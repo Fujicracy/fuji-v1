@@ -102,12 +102,12 @@ function App(props) {
   //
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts,"YourContract", "purpose")
-  console.log("🤗 purpose:",purpose)
+  //const purpose = useContractReader(readContracts,"YourContract", "purpose")
+  //console.log("🤗 purpose:",purpose)
 
   //📟 Listen for broadcast events
-  const setPurposeEvents = useEventListener(readContracts, "YourContract", "SetPurpose", localProvider, 1);
-  console.log("📟 SetPurpose events:",setPurposeEvents)
+  //const setPurposeEvents = useEventListener(readContracts, "YourContract", "SetPurpose", localProvider, 1);
+  //console.log("📟 SetPurpose events:",setPurposeEvents)
 
   /*
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
@@ -179,7 +179,15 @@ function App(props) {
                 and give you a form to interact with it locally
             */}
             <Contract
-              name="YourContract"
+              name="VaultETHDAI"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
+
+            <Contract
+              name="ProviderAave"
               signer={userProvider.getSigner()}
               provider={localProvider}
               address={address}
@@ -206,6 +214,7 @@ function App(props) {
             />
           </Route>
           <Route path="/exampleui">
+            { /* Uncomment to display and interact with an external contract (DAI on mainnet):
             <ExampleUI
               address={address}
               userProvider={userProvider}
@@ -219,6 +228,7 @@ function App(props) {
               purpose={purpose}
               setPurposeEvents={setPurposeEvents}
             />
+            */ }
           </Route>
           <Route path="/subgraph">
             <Subgraph
