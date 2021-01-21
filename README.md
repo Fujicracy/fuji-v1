@@ -7,9 +7,9 @@
 ## quickstart
 
 ```bash
-git clone https://github.com/austintgriffith/scaffold-eth.git your-next-dapp
+git clone https://github.com/Fujicracy/fuji.git
 
-cd your-next-dapp
+cd fuji
 ```
 
 ```bash
@@ -28,7 +28,7 @@ yarn start
 
 ```bash
 
-yarn chain
+yarn fork
 
 ```
 
