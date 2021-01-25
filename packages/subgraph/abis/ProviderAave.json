@@ -47,7 +47,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "aTokenAddress",
+        "name": "",
         "type": "address"
       }
     ],

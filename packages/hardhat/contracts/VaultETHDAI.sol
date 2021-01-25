@@ -163,6 +163,7 @@ contract VaultETHDAI {
     }
   }
 
+
   function getRedeemableAmountOf(address _user) public view returns(uint256 share) {
     uint256 collateralShare = getCollateralShareOf(_user);
     share = redeemableCollateralBalance().mul(collateralShare).div(BASE);
