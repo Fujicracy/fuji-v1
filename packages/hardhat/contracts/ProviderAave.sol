@@ -87,8 +87,8 @@ contract ProviderAave is IProvider {
     }
 
     function getEthAddr() internal pure returns (address) {
-    return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE; // ETH Address
-  }
+        return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE; // ETH Address
+    }
 
     function getIsColl(AaveDataProviderInterface aaveData, address token, address user) internal view returns (bool isCol) {
         (, , , , , , , , isCol) = aaveData.getUserReserveData(token, user);
@@ -102,7 +102,22 @@ contract ProviderAave is IProvider {
        if(isEth) {
             token.approve(address(token), amount);
             token.withdraw(amount);
+    }
+    }
+        function getReserveTokensAddresses(address _asset) external virtual view returns (
+        address aTokenAddress,
+        address stableDebtTokenAddress,
+        address variableDebtTokenAddress
+    ){
+
         }
+
+
+    function getRedeemableAddress(address collateralAsset) external override returns(address) {
+        AaveDataProviderInterface aaveData = getAaveDataProvider();
+        (address aTokenAddress,,) = AaveDataProviderInterface(aaveData).getReserveTokensAddresses(collateralAsset);
+        return aTokenAddress;
+
     }
 
 
