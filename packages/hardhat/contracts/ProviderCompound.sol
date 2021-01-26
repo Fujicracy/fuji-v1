@@ -21,9 +21,12 @@ contract ProviderCompound is IProvider{
   function payback(address borrowAsset, uint256 borrowAmount) external override payable {
 
   }
-  function getRedeemableAddress(address collateralAsset) external override returns(address) {
+  function getRedeemableAddress(address collateralAsset) external view override returns(address) {
         
   }
+    function getBorrowRateFor(address asset) external view override returns(uint256) {
+
+    }
 
 }
 

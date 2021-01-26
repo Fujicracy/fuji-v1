@@ -51,6 +51,18 @@ interface AaveDataProviderInterface {
         uint40 stableRateLastUpdated,
         bool usageAsCollateralEnabled
     );
+      function getReserveData(address asset) external view returns (
+      uint256 availableLiquidity,
+      uint256 totalStableDebt,
+      uint256 totalVariableDebt,
+      uint256 liquidityRate,
+      uint256 variableBorrowRate,
+      uint256 stableBorrowRate,
+      uint256 averageStableBorrowRate,
+      uint256 liquidityIndex,
+      uint256 variableBorrowIndex,
+      uint40 lastUpdateTimestamp
+    );
 }
 
 interface AaveAddressProviderRegistryInterface {
@@ -65,10 +77,10 @@ contract ProviderAave is IProvider {
   using SafeMath for uint256;
   using UniERC20 for IERC20;
 
-    function sub(uint x, uint y) internal virtual pure returns (uint z) {
-    z = SafeMath.sub(x, y);
+      function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        require(b <= a, "SafeMath: subtraction overflow");
+        return a - b;
     }
-
 
     function getAaveProvider() internal pure returns (AaveLendingPoolProviderInterface) {
         return AaveLendingPoolProviderInterface(0xB53C1a33016B2DC2fF3653530bfF1848a515c8c5); //mainnet
@@ -106,18 +118,33 @@ contract ProviderAave is IProvider {
         }
     }
 
-    function getRedeemableAddress(address collateralAsset) external override returns(address) {
+      function getBorrowRateFor(address asset) external view override returns(uint256) {
+
+        AaveDataProviderInterface aaveData = getAaveDataProvider();
+        
+        bool isEth = asset == getEthAddr();
+        address botoken = isEth ? getWethAddr() : asset;
+
+        (, , , ,uint256 variableBorrowRate, , , , ,) = AaveDataProviderInterface(aaveData).getReserveData(botoken);
+        return variableBorrowRate;
+        
+      }
+
+    function getRedeemableAddress(address collateralAsset) external view override returns(address) {
 
         AaveDataProviderInterface aaveData = getAaveDataProvider();
 
-        (address aTokenAddress,,) = AaveDataProviderInterface(aaveData).getReserveTokensAddresses(collateralAsset);
+        bool isEth = collateralAsset == getEthAddr();
+        address token = isEth ? getWethAddr() : collateralAsset;
+
+        (address aTokenAddress,,) = AaveDataProviderInterface(aaveData).getReserveTokensAddresses(token);
 
         return aTokenAddress;
 
     }
 
 
-    function deposit(address collateralAsset, uint collateralAmount) external override payable {
+    function deposit(address collateralAsset, uint256 collateralAmount) external override payable {
 
         AaveInterface aave = AaveInterface(getAaveProvider().getLendingPool());
         AaveDataProviderInterface aaveData = getAaveDataProvider();
@@ -128,10 +155,10 @@ contract ProviderAave is IProvider {
         TokenInterface tokenContract = TokenInterface(_token);
 
         if (isEth) {
-            collateralAmount = collateralAmount == uint(-1) ? address(this).balance : collateralAmount;
+            collateralAmount = collateralAmount == uint256(-1) ? address(this).balance : collateralAmount;
             convertEthToWeth(isEth, tokenContract, collateralAmount);
         } else {
-            collateralAmount = collateralAmount == uint(-1) ? tokenContract.balanceOf(address(this)) : collateralAmount;
+            collateralAmount = collateralAmount == uint256(-1) ? tokenContract.balanceOf(address(this)) : collateralAmount;
         }
 
         tokenContract.approve(address(aave), collateralAmount);
@@ -167,9 +194,9 @@ contract ProviderAave is IProvider {
 
         TokenInterface tokenContract = TokenInterface(_token);
 
-        uint initialBal = tokenContract.balanceOf(address(this));
+        uint256 initialBal = tokenContract.balanceOf(address(this));
         aave.withdraw(_token, collateralAmount, address(this));
-        uint finalBal = tokenContract.balanceOf(address(this));
+        uint256 finalBal = tokenContract.balanceOf(address(this));
 
         collateralAmount = sub(finalBal, initialBal);
 
@@ -189,7 +216,7 @@ contract ProviderAave is IProvider {
 
         TokenInterface tokenContract = TokenInterface(_token);
 
-        borrowAmount = borrowAmount == uint(-1) ? getPaybackBalance(aaveData, _token, 2) : borrowAmount;
+        borrowAmount = borrowAmount == uint256(-1) ? getPaybackBalance(aaveData, _token, 2) : borrowAmount;
 
         if (isEth) convertEthToWeth(isEth, tokenContract, borrowAmount);
 
