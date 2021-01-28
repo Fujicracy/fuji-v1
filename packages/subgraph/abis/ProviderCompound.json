@@ -8,7 +8,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_Amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -26,13 +26,32 @@
       },
       {
         "internalType": "uint256",
-        "name": "_Amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
     "name": "deposit",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "getBorrowBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -82,7 +101,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_Amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -100,7 +119,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_Amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -108,9 +127,5 @@
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
   }
 ]
