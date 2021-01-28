@@ -215,6 +215,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_newProvider",
+        "type": "address"
+      }
+    ],
+    "name": "fujiSwitch",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_user",
         "type": "address"
       }
@@ -303,13 +316,6 @@
       }
     ],
     "name": "payback",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paybackAll",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
