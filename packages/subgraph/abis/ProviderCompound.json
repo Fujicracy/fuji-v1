@@ -3,12 +3,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "borrowAsset",
+        "name": "_borrowAsset",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "borrowAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -21,12 +21,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "collateralAsset",
+        "name": "_depositAsset",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "collateralAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -39,12 +39,69 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "borrowAsset",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "getBorrowBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "getBorrowRateFor",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "collateralAsset",
+        "type": "address"
+      }
+    ],
+    "name": "getRedeemableAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_paybackAsset",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "borrowAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -57,12 +114,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "collateralAsset",
+        "name": "_withdrawAsset",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "collateralAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
