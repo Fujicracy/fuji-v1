@@ -13,7 +13,7 @@
       },
       {
         "internalType": "address",
-        "name": "_provider",
+        "name": "_owner",
         "type": "address"
       }
     ],
@@ -25,7 +25,7 @@
     "name": "activeProvider",
     "outputs": [
       {
-        "internalType": "contract IProvider",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -198,6 +198,11 @@
         "internalType": "address",
         "name": "_newProvider",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_flashLoanDebt",
+        "type": "uint256"
       }
     ],
     "name": "fujiSwitch",
@@ -244,6 +249,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getProviders",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -276,19 +294,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "outstandingBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -312,7 +317,7 @@
     "name": "providers",
     "outputs": [
       {
-        "internalType": "contract IProvider",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }

@@ -178,6 +178,7 @@ function App(props) {
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
             */}
+
             <Contract
               name="VaultETHDAI"
               signer={userProvider.getSigner()}
@@ -195,6 +196,22 @@ function App(props) {
             />
 
             <Contract
+              name="ProviderCompound"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
+
+            <Contract
+              name="Controller"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
+
+            <Contract
               name="DAI"
               customContract={mainnetDAIContract}
               signer={userProvider.getSigner()}
@@ -202,6 +219,15 @@ function App(props) {
               address={address}
               blockExplorer={blockExplorer}
             />
+
+            <Contract
+              name="Flasher"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
+
           </Route>
           <Route path="/hints">
             <Hints
