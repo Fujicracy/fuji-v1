@@ -9,6 +9,9 @@ import { useUserAddress } from "eth-hooks";
 import { useUserProvider, useContractLoader, useContractReader } from "./hooks";
 import { INFURA_ID } from "./constants";
 import FujiHome from "./FujiHome";
+import FujiInfos from "./FujiInfos/FujiInfos";
+import FujiTeam from "./FujiTeam/FujiTeam";
+import FujiVaults from "./FujiVaults/FujiVaults";
 
 function FujiApp(props) {
   const [injectedProvider, setInjectedProvider] = useState();
@@ -42,13 +45,13 @@ function FujiApp(props) {
           />
         </Route>
         <Route path="/vaults">
-          <div>Placeholder Vaults</div>
+          <FujiVaults />
         </Route>
         <Route path="/team">
-          <div>Placeholder Team</div>
+          <FujiTeam />
         </Route>
         <Route path="/about">
-          <div>Placeholder Infos</div>
+          <FujiInfos />
         </Route>
       </Switch>
     </BrowserRouter>
