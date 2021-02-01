@@ -1,27 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Web3Provider } from "@ethersproject/providers";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import { useUserAddress } from "eth-hooks";
-import { useUserProvider } from "./hooks";
-import { INFURA_ID } from "./constants";
-import { Layout, Button } from 'antd';
+import { Layout, Row, Col, Button } from 'antd';
 
-function FujiHome({ address }) {
-  const [injectedProvider, setInjectedProvider] = useState();
-
-  const loadWeb3Modal = useCallback(async () => {
-    const provider = await web3Modal.connect();
-    setInjectedProvider(new Web3Provider(provider));
-  }, [setInjectedProvider]);
-
+function FujiHome({ address, loadWeb3Modal }) {
   const { Header, Footer, Content } = Layout;
-
-  const onClickConnect = () => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-  }
 
   return (
     <div className="App"> 
@@ -35,15 +16,19 @@ function FujiHome({ address }) {
           </h1>
         </Header>
 
-        <Content>{
-          !address
-          ? <Button onClick={onClickConnect} className="button" type="primary" shape="round">
-              Connect Wallet
-            </Button> 
-          : <Button href="vaults" className="button" type="primary" shape="round">
-              Launch App
-            </Button> 
-        }
+        <Content>
+          <Row align="middle" justify="center" style={{ paddingTop: '300px' }}>
+            <Col span={24}>{
+              !address
+              ? <Button onClick={loadWeb3Modal} className="button" type="primary" shape="round" size="large">
+                  Connect Wallet
+                </Button>
+              : <Button href="vaults" className="button" type="primary" shape="round" size="large">
+                  Launch App
+                </Button>
+            }
+            </Col>
+          </Row>
         </Content>
 
         <Footer>                
@@ -59,18 +44,5 @@ function FujiHome({ address }) {
     </div>
    );
 }
-
-const web3Modal = new Web3Modal({
-  // network: "mainnet", // optional
-  cacheProvider: true, // optional
-  providerOptions: {
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        infuraId: INFURA_ID,
-      },
-    },
-  },
-});
 
 export default FujiHome;

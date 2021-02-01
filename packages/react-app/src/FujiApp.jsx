@@ -39,9 +39,8 @@ function FujiApp(props) {
       <Switch>
         <Route exact path="/">
           <FujiHome
-            signer={userProvider ? userProvider.getSigner() : null}
-            provider={userProvider}
             address={address}
+            loadWeb3Modal={loadWeb3Modal}
           />
         </Route>
         <Route path="/vaults">
@@ -57,6 +56,7 @@ function FujiApp(props) {
     </BrowserRouter>
   );
 }
+//signer={userProvider ? userProvider.getSigner() : null}
 
 const web3Modal = new Web3Modal({
   // network: "mainnet", // optional
@@ -71,11 +71,11 @@ const web3Modal = new Web3Modal({
   },
 });
 
-const logoutOfWeb3Modal = async () => {
-  await web3Modal.clearCachedProvider();
-  setTimeout(() => {
-    window.location.reload();
-  }, 1);
-};
+//const logoutOfWeb3Modal = async () => {
+  //await web3Modal.clearCachedProvider();
+  //setTimeout(() => {
+    //window.location.reload();
+  //}, 1);
+//};
 
 export default FujiApp;
