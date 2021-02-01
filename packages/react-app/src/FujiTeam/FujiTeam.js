@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Row, Col, Layout, Card, Image } from "antd";
+import { TwitterSquareFilled , LinkedinFilled } from '@ant-design/icons';
 
 function FujiTeam(props) {
+
   const { Header, Footer, Content } = Layout;
 
   return (
@@ -24,6 +26,8 @@ function FujiTeam(props) {
 					      width={200}
 					      src="BoyanB.jpg"
 					/>
+					<TwitterSquareFilled />
+					<LinkedinFilled />
               </Card>
             </Col>
             <Col span={4}>
@@ -32,6 +36,8 @@ function FujiTeam(props) {
 					      width={200}
 					      src="JcAwesome.png"
 					/>
+					<TwitterSquareFilled />
+					<LinkedinFilled />
               </Card>
             </Col>
             <Col span={4}>
@@ -40,6 +46,8 @@ function FujiTeam(props) {
 					      width={200}
 					      src="DaigaroC.jpg"
 					/>
+					<TwitterSquareFilled />
+					<LinkedinFilled />
               </Card>
             </Col>
              <Col span={4}>
@@ -48,6 +56,8 @@ function FujiTeam(props) {
 					      width={200}
 					      src="EdgarM.jpg"
 					/>
+					<TwitterSquareFilled />
+					<LinkedinFilled />
               </Card>
             </Col>
              <Col span={4}>
@@ -56,6 +66,8 @@ function FujiTeam(props) {
 					      width={200}
 					      src="OscarF.png"
 					/>
+					<TwitterSquareFilled />
+					<LinkedinFilled />
               </Card>
             </Col>
           </Row>

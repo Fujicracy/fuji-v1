@@ -18,7 +18,7 @@ function FujiInfos(props) {
         </Header>
 
         <Content> 
-	        <h1> What is it ?
+	        <h1 className="question"> What is it ?
 	      </h1>
 	          
 	        <h2>
@@ -27,7 +27,7 @@ function FujiInfos(props) {
 				Fuji finds the best borrowing rates for you, it automatically refinances your loan.
 	         </h2>
 
-	      	<h1> How it works ?
+	      	<h1 className="question"> How it works ?
 	      </h1>
 
 	        <Image
