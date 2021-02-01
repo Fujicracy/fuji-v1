@@ -1,8 +1,14 @@
 body {
   margin: 0;
+  font-family: Roboto;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1, h2, h3, h4, h5, a, button {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+p {
+  letter-spacing: 1px;
+  line-height: 1.5 !important;
+  font-family: 'Exo 2', sans-serif !important;
 }
