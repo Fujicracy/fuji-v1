@@ -18,7 +18,7 @@ function FujiTeam(props) {
           </h1>
         </Header>
 
-        <Content>
+        <Content className="content">
           <Row gutter={16}>
             <Col span={4}>
               <Card title="Boyan Barakov" bordered={false}>
@@ -26,6 +26,7 @@ function FujiTeam(props) {
 					      width={200}
 					      src="BoyanB.jpg"
 					/>
+					<br/>
 					<TwitterSquareFilled />
 					<LinkedinFilled />
               </Card>
@@ -36,6 +37,7 @@ function FujiTeam(props) {
 					      width={200}
 					      src="JcAwesome.png"
 					/>
+					<br/>
 					<TwitterSquareFilled />
 					<LinkedinFilled />
               </Card>
@@ -46,6 +48,7 @@ function FujiTeam(props) {
 					      width={200}
 					      src="DaigaroC.jpg"
 					/>
+					<br/>
 					<TwitterSquareFilled />
 					<LinkedinFilled />
               </Card>
@@ -56,6 +59,7 @@ function FujiTeam(props) {
 					      width={200}
 					      src="EdgarM.jpg"
 					/>
+					<br/>
 					<TwitterSquareFilled />
 					<LinkedinFilled />
               </Card>
@@ -66,6 +70,7 @@ function FujiTeam(props) {
 					      width={200}
 					      src="OscarF.png"
 					/>
+					<br/>
 					<TwitterSquareFilled />
 					<LinkedinFilled />
               </Card>
