@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Row, Col, Layout, Card, Image } from "antd";
 import { TwitterSquareFilled , LinkedinFilled } from '@ant-design/icons';
+import "./FujiTeam.css";
 
 function FujiTeam(props) {
 
@@ -77,12 +78,11 @@ function FujiTeam(props) {
             </Col>
           </Row>
 
-                   <Image
+        </Content>
+                           <Image
 					      width={400}
 					      src="MarketMake.png"
 					/>
-
-        </Content>
       </Layout>
     </div>
    );
