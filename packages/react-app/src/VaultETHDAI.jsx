@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
+import { useBalance, useContractReader, useContractLoader, useExchangePrice } from "./hooks";
+import { Transactor } from "./helpers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -37,6 +41,10 @@ const useStyles = makeStyles(theme =>
     marginAdorn: {
       margin: theme.spacing(2),
     },
+    collatInputText: {
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
     statsRow: {
       display: "flex",
       alignItems: "center",
@@ -64,7 +72,7 @@ const useStyles = makeStyles(theme =>
       height: "201px",
       marginRight: theme.spacing(5),
       color: theme.palette.secondary.main,
-      border: "5px solid" + theme.palette.primary.main,
+      border: "5px solid",
       borderRadius: "50%",
       boxSizing: "border-box",
       boxShadow: "inset -14px 14px 4px rgba(0, 0, 0, 0.25)",
@@ -72,8 +80,163 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function SideHelper() {
+function VaultETHDAI({ provider, address, setRoute }) {
   const classes = useStyles();
+  const location = useLocation();
+
+  const [borrowAmount, setBorrowAmount] = useState('');
+  const [collateralAmount, setCollateralAmount] = useState('');
+  const [disableSubmit, setDisableSubmit] = useState(true);
+
+  const ethBalance = useBalance(provider, address);
+
+  useEffect(() => {
+    setRoute(location.pathname);
+  }, [location, setRoute]);
+
+  const contracts = useContractLoader(provider);
+  const neededCollateral = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "getNeededCollateralFor",
+    [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
+  );
+
+  useEffect(() => {
+    if (neededCollateral && collateralAmount >= formatUnits(neededCollateral)) {
+      setDisableSubmit(false);
+    }
+    else {
+      setDisableSubmit(true);
+    }
+  }, [collateralAmount, neededCollateral]);
+
+  const tx = Transactor(provider);
+  const handleSubmit = () => {
+    tx(
+      contracts.VaultETHDAI.depositAndBorrow(
+        parseEther(collateralAmount),
+        parseUnits(borrowAmount),
+        { value: parseEther(collateralAmount) }
+      )
+    );
+  }
+
+  return (
+    <div className={classes.paper}>
+      <Grid
+        container
+        justify="space-around"
+      >
+        <Grid item md={11}>
+          <Typography component="h1" variant="h4">
+            Borrow DAI
+          </Typography>
+        </Grid>
+        <Grid item md={4}>
+          <form className={classes.form} noValidate>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h5">
+                  How it works
+                </Typography>
+                <Typography variant="subtitle1">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1">
+                  Amount to borrow
+                </Typography>
+                <TextField
+                  className={classes.inputField}
+                  required
+                  fullWidth
+                  id="borrowAmount"
+                  name="borrowAmount"
+                  type="tel"
+                  variant="outlined"
+                  onChange={({ target }) => setBorrowAmount(target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography variant="body1" className={classes.marginAdorn}>
+                          DAI
+                        </Typography>
+                        <Avatar alt="DAI" src="/DAI.png"/>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box className={classes.collatInputText}>
+                  <Typography variant="body1">
+                    Collateral
+                  </Typography>
+                  <Typography variant="body1">
+                    Your balance: {ethBalance ? formatEther(ethBalance) : '...'}
+                  </Typography>
+                </Box>
+                <TextField
+                  className={classes.inputField}
+                  required
+                  fullWidth
+                  name="collateralAmount"
+                  type="tel"
+                  id="collateralAmount"
+                  variant="outlined"
+                  placeholder={
+                    neededCollateral
+                    ? "min " + parseFloat(formatUnits(neededCollateral)).toFixed(3)
+                    : ""
+                  }
+                  onChange={({ target }) => setCollateralAmount(target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Typography variant="body1" className={classes.marginAdorn}>
+                          ETH
+                        </Typography>
+                        <Avatar alt="ETH" src="/ETH.png"/>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <Grid item style={{ textAlign: "center" }}>
+              <Button
+                onClick={handleSubmit}
+                disabled={disableSubmit}
+                className={classes.submitBtn}
+              >
+                Borrow
+              </Button>
+            </Grid>
+          </form>
+        </Grid>
+        <Grid item md={5}>
+          <SideHelper
+            daiAmount={borrowAmount}
+            ethAmount={collateralAmount}
+          />
+        </Grid>
+      </Grid>
+    </div>
+  );
+}
+
+function SideHelper({ daiAmount, ethAmount }) {
+  const classes = useStyles();
+  const mainnetProvider = new JsonRpcProvider(
+    "https://mainnet.infura.io/v3/f8481a1ed3b0466ead585fdbd71d8f95"
+  );
+  const price = useExchangePrice(mainnetProvider);
+
+  const ratio = ethAmount && daiAmount && price
+    ? (ethAmount * price / daiAmount)
+    : 0
 
   return (
     <Grid
@@ -86,9 +249,12 @@ function SideHelper() {
           Collaterization Ratio
         </Typography>
         <Box className={classes.statsRow}>
-          <Box className={classes.collatRatioBox}>
+          <Box
+            className={classes.collatRatioBox}
+            style={{ borderColor: ratio < 1.35 ? 'red' : 'blue' }}
+          >
             <Typography component="p" variant="h4">
-              125 %
+              {parseFloat(ratio).toFixed(2)}
             </Typography>
           </Box>
           <Typography component="span" variant="subtitle1">
@@ -138,103 +304,6 @@ function SideHelper() {
         </Grid>
       </Grid>
     </Grid>
-  );
-}
-
-function VaultETHDAI({ address, setRoute }) {
-  const classes = useStyles();
-  const location = useLocation();
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location])
-
-  return (
-    <div className={classes.paper}>
-      <Grid
-        container
-        justify="space-around"
-      >
-        <Grid item md={11}>
-          <Typography component="h1" variant="h4">
-            Borrow DAI
-          </Typography>
-        </Grid>
-        <Grid item md={4}>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h5">
-                  How it works
-                </Typography>
-                <Typography variant="subtitle1">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  Amount to borrow
-                </Typography>
-                <TextField
-                  className={classes.inputField}
-                  required
-                  fullWidth
-                  id="borrowAmount"
-                  name="borrowAmount"
-                  type="number"
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="body1" className={classes.marginAdorn}>
-                          DAI
-                        </Typography>
-                        <Avatar alt="DAI" src="/DAI.png"/>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  Collateral
-                </Typography>
-                <TextField
-                  className={classes.inputField}
-                  required
-                  fullWidth
-                  name="collateralAmount"
-                  type="number"
-                  id="collateralAmount"
-                  variant="outlined"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="body1" className={classes.marginAdorn}>
-                          ETH
-                        </Typography>
-                        <Avatar alt="ETH" src="/ETH.png"/>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-            </Grid>
-            <Grid item style={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                className={classes.submitBtn}
-              >
-                Borrow
-              </Button>
-            </Grid>
-          </form>
-        </Grid>
-        <Grid item md={5}>
-          <SideHelper />
-        </Grid>
-      </Grid>
-    </div>
   );
 }
 

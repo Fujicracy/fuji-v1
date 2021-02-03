@@ -144,6 +144,7 @@ function FujiApp(props) {
               <VaultETHDAI
                 address={address}
                 setRoute={setRoute}
+                provider={userProvider}
               />
             </Route>
             <Route path="/vaults">
