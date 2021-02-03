@@ -211,14 +211,14 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
 
-            <Contract
+            /*<Contract
               name="DAI"
               customContract={mainnetDAIContract}
               signer={userProvider.getSigner()}
               provider={mainnetProvider}
               address={address}
               blockExplorer={blockExplorer}
-            />
+            />*/
 
             <Contract
               name="Flasher"
