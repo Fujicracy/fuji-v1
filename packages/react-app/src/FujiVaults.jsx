@@ -3,33 +3,29 @@ import { useLocation } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => 
   createStyles({
-    mainBtn: {
+    vaultBtn: {
       color: theme.palette.secondary.main,
       border: "5px solid" + theme.palette.primary.main,
+      padding: "8px 30px",
       borderRadius: 50,
       boxSizing: "border-box",
       boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
-      minWidth: "200px",
+      minWidth: "500px",
       margin: "5px",
-      fontSize: "1.1em",
+      fontSize: "1.5em",
       fontWeight: "900",
       textTransform: "none",
-    },
-    mainArea: {
-      position: "fixed",
-      top: "35%"
-    },
-    baseLine: {
-      fontWeight: "900",
+      justifyContent: "space-between",
     },
   })
 );
 
-function FujiHome({ address, setRoute, loadWeb3Modal }) {
+function FujiVaults({ address, setRoute }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -38,41 +34,43 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
   },[location])
 
   return (
-    <div> 
+    <div style={{ paddingTop: "100px" }}> 
       <Grid
         container
         direction="column"
         justify="center"
         alignItems="center"
         className={classes.mainArea}
+        spacing={5}
       >
-        <Grid item md={6} style={{ paddingBottom: "50px" }}>
-          <Typography variant="h4" className={classes.baseLine}>
-            Fuji finds the best borrowing rates and automatically refinances your loan
-          </Typography>
+        <Grid item>
+          <Button
+            className={classes.vaultBtn}
+            endIcon={<ArrowForwardIosIcon />}
+            href="./vaults/ethdai"
+          >
+            Borrow DAI
+          </Button>
         </Grid>
         <Grid item>
-        {
-          !address
-          ? <Button
-              onClick={loadWeb3Modal}
-              className={classes.mainBtn}
-              size="large"
-            >
-              Connect Wallet
-            </Button>
-          : <Button
-              href="vaults"
-              className={classes.mainBtn}
-              size="large"
-            >
-              Launch App
-            </Button>
-        }
+          <Button
+            disabled
+            className={classes.vaultBtn}
+          >
+            Borrow USDC
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            disabled
+            className={classes.vaultBtn}
+          >
+            Borrow USDT
+          </Button>
         </Grid>
       </Grid>
     </div>
    );
 }
 
-export default FujiHome;
+export default FujiVaults;

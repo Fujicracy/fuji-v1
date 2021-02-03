@@ -1,20 +1,81 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import "antd/dist/antd.css";
 import { Web3Provider } from "@ethersproject/providers";
-import "./App.css";
+//import "./App.css";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
 import { useUserProvider, useContractLoader, useContractReader } from "./hooks";
 import { INFURA_ID } from "./constants";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+
 import FujiHome from "./FujiHome";
+import FujiVaults from "./FujiVaults";
+import VaultETHDAI from "./VaultETHDAI";
 import FujiInfos from "./FujiInfos/FujiInfos";
 import FujiTeam from "./FujiTeam/FujiTeam";
-import FujiVaults from "./FujiVaults/FujiVaults";
+
+const useStyles = makeStyles(theme => 
+  createStyles({
+    root: {
+      fontSize: "x-large",
+      fontStyle: "italic",
+      textAlign: "center",
+      color: theme.palette.primary.main
+    },
+    header: {
+      justifyContent: 'space-between',
+      overflowX: 'auto',
+      height: "70px",
+    },
+    titleHome: {
+      textDecoration: "none",
+      color: "#fff"
+    },
+    titleSquared: {
+      margin: "0 10px",
+      background: "#fff",
+      color: theme.palette.secondary.main,
+      fontWeight: "900",
+      padding: "1px 15px",
+      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
+    },
+    titleRounded: {
+      margin: "0 10px",
+      background: "#fff",
+      color: theme.palette.secondary.main,
+      fontWeight: "900",
+      padding: "5px 0",
+      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
+      borderRadius: "50px",
+      maxWidth: "50%",
+      flex: 1
+    },
+    logo: {
+      background: "#fff",
+      padding: "1px 0 0 5px",
+      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
+    },
+    footer: {
+      position: "absolute",
+      width: "100%",
+      height: "80px",
+      bottom: 0,
+      left: 0,
+      right: 0
+    }
+  })
+);
 
 function FujiApp(props) {
+  const classes = useStyles();
   const [injectedProvider, setInjectedProvider] = useState();
+  const [route, setRoute] = useState();
 
   const userProvider = useUserProvider(injectedProvider);
   const address = useUserAddress(userProvider);
@@ -35,25 +96,91 @@ function FujiApp(props) {
   }, [loadWeb3Modal]);
 
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <FujiHome
-            address={address}
-            loadWeb3Modal={loadWeb3Modal}
-          />
-        </Route>
-        <Route path="/vaults">
-          <FujiVaults />
-        </Route>
-        <Route path="/team">
-          <FujiTeam />
-        </Route>
-        <Route path="/about">
-          <FujiInfos />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <div className={classes.root}> 
+      <AppBar>
+        <Toolbar className={classes.header}>
+          <Toolbar>
+            <Typography
+              variant="h4"
+              component="a"
+              className={classes.titleHome}
+              href="/"
+            >
+              Fuji
+            </Typography>
+            <Typography
+              variant="h4"
+              className={classes.titleSquared}
+            >{route === '/'
+              ? "Home"
+              : route === '/vaults'
+              ? "Vaults"
+              : route === '/vaults/ethdai'
+              ? "ETH/DAI"
+              : "Other"
+            }
+            </Typography>
+          </Toolbar>
+          <Typography
+            component="h1"
+            variant="h4"
+            className={classes.titleRounded}
+          >
+            Borrowing Agreggator
+          </Typography>
+          <Toolbar>
+            <Avatar
+              alt="Fuji Logo"
+              variant="square"
+              src="/logo192.png"
+              className={classes.logo}
+            />
+          </Toolbar>
+        </Toolbar>
+      </AppBar>
+
+      <div style={{ marginTop: "100px" }}>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/">
+              <FujiHome
+                address={address}
+                loadWeb3Modal={loadWeb3Modal}
+                setRoute={setRoute}
+              />
+            </Route>
+            <Route path="/vaults/ethdai">
+              <VaultETHDAI
+                address={address}
+                setRoute={setRoute}
+              />
+            </Route>
+            <Route path="/vaults">
+              <FujiVaults
+                address={address}
+                setRoute={setRoute}
+              />
+            </Route>
+            <Route path="/team">
+              <FujiTeam />
+            </Route>
+            <Route path="/about">
+              <FujiInfos />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </div>
+
+      <div className={classes.footer}>
+        <Button href="about" type="primary">
+          FAQ
+        </Button>
+
+        <Button href="team" type="primary">
+          Team
+        </Button>
+      </div>
+    </div>
   );
 }
 //signer={userProvider ? userProvider.getSigner() : null}
