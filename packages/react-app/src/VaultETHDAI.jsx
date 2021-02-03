@@ -13,33 +13,29 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => 
   createStyles({
-    vaultBtn: {
-      color: theme.palette.secondary.main,
-      border: "5px solid" + theme.palette.primary.main,
-      padding: "8px 30px",
-      borderRadius: 50,
-      boxSizing: "border-box",
-      boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
-      minWidth: "500px",
-      margin: "5px",
-      fontSize: "1.5em",
-      fontWeight: "900",
-      textTransform: "none",
-      justifyContent: "space-between",
-    },
     paper: {
-      marginTop: theme.spacing(20),
+      marginTop: theme.spacing(2),
       textAlign: "left",
     },
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing(12),
     },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
+    inputField: {
+      padding: theme.spacing(0, 3),
+      minWidth: "500px",
+      margin: "5px",
+    },
+    submitBtn: {
+      margin: theme.spacing(6, 0, 2),
+      padding: theme.spacing(1, 3),
+      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.success.main,
+      fontSize: "1.3em",
+      fontWeight: "900",
     },
     marginAdorn: {
-      margin: theme.spacing(1),
+      margin: theme.spacing(2),
     },
     statsRow: {
       display: "flex",
@@ -55,12 +51,12 @@ const useStyles = makeStyles(theme =>
       marginRight: theme.spacing(5),
       color: theme.palette.secondary.main,
       border: "5px solid" + theme.palette.primary.main,
-      padding: "8px 30px",
+      padding: theme.spacing(1, 4),
       borderRadius: 50,
       boxSizing: "border-box",
       boxShadow: "15px 15px 4px rgba(0, 0, 0, 0.25)",
     },
-    colRatioBox: {
+    collatRatioBox: {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-around",
@@ -90,7 +86,7 @@ function SideHelper() {
           Collaterization Ratio
         </Typography>
         <Box className={classes.statsRow}>
-          <Box className={classes.colRatioBox}>
+          <Box className={classes.collatRatioBox}>
             <Typography component="p" variant="h4">
               125 %
             </Typography>
@@ -180,6 +176,7 @@ function VaultETHDAI({ address, setRoute }) {
                   Amount to borrow
                 </Typography>
                 <TextField
+                  className={classes.inputField}
                   required
                   fullWidth
                   id="borrowAmount"
@@ -203,6 +200,7 @@ function VaultETHDAI({ address, setRoute }) {
                   Collateral
                 </Typography>
                 <TextField
+                  className={classes.inputField}
                   required
                   fullWidth
                   name="collateralAmount"
@@ -222,15 +220,14 @@ function VaultETHDAI({ address, setRoute }) {
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Borrow
-            </Button>
+            <Grid item style={{ textAlign: "center" }}>
+              <Button
+                type="submit"
+                className={classes.submitBtn}
+              >
+                Borrow
+              </Button>
+            </Grid>
           </form>
         </Grid>
         <Grid item md={5}>

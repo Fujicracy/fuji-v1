@@ -9,17 +9,10 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => 
   createStyles({
     vaultBtn: {
-      color: theme.palette.secondary.main,
-      border: "5px solid" + theme.palette.primary.main,
       padding: "8px 30px",
-      borderRadius: 50,
-      boxSizing: "border-box",
-      boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
       minWidth: "500px",
-      margin: "5px",
       fontSize: "1.5em",
       fontWeight: "900",
-      textTransform: "none",
       justifyContent: "space-between",
     },
   })

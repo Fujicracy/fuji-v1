@@ -9,7 +9,6 @@ import { useUserProvider, useContractLoader, useContractReader } from "./hooks";
 import { INFURA_ID } from "./constants";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
@@ -61,14 +60,6 @@ const useStyles = makeStyles(theme =>
       padding: "1px 0 0 5px",
       boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
     },
-    footer: {
-      position: "absolute",
-      width: "100%",
-      height: "80px",
-      bottom: 0,
-      left: 0,
-      right: 0
-    }
   })
 );
 
@@ -169,16 +160,6 @@ function FujiApp(props) {
             </Route>
           </Switch>
         </BrowserRouter>
-      </div>
-
-      <div className={classes.footer}>
-        <Button href="about" type="primary">
-          FAQ
-        </Button>
-
-        <Button href="team" type="primary">
-          Team
-        </Button>
       </div>
     </div>
   );

@@ -8,16 +8,9 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => 
   createStyles({
     mainBtn: {
-      color: theme.palette.secondary.main,
-      border: "5px solid" + theme.palette.primary.main,
-      borderRadius: 50,
-      boxSizing: "border-box",
-      boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
       minWidth: "200px",
-      margin: "5px",
       fontSize: "1.1em",
       fontWeight: "900",
-      textTransform: "none",
     },
     mainArea: {
       position: "fixed",
@@ -26,6 +19,14 @@ const useStyles = makeStyles(theme =>
     baseLine: {
       fontWeight: "900",
     },
+    footer: {
+      position: "absolute",
+      width: "100%",
+      height: "80px",
+      bottom: 0,
+      left: 0,
+      right: 0
+    }
   })
 );
 
@@ -71,6 +72,26 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
         }
         </Grid>
       </Grid>
+
+      <div className={classes.footer}>
+        <Button href="about" type="primary">
+          FAQ
+        </Button>
+
+        <Button href="team" type="primary">
+          Team
+        </Button>
+      </div>
+
+      <div className={classes.footer}>
+        <Button href="about" type="primary">
+          FAQ
+        </Button>
+
+        <Button href="team" type="primary">
+          Team
+        </Button>
+      </div>
     </div>
    );
 }
