@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -53,7 +54,7 @@ const useStyles = makeStyles(theme =>
     providerBox: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-around",
+      justifyContent: "space-between",
       width: "222px",
       height: "100px",
       marginRight: theme.spacing(5),
@@ -68,8 +69,8 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       alignItems: "center",
       justifyContent: "space-around",
-      width: "210px",
-      height: "201px",
+      minWidth: "200px",
+      height: "200px",
       marginRight: theme.spacing(5),
       color: theme.palette.secondary.main,
       border: "5px solid",
@@ -100,6 +101,18 @@ function VaultETHDAI({ provider, address, setRoute }) {
     "VaultETHDAI",
     "getNeededCollateralFor",
     [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
+  );
+  const aaveRate = useContractReader(
+    contracts,
+    "ProviderAave",
+    "getBorrowRateFor",
+    ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
+  );
+  const compoundRate = useContractReader(
+    contracts,
+    "ProviderCompound",
+    "getBorrowRateFor",
+    ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
   );
 
   useEffect(() => {
@@ -220,6 +233,8 @@ function VaultETHDAI({ provider, address, setRoute }) {
           <SideHelper
             daiAmount={borrowAmount}
             ethAmount={collateralAmount}
+            aaveRate={aaveRate}
+            compoundRate={compoundRate}
           />
         </Grid>
       </Grid>
@@ -227,7 +242,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
   );
 }
 
-function SideHelper({ daiAmount, ethAmount }) {
+function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
   const classes = useStyles();
   const mainnetProvider = new JsonRpcProvider(
     "https://mainnet.infura.io/v3/f8481a1ed3b0466ead585fdbd71d8f95"
@@ -236,7 +251,10 @@ function SideHelper({ daiAmount, ethAmount }) {
 
   const ratio = ethAmount && daiAmount && price
     ? (ethAmount * price / daiAmount)
-    : 0
+    : 0;
+
+  const aaveR = parseFloat(`${aaveRate}`) / 1e27 * 100;
+  const compoundR = parseFloat(`${compoundRate}`) / 1e27 * 100;
 
   return (
     <Grid
@@ -280,12 +298,17 @@ function SideHelper({ daiAmount, ethAmount }) {
                 src="/Aave.png"
               />
               <Typography component="p" variant="h5">
-                6 %
+                {aaveR.toFixed(1)} %
               </Typography>
             </Box>
-            <Typography component="span" variant="subtitle1">
-              currently using
-            </Typography>
+            {compoundR > aaveR
+              ? (<>
+                  <CheckCircleIcon style={{ marginRight: "5px" }} />
+                  <Typography component="span" variant="subtitle1">
+                    currently using
+                  </Typography>
+                </>)
+              : '' }
           </Grid>
           <Grid item className={classes.statsRow}>
             <Box className={classes.providerBox}>
@@ -294,12 +317,17 @@ function SideHelper({ daiAmount, ethAmount }) {
                 src="/Compound.png"
               />
               <Typography component="p" variant="h5">
-                6 %
+                {compoundR.toFixed(1)} %
               </Typography>
-            </Box>
-            <Typography component="span" variant="subtitle1">
-              currently using
-            </Typography>
+              </Box>
+              {compoundR < aaveR
+                ? (<>
+                    <CheckCircleIcon style={{ marginRight: "5px" }} />
+                    <Typography component="span" variant="subtitle1">
+                      currently using
+                    </Typography>
+                  </>)
+                : '' }
           </Grid>
         </Grid>
       </Grid>
