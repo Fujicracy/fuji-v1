@@ -22,14 +22,14 @@ const useSideHelperStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "space-between",
     width: "222px",
-    height: "100px",
+    height: "90px",
     marginRight: theme.spacing(5),
     color: theme.palette.secondary.main,
     border: "5px solid" + theme.palette.primary.main,
     padding: theme.spacing(1, 4),
     borderRadius: 50,
     boxSizing: "border-box",
-    boxShadow: "15px 15px 4px rgba(0, 0, 0, 0.25)",
+    boxShadow: "inset -15px 15px 4px rgba(0, 0, 0, 0.25)",
   },
   collatRatioBox: {
     display: "flex",
@@ -63,8 +63,8 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
   return (
     <Grid
       container
-      direction="column"
       spacing={2}
+      justify="center"
     >
       <Grid item>
         <Typography variant="h5">
@@ -88,8 +88,6 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
         <Typography variant="h5">
           Providers
         </Typography>
-      </Grid>
-      <Grid item>
         <Grid
           container
           direction="column"

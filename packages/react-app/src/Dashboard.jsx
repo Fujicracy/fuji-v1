@@ -20,12 +20,14 @@ import SideHelper from "./SideHelper";
 const useStyles = makeStyles(theme => 
   createStyles({
     paper: {
-      marginTop: theme.spacing(2),
+      paddingTop: theme.spacing(7),
       textAlign: "left",
     },
     form: {
+      display: 'flex',
+      justifyContent: 'space-around',
       width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(7),
+      margin: theme.spacing(7, 0, 12),
     },
     switchRow: {
       border: "5px solid" + theme.palette.primary.main,
@@ -51,7 +53,7 @@ const useStyles = makeStyles(theme =>
     },
     collatInputText: {
       display: 'flex',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
     },
   })
 );
@@ -131,15 +133,24 @@ function Dashboard({ provider, address, setRoute }) {
         justify="space-around"
       >
         <Grid item md={11}>
+          <SideHelper
+            daiAmount={borrowAmount}
+            ethAmount={collateralAmount}
+            aaveRate={aaveRate}
+            compoundRate={compoundRate}
+          />
+        </Grid>
+        <Grid item md={11} style={{ padding: theme.spacing(4, 0, 0) }}>
           <Typography component="h1" variant="h4">
             Manage position
           </Typography>
-        </Grid>{
+        </Grid>
+        {
         !txConfirmation
-        ? <Grid item md={4}>
+        ? <Grid item md={12}>
             <form className={classes.form} noValidate>
-              <Grid container spacing={3} style={{ justifyContent: "center" }}>
-                <Grid item xs={12}>
+              <Grid container md={5} spacing={3}>
+                <Grid item>
                   <Tabs
                     centered
                     onChange={(_, action) => setCollateralAction(action)}
@@ -164,7 +175,7 @@ function Dashboard({ provider, address, setRoute }) {
                     />
                   </Tabs>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                   <Typography variant="body1">
                     Amount to {collateralAction === 0 ? "repay" : "borrow"}
                   </Typography>
@@ -201,8 +212,8 @@ function Dashboard({ provider, address, setRoute }) {
                   </Button>
                 </Grid>
               </Grid>
-              <Grid container spacing={3} style={{ justifyContent: "center", marginTop: theme.spacing(7) }}>
-                <Grid item xs={12}>
+              <Grid container md={5} spacing={3}>
+                <Grid item>
                   <Tabs
                     centered
                     onChange={(_, action) => setBorrowAction(action)}
@@ -227,7 +238,7 @@ function Dashboard({ provider, address, setRoute }) {
                     />
                   </Tabs>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                   <Box className={classes.collatInputText}>
                     <Typography variant="body1">
                       Collateral to {borrowAction === 0 ? "withdraw" : "deposit"}
@@ -277,14 +288,6 @@ function Dashboard({ provider, address, setRoute }) {
           </Grid>
         : ''
         }
-        <Grid item md={4}>
-          <SideHelper
-            daiAmount={borrowAmount}
-            ethAmount={collateralAmount}
-            aaveRate={aaveRate}
-            compoundRate={compoundRate}
-          />
-        </Grid>
       </Grid>
     </div>
   );
