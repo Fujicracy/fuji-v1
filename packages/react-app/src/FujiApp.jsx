@@ -16,6 +16,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 import FujiHome from "./FujiHome";
 import FujiVaults from "./FujiVaults";
 import VaultETHDAI from "./VaultETHDAI";
+import Dashboard from "./Dashboard";
 import FujiInfos from "./FujiInfos/FujiInfos";
 import FujiTeam from "./FujiTeam/FujiTeam";
 
@@ -25,7 +26,6 @@ const useStyles = makeStyles(theme =>
       fontSize: "x-large",
       fontStyle: "italic",
       textAlign: "center",
-      color: theme.palette.primary.main
     },
     header: {
       justifyContent: 'space-between',
@@ -107,7 +107,9 @@ function FujiApp(props) {
               : route === '/vaults'
               ? "Vaults"
               : route === '/vaults/ethdai'
-              ? "ETH/DAI"
+              ? "Vaults"
+              : route === '/dashboard'
+              ? "Dashboard"
               : "Other"
             }
             </Typography>
@@ -138,6 +140,13 @@ function FujiApp(props) {
                 address={address}
                 loadWeb3Modal={loadWeb3Modal}
                 setRoute={setRoute}
+              />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard
+                address={address}
+                setRoute={setRoute}
+                provider={userProvider}
               />
             </Route>
             <Route path="/vaults/ethdai">
