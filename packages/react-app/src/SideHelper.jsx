@@ -29,7 +29,7 @@ const useSideHelperStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 4),
     borderRadius: 50,
     boxSizing: "border-box",
-    boxShadow: "inset -15px 15px 4px rgba(0, 0, 0, 0.25)",
+    boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
   },
   collatRatioBox: {
     display: "flex",
@@ -42,7 +42,7 @@ const useSideHelperStyles = makeStyles(theme => ({
     border: "5px solid",
     borderRadius: "50%",
     boxSizing: "border-box",
-    boxShadow: "inset -14px 14px 4px rgba(0, 0, 0, 0.25)",
+    boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
   },
 }));
 
