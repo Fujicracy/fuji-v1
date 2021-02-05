@@ -216,7 +216,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
             />
           </Grid>
         }
-        <Grid item md={5}>
+        <Grid item md={4}>
           <SideHelper
             daiAmount={borrowAmount}
             ethAmount={collateralAmount}
@@ -321,6 +321,7 @@ function BorrowConfirmation({ daiAmount, ethAmount, aaveRate, compoundRate }) {
       </Grid>
       <Grid item style={{ textAlign: "center" }}>
         <Button
+          href="/dashboard"
           className={classes.submitBtn}
         >
           Manage my position

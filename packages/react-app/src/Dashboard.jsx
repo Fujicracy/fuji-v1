@@ -277,7 +277,7 @@ function Dashboard({ provider, address, setRoute }) {
           </Grid>
         : ''
         }
-        <Grid item md={5}>
+        <Grid item md={4}>
           <SideHelper
             daiAmount={borrowAmount}
             ethAmount={collateralAmount}
