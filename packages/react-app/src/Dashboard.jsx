@@ -94,12 +94,25 @@ function Dashboard({ provider, address, setRoute }) {
   );
   console.log(address)
   console.log(debt)
+  const activeProviderAddr = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "activeProvider",
+  );
+
+  const aaveAddr = contracts && contracts["ProviderAave"]
+    ? contracts["ProviderAave"].address
+    : '';
   const aaveRate = useContractReader(
     contracts,
     "ProviderAave",
     "getBorrowRateFor",
     ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
   );
+
+  const compoundAddr = contracts && contracts["ProviderCompound"]
+    ? contracts["ProviderCompound"].address
+    : '';
   const compoundRate = useContractReader(
     contracts,
     "ProviderCompound",
@@ -149,6 +162,7 @@ function Dashboard({ provider, address, setRoute }) {
             ethAmount={collateral}
             aaveRate={aaveRate}
             compoundRate={compoundRate}
+            activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
           />
         </Grid>
         <Grid item md={11} style={{ padding: theme.spacing(4, 0, 0) }}>

@@ -74,12 +74,25 @@ function VaultETHDAI({ provider, address, setRoute }) {
     "getNeededCollateralFor",
     [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
   );
+  const activeProviderAddr = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "activeProvider",
+  );
+
+  const aaveAddr = contracts && contracts["ProviderAave"]
+    ? contracts["ProviderAave"].address
+    : '';
   const aaveRate = useContractReader(
     contracts,
     "ProviderAave",
     "getBorrowRateFor",
     ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
   );
+
+  const compoundAddr = contracts && contracts["ProviderCompound"]
+    ? contracts["ProviderCompound"].address
+    : '';
   const compoundRate = useContractReader(
     contracts,
     "ProviderCompound",
@@ -215,8 +228,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
             <BorrowConfirmation
               daiAmount={borrowAmount}
               ethAmount={collateralAmount}
-              aaveRate={aaveRate}
-              compoundRate={compoundRate}
+              activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
             />
           </Grid>
         }
@@ -226,6 +238,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
             ethAmount={collateralAmount}
             aaveRate={aaveRate}
             compoundRate={compoundRate}
+            activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
           />
         </Grid>
       </Grid>
@@ -278,7 +291,7 @@ const useBorrowConfirmationStyles = makeStyles(theme => ({
   }
 }));
 
-function BorrowConfirmation({ daiAmount, ethAmount, aaveRate, compoundRate }) {
+function BorrowConfirmation({ daiAmount, ethAmount, activeProvider }) {
   const classes = useBorrowConfirmationStyles();
 
   return (
@@ -319,7 +332,7 @@ function BorrowConfirmation({ daiAmount, ethAmount, aaveRate, compoundRate }) {
             Current provider:
           </Typography>
           <Typography variant="h5" className={classes.rowLastEl}>
-            {aaveRate < compoundRate ? "Aave" : "Compound"}
+            {activeProvider}
           </Typography>
         </Box>
       </Grid>

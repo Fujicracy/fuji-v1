@@ -4,7 +4,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -28,6 +28,11 @@ const useSideHelperStyles = makeStyles(theme => ({
     boxSizing: "border-box",
     boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
   },
+  currentlyUsing: {
+    color: theme.palette.primary.main,
+    display: "flex",
+    alignItems: "center",
+  },
   collatRatioBox: {
     display: "flex",
     alignItems: "center",
@@ -43,7 +48,13 @@ const useSideHelperStyles = makeStyles(theme => ({
   },
 }));
 
-function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
+function SideHelper({
+  daiAmount,
+  ethAmount,
+  aaveRate,
+  compoundRate,
+  activeProvider
+}) {
   const classes = useSideHelperStyles();
   const mainnetProvider = new JsonRpcProvider(
     "https://mainnet.infura.io/v3/f8481a1ed3b0466ead585fdbd71d8f95"
@@ -99,13 +110,13 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
                 {aaveR.toFixed(1)} %
               </Typography>
             </Box>
-            {compoundR > aaveR
-              ? (<>
-                  <CheckCircleIcon style={{ marginRight: "5px" }} />
-                  <Typography component="span" variant="subtitle1">
+            {activeProvider === "Aave"
+              ? <Box className={classes.currentlyUsing}>
+                  <ArrowBackIcon style={{ marginRight: "10px" }} />
+                  <Typography component="span" variant="h5">
                     currently using
                   </Typography>
-                </>)
+                </Box>
               : '' }
           </Grid>
           <Grid item className={classes.statsRow}>
@@ -118,13 +129,13 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
                 {compoundR.toFixed(1)} %
               </Typography>
               </Box>
-              {compoundR < aaveR
-                ? (<>
-                    <CheckCircleIcon style={{ marginRight: "5px" }} />
-                    <Typography component="span" variant="subtitle1">
+              {activeProvider === "Compound"
+                ? <Box className={classes.currentlyUsing}>
+                    <ArrowBackIcon style={{ marginRight: "10px" }} />
+                    <Typography component="span" variant="h5">
                       currently using
                     </Typography>
-                  </>)
+                  </Box>
                 : '' }
           </Grid>
         </Grid>
