@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
-import { useUserProvider, useContractLoader, useContractReader } from "./hooks";
+import { useUserProvider } from "./hooks";
 import { INFURA_ID } from "./constants";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';

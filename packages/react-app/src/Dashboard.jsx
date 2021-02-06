@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useBalance, useContractReader, useContractLoader } from "./hooks";
@@ -8,7 +8,6 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tabs from '@material-ui/core/Tabs';
@@ -28,6 +27,10 @@ const useStyles = makeStyles(theme =>
       justifyContent: 'space-around',
       width: '100%', // Fix IE 11 issue.
       margin: theme.spacing(7, 0, 12),
+    },
+    pageTitle: {
+      fontWeight: "900",
+      color: theme.palette.primary.main,
     },
     switchRow: {
       border: "5px solid" + theme.palette.primary.main,
@@ -130,9 +133,9 @@ function Dashboard({ provider, address, setRoute }) {
     }
   }
 
-  const handleCollateralAction = (event, action) => {
-    console.log(action)
-  }
+  //const handleCollateralAction = (event, action) => {
+    //console.log(action)
+  //}
 
   return (
     <div className={classes.paper}>
@@ -149,7 +152,7 @@ function Dashboard({ provider, address, setRoute }) {
           />
         </Grid>
         <Grid item md={11} style={{ padding: theme.spacing(4, 0, 0) }}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" className={classes.pageTitle}>
             Manage position
           </Typography>
         </Grid>
@@ -160,7 +163,7 @@ function Dashboard({ provider, address, setRoute }) {
               <Grid container md={5} spacing={3} direction="column">
                 <Grid item>
                   <Tabs
-                    value={0}
+                    value={false}
                     centered
                     onChange={(_, action) => setCollateralAction(action)}
                     variant="fullWidth"
@@ -224,7 +227,7 @@ function Dashboard({ provider, address, setRoute }) {
               <Grid container md={5} spacing={3} direction="column">
                 <Grid item>
                   <Tabs
-                    value={0}
+                    value={false}
                     centered
                     onChange={(_, action) => setBorrowAction(action)}
                     variant="fullWidth"

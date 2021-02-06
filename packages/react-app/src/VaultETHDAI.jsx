@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useBalance, useContractReader, useContractLoader } from "./hooks";
@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
 import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
+//import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme =>
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing(10),
+    },
+    pageTitle: {
+      fontWeight: "900",
+      color: theme.palette.primary.main,
     },
     inputField: {
       padding: theme.spacing(0, 3),
@@ -116,7 +120,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
         justify="space-around"
       >
         <Grid item md={11}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" className={classes.pageTitle}>
             Borrow DAI
           </Typography>
         </Grid>{
@@ -129,7 +133,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
                     How it works
                   </Typography>
                   <Typography variant="subtitle1">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Please enter the amount of DAI you'd like to borrow and the amount of ETH to provide as collateral. The minimum required amount of collateral is suggested.
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -315,7 +319,7 @@ function BorrowConfirmation({ daiAmount, ethAmount, aaveRate, compoundRate }) {
             Current provider:
           </Typography>
           <Typography variant="h5" className={classes.rowLastEl}>
-            Aave
+            {aaveRate < compoundRate ? "Aave" : "Compound"}
           </Typography>
         </Box>
       </Grid>

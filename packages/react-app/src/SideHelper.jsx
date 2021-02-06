@@ -1,15 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useContractLoader, useExchangePrice } from "./hooks";
+import React from "react";
+import { useExchangePrice } from "./hooks";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useSideHelperStyles = makeStyles(theme => ({
   statsRow: {
@@ -78,8 +75,8 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
               {parseFloat(ratio).toFixed(2)}
             </Typography>
           </Box>
-          <Typography component="span" variant="subtitle1">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+          <Typography component="span" variant="subtitle1" style={{ maxWidth: "350px" }}>
+            This ratio represents the safety of your loan derived from the proportion of collateral versus amount borrowed. Keep it above 1 to avoid liquidation.
           </Typography>
         </Box>
       </Grid>

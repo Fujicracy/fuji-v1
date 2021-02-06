@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -14,10 +14,15 @@ const useStyles = makeStyles(theme =>
     },
     mainArea: {
       position: "fixed",
-      top: "35%"
+      top: "30%"
     },
     baseLine: {
       fontWeight: "900",
+      color: theme.palette.primary.main,
+    },
+    subtitle: {
+      color: theme.palette.secondary.main,
+      paddingBottom: theme.spacing(3),
     },
     footer: {
       position: "absolute",
@@ -48,8 +53,12 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
         className={classes.mainArea}
       >
         <Grid item md={6} style={{ paddingBottom: "50px" }}>
+          <Typography variant="h5" className={classes.subtitle}>
+            The first DeFi borrowing aggregator
+          </Typography>
           <Typography variant="h4" className={classes.baseLine}>
-            Fuji finds the best borrowing rates and automatically refinances your loan
+            Fuji finds the best borrowing rates and
+            constantly refinances your loan
           </Typography>
         </Grid>
         <Grid item>
@@ -75,21 +84,19 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
 
       <div className={classes.footer}>
         <Button href="about" type="primary">
-          FAQ
+          How it works
         </Button>
 
         <Button href="team" type="primary">
           Team
         </Button>
-      </div>
 
-      <div className={classes.footer}>
-        <Button href="about" type="primary">
-          FAQ
+        <Button href="https://twitter.com/FujiFinance" target="_blank" type="primary">
+          Twitter
         </Button>
 
-        <Button href="team" type="primary">
-          Team
+        <Button href="https://github.com/Fujicracy" target="_blank" type="primary">
+          Github
         </Button>
       </div>
     </div>
