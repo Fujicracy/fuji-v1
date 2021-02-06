@@ -107,7 +107,7 @@ function SideHelper({
                 src="/Aave.png"
               />
               <Typography component="p" variant="h5">
-                {aaveR.toFixed(1)} %
+                {aaveRate ? aaveR.toFixed(1) : "..."} %
               </Typography>
             </Box>
             {activeProvider === "Aave"
@@ -126,7 +126,7 @@ function SideHelper({
                 src="/Compound.png"
               />
               <Typography component="p" variant="h5">
-                {compoundR.toFixed(1)} %
+                {compoundRate ? compoundR.toFixed(1) : "..."} %
               </Typography>
               </Box>
               {activeProvider === "Compound"
