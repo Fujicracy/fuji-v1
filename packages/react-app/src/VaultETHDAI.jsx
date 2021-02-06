@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useBalance, useContractReader, useContractLoader } from "./hooks";
 import { Transactor } from "./helpers";
+import { DAI_ADDRESS } from "./constants";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -87,7 +88,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
     contracts,
     "ProviderAave",
     "getBorrowRateFor",
-    ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
+    [DAI_ADDRESS]
   );
 
   const compoundAddr = contracts && contracts["ProviderCompound"]
@@ -97,7 +98,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
     contracts,
     "ProviderCompound",
     "getBorrowRateFor",
-    ["0x6B175474E89094C44Da98b954EedeAC495271d0F"]
+    [DAI_ADDRESS]
   );
 
   useEffect(() => {
