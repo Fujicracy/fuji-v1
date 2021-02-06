@@ -105,34 +105,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_vaultAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_newProviderAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_borrowAsset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "initiateFlashLoan",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "newThreshold",
         "type": "uint256"

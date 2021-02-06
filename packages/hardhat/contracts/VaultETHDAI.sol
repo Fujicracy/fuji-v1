@@ -3,13 +3,9 @@
 pragma solidity >=0.4.25 <0.7.0;
 
 import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
-import { WadRayMath } from "./aave-debt-token/WadRayMath.sol";
-import { VariableDebtToken } from "./aave-debt-token/VariableDebtToken.sol";
+import { DebtToken } from "./DebtToken.sol";
 import "./LibUniERC20.sol";
 import "./IProvider.sol";
-
-// DEBUG
-import "hardhat/console.sol";
 
 interface IVault {
   function activeProvider() external view returns(address);
@@ -21,20 +17,28 @@ interface IVault {
   function setActiveProvider(address _provider) external;
 }
 
+interface IController {
+  function doControllerRoutine(address _vault) external returns(bool);
+}
+
 contract VaultETHDAI is IVault {
+
   using SafeMath for uint256;
-  using WadRayMath for uint256;
   using UniERC20 for IERC20;
 
   AggregatorV3Interface public oracle;
 
+  //Base Struct Object to define Safety factor
+  //a divided by b represent the factor example 1.2, or +20%, is (a/b)= 6/5
   struct Factor {
     uint256 a;
     uint256 b;
   }
-  //  a divided by b represent Safety factor, example 1.2, or +20%, is (a/b)= 6/5
+
+  //Safety factor
   Factor public safetyF;
-  //  a divided by b represent collateralization factor
+
+  //Collateralization factor
   Factor public collatF;
   uint256 internal constant BASE = 1e18;
 
@@ -45,15 +49,29 @@ contract VaultETHDAI is IVault {
   address[] public providers;
   address public override activeProvider;
 
-  //Vault Assets
+  //Managed assets in this Vault
   address public override collateralAsset = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE); // ETH
   address public override borrowAsset = address(0x6B175474E89094C44Da98b954EedeAC495271d0F); // DAI
 
-  VariableDebtToken debtToken;
+  DebtToken debtToken;
+
+  	// Log Users deposit
+	event Deposit(address userAddrs,uint256 amount);
+	// Log Users borrow
+	event Borrow(address userAddrs,uint256 amount);
+	// Log Users debt repay
+	event Repay(address userAddrs,uint256 amount);
+	// Log Users withdraw
+	event Withdraw(address userAddrs,uint256 amount);
+	// Log New active provider
+	event SetActiveProvider(address providerAddrs);
+	// Log Switch providers
+	event Switch(address fromProviderAddrs,address toProviderAddrs);
+
 
   mapping(address => uint256) public collaterals;
 
-  // balance of all available collateral in ETH
+  //Balance of all available collateral in ETH
   uint256 public collateralBalance;
 
   modifier isAuthorized() {
@@ -71,7 +89,6 @@ contract VaultETHDAI is IVault {
     oracle = AggregatorV3Interface(_oracle);
     owner = _owner;
 
-
     // + 5%
     safetyF.a = 21;
     safetyF.b = 20;
@@ -81,13 +98,24 @@ contract VaultETHDAI is IVault {
     collatF.b = 4;
   }
 
+  //Core functions
+
+  /**
+  * @dev Deposits collateral and borrows underlying in a single function call from activeProvider
+  * @param _collateralAmount to be deposited, and _borrowAmount of underlying
+  */
   function depositAndBorrow(uint256 _collateralAmount, uint256 _borrowAmount) external payable {
     deposit(_collateralAmount);
     borrow(_borrowAmount);
   }
 
+  /**
+  * @dev Deposit Vault's type collateral to activeProvider
+  * call Controller checkrates
+  * @param _collateralAmount: to be deposited
+  * Emits a {Deposit} event.
+  */
   function deposit(uint256 _collateralAmount) public payable {
-    // TODO
     require(msg.value == _collateralAmount, "Collateral amount not the same as sent amount");
 
     uint256 currentBalance = redeemableCollateralBalance();
@@ -107,10 +135,21 @@ contract VaultETHDAI is IVault {
 
     uint256 providedCollateral = collaterals[msg.sender];
     collaterals[msg.sender] = providedCollateral.add(_collateralAmount);
+
+    emit Deposit(msg.sender, _collateralAmount);
+
+    IController fujiTroller = IController(controller);
+    fujiTroller.doControllerRoutine(address(this));
   }
 
+  /**
+  * @dev Withdraws Vault's type collateral from activeProvider
+  * call Controller checkrates
+  * @param _withdrawAmount: amount of collateral to withdraw
+  * Emits a {Withdraw} event.
+  */
   function withdraw(uint256 _withdrawAmount) public {
-    // TODO
+
     uint256 providedCollateral = collaterals[msg.sender];
 
     require(
@@ -138,10 +177,20 @@ contract VaultETHDAI is IVault {
     collaterals[msg.sender] = providedCollateral.sub(_withdrawAmount);
     IERC20(collateralAsset).uniTransfer(msg.sender, _withdrawAmount);
     collateralBalance = collateralBalance.sub(_withdrawAmount);
+
+    emit Withdraw(msg.sender, _withdrawAmount);
+
+    IController fujiTroller = IController(controller);
+    fujiTroller.doControllerRoutine(address(this));
   }
 
+  /**
+  * @dev Borrows Vault's type underlying amount from activeProvider
+  * @param _borrowAmount: token amount of underlying to borrow
+  * Emits a {Borrow} event.
+  */
   function borrow(uint256 _borrowAmount) public {
-    // TODO
+
     uint256 providedCollateral = collaterals[msg.sender];
 
     // get needed collateral for already existing positions
@@ -153,10 +202,6 @@ contract VaultETHDAI is IVault {
 
     require(providedCollateral > neededCollateral, "Not enough collateral provided");
 
-    console.log("Borrow Balance:");
-    console.log(borrowBalance());
-    console.log("Total supply");
-    console.log(debtToken.totalSupply());
     if (debtToken.totalSupply() > 0 && borrowBalance() > 0) {
       debtToken.updateState(
         borrowBalance().sub(debtToken.totalSupply())
@@ -177,11 +222,16 @@ contract VaultETHDAI is IVault {
       msg.sender,
       _borrowAmount
     );
+
+    emit Borrow(msg.sender, _borrowAmount);
   }
 
+  /**
+  * @dev Paybacks Vault's type underlying to activeProvider
+  * @param _repayAmount: token amount of underlying to repay
+  * Emits a {Repay} event.
+  */
   function payback(uint256 _repayAmount) public payable {
-    // TODO
-    uint256 providedCollateral = collaterals[msg.sender];
 
     require(
       IERC20(borrowAsset).allowance(msg.sender, address(this)) >= _repayAmount,
@@ -205,8 +255,16 @@ contract VaultETHDAI is IVault {
       msg.sender,
       _repayAmount
     );
+
+    emit Repay(msg.sender, _repayAmount);
   }
 
+  /**
+  * @dev Changes Vault debt and collateral to a newProvider, called by Controller
+  * @param _newProvider new provider fuji address
+  * @param _flashLoanDebt amount of flashloan underlying to repay Flashloan
+  * Emits a {Switch} event.
+  */
   function fujiSwitch(address _newProvider, uint256 _flashLoanDebt) public override payable {
     uint256 borrowBalance = borrowBalance();
 
@@ -249,15 +307,30 @@ contract VaultETHDAI is IVault {
     );
     execute(address(_newProvider), data);
 
+    debtToken.updateState(
+      _flashLoanDebt.sub(debtToken.totalSupply())
+    );
+
     // return borrowed amount to Flasher
     IERC20(borrowAsset).uniTransfer(msg.sender, _flashLoanDebt);
+
+    emit Switch(activeProvider, _newProvider);
   }
 
-  // TODO isAuthorized
+  //Administrative functions
+
+  /**
+  * @dev Sets the debtToken address to the Vault
+  * @param _debtToken: fuji debt token address
+  */
   function setDebtToken(address _debtToken) external {
-    debtToken = VariableDebtToken(_debtToken);
+    debtToken = DebtToken(_debtToken);
   }
 
+  /**
+  * @dev Adds a provider to the Vault
+  * @param _provider: new provider fuji address
+  */
   function addProvider(address _provider) external isAuthorized {
     bool alreadyincluded = false;
 
@@ -278,6 +351,10 @@ contract VaultETHDAI is IVault {
     }
   }
 
+  /**
+  * @dev Returns the amount of collateral needed, including safety factors
+  * @param _amount: Vault underlying type intended to be borrowed
+  */
   function getNeededCollateralFor(uint256 _amount) public view returns(uint256) {
     // get price of DAI in ETH
     (,int256 latestPrice,,,) = oracle.latestRoundData();
@@ -291,6 +368,10 @@ contract VaultETHDAI is IVault {
         .div(BASE);
   }
 
+  /**
+  * @dev Returns the amount of collateral of a user address
+  * @param _user: address of the user
+  */
   function getCollateralShareOf(address _user) public view returns(uint256 share) {
     uint256 providedCollateral = collaterals[_user];
     if (providedCollateral == 0) {
@@ -301,16 +382,29 @@ contract VaultETHDAI is IVault {
     }
   }
 
-
+  /**
+  * @dev Returns the redeermable amount of collateral of a user address
+  * @param _user: address of the user
+  */
   function getRedeemableAmountOf(address _user) public view returns(uint256 share) {
     uint256 collateralShare = getCollateralShareOf(_user);
     share = redeemableCollateralBalance().mul(collateralShare).div(BASE);
   }
 
+  /**
+  * @dev Sets a new active provider for the Vault
+  * @param _provider: fuji address of the new provider
+  * Emits a {SetActiveProvider} event.
+  */
   function setActiveProvider(address _provider) external override isAuthorized {
     activeProvider = _provider;
+
+    emit SetActiveProvider(_provider);
   }
 
+  /**
+  * @dev Returns the amount of redeemable collateral from an active provider
+  */
   function redeemableCollateralBalance() public view returns(uint256) {
     address redeemable = IProvider(activeProvider).getRedeemableAddress(collateralAsset);
     return IERC20(redeemable).balanceOf(address(this));
@@ -318,14 +412,25 @@ contract VaultETHDAI is IVault {
     //return IERC20(0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5).balanceOf(address(this)); // Compound cETH
   }
 
+  /**
+  * @dev Returns the total borrow balance of the Vault's type underlying at active provider
+  */
   function borrowBalance() public override returns(uint256) {
     return IProvider(activeProvider).getBorrowBalance(borrowAsset);
   }
 
+  /**
+  * @dev Returns an array of the Vault's providers
+  */
   function getProviders() external view override returns(address[] memory) {
     return providers;
   }
 
+  //Internal functions
+
+  /**
+  * @dev Returns byte response of delegatcalls
+  */
   function execute(
     address _target,
     bytes memory _data

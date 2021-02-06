@@ -22,7 +22,10 @@ contract Flasher is IFlashLoanReceiver {
 
   address constant LENDING_POOL = 0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9;
 
-  //This Operation is called and required by Aave FlashLoan
+  /**
+  * @dev Executes Aave Flashloan, this Operation is required and called by
+    Aaveflashloan, refer to Aave Flasloan Documentation
+  */
   function executeOperation(
     address[] calldata assets,
     uint256[] calldata amounts,
