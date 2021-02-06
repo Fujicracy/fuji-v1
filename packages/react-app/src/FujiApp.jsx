@@ -11,6 +11,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import FujiHome from "./FujiHome";
@@ -44,16 +45,13 @@ const useStyles = makeStyles(theme =>
       padding: "1px 15px",
       boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
     },
-    titleRounded: {
-      margin: "0 10px",
+    walletAddr: {
       background: "#fff",
       color: theme.palette.secondary.main,
       fontWeight: "900",
-      padding: "5px 0",
+      padding: "5px 13px",
       boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
       borderRadius: "50px",
-      maxWidth: "50%",
-      flex: 1
     },
     logo: {
       background: "#fff",
@@ -107,27 +105,31 @@ function FujiApp(props) {
               : route === '/vaults'
               ? "Vaults"
               : route === '/vaults/ethdai'
-              ? "Vaults"
+              ? "ETH/DAI"
               : route === '/dashboard'
               ? "Dashboard"
               : "Other"
             }
             </Typography>
           </Toolbar>
-          <Typography
-            component="h1"
-            variant="h4"
-            className={classes.titleRounded}
-          >
-            Borrowing Agreggator
-          </Typography>
-          <Toolbar>
-            <Avatar
-              alt="Fuji Logo"
-              variant="square"
-              src="/logo192.png"
-              className={classes.logo}
-            />
+          <Toolbar>{
+            address
+            ? (<>
+                <FiberManualRecordIcon style={{ color: "limegreen" }} />
+                <Typography
+                  variant="h5"
+                  className={classes.walletAddr}
+                >
+                  {address.substr(0, 5) + "..." + address.substr(-4, 4)}
+                </Typography>
+              </>)
+            : <Avatar
+                alt="Fuji Logo"
+                variant="square"
+                src="/logo192.png"
+                className={classes.logo}
+              />
+            }
           </Toolbar>
         </Toolbar>
       </AppBar>

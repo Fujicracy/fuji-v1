@@ -83,14 +83,14 @@ function Dashboard({ provider, address, setRoute }) {
     "getNeededCollateralFor",
     [amount ? parseUnits(`${amount}`) : ''],
   );
-  //const debt = useContractReader(
-    //contracts,
-    //"VariableDebtToken",
-    //"balanceOf",
-    //[address]
-  //);
-  //console.log(address)
-  //console.log(debt)
+  const debt = useContractReader(
+    contracts,
+    "VariableDebtToken",
+    "balanceOf",
+    [address]
+  );
+  console.log(address)
+  console.log(debt)
   const aaveRate = useContractReader(
     contracts,
     "ProviderAave",
