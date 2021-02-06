@@ -48,6 +48,10 @@ const useSideHelperStyles = makeStyles(theme => ({
   },
 }));
 
+const mainnetProvider = new JsonRpcProvider(
+  "https://eth-mainnet.alchemyapi.io/v2/kXCJNELs1PVaRNffous3Uytnw4A7BJUr"
+);
+
 function SideHelper({
   daiAmount,
   ethAmount,
@@ -56,9 +60,6 @@ function SideHelper({
   activeProvider
 }) {
   const classes = useSideHelperStyles();
-  const mainnetProvider = new JsonRpcProvider(
-    "https://mainnet.infura.io/v3/f8481a1ed3b0466ead585fdbd71d8f95"
-  );
   const price = useExchangePrice(mainnetProvider);
 
   const ratio = ethAmount && daiAmount && price
@@ -80,10 +81,10 @@ function SideHelper({
         <Box className={classes.statsRow}>
           <Box
             className={classes.collatRatioBox}
-            style={{ borderColor: ratio < 1.35 ? 'red' : 'blue' }}
+            style={{ borderColor: ratio < 1.35 ? "red" : "blue" }}
           >
             <Typography component="p" variant="h4">
-              {parseFloat(ratio).toFixed(2)}
+              {ratio ? parseFloat(ratio).toFixed(2) : "..."}
             </Typography>
           </Box>
           <Typography component="span" variant="subtitle1" style={{ maxWidth: "350px" }}>

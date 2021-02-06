@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useContractLoader } from "./hooks";
+import { useBalance, useContractReader, useContractLoader, useExternalContractLoader } from "./hooks";
 import { Transactor } from "./helpers";
-import { DAI_ADDRESS } from "./constants";
+import { DAI_ADDRESS, DAI_ABI } from "./constants";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -20,16 +20,20 @@ import SideHelper from "./SideHelper";
 const useStyles = makeStyles(theme => 
   createStyles({
     paper: {
-      paddingTop: theme.spacing(7),
+      paddingTop: theme.spacing(2),
       textAlign: "left",
     },
     form: {
-      display: 'flex',
-      justifyContent: 'space-around',
+      display: "flex",
+      justifyContent: "space-around",
       width: '100%', // Fix IE 11 issue.
       margin: theme.spacing(7, 0, 12),
     },
-    pageTitle: {
+    rowSpaceBetween: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    blueTitle: {
       fontWeight: "900",
       color: theme.palette.primary.main,
     },
@@ -55,10 +59,6 @@ const useStyles = makeStyles(theme =>
     marginAdorn: {
       margin: theme.spacing(2),
     },
-    collatInputText: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
   })
 );
 
@@ -80,17 +80,31 @@ function Dashboard({ provider, address, setRoute }) {
     setRoute(location.pathname);
   }, [location, setRoute]);
 
-  const contracts = useContractLoader(provider);
-  const neededCollateral = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "getNeededCollateralFor",
-    [amount ? parseUnits(`${amount}`) : ''],
+  const DAIContract = useExternalContractLoader(provider, DAI_ADDRESS, DAI_ABI);
+  const daiBalance = useContractReader(
+    { DAI: DAIContract },
+    "DAI",
+    "balanceOf",
+    [address]
   );
+
+  const contracts = useContractLoader(provider);
+  //const neededCollateral = useContractReader(
+    //contracts,
+    //"VaultETHDAI",
+    //"getNeededCollateralFor",
+    //[amount ? parseUnits(`${amount}`) : ''],
+  //);
   const debtBalance = useContractReader(
     contracts,
     "DebtToken",
     "balanceOf",
+    [address]
+  );
+  const collateralBalance = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "collaterals",
     [address]
   );
   const activeProviderAddr = useContractReader(
@@ -119,14 +133,14 @@ function Dashboard({ provider, address, setRoute }) {
     [DAI_ADDRESS]
   );
 
-  useEffect(() => {
-    if (neededCollateral && collateral >= formatUnits(neededCollateral)) {
-      setDisableSubmit(false);
-    }
-    else {
-      setDisableSubmit(true);
-    }
-  }, [collateral, neededCollateral]);
+  //useEffect(() => {
+    //if (neededCollateral && collateral >= formatUnits(neededCollateral)) {
+      //setDisableSubmit(false);
+    //}
+    //else {
+      //setDisableSubmit(true);
+    //}
+  //}, [collateral, neededCollateral]);
 
   const tx = Transactor(provider);
   const handleSubmit = async () => {
@@ -155,25 +169,36 @@ function Dashboard({ provider, address, setRoute }) {
         container
         justify="space-around"
       >
+        <Grid item md={11} style={{ paddingBottom: theme.spacing(4) }}>
+          <Typography component="h1" variant="h3" className={classes.blueTitle}>
+            Manage position
+          </Typography>
+        </Grid>
         <Grid item md={11}>
           <SideHelper
-            daiAmount={amount}
-            ethAmount={collateral}
+            daiAmount={debtBalance}
+            ethAmount={collateralBalance}
             aaveRate={aaveRate}
             compoundRate={compoundRate}
             activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
           />
-        </Grid>
-        <Grid item md={11} style={{ padding: theme.spacing(4, 0, 0) }}>
-          <Typography component="h1" variant="h4" className={classes.pageTitle}>
-            Manage position
-          </Typography>
         </Grid>
         {
         !txConfirmation
         ? <Grid item md={12}>
             <form className={classes.form} noValidate>
               <Grid container md={5} spacing={3} direction="column">
+                <Grid item className={classes.rowSpaceBetween}>
+                  <Typography variant="h4" className={classes.blueTitle}>
+                    Debt:
+                  </Typography>
+                  <Typography variant="h4" className={classes.blueTitle}>
+                    {debtBalance
+                      ? parseFloat(formatUnits(debtBalance)).toFixed(2) + " DAI"
+                      : "loading..."
+                    }
+                  </Typography>
+                </Grid>
                 <Grid item>
                   <Tabs
                     value={false}
@@ -201,14 +226,18 @@ function Dashboard({ provider, address, setRoute }) {
                   </Tabs>
                 </Grid>
                 <Grid item>
-                  <Typography variant="body1">
-                    Amount to {collateralAction === 0 ? "repay" : "borrow"}
-                  </Typography>
+                  <Box className={classes.rowSpaceBetween}>
+                    <Typography variant="body1">
+                      Amount to {collateralAction === 0 ? "repay" : "borrow"}
+                    </Typography>
+                    <Typography variant="body1">
+                      Wallet balance: {daiBalance ? formatUnits(daiBalance) : '...'}
+                    </Typography>
+                  </Box>
                   <TextField
                     className={classes.inputField}
                     required
                     fullWidth
-                    placeholder="1000"
                     autoComplete="off"
                     id="amount"
                     name="amount"
@@ -238,6 +267,17 @@ function Dashboard({ provider, address, setRoute }) {
                 </Grid>
               </Grid>
               <Grid container md={5} spacing={3} direction="column">
+                <Grid item className={classes.rowSpaceBetween}>
+                  <Typography variant="h4" className={classes.blueTitle}>
+                    Collateral:
+                  </Typography>
+                  <Typography variant="h4" className={classes.blueTitle}>
+                    {collateralBalance
+                      ? parseFloat(formatEther(collateralBalance)).toFixed(2) + " ETH"
+                      : "loading..."
+                    }
+                  </Typography>
+                </Grid>
                 <Grid item>
                   <Tabs
                     value={false}
@@ -265,7 +305,7 @@ function Dashboard({ provider, address, setRoute }) {
                   </Tabs>
                 </Grid>
                 <Grid item>
-                  <Box className={classes.collatInputText}>
+                  <Box className={classes.rowSpaceBetween}>
                     <Typography variant="body1">
                       Collateral to {borrowAction === 0 ? "withdraw" : "deposit"}
                     </Typography>
@@ -282,11 +322,6 @@ function Dashboard({ provider, address, setRoute }) {
                     type="tel"
                     id="collateral"
                     variant="outlined"
-                    placeholder={
-                      neededCollateral
-                      ? "min " + parseFloat(formatUnits(neededCollateral)).toFixed(3)
-                      : ""
-                    }
                     onChange={({ target }) => setCollateral(target.value)}
                     InputProps={{
                       endAdornment: (

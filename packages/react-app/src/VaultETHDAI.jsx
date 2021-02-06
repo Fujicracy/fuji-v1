@@ -112,13 +112,14 @@ function VaultETHDAI({ provider, address, setRoute }) {
 
   const tx = Transactor(provider);
   const handleSubmit = async () => {
-    const res = await tx(
-      contracts.VaultETHDAI.depositAndBorrow(
-        parseEther(collateralAmount),
-        parseUnits(borrowAmount),
-        { value: parseEther(collateralAmount) }
-      )
-    );
+    const res = await contracts
+        .VaultETHDAI
+        .depositAndBorrow(
+          parseEther(collateralAmount),
+          parseUnits(borrowAmount),
+          { value: parseEther(collateralAmount) }
+        );
+
     if (res && res.hash) {
       setTxConfirmation(true);
     }
