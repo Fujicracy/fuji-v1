@@ -63,8 +63,7 @@ function SideHelper({ daiAmount, ethAmount, aaveRate, compoundRate }) {
   return (
     <Grid
       container
-      spacing={2}
-      justify="center"
+      spacing={6}
     >
       <Grid item>
         <Typography variant="h5">

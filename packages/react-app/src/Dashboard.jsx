@@ -65,8 +65,8 @@ function Dashboard({ provider, address, setRoute }) {
 
   const [collateralAction, setCollateralAction] = useState(0);
   const [borrowAction, setBorrowAction] = useState(0);
-  const [borrowAmount, setBorrowAmount] = useState('1000');
-  const [collateralAmount, setCollateralAmount] = useState('');
+  const [amount, setAmount] = useState('1000');
+  const [collateral, setCollateral] = useState('');
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [txConfirmation, setTxConfirmation] = useState(false);
 
@@ -81,8 +81,16 @@ function Dashboard({ provider, address, setRoute }) {
     contracts,
     "VaultETHDAI",
     "getNeededCollateralFor",
-    [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
+    [amount ? parseUnits(`${amount}`) : ''],
   );
+  //const debt = useContractReader(
+    //contracts,
+    //"VariableDebtToken",
+    //"balanceOf",
+    //[address]
+  //);
+  //console.log(address)
+  //console.log(debt)
   const aaveRate = useContractReader(
     contracts,
     "ProviderAave",
@@ -97,21 +105,21 @@ function Dashboard({ provider, address, setRoute }) {
   );
 
   useEffect(() => {
-    if (neededCollateral && collateralAmount >= formatUnits(neededCollateral)) {
+    if (neededCollateral && collateral >= formatUnits(neededCollateral)) {
       setDisableSubmit(false);
     }
     else {
       setDisableSubmit(true);
     }
-  }, [collateralAmount, neededCollateral]);
+  }, [collateral, neededCollateral]);
 
   const tx = Transactor(provider);
   const handleSubmit = async () => {
     const res = await tx(
       contracts.VaultETHDAI.depositAndBorrow(
-        parseEther(collateralAmount),
-        parseUnits(borrowAmount),
-        { value: parseEther(collateralAmount) }
+        parseEther(collateral),
+        parseUnits(amount),
+        { value: parseEther(collateral) }
       )
     );
     if (res && res.hash) {
@@ -134,8 +142,8 @@ function Dashboard({ provider, address, setRoute }) {
       >
         <Grid item md={11}>
           <SideHelper
-            daiAmount={borrowAmount}
-            ethAmount={collateralAmount}
+            daiAmount={amount}
+            ethAmount={collateral}
             aaveRate={aaveRate}
             compoundRate={compoundRate}
           />
@@ -149,9 +157,10 @@ function Dashboard({ provider, address, setRoute }) {
         !txConfirmation
         ? <Grid item md={12}>
             <form className={classes.form} noValidate>
-              <Grid container md={5} spacing={3}>
+              <Grid container md={5} spacing={3} direction="column">
                 <Grid item>
                   <Tabs
+                    value={0}
                     centered
                     onChange={(_, action) => setCollateralAction(action)}
                     variant="fullWidth"
@@ -185,11 +194,11 @@ function Dashboard({ provider, address, setRoute }) {
                     fullWidth
                     placeholder="1000"
                     autoComplete="off"
-                    id="borrowAmount"
-                    name="borrowAmount"
+                    id="amount"
+                    name="amount"
                     type="tel"
                     variant="outlined"
-                    onChange={({ target }) => setBorrowAmount(target.value)}
+                    onChange={({ target }) => setAmount(target.value)}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -212,9 +221,10 @@ function Dashboard({ provider, address, setRoute }) {
                   </Button>
                 </Grid>
               </Grid>
-              <Grid container md={5} spacing={3}>
+              <Grid container md={5} spacing={3} direction="column">
                 <Grid item>
                   <Tabs
+                    value={0}
                     centered
                     onChange={(_, action) => setBorrowAction(action)}
                     variant="fullWidth"
@@ -252,16 +262,16 @@ function Dashboard({ provider, address, setRoute }) {
                     required
                     fullWidth
                     autoComplete="off"
-                    name="collateralAmount"
+                    name="collateral"
                     type="tel"
-                    id="collateralAmount"
+                    id="collateral"
                     variant="outlined"
                     placeholder={
                       neededCollateral
                       ? "min " + parseFloat(formatUnits(neededCollateral)).toFixed(3)
                       : ""
                     }
-                    onChange={({ target }) => setCollateralAmount(target.value)}
+                    onChange={({ target }) => setCollateral(target.value)}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
