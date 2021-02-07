@@ -52,7 +52,7 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
         alignItems="center"
         className={classes.mainArea}
       >
-        <Grid item md={6} style={{ paddingBottom: "50px" }}>
+        <Grid item md={6}>
           <Typography variant="h5" className={classes.subtitle}>
             The first DeFi borrowing aggregator
           </Typography>
@@ -61,7 +61,7 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
             constantly refinances your loan
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item style={{ padding: "60px 0" }}>
           <Button
             href="about"
             className={classes.mainBtn}
@@ -69,6 +69,9 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
           >
             How it works
           </Button>
+        </Grid>
+        <Grid item>
+          <iframe width="600" height="350" src="https://www.youtube.com/embed/GfwYYfmjYf8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
         </Grid>
       </Grid>
 
