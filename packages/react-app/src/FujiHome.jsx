@@ -12,10 +12,6 @@ const useStyles = makeStyles(theme =>
       fontSize: "1.1em",
       fontWeight: "900",
     },
-    mainArea: {
-      position: "fixed",
-      top: "30%"
-    },
     baseLine: {
       fontWeight: "900",
       color: theme.palette.primary.main,
@@ -31,7 +27,10 @@ const useStyles = makeStyles(theme =>
       bottom: 0,
       left: 0,
       right: 0
-    }
+    },
+    footerBtn: {
+      backgroundColor: "#fff",
+    },
   })
 );
 
@@ -50,7 +49,6 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.mainArea}
       >
         <Grid item md={6}>
           <Typography variant="h5" className={classes.subtitle}>
@@ -76,15 +74,15 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
       </Grid>
 
       <div className={classes.footer}>
-        <Button href="team" type="primary">
+        <Button href="team" type="primary" className={classes.footerBtn}>
           Team
         </Button>
 
-        <Button href="https://twitter.com/FujiFinance" target="_blank" type="primary">
+        <Button href="https://twitter.com/FujiFinance" target="_blank" type="primary" className={classes.footerBtn}>
           Twitter
         </Button>
 
-        <Button href="https://github.com/Fujicracy" target="_blank" type="primary">
+        <Button href="https://github.com/Fujicracy" target="_blank" type="primary" className={classes.footerBtn}>
           Github
         </Button>
       </div>
