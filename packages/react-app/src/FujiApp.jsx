@@ -78,11 +78,11 @@ function FujiApp(props) {
     setInjectedProvider(new Web3Provider(provider));
   }, [setInjectedProvider]);
 
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-  }, [loadWeb3Modal]);
+  //useEffect(() => {
+    //if (web3Modal.cachedProvider) {
+      //loadWeb3Modal();
+    //}
+  //}, [loadWeb3Modal]);
 
   return (
     <div className={classes.root}> 

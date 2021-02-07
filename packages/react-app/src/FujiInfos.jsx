@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme =>
       padding: theme.spacing(2, 0, 3),
     },
     section: {
+      padding: theme.spacing(6, 0),
       textAlign: "left",
     },
     item: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme =>
     },
     title: {
       fontWeight: "900",
-      color: theme.palette.primary.main,
+      color: theme.palette.secondary.main,
       paddingBottom: theme.spacing(2),
     },
     text: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme =>
       fontStyle: "normal",
       "& span": {
         fontWeight: "700",
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
       }
     },
     demoImg: {
@@ -56,7 +57,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
         container
         className={classes.section}
       >
-        <Grid item md={5} className={classes.item}>
+        <Grid item md={4} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             What is Fuji Borrow
           </Typography>
@@ -64,15 +65,9 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
             Fuji Borrow is a protocol that pools user funds together and continuously scouts multiple lending protocols  to provide its users with the lowest interest rate available.
           </Typography>
         </Grid>
-      </Grid>
-
-      <Grid
-        container
-        className={classes.section}
-      >
-        <Grid item md={7}>
+        <Grid item md={2}>
         </Grid>
-        <Grid item md={5} className={classes.item}>
+        <Grid item md={6} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             Why we are building it
           </Typography>
@@ -93,10 +88,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
       >
         <Grid item md={5} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
-            How it works
-          </Typography>
-          <Typography variant="subtitle1" className={classes.text}>
-            The protocol architecture includes the following elements:
+            Protocol Architecture
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
             A <span>Vault</span> which handles user interaction and controls the assets.
@@ -117,7 +109,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
           <img
             className={classes.demoImg}
             src="/step1.png"
-            title="Deposit-Borrow"
+            title="Protocol Architecture"
           />
         </Grid>
       </Grid>
@@ -132,7 +124,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
           <img
             className={classes.demoImg}
             src="/step2.png"
-            title="Deposit-Borrow"
+            title="Flashloan"
           />
         </Grid>
         <Grid item md={1}>
@@ -154,10 +146,12 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
       </Grid>
       <Grid
         container
-        style={{ padding: "48px 0" }}
         className={classes.section}
       >
         <Grid item md={7} className={classes.item}>
+          <Typography variant="h5" className={classes.title}>
+            Vision
+          </Typography>
           <Typography variant="subtitle1" className={classes.text}>
             Borrowing rate aggregators such as Fuji Borrow are needed as an essential block of DeFi.
           </Typography>

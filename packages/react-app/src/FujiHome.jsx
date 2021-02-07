@@ -62,31 +62,17 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
           </Typography>
         </Grid>
         <Grid item>
-        {
-          !address
-          ? <Button
-              onClick={loadWeb3Modal}
-              className={classes.mainBtn}
-              size="large"
-            >
-              Connect Wallet
-            </Button>
-          : <Button
-              href="vaults"
-              className={classes.mainBtn}
-              size="large"
-            >
-              Launch App
-            </Button>
-        }
+          <Button
+            href="about"
+            className={classes.mainBtn}
+            size="large"
+          >
+            How it works
+          </Button>
         </Grid>
       </Grid>
 
       <div className={classes.footer}>
-        <Button href="about" type="primary">
-          How it works
-        </Button>
-
         <Button href="team" type="primary">
           Team
         </Button>
