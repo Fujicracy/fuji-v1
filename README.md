@@ -1,4 +1,4 @@
-# **🗻Fuji Finance **
+# 🗻Fuji Finance
 
 > Borrowing Rates Aggregator (built on MarketMake hackathon)
 
