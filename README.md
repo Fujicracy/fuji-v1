@@ -1,4 +1,4 @@
-# **🗻Fuji Finance :**
+# **🗻Fuji Finance **
 
 > Borrowing Rates Aggregator (built on MarketMake hackathon)
 
@@ -18,10 +18,15 @@ The first step toward the aggregation of borrowing rates is to understand the "l
 
 The product architecture includes 5 main elements:
 • A Vault contract which handles user interaction and controls the assets.
+<br/>
 • An Interface Provider base contract which defines standards for interaction for every lending protocol from which then each provider derives its own proxy contract. We inspired on InstaDapp methods for this interfaces.
+<br/>
 • A Controller Contract which checks rates in the lending protocol and calls the Flasher  when an opportunity exists.
+<br/>
 • A Flasher contract that executes flashloans and call logic from the Vault to swap collateral and borrowing positions from a lending protocol to another. We use Aaves Flashloans to perform flasher operations.
+<br/>
 • A debt token contract that tracks the individual user debt positions and is linked to the vault operations. Based on Aaves debt contract standard. 
+<br/>
 
 The initial step is to "standardize" the interface with each of the lending protocols. Lending protocols have 4 main core functions: deposit, withdraw, borrow, and repay. The standardization of the interface makes these core functions accessible in the "Fuji" environment.
 
@@ -31,26 +36,31 @@ A non-transferable token, in similarity to Aave debt token, is used to simplify 
 
 Interaction of all these elements make FujiBorrow a viable protocol for Aggregating Borrowing Rates.
 
-### Schemes
+### **Schemes**
 
 <img src="./images/Scheme1.png" >
 <img src="./images/Scheme2.png" >
 
-### Vision
+### **Vision**
 
-Fuji team aims to build more services on top of Fuji Borrow, you can connect with us on Twitter here : [https://twitter.com/FujiFinance](https://twitter.com/FujiFinance) .
+Borrowing rate aggregators such as Fuji Borrow are needed as an essential block of DeFi.
+In the long term such applications will serve to the whole DeFi ecosystem by bringing equilibrium to the borrowing markets in DeFi.
+
+Fuji team aims to build more services on top of Fuji Borrow, you can connect with us on Twitter **[here](https://twitter.com/FujiFinance)**
 
 Thanks to all MarketMake sponsors and helpers.
 
-Boyan Barakov
+### **Team**
 
-Daigaro Cota
+**[Boyan Barakov](https://twitter.com/BoyanBarakov)**
 
-Edgar Moreau
+**[Daigaro Cota](https://twitter.com/DaigaroC)**
 
-JC Awe
+**[Edgar Moreau](https://twitter.com/TheEdgarMoreau)**
 
-Oscar Fonseca
+**[JC Awe](https://twitter.com/qjawe)**
+
+**[Oscar Fonseca](https://twitter.com/oFonCK)**
 
 ---
 
@@ -66,10 +76,12 @@ Scaffold-eth was used to bootstrap this project.
 
 > in a second terminal window:
 
-`cd fuji
-yarn fork`
+`cd fuji`
+
+`yarn fork`
 
 > in a third terminal window:
 
-`cd fuji
-yarn deploy`
+`cd fuji`
+
+`yarn deploy`
