@@ -33,8 +33,8 @@ Interaction of all these elements make FujiBorrow a viable protocol for Aggregat
 
 ### Schemes
 
-<img src="./images/Scheme1.png" width="200">
-<img src="./images/Scheme2.png" width="200">
+<img src="./images/Scheme1.png" >
+<img src="./images/Scheme2.png" >
 
 ### Vision
 
