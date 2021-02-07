@@ -31,6 +31,11 @@ A non-transferable token, in similarity to Aave debt token, is used to simplify 
 
 Interaction of all these elements make FujiBorrow a viable protocol for Aggregating Borrowing Rates.
 
+### Schemes
+
+<img src="./images/Scheme1.png" width="200">
+<img src="./images/Scheme2.png" width="200">
+
 ### Vision
 
 Fuji team aims to build more services on top of Fuji Borrow, you can connect with us on Twitter here : [https://twitter.com/FujiFinance](https://twitter.com/FujiFinance) .
