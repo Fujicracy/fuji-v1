@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme =>
     },
     item: {
       padding: theme.spacing(3, 1, 0, 2),
+      marginBottom: theme.spacing(1),
       border: "5px solid" + theme.palette.primary.main,
       borderRadius: 50,
       boxSizing: "border-box",

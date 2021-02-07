@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme =>
       paddingBottom: theme.spacing(3),
     },
     footer: {
-      position: "absolute",
+      paddingTop: theme.spacing(10),
       width: "100%",
       height: "80px",
       bottom: 0,
