@@ -18,8 +18,8 @@ import FujiHome from "./FujiHome";
 import FujiVaults from "./FujiVaults";
 import VaultETHDAI from "./VaultETHDAI";
 import Dashboard from "./Dashboard";
-import FujiInfos from "./FujiInfos/FujiInfos";
-import FujiTeam from "./FujiTeam/FujiTeam";
+import FujiInfos from "./FujiInfos";
+import FujiTeam from "./FujiTeam";
 
 const useStyles = makeStyles(theme => 
   createStyles({
