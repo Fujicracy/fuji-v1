@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
@@ -11,18 +13,26 @@ const useStyles = makeStyles(theme =>
       position: "fixed",
       top: "30%"
     },
-    baseLine: {
-      fontWeight: "900",
-      color: theme.palette.primary.main,
+    card: {
+      border: "5px solid" + theme.palette.primary.main,
+      padding: theme.spacing(2, 0),
+      borderRadius: 50,
+      boxSizing: "border-box",
+      boxShadow: "10px 15px 4px rgba(0, 0, 0, 0.25);",
+    },
+    pic: {
+      height: theme.spacing(30),
+      borderRadius: 70,
     },
     subtitle: {
       color: theme.palette.secondary.main,
-      paddingBottom: theme.spacing(3),
+      paddingTop: theme.spacing(2),
+      fontWeight: "500",
     },
   })
 );
 
-function FujiTeam({ address, setRoute, loadWeb3Modal }) {
+function FujiTeam({ setRoute }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -34,18 +44,79 @@ function FujiTeam({ address, setRoute, loadWeb3Modal }) {
     <div> 
       <Grid
         container
-        direction="column"
         justify="center"
         alignItems="center"
+        spacing={3}
         className={classes.mainArea}
       >
-        <Grid item md={6} style={{ paddingBottom: "50px" }}>
+        <Grid item md={2}>
+          <Link href="https://twitter.com/BoyanBarakov" target="_blank">
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.pic}
+                image="/BoyanB.jpg"
+                title="Boyan Barakov"
+              />
+            </Card>
+          </Link>
           <Typography variant="h5" className={classes.subtitle}>
-            The first DeFi borrowing aggregator
+            Boyan Barakov
           </Typography>
-          <Typography variant="h4" className={classes.baseLine}>
-            Fuji finds the best borrowing rates and
-            constantly refinances your loan
+        </Grid>
+        <Grid item md={2}>
+          <Link href="https://twitter.com/DaigaroC" target="_blank">
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.pic}
+                image="/DaigaroC.jpg"
+                title="Daigaro Cota"
+              />
+            </Card>
+          </Link>
+          <Typography variant="h5" className={classes.subtitle}>
+            Daigaro Cota
+          </Typography>
+        </Grid>
+        <Grid item md={2}>
+          <Link href="https://twitter.com/TheEdgarMoreau" target="_blank">
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.pic}
+                image="/EdgarM.jpg"
+                title="Edgar Moreau"
+              />
+            </Card>
+          </Link>
+          <Typography variant="h5" className={classes.subtitle}>
+            Edgar Moreau
+          </Typography>
+        </Grid>
+        <Grid item md={2}>
+          <Link href="https://twitter.com/qjawe" target="_blank">
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.pic}
+                image="/JcAwesome.png"
+                title="JC Awe"
+              />
+            </Card>
+          </Link>
+          <Typography variant="h5" className={classes.subtitle}>
+            JC Awe
+          </Typography>
+        </Grid>
+        <Grid item md={2}>
+          <Link href="https://twitter.com/oFonCK" target="_blank">
+            <Card className={classes.card}>
+              <CardMedia
+                className={classes.pic}
+                image="/OscarF.png"
+                title="Oscar Fonseca"
+              />
+            </Card>
+          </Link>
+          <Typography variant="h5" className={classes.subtitle}>
+            Oscar Fonseca
           </Typography>
         </Grid>
       </Grid>

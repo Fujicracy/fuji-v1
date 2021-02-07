@@ -101,13 +101,17 @@ function FujiApp(props) {
               variant="h4"
               className={classes.titleSquared}
             >{route === '/'
-              ? "Home"
+              ? "Borrow"
               : route === '/vaults'
               ? "Vaults"
               : route === '/vaults/ethdai'
               ? "ETH/DAI"
               : route === '/dashboard'
               ? "Dashboard"
+              : route === '/team'
+              ? "Team"
+              : route === '/infos'
+              ? "About"
               : "Other"
             }
             </Typography>
@@ -165,10 +169,14 @@ function FujiApp(props) {
               />
             </Route>
             <Route path="/team">
-              <FujiTeam />
+              <FujiTeam
+                setRoute={setRoute}
+              />
             </Route>
             <Route path="/about">
-              <FujiInfos />
+              <FujiInfos
+                setRoute={setRoute}
+              />
             </Route>
           </Switch>
         </BrowserRouter>
