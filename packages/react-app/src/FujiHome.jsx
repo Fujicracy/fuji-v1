@@ -90,3 +90,20 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
 }
 
 export default FujiHome;
+        /*{
+          !address
+          ? <Button
+              onClick={loadWeb3Modal}
+              className={classes.mainBtn}
+              size="large"
+            >
+              Connect Wallet
+            </Button>
+          : <Button
+              href="vaults"
+              className={classes.mainBtn}
+              size="large"
+            >
+              Launch App
+            </Button>
+        }*/
