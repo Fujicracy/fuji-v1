@@ -110,7 +110,7 @@ function FujiApp(props) {
               ? "Dashboard"
               : route === '/team'
               ? "Team"
-              : route === '/infos'
+              : route === '/about'
               ? "About"
               : "Other"
             }
