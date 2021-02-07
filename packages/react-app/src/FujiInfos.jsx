@@ -137,7 +137,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
             The <span>Controller</span> has a routine to check and compare borrowing rates across the borrowing markets.
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
-             If conditions are met, it triggers a flashloan to repay the debt to the current provider, transfers the collateral, and finally opens the debt position with the new prpvider. 
+             If conditions are met, it triggers a flashloan to repay the debt to the current provider, transfers the collateral, and finally opens the debt position with the new provider.
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
             A <span>Flasher</span> contract executes flashloans and call logic from the Vault to swap collateral and borrowing positions from one lending protocol to another.
