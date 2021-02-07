@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme =>
       padding: theme.spacing(2, 0, 3),
     },
     section: {
-      paddingTop: theme.spacing(3),
       textAlign: "left",
     },
     item: {
@@ -109,7 +108,7 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
             Standards for interactions, inspired by InstaDapp, from which each provider derives its own <span>Proxy</span> contract.
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
-            A <span>Debt token</span> contract, based on Aave's debt token standard, that tracks the individual users' debt positions.
+            A <span>Debt token</span> contract, based on Aave's debt token standard, that tracks users' debt positions.
           </Typography>
         </Grid>
         <Grid item md={1}>
@@ -150,6 +149,20 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
             A <span>Flasher</span> contract executes flashloans and call logic from the Vault to swap collateral and borrowing positions from one lending protocol to another.
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        style={{ padding: "48px 0" }}
+        className={classes.section}
+      >
+        <Grid item md={7} className={classes.item}>
+          <Typography variant="subtitle1" className={classes.text}>
+            Borrowing rate aggregators such as Fuji Borrow are needed as an essential block of DeFi.
+          </Typography>
+          <Typography variant="subtitle1" className={classes.text}>
+            In the long term such applications will serve to the whole DeFi ecosystem by bringing equilibrium to the borrowing markets in DeFi.
           </Typography>
         </Grid>
       </Grid>
