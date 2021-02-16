@@ -13,6 +13,11 @@
       },
       {
         "internalType": "address",
+        "name": "_uniswap",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       }
@@ -83,7 +88,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "providerAddrs",
+        "name": "providerAddr",
         "type": "address"
       }
     ],
@@ -102,7 +107,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "toProviderAddrs",
+        "name": "toProviderAddr",
         "type": "address"
       }
     ],
@@ -262,6 +267,19 @@
     "outputs": [
       {
         "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "debtToken",
+    "outputs": [
+      {
+        "internalType": "contract DebtToken",
         "name": "",
         "type": "address"
       }
@@ -468,6 +486,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_userAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_flashLoanDebt",
+        "type": "uint256"
+      }
+    ],
+    "name": "selfLiquidate",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_provider",
         "type": "address"
       }
@@ -486,6 +522,26 @@
       }
     ],
     "name": "setDebtToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "uniswap",
+    "outputs": [
+      {
+        "internalType": "contract IUniswapV2Router02",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "updateDebtTokenBalances",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

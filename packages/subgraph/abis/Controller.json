@@ -12,6 +12,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_liquidator",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_changeThreshold",
         "type": "uint256"
@@ -92,6 +97,32 @@
   {
     "inputs": [],
     "name": "flasherAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultAddr",
+        "type": "address"
+      }
+    ],
+    "name": "initiateSelfLiquidation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "liquidatorAddr",
     "outputs": [
       {
         "internalType": "address",
