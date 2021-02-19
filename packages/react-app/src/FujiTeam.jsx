@@ -91,34 +91,6 @@ function FujiTeam({ setRoute }) {
             Edgar Moreau
           </Typography>
         </Grid>
-        <Grid item md={2}>
-          <Link href="https://twitter.com/qjawe" target="_blank">
-            <Card className={classes.card}>
-              <CardMedia
-                className={classes.pic}
-                image="/JcAwesome.png"
-                title="JC Awe"
-              />
-            </Card>
-          </Link>
-          <Typography variant="h5" className={classes.subtitle}>
-            JC Awe
-          </Typography>
-        </Grid>
-        <Grid item md={2}>
-          <Link href="https://twitter.com/oFonCK" target="_blank">
-            <Card className={classes.card}>
-              <CardMedia
-                className={classes.pic}
-                image="/OscarF.png"
-                title="Oscar Fonseca"
-              />
-            </Card>
-          </Link>
-          <Typography variant="h5" className={classes.subtitle}>
-            Oscar Fonseca
-          </Typography>
-        </Grid>
       </Grid>
 
     </div>
