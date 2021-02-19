@@ -82,8 +82,8 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
           Twitter
         </Button>
 
-        <Button href="https://github.com/Fujicracy" target="_blank" type="primary" className={classes.footerBtn}>
-          Github
+        <Button href="https://t.me/joinchat/U4cKWMsxuUG0JOGV" target="_blank" type="primary" className={classes.footerBtn}>
+          Telegram
         </Button>
       </div>
     </div>
