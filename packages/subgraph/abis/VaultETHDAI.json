@@ -510,7 +510,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_flashLoanDebt",
+        "name": "_debtAmount",
         "type": "uint256"
       }
     ],

@@ -105,19 +105,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_vaultAddr",
-        "type": "address"
-      }
-    ],
-    "name": "initiateSelfLiquidation",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "_newThreshold",
         "type": "uint256"
