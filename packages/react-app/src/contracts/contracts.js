@@ -1,1 +1,1 @@
-module.exports = ["Controller","DebtToken","Flasher","FujiMapping","Liquidator","ProviderAave","ProviderCompound","VaultETHDAI"];
+module.exports = ["Controller","DebtToken","FujiMapping","ProviderAave","ProviderCompound","VaultETHDAI"];

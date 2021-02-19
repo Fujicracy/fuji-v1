@@ -12,11 +12,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_liquidator",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_changeThreshold",
         "type": "uint256"
@@ -29,7 +24,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_vault",
+        "name": "_vaultAddr",
         "type": "address"
       }
     ],
@@ -55,7 +50,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_vault",
+        "name": "_vaultAddr",
         "type": "address"
       }
     ],
@@ -79,7 +74,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_vault",
+        "name": "_vaultAddr",
         "type": "address"
       }
     ],
@@ -121,23 +116,10 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "liquidatorAddr",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "newThreshold",
+        "name": "_newThreshold",
         "type": "uint256"
       }
     ],
@@ -150,11 +132,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "newflasher",
+        "name": "_newFlasher",
         "type": "address"
       }
     ],
-    "name": "setflasher",
+    "name": "setFlasher",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
