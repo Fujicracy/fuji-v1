@@ -18,8 +18,8 @@ import FujiHome from "./FujiHome";
 import FujiVaults from "./FujiVaults";
 import VaultETHDAI from "./VaultETHDAI";
 import Dashboard from "./Dashboard";
-import FujiInfos from "./FujiInfos/FujiInfos";
-import FujiTeam from "./FujiTeam/FujiTeam";
+import FujiInfos from "./FujiInfos";
+import FujiTeam from "./FujiTeam";
 
 const useStyles = makeStyles(theme => 
   createStyles({
@@ -78,11 +78,11 @@ function FujiApp(props) {
     setInjectedProvider(new Web3Provider(provider));
   }, [setInjectedProvider]);
 
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-  }, [loadWeb3Modal]);
+  //useEffect(() => {
+    //if (web3Modal.cachedProvider) {
+      //loadWeb3Modal();
+    //}
+  //}, [loadWeb3Modal]);
 
   return (
     <div className={classes.root}> 
@@ -101,13 +101,17 @@ function FujiApp(props) {
               variant="h4"
               className={classes.titleSquared}
             >{route === '/'
-              ? "Home"
+              ? "Borrow"
               : route === '/vaults'
               ? "Vaults"
               : route === '/vaults/ethdai'
               ? "ETH/DAI"
               : route === '/dashboard'
               ? "Dashboard"
+              : route === '/team'
+              ? "Team"
+              : route === '/about'
+              ? "About"
               : "Other"
             }
             </Typography>
@@ -165,10 +169,14 @@ function FujiApp(props) {
               />
             </Route>
             <Route path="/team">
-              <FujiTeam />
+              <FujiTeam
+                setRoute={setRoute}
+              />
             </Route>
             <Route path="/about">
-              <FujiInfos />
+              <FujiInfos
+                setRoute={setRoute}
+              />
             </Route>
           </Switch>
         </BrowserRouter>
