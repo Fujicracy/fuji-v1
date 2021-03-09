@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function FujiHome({ address, setRoute, loadWeb3Modal }) {
+function Home({ address, setRoute, loadWeb3Modal }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -90,7 +90,7 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
    );
 }
 
-export default FujiHome;
+export default Home;
         /*{
           !address
           ? <Button

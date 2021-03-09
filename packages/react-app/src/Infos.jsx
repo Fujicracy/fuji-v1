@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function FujiInfos({ address, setRoute, loadWeb3Modal }) {
+function Infos({ address, setRoute, loadWeb3Modal }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -165,4 +165,4 @@ function FujiInfos({ address, setRoute, loadWeb3Modal }) {
    );
 }
 
-export default FujiInfos;
+export default Infos;

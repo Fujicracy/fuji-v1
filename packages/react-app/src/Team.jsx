@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function FujiTeam({ setRoute }) {
+function Team({ setRoute }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -97,4 +97,4 @@ function FujiTeam({ setRoute }) {
    );
 }
 
-export default FujiTeam;
+export default Team;
