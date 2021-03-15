@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 //import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import "./index.css";
-import FujiApp from "./FujiApp";
+import App from "./App";
 
 //let subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"
 
@@ -57,7 +57,7 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <FujiApp/>
+    <App/>
   </ThemeProvider>,
   document.getElementById("root"),
 );

@@ -12,10 +12,6 @@ const useStyles = makeStyles(theme =>
       fontSize: "1.1em",
       fontWeight: "900",
     },
-    mainArea: {
-      position: "fixed",
-      top: "30%"
-    },
     baseLine: {
       fontWeight: "900",
       color: theme.palette.primary.main,
@@ -25,17 +21,20 @@ const useStyles = makeStyles(theme =>
       paddingBottom: theme.spacing(3),
     },
     footer: {
-      position: "absolute",
+      paddingTop: theme.spacing(10),
       width: "100%",
       height: "80px",
       bottom: 0,
       left: 0,
       right: 0
-    }
+    },
+    footerBtn: {
+      backgroundColor: "#fff",
+    },
   })
 );
 
-function FujiHome({ address, setRoute, loadWeb3Modal }) {
+function Home({ address, setRoute, loadWeb3Modal }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -50,9 +49,8 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.mainArea}
       >
-        <Grid item md={6} style={{ paddingBottom: "50px" }}>
+        <Grid item md={6}>
           <Typography variant="h5" className={classes.subtitle}>
             The first DeFi borrowing aggregator
           </Typography>
@@ -61,8 +59,39 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
             constantly refinances your loan
           </Typography>
         </Grid>
+        <Grid item style={{ padding: "60px 0" }}>
+          <Button
+            href="about"
+            className={classes.mainBtn}
+            size="large"
+          >
+            How it works
+          </Button>
+        </Grid>
         <Grid item>
-        {
+          <iframe width="600" height="350" src="https://www.youtube.com/embed/GfwYYfmjYf8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+        </Grid>
+      </Grid>
+
+      <div className={classes.footer}>
+        <Button href="team" type="primary" className={classes.footerBtn}>
+          Team
+        </Button>
+
+        <Button href="https://twitter.com/FujiFinance" target="_blank" type="primary" className={classes.footerBtn}>
+          Twitter
+        </Button>
+
+        <Button href="https://t.me/joinchat/U4cKWMsxuUG0JOGV" target="_blank" type="primary" className={classes.footerBtn}>
+          Telegram
+        </Button>
+      </div>
+    </div>
+   );
+}
+
+export default Home;
+        /*{
           !address
           ? <Button
               onClick={loadWeb3Modal}
@@ -78,29 +107,4 @@ function FujiHome({ address, setRoute, loadWeb3Modal }) {
             >
               Launch App
             </Button>
-        }
-        </Grid>
-      </Grid>
-
-      <div className={classes.footer}>
-        <Button href="about" type="primary">
-          How it works
-        </Button>
-
-        <Button href="team" type="primary">
-          Team
-        </Button>
-
-        <Button href="https://twitter.com/FujiFinance" target="_blank" type="primary">
-          Twitter
-        </Button>
-
-        <Button href="https://github.com/Fujicracy" target="_blank" type="primary">
-          Github
-        </Button>
-      </div>
-    </div>
-   );
-}
-
-export default FujiHome;
+        }*/

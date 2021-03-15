@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function FujiVaults({ address, setRoute }) {
+function Vaults({ address, setRoute }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -66,4 +66,4 @@ function FujiVaults({ address, setRoute }) {
    );
 }
 
-export default FujiVaults;
+export default Vaults;
