@@ -5,8 +5,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
-import { useUserProvider } from "./hooks";
-import { INFURA_ID } from "./constants";
+import { useUserProvider, useContractLoader, useExternalContractLoader } from "./hooks";
+import { INFURA_ID, DAI_ADDRESS, DAI_ABI } from "./constants";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
@@ -69,20 +69,22 @@ function App(props) {
   const userProvider = useUserProvider(injectedProvider);
   const address = useUserAddress(userProvider);
 
-  //const readContracts = useContractLoader(userProvider)
-
-  //const writeContracts = useContractLoader(userProvider)
+  const contracts = useContractLoader(userProvider)
+  const DAIContract = useExternalContractLoader(userProvider, DAI_ADDRESS, DAI_ABI);
+  if (contracts) {
+    contracts.DAI = DAIContract;
+  }
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
     setInjectedProvider(new Web3Provider(provider));
   }, [setInjectedProvider]);
 
-  //useEffect(() => {
-    //if (web3Modal.cachedProvider) {
-      //loadWeb3Modal();
-    //}
-  //}, [loadWeb3Modal]);
+  useEffect(() => {
+    if (web3Modal.cachedProvider) {
+      loadWeb3Modal();
+    }
+  }, [loadWeb3Modal]);
 
   return (
     <div className={classes.root}> 
@@ -150,6 +152,7 @@ function App(props) {
             </Route>
             <Route path="/dashboard">
               <Dashboard
+                contracts={contracts}
                 address={address}
                 setRoute={setRoute}
                 provider={userProvider}
@@ -157,6 +160,7 @@ function App(props) {
             </Route>
             <Route path="/vaults/ethdai">
               <VaultETHDAI
+                contracts={contracts}
                 address={address}
                 setRoute={setRoute}
                 provider={userProvider}

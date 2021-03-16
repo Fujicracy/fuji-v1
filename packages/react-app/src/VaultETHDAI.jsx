@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useContractLoader } from "./hooks";
+import { useBalance, useContractReader } from "./hooks";
 import { Transactor } from "./helpers";
 import { DAI_ADDRESS } from "./constants";
+import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -53,13 +54,15 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function VaultETHDAI({ provider, address, setRoute }) {
+function VaultETHDAI({ contracts, provider, address, setRoute }) {
   const classes = useStyles();
   const location = useLocation();
 
-  const [borrowAmount, setBorrowAmount] = useState('1000');
+  const { register, errors, handleSubmit } = useForm();
+
+  const [borrowAmount, setBorrowAmount] = useState(1000);
   const [collateralAmount, setCollateralAmount] = useState('');
-  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [formattedCollateral, setFormattedCollateral] = useState(0);
   const [txConfirmation, setTxConfirmation] = useState(false);
 
   const ethBalance = useBalance(provider, address);
@@ -68,7 +71,6 @@ function VaultETHDAI({ provider, address, setRoute }) {
     setRoute(location.pathname);
   }, [location, setRoute]);
 
-  const contracts = useContractLoader(provider);
   const neededCollateral = useContractReader(
     contracts,
     "VaultETHDAI",
@@ -91,9 +93,9 @@ function VaultETHDAI({ provider, address, setRoute }) {
     [DAI_ADDRESS]
   );
 
-  const compoundAddr = contracts && contracts["ProviderCompound"]
-    ? contracts["ProviderCompound"].address
-    : '';
+  //const compoundAddr = contracts && contracts["ProviderCompound"]
+    //? contracts["ProviderCompound"].address
+    //: '';
   const compoundRate = useContractReader(
     contracts,
     "ProviderCompound",
@@ -102,22 +104,20 @@ function VaultETHDAI({ provider, address, setRoute }) {
   );
 
   useEffect(() => {
-    if (neededCollateral && collateralAmount >= formatUnits(neededCollateral)) {
-      setDisableSubmit(false);
+    if (neededCollateral) {
+      const f = parseFloat(formatUnits(neededCollateral)).toFixed(3);
+      setFormattedCollateral(f);
     }
-    else {
-      setDisableSubmit(true);
-    }
-  }, [collateralAmount, neededCollateral]);
+  }, [neededCollateral]);
 
-  const tx = Transactor(provider);
-  const handleSubmit = async () => {
+  //const tx = Transactor(provider);
+  const onSubmit = async (data) => {
     const res = await contracts
         .VaultETHDAI
         .depositAndBorrow(
-          parseEther(collateralAmount),
-          parseUnits(borrowAmount),
-          { value: parseEther(collateralAmount) }
+          parseEther(data.collateralAmount),
+          parseUnits(data.borrowAmount),
+          { value: parseEther(data.collateralAmount) }
         );
 
     if (res && res.hash) {
@@ -157,7 +157,6 @@ function VaultETHDAI({ provider, address, setRoute }) {
                   </Typography>
                   <TextField
                     className={classes.inputField}
-                    required
                     fullWidth
                     placeholder="1000"
                     autoComplete="off"
@@ -166,6 +165,7 @@ function VaultETHDAI({ provider, address, setRoute }) {
                     type="tel"
                     variant="outlined"
                     onChange={({ target }) => setBorrowAmount(target.value)}
+                    inputRef={register({ required: true, min: 0 })}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -177,6 +177,11 @@ function VaultETHDAI({ provider, address, setRoute }) {
                       ),
                     }}
                   />
+                  {errors?.borrowAmount
+                    && <Typography variant="body2">
+                      Please, type the amount you like to borrow!
+                    </Typography>
+                  }
                 </Grid>
                 <Grid item xs={12}>
                   <Box className={classes.collatInputText}>
@@ -196,12 +201,9 @@ function VaultETHDAI({ provider, address, setRoute }) {
                     type="tel"
                     id="collateralAmount"
                     variant="outlined"
-                    placeholder={
-                      neededCollateral
-                      ? "min " + parseFloat(formatUnits(neededCollateral)).toFixed(3)
-                      : ""
-                    }
+                    placeholder={`min ${formattedCollateral}`}
                     onChange={({ target }) => setCollateralAmount(target.value)}
+                    inputRef={register({ required: true, min: formattedCollateral})}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -213,12 +215,16 @@ function VaultETHDAI({ provider, address, setRoute }) {
                       ),
                     }}
                   />
+                  {errors?.collateralAmount
+                    && <Typography variant="body2">
+                        Please, provide at least {formattedCollateral} ETH as collateral!
+                    </Typography>
+                  }
                 </Grid>
               </Grid>
               <Grid item style={{ textAlign: "center" }}>
                 <Button
-                  onClick={handleSubmit}
-                  disabled={disableSubmit}
+                  onClick={handleSubmit(onSubmit)}
                   className={classes.submitBtn}
                 >
                   Borrow

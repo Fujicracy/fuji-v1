@@ -4,7 +4,7 @@ import usePoller from "./Poller";
 const DEBUG = false;
 
 export default function useContractReader(contracts, contractName, functionName, args, pollTime, formatter, onChange) {
-  let adjustPollTime = 1777;
+  let adjustPollTime = 5000;
   if (pollTime) {
     adjustPollTime = pollTime;
   } else if (!pollTime && typeof args === "number") {
@@ -24,11 +24,11 @@ export default function useContractReader(contracts, contractName, functionName,
       try {
         let newValue;
         if (DEBUG) console.log("CALLING ", contractName, functionName, "with args", args);
-        if (args && args.length > 0) {
+        if (args && args.length > 0 && args.indexOf("") === -1) {
           newValue = await contracts[contractName][functionName](...args);
           if (DEBUG)
             console.log("contractName", contractName, "functionName", functionName, "args", args, "RESULT:", newValue);
-        } else {
+        } else if (!args || (args && args.length === 0)){
           newValue = await contracts[contractName][functionName]();
         }
         if (formatter && typeof formatter === "function") {
