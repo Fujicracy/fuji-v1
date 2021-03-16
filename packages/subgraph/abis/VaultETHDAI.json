@@ -402,13 +402,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "executeRoutine",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
