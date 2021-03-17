@@ -1,14 +1,57 @@
+@font-face {
+	font-family: Poppins;
+	src: url(https://assets.codepen.io/194136/Poppins-SemiBold.ttf);
+	font-weight: 600;
+}
+
+@font-face {
+	font-family: Poppins;
+	src: url(https://assets.codepen.io/194136/Poppins-Medium.ttf);
+	font-weight: 500;
+}
+
+@font-face {
+	font-family: Poppins;
+	src: url(https://assets.codepen.io/194136/Poppins-Regular.ttf);
+	font-weight: 400;
+}
+
+* {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* ------------- */
+/*   VARIABLES   */
+/* ------------- */
+
+:root {
+	--brand: rgba(240, 1, 79, 1);
+	--white: rgba(255, 255, 255, 1);
+	--white64: rgba(255, 255, 255, 0.64);
+	--white32: rgba(255, 255, 255, 0.32);
+	--white05: rgba(255, 255, 255, 0.05);
+	--bg: rgba(16, 16, 16, 1);
+	--bg64: rgba(16, 16, 16, 0.64);
+	--blocks: rgba(25, 25, 25, 0.64);
+	--green: rgba(23, 203, 73, 1);
+}
+
 body {
-  margin: 0;
-  font-family: Roboto;
+	background-color: var(--bg);
+	color: var(--white);
+	font-family: Poppins, sans-serif;
+	font-weight: 400;
 }
 
-h1, h2, h3, h4, h5, a, button {
-  font-family: 'Roboto', sans-serif !important;
+a {
+	text-decoration: none;
 }
 
-p {
-  letter-spacing: 1px;
-  line-height: 1.5 !important;
-  font-family: 'Exo 2', sans-serif !important;
+.bold {
+	font-weight: 600;
+}
+
+.brand-color {
+	color: var(--brand);
 }

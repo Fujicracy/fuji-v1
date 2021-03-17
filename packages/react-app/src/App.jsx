@@ -1,64 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Web3Provider } from "@ethersproject/providers";
-//import "./App.css";
+import "./App.css";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
 import { useUserProvider, useContractLoader, useExternalContractLoader } from "./hooks";
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI } from "./constants";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from '@material-ui/core/Toolbar';
-import Avatar from '@material-ui/core/Avatar';
+//import AppBar from "@material-ui/core/AppBar";
+//import Toolbar from '@material-ui/core/Toolbar';
+//import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import Home from "./Home";
-import Vaults from "./Vaults";
+import MyPositions from "./MyPositions";
 import VaultETHDAI from "./VaultETHDAI";
 import Dashboard from "./Dashboard";
 import Infos from "./Infos";
 import Team from "./Team";
 
 const useStyles = makeStyles(theme => 
-  createStyles({
-    root: {
-      fontSize: "x-large",
-      fontStyle: "italic",
-      textAlign: "center",
-    },
-    header: {
-      justifyContent: 'space-between',
-      overflowX: 'auto',
-      height: "70px",
-    },
-    titleHome: {
-      textDecoration: "none",
-      color: "#fff"
-    },
-    titleSquared: {
-      margin: "0 10px",
-      background: "#fff",
-      color: theme.palette.secondary.main,
-      fontWeight: "900",
-      padding: "1px 15px",
-      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
-    },
-    walletAddr: {
-      background: "#fff",
-      color: theme.palette.secondary.main,
-      fontWeight: "900",
-      padding: "5px 13px",
-      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)",
-      borderRadius: "50px",
-    },
-    logo: {
-      background: "#fff",
-      padding: "1px 0 0 5px",
-      boxShadow: "inset 5px 5px 0px rgba(0, 0, 0, 0.25)"
-    },
-  })
+  createStyles()
 );
 
 function App(props) {
@@ -86,61 +49,26 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
+  //{address.substr(0, 5) + "..." + address.substr(-4, 4)}
+  //<li>
+    //<a href="#"><span class="material-icons">light_mode</span></a>
+  //</li>
   return (
-    <div className={classes.root}> 
-      <AppBar>
-        <Toolbar className={classes.header}>
-          <Toolbar>
-            <Typography
-              variant="h4"
-              component="a"
-              className={classes.titleHome}
-              href="/"
-            >
-              Fuji
-            </Typography>
-            <Typography
-              variant="h4"
-              className={classes.titleSquared}
-            >{route === '/'
-              ? "Borrow"
-              : route === '/vaults'
-              ? "Vaults"
-              : route === '/vaults/ethdai'
-              ? "ETH/DAI"
-              : route === '/dashboard'
-              ? "Dashboard"
-              : route === '/team'
-              ? "Team"
-              : route === '/about'
-              ? "About"
-              : "Other"
-            }
-            </Typography>
-          </Toolbar>
-          <Toolbar>{
-            address
-            ? (<>
-                <FiberManualRecordIcon style={{ color: "limegreen" }} />
-                <Typography
-                  variant="h5"
-                  className={classes.walletAddr}
-                >
-                  {address.substr(0, 5) + "..." + address.substr(-4, 4)}
-                </Typography>
-              </>)
-            : <Avatar
-                alt="Fuji Logo"
-                variant="square"
-                src="/logo192.png"
-                className={classes.logo}
-              />
-            }
-          </Toolbar>
-        </Toolbar>
-      </AppBar>
+    <div> 
+      <header>
+        <a href="#" class="logo">
+          <img src="https://assets.codepen.io/194136/fujiDao.svg" />
+        </a>
 
-      <div style={{ marginTop: "100px" }}>
+        <nav>
+          <ul>
+            <li><a href="#" class="current">Dashboard</a></li>
+            <li><a href="#">All positions</a></li>
+            <li><a href="#" class="button-nav">Connect Wallet</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="container" style={{ marginTop: "100px" }}>
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
@@ -166,8 +94,8 @@ function App(props) {
                 provider={userProvider}
               />
             </Route>
-            <Route path="/vaults">
-              <Vaults
+            <Route path="/my-positions">
+              <MyPositions
                 address={address}
                 setRoute={setRoute}
               />
@@ -185,6 +113,7 @@ function App(props) {
           </Switch>
         </BrowserRouter>
       </div>
+      <div class="bg-effect"></div>
     </div>
   );
 }

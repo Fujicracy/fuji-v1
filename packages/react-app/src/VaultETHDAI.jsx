@@ -53,6 +53,10 @@ const useStyles = makeStyles(theme =>
     },
   })
 );
+// TODO rename to InitBorrow
+// need to have a route params
+// 1. defining the asset to borrow and the vault to be used
+// 2. defining the amount to be borrowed
 
 function VaultETHDAI({ contracts, provider, address, setRoute }) {
   const classes = useStyles();

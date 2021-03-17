@@ -1,0 +1,148 @@
+/* ---------------- */
+/*     Position     */
+/* ---------------- */
+
+.positions {
+  margin-top: 56px;
+}
+
+.positions .title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.positions .legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.positions .legend .empty-tab {
+  width: 120px;
+}
+
+.positions .legend .legend-elements {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.positions .legend span {
+  font-size: 14px;
+  font-weight: 600;
+  width: 111px;
+}
+
+.positions .legend .empty-button {
+  width: 100px;
+}
+
+.positions .position-element {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: rgba(25, 25, 25, 0.56);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.positions .position-element:last-child {
+  margin-bottom: 0px;
+}
+
+.positions .position-about {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.positions .position-about .elmtXelmt {
+  display: flex;
+}
+
+.positions .position-about .elmtXelmt img {
+  width: 32px;
+  height: 32px;
+}
+
+.positions .position-about .elmtXelmt .front {
+  margin-left: -16px;
+}
+
+.positions .position-about .elmt-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 8px;
+  line-height: initial;
+}
+
+.positions .position-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.position-numbers .collateral-number,
+.position-numbers .borrow-number,
+.position-numbers .debt-ratio-number {
+  width: 111px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.debt-ratio-number.positive .number {
+  color: var(--brand);
+}
+
+.debt-ratio-number.negative .number {
+  color: var(--green);
+}
+
+.debt-ratio-number.neutral .number {
+	color: var(--white64);
+}
+
+.position-numbers .number {
+	font-size: 16px;
+	font-weight: 400;
+	color: var(--white);
+}
+
+.position-numbers .additional-infos {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	font-size: 14px;
+	font-weight: 400;
+	color: var(--white64);
+}
+
+.position-numbers .additional-infos img {
+	display: flex;
+	width: 16px;
+	height: 16px;
+	margin-right: 4px;
+}
+
+.positions .position-btn {
+	cursor: pointer;
+	padding: 8px 16px;
+	font-size: 16px;
+	font-weight: 400;
+	color: var(--white);
+	border: 1px solid var(--white);
+	border-radius: 32px;
+	box-sizing: border-box;
+	background: linear-gradient(
+		180deg,
+		rgba(36, 36, 36, 0.56) 0%,
+		rgba(24, 24, 24, 0.56) 100%
+	);
+	backdrop-filter: blur(6px);
+}
