@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useBalance, useContractReader } from "./hooks";
-import { Transactor } from "./helpers";
-import { DAI_ADDRESS } from "./constants";
+//import { Transactor } from "./helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import CollaterizationIndicator from "./CollaterizationIndicator";
 import ProvidersList from "./ProvidersList";
@@ -22,7 +25,7 @@ import ProvidersList from "./ProvidersList";
 // 1. defining the asset to borrow and the vault to be used
 // 2. defining the amount to be borrowed
 
-function InitBorrow({ contracts, provider, address }) {
+function InitBorrow({ contracts, provider, address, setRoute }) {
   const { register, errors, handleSubmit } = useForm();
 
   const [borrowAmount, setBorrowAmount] = useState(1000);
@@ -37,31 +40,6 @@ function InitBorrow({ contracts, provider, address }) {
     "VaultETHDAI",
     "getNeededCollateralFor",
     [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
-  );
-  const activeProviderAddr = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "activeProvider",
-  );
-
-  const aaveAddr = contracts && contracts["ProviderAave"]
-    ? contracts["ProviderAave"].address
-    : '';
-  const aaveRate = useContractReader(
-    contracts,
-    "ProviderAave",
-    "getBorrowRateFor",
-    [DAI_ADDRESS]
-  );
-
-  //const compoundAddr = contracts && contracts["ProviderCompound"]
-    //? contracts["ProviderCompound"].address
-    //: '';
-  const compoundRate = useContractReader(
-    contracts,
-    "ProviderCompound",
-    "getBorrowRateFor",
-    [DAI_ADDRESS]
   );
 
   useEffect(() => {
@@ -90,8 +68,24 @@ function InitBorrow({ contracts, provider, address }) {
   }
 
   return (
-    <>
+    <div class="container initial-step">
       <div class="left-content">
+        <Dialog open={txConfirmation} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Success</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Your transaction have been processed, you can now check your positions to follow the evolution of your debt position.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              href="/my-positions"
+              className="main-button"
+            >
+              Check my positions
+            </Button>
+          </DialogActions>
+        </Dialog>
         <HowItWorks />
         <Grid container class="dark-block borrow-actions">
           <form noValidate>
@@ -228,12 +222,10 @@ function InitBorrow({ contracts, provider, address }) {
           ethAmount={collateralAmount}
         />
         <ProvidersList
-          aaveRate={aaveRate}
-          compoundRate={compoundRate}
-          activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
+          contracts={contracts}
         />
       </div>
-    </>
+    </div>
   );
 }
 

@@ -1,148 +1,220 @@
 /* ---------------- */
+/*     Stats        */
+/* ---------------- */
+
+.fuji-stats {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.fuji-stats .dark-block {
+	margin-right: 24px;
+	width: calc(50% - 0.75rem);
+	padding: 1.5rem 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+  color: var(--text);
+}
+
+.fuji-stats .dark-block:last-child {
+	margin-right: 0rem;
+}
+
+.fuji-stats .title {
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.fuji-stats .number {
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+/* ---------------- */
 /*     Position     */
 /* ---------------- */
 
-.positions {
-  margin-top: 56px;
+.one-position {
+	padding: 1rem;
+	background: var(--blocks56);
+	backdrop-filter: blur(0.375rem);
+	-webkit-backdrop-filter: blur(0.375rem);
+	border-radius: 0.5rem;
+	margin-bottom: 1rem;
+	z-index: 1;
+	position: relative;
 }
 
-.positions .title {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.positions .legend {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-}
-
-.positions .legend .empty-tab {
-  width: 120px;
-}
-
-.positions .legend .legend-elements {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.positions .legend span {
-  font-size: 14px;
-  font-weight: 600;
-  width: 111px;
-}
-
-.positions .legend .empty-button {
-  width: 100px;
-}
-
-.positions .position-element {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background: rgba(25, 25, 25, 0.56);
-  backdrop-filter: blur(6px);
-  border-radius: 8px;
-  margin-bottom: 16px;
+.positions .position-element  {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .positions .position-element:last-child {
-  margin-bottom: 0px;
+	margin-bottom: 0rem;
 }
 
 .positions .position-about {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
 }
 
 .positions .position-about .elmtXelmt {
-  display: flex;
+	display: flex;
 }
 
 .positions .position-about .elmtXelmt img {
-  width: 32px;
-  height: 32px;
+	width: 2rem;
+	height: 2rem;
 }
 
 .positions .position-about .elmtXelmt .front {
-  margin-left: -16px;
+	margin-left: -1rem;
 }
 
 .positions .position-about .elmt-name {
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 8px;
-  line-height: initial;
+	font-size: 1rem;
+	font-weight: 600;
+	margin-left: 0.5rem;
+	line-height: initial;
+  color: var(--text);
 }
 
 .positions .position-numbers {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .position-numbers .collateral-number,
 .position-numbers .borrow-number,
 .position-numbers .debt-ratio-number {
-  width: 111px;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+	width: 6.938rem;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: cent.po
 }
 
-.debt-ratio-number.positive .number {
-  color: var(--brand);
+.one-position.positive .debt-ratio-number .number {
+	color: var(--green);
 }
 
-.debt-ratio-number.negative .number {
-  color: var(--green);
+.one-position.negative .debt-ratio-number .number {
+	color: var(--brand);
 }
 
-.debt-ratio-number.neutral .number {
-	color: var(--white64);
+.one-position.neutral .debt-ratio-number .number {
+	color: var(--text64);
 }
 
 .position-numbers .number {
-	font-size: 16px;
+	font-size: 1rem;
 	font-weight: 400;
-	color: var(--white);
+	color: var(--text);
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
 }
 
 .position-numbers .additional-infos {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	font-size: 14px;
+	font-size: 0.875rem;
 	font-weight: 400;
-	color: var(--white64);
+	color: var(--text64);
 }
 
 .position-numbers .additional-infos img {
 	display: flex;
-	width: 16px;
-	height: 16px;
-	margin-right: 4px;
+	width: 1rem;
+	height: 1rem;
+	margin-right: 0.25rem;
+}
+
+.position-numbers .number img {
+	display: flex;
+	margin-right: 0.25rem;
+	width: 1.125rem;
+	height: 1.125rem;
+}
+
+.position-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .positions .position-btn {
 	cursor: pointer;
-	padding: 8px 16px;
-	font-size: 16px;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
 	font-weight: 400;
-	color: var(--white);
-	border: 1px solid var(--white);
-	border-radius: 32px;
+	color: var(--text);
+	border: 0.063rem solid var(--text);
+	border-radius: 2rem;
 	box-sizing: border-box;
-	background: linear-gradient(
-		180deg,
-		rgba(36, 36, 36, 0.56) 0%,
-		rgba(24, 24, 24, 0.56) 100%
-	);
-	backdrop-filter: blur(6px);
+	background: transparent;
+	backdrop-filter: blur(0.375rem);
+	-webkit-backdrop-filter: blur(0.375rem);
+	transition: all 250ms ease;
+}
+
+.positions .position-btn:hover {
+	color: var(--text);
+	border-color: var(--brand);
+	background: var(--brand);
+	box-shadow: 0rem 0rem 0.25rem var(--brand);
+}
+
+/* ---------------- */
+/*     Positions    */
+/* ---------------- */
+
+.positions {
+	margin-top: 3.5rem;
+}
+
+.positions h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.positions .position-board {
+	margin-top: 2rem;
+}
+
+.positions .position-board .legend {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	text-align: center;
+	margin-bottom: 1rem;
+}
+
+.positions .position-board .legend .legend-elements {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+  color: var(--text);
+}
+
+.positions .position-board .legend .empty-tab {
+	width: 10.625rem;
+}
+
+.positions .position-board .legend .empty-button {
+	width: 8.125rem;
+}
+
+.positions .position-board .legend span {
+	font-size: 0.875rem;
+	font-weight: 600;
+	width: 6.938rem;
 }

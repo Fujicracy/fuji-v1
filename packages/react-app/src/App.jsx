@@ -69,58 +69,56 @@ function App(props) {
           </ul>
         </nav>
       </header>
-      <div class="container initial-step">
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/">
-              <Home
-                address={address}
-                loadWeb3Modal={loadWeb3Modal}
-                setRoute={setRoute}
-              />
-            </Route>
-            <Route path="/init-borrow">
-              <InitBorrow
-                contracts={contracts}
-                address={address}
-                setRoute={setRoute}
-                provider={userProvider}
-              />
-            </Route>
-            <Route path="/dashboard">
-              <Dashboard
-                contracts={contracts}
-                address={address}
-                setRoute={setRoute}
-                provider={userProvider}
-              />
-            </Route>
-            <Route path="/my-positions">
-              <MyPositions
-                contracts={contracts}
-                address={address}
-                setRoute={setRoute}
-              />
-            </Route>
-            <Route path="/simulation">
-              <Simulation
-                address={address}
-                setRoute={setRoute}
-              />
-            </Route>
-            <Route path="/team">
-              <Team
-                setRoute={setRoute}
-              />
-            </Route>
-            <Route path="/about">
-              <Infos
-                setRoute={setRoute}
-              />
-            </Route>
-          </Switch>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <Home
+              address={address}
+              loadWeb3Modal={loadWeb3Modal}
+              setRoute={setRoute}
+            />
+          </Route>
+          <Route path="/init-borrow">
+            <InitBorrow
+              contracts={contracts}
+              address={address}
+              setRoute={setRoute}
+              provider={userProvider}
+            />
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard
+              contracts={contracts}
+              address={address}
+              setRoute={setRoute}
+              provider={userProvider}
+            />
+          </Route>
+          <Route path="/my-positions">
+            <MyPositions
+              contracts={contracts}
+              address={address}
+              setRoute={setRoute}
+            />
+          </Route>
+          <Route path="/simulation">
+            <Simulation
+              address={address}
+              setRoute={setRoute}
+            />
+          </Route>
+          <Route path="/team">
+            <Team
+              setRoute={setRoute}
+            />
+          </Route>
+          <Route path="/about">
+            <Infos
+              setRoute={setRoute}
+            />
+          </Route>
+        </Switch>
+      </BrowserRouter>
       <div class="bg-effect"></div>
     </div>
   );

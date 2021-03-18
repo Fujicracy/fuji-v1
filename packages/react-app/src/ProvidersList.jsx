@@ -2,8 +2,35 @@ import React from "react";
 import "./ProvidersList.css";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
+import { useContractReader } from "./hooks";
+import { DAI_ADDRESS } from "./constants";
 
-function ProvidersList({ aaveRate, compoundRate }) {
+function ProvidersList({ contracts }) {
+  const activeProviderAddr = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "activeProvider",
+  );
+
+  const aaveAddr = contracts && contracts["ProviderAave"]
+    ? contracts["ProviderAave"].address
+    : '';
+  const aaveRate = useContractReader(
+    contracts,
+    "ProviderAave",
+    "getBorrowRateFor",
+    [DAI_ADDRESS]
+  );
+
+  //const compoundAddr = contracts && contracts["ProviderCompound"]
+    //? contracts["ProviderCompound"].address
+    //: '';
+  const compoundRate = useContractReader(
+    contracts,
+    "ProviderCompound",
+    "getBorrowRateFor",
+    [DAI_ADDRESS]
+  );
   const aaveR = parseFloat(`${aaveRate}`) / 1e27 * 100;
   const compoundR = parseFloat(`${compoundRate}`) / 1e27 * 100;
 
