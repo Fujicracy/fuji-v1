@@ -15,8 +15,8 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import Home from "./Home";
 import Simulation from "./Simulation";
+import InitBorrow from "./InitBorrow";
 import MyPositions from "./MyPositions";
-import VaultETHDAI from "./VaultETHDAI";
 import Dashboard from "./Dashboard";
 import Infos from "./Infos";
 import Team from "./Team";
@@ -69,7 +69,7 @@ function App(props) {
           </ul>
         </nav>
       </header>
-      <div class="container" style={{ marginTop: "100px" }}>
+      <div class="container initial-step">
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
@@ -79,16 +79,16 @@ function App(props) {
                 setRoute={setRoute}
               />
             </Route>
-            <Route path="/dashboard">
-              <Dashboard
+            <Route path="/init-borrow">
+              <InitBorrow
                 contracts={contracts}
                 address={address}
                 setRoute={setRoute}
                 provider={userProvider}
               />
             </Route>
-            <Route path="/vaults/ethdai">
-              <VaultETHDAI
+            <Route path="/dashboard">
+              <Dashboard
                 contracts={contracts}
                 address={address}
                 setRoute={setRoute}

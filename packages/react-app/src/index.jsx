@@ -13,41 +13,48 @@ import App from "./App";
 //});
 
 const theme = createMuiTheme({
+  typography: {
+    fontFamily: "inherit",
+  },
   palette: {
     primary: {
-      main: "#0009E9"
+      main: "rgba(240, 1, 79, 1)" // --brand
     },
     secondary: {
       main: "#FF0101"
     },
     success: {
       main: "#20E600"
-    }
+    },
   },
   overrides: {
-    MuiButton: {
+    MuiTypography: {
       root: {
-        color: "#FF0101",
-        border: "5px solid #0009E9",
-        borderRadius: 50,
-        boxSizing: "border-box",
-        boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
-        textTransform: "none",
-        margin: "5px",
+        color: "rgba(255, 255, 255, 1)", // --text
+      },
+      h3: {
+        fontSize: "1rem",
+        fontWeight: "500",
+      },
+      body2: {
+        fontSize: "0.75rem",
+        fontWeight: "500",
+        lineHeight: "150%",
       }
     },
-    MuiFormControl: {
+    MuiButton: {
       root: {
-        border: "5px solid #0009E9",
-        borderRadius: 50,
-        boxSizing: "border-box",
-        boxShadow: "0px 10px 4px rgba(0, 0, 0, 0.25)",
+        border: "none",
+        borderRadius: "0.5rem",
+        textTransform: "none",
+        fontSize: "1rem",
+        fontWeight: "600",
+        height: "3rem",
+        width: "100%",
+        transition: "all 250ms ease",
       }
     },
     MuiOutlinedInput: {
-      root: {
-        fontSize: '1.3em'
-      },
       notchedOutline: {
         border: 'none'
       }

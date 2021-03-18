@@ -87,18 +87,3 @@ header .button-nav:hover {
 	color: var(--white);
 	background: var(--brand);
 }
-
-.container {
-	z-index: 1;
-	margin: 0 auto;
-	margin-top: 124px;
-	min-height: calc(100vh - 250px);
-	max-width: 1054px;
-	width: calc(100% - 64px);
-	padding: 0px 32px;
-	margin-bottom: 40px;
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	line-height: 150%;
-}

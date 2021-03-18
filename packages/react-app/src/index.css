@@ -1,3 +1,65 @@
+/* ------------- */
+/*   RESETS      */
+/* ------------- */
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+body {
+	line-height: 1;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+blockquote, q {
+	quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* ------------- */
+/*   VARIABLES   */
+/* ------------- */
+
 @font-face {
 	font-family: Poppins;
 	src: url(https://assets.codepen.io/194136/Poppins-SemiBold.ttf);
@@ -26,16 +88,36 @@
 /* ------------- */
 
 :root {
-	--brand: rgba(240, 1, 79, 1);
-	--white: rgba(255, 255, 255, 1);
-	--white64: rgba(255, 255, 255, 0.64);
-	--white32: rgba(255, 255, 255, 0.32);
-	--white05: rgba(255, 255, 255, 0.05);
-	--bg: rgba(16, 16, 16, 1);
-	--bg64: rgba(16, 16, 16, 0.64);
-	--blocks: rgba(25, 25, 25, 0.64);
-	--green: rgba(23, 203, 73, 1);
+  --brand: rgba(240,1,79,1);
+	--text: rgba(255,255,255,1);
+	--text64: rgba(255,255,255,0.64);
+	--text32: rgba(255,255,255,0.32);
+	--text16: rgba(255,255,255,0.16);
+	--text05: rgba(255,255,255,0.05);
+	--bg: rgba(16,16,16,1);
+	--bg64: rgba(16,16,16,0.64);
+	--blocks: rgba(25,25,25,0.64);
+	--blocks56: rgba(25,25,25,0.56);
+	--green: rgba(23,203,73,1);
 }
+
+.light-theme {
+  --brand: rgba(240,1,79,1);
+	--text: rgba(255,255,255,1);
+	--text64: rgba(255,255,255,0.64);
+	--text32: rgba(255,255,255,0.32);
+	--text16: rgba(255,255,255,0.16);
+	--text05: rgba(255,255,255,0.05);
+	--bg: rgba(16,16,16,1);
+	--bg64: rgba(16,16,16,0.64);
+	--blocks: rgba(25,25,25,0.64);
+	--blocks56: rgba(25,25,25,0.56);
+	--green: rgba(23,203,73,1);
+}
+
+/* ------------- */
+/*   BASICS      */
+/* ------------- */
 
 body {
 	background-color: var(--bg);
@@ -48,6 +130,22 @@ a {
 	text-decoration: none;
 }
 
+/* Removing arrows on input type number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Placeholder color */
+::placeholder {
+	color: var(--text64);
+}
+
 .bold {
 	font-weight: 600;
 }
@@ -55,3 +153,415 @@ a {
 .brand-color {
 	color: var(--brand);
 }
+
+.active-theme {
+	display: flex !important;
+}
+
+.theme {
+	display: none;
+}
+
+.main-button {
+	background-color: var(--brand);
+	color: var(--text);
+}
+
+.main-button:hover {
+	background-color: var(--brand);
+	opacity: 0.8;
+}
+
+/* ------------- */
+/*   GRID        */
+/* ------------- */
+
+.container {
+	z-index: 1;
+	margin: 0 auto;
+	margin-top: 7.75rem;
+	min-height: calc(100vh - 13.125rem);
+	max-width: 65.875rem;
+	width: calc(100% - 4rem);
+	padding: 0rem 2rem;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	line-height: 150%;
+	padding-bottom: 4rem;
+}
+
+.initial-step {
+	max-width: 52.125rem !important;
+}
+
+.center-content {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.left-content {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.right-content {
+	max-width: 21.625rem;
+	width: 100%;
+	height: auto;
+	margin-left: 2.5rem;
+}
+
+.dark-block {
+	background-color: var(--blocks56);
+	backdrop-filter: blur(0.375rem);
+	-webkit-backdrop-filter: blur(0.375rem);
+	border-radius: 1rem;
+	padding: 2rem;
+	width: calc(100% - 4rem);
+}
+
+.section-title {
+	font-size: 1rem;
+	line-height: 120%;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	margin-bottom: 1.5rem;
+}
+
+.col-50 {
+	width: calc(50% - 1.5rem);
+	margin-right: 1.5rem;
+	margin-left: 1.5rem;
+}
+
+@media screen and (max-width: 1000px) {
+	.container {
+		flex-direction: column;
+	}
+
+	.right-content {
+		max-width: 100%;
+    margin-left: 0;
+    margin-top: 2.5rem;
+		z-index: 1;
+	}
+}
+
+/* ------------- */
+/*   INPUTS      */
+/* ------------- */
+
+.fake-input {
+	height: 3.5rem;
+	/*width: calc(100% - 2rem);*/
+	border-radius: 0.5rem;
+	background-color:  var(--text05);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/*padding: 0rem 1rem;*/
+}
+
+.borrow-amount-input, .collateral-input {
+	margin-bottom: 1.5rem;
+}
+
+.fake-input .input-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.fake-input .input-container .icon {
+	width: 1.5rem;
+	height: 1.5rem;
+	margin-right: 1rem;
+}
+
+.fake-input .input-container input {
+	background: none;
+	border: none;
+	color: var(--text);
+	font-size: 1rem;
+	font-weight: 600;
+	/*width: 5rem;*/
+} 
+
+.fake-input .input {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.fake-input .input span {
+	margin-right: 0.5rem;
+	color: var(--text64);
+	font-size: 1rem;
+	font-weight: 500;
+}
+
+.fake-input .input-infos {
+	color: var(--text64);
+	font-size: 0.875rem;
+	font-weight: 400;
+}
+
+.toggle-button {
+	position: relative; 
+}
+
+.toggle-button .button {
+	position: relative;
+  width:100%;
+  height: 2.5rem;
+	border-radius: 0.5rem;
+}
+
+.toggle-button .checkbox {
+ position: relative;
+ width: 100%;
+ height: 100%;
+ padding: 0rem;
+ margin: 0rem;
+ opacity: 0;
+ cursor: pointer;
+ z-index: 3;
+}
+
+.toggle-button .knobs {
+	top: 0rem;
+  left: 0rem;
+  position: absolute;
+  height: 2.5rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 0.063rem solid var(--text32);
+	background: var(--text05);
+  z-index: 2;
+}
+
+.toggle-button .button .knobs:before, .toggle-button .button .knobs:after, .toggle-button .button .knobs .toggle-options {
+  position: absolute;
+  top: 0rem;
+  width: 50%;
+  height: 2.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1;
+  border-radius: 0.125rem;
+  transition: 250ms ease all;
+}
+
+.toggle-button .button .knobs:before {
+	content: '';
+	top: 0.125rem;
+	left: 0.125rem;
+	border-radius: 0.375rem;
+	background-color: var(--text32);
+}
+
+.toggle-button .button .knobs .toggle-options span {
+	position: absolute;
+  display: flex;
+  align-items: center;
+  left: -0.125rem;
+  justify-content: center;
+  width: 50%;
+}
+
+.toggle-button [data-toggle]:after {
+	content: attr(data-toggle) '';
+	color: var(--text);
+	position: absolute;
+  right: 0.375rem;
+	display: flex;
+  width: 50%;
+  justify-content: center;
+  text-align: center;
+}
+
+.toggle-button .button .knobs .toggle-options {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
+	align-items: center;
+	color: var(--text);
+	left: 0.25rem;
+	top: 0.063rem;
+	z-index: 1;
+}
+
+.toggle-button .button .checkbox:checked + .knobs:before {
+	left: calc(50% - 0.125rem);
+	background-color: var(--text32);
+}
+
+
+.toggle-mode {
+	position: relative;
+	width: 100%;
+}
+
+.toggle-mode .button {
+	position: relative;
+  width:100%;
+  height: 2.5rem;
+	border-radius: 0.5rem;
+}
+
+.toggle-mode .checkbox {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0rem;
+	margin: 0rem;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 3;
+}
+
+.toggle-mode .knobs {
+	top: 0rem;
+  left: 0rem;
+  position: absolute;
+  height: 2.5rem;
+  width: 100%;
+  border-radius: 4rem;
+  border: 0.063rem solid var(--brand);
+	background: var(--bg);
+  z-index: 2;
+}
+
+.toggle-mode .button .knobs:before, .toggle-mode .button .knobs:after, .toggle-mode .button .knobs .toggle-options {
+  position: absolute;
+  top: 0rem;
+  width: 50%;
+  height: 2.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1;
+  border-radius: 4rem;
+  transition: 250ms ease all;
+}
+
+.toggle-mode .button .knobs:before {
+	content: '';
+	top: 0.125rem;
+	left: 0.125rem;
+	border-radius: 4rem;
+	background-color: var(--brand);
+}
+
+.toggle-mode .button .knobs .toggle-options span {
+	position: absolute;
+  display: flex;
+  align-items: center;
+  left: -0.125rem;
+  justify-content: center;
+  width: 50%;
+}
+
+.toggle-mode [data-toggle]:after {
+	content: attr(data-toggle) '';
+	color: var(--text);
+	position: absolute;
+  right: 0.375rem;
+	display: flex;
+  width: 50%;
+  justify-content: center;
+  text-align: center;
+}
+
+.toggle-mode .button .knobs .toggle-options {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
+	align-items: center;
+	color: var(--text);
+	left: 0.25rem;
+	top: 0.063rem;
+	z-index: 1;
+}
+
+.toggle-mode .button .checkbox:checked + .knobs:before {
+	left: calc(50% - 0.125rem);
+	background-color:var(--brand);
+}
+
+/* ------------- */
+/*   TOOLTIPS    */
+/* ------------- */
+
+.tooltip-info {
+	margin-left: 0.5rem;
+	color: var(--brand);
+	display: flex;
+	cursor: pointer;
+	position: relative;
+}
+
+.tooltip-info .tooltip {
+	visibility: hidden;
+  min-width: 12.5rem;
+	max-width: 15.375rem;
+	width: auto;
+  background-color: var(--blocks);
+	backdrop-filter: blur(0.375rem);
+	-webkit-backdrop-filter: blur(0.375rem);
+  color: var(--text);
+  text-align: left;
+  border-radius: 0.25rem;
+	border: 1px solid var(--brand);
+	font-size: 0.75rem;
+	font-weight: 400;
+  padding: 0.75rem;
+  position: absolute;
+	top: 1.75rem;
+  z-index: 25;
+}
+
+.tooltip-info .tooltip-top {
+	margin-top: -5.5rem;
+}
+
+.tooltip-info:hover .tooltip-top {
+	  animation: tooltip-top 250ms ease forwards !important;
+}
+
+.tooltip-info:hover .tooltip {
+  animation: tooltip-bottom 250ms ease forwards;
+}
+
+@keyframes tooltip-bottom {
+  0% {
+    visibility: visible;
+		opacity: 0;
+		top: 2.125rem;
+  }
+	100% {
+    visibility: visible;
+		opacity: 1;
+		top: 1.75rem;
+  }
+}
+
+@keyframes tooltip-top {
+  0% {
+    visibility: visible;
+		opacity: 0;
+		margin-top: -5.875rem;
+  }
+	100% {
+    visibility: visible;
+		opacity: 1;
+		margin-top: -5.5rem;
+  }
+}
+
+
