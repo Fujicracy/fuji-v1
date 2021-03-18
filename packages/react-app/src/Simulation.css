@@ -1,0 +1,9 @@
+.chart-container {
+  padding-top: 30px;
+  height: 33vh;
+  width: 70vw;
+}
+
+.chart-container text {
+	fill: var(--white) !important;
+}

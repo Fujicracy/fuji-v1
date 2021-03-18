@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import Home from "./Home";
+import Simulation from "./Simulation";
 import MyPositions from "./MyPositions";
 import VaultETHDAI from "./VaultETHDAI";
 import Dashboard from "./Dashboard";
@@ -96,6 +97,13 @@ function App(props) {
             </Route>
             <Route path="/my-positions">
               <MyPositions
+                contracts={contracts}
+                address={address}
+                setRoute={setRoute}
+              />
+            </Route>
+            <Route path="/simulation">
+              <Simulation
                 address={address}
                 setRoute={setRoute}
               />
