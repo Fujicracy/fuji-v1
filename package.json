@@ -18,7 +18,7 @@
     "chain": "yarn workspace @scaffold-eth/hardhat chain",
     "fork": "yarn workspace @scaffold-eth/hardhat fork",
     "node": "yarn workspace @scaffold-eth/hardhat chain",
-    "test:aave": "yarn workspace @scaffold-eth/hardhat test:aave",
+    "test:alpha": "yarn workspace @scaffold-eth/hardhat test:alpha",
     "test:compound": "yarn workspace @scaffold-eth/hardhat test:compound",
     "start": "yarn workspace @scaffold-eth/react-app start:dev",
     "compile": "yarn workspace @scaffold-eth/hardhat compile",
