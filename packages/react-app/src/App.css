@@ -81,6 +81,7 @@ header nav ul .current {
 }
 
 header .button-nav {
+  cursor: pointer;
 	padding: 0.5rem 1rem;
 	border: 0.125rem solid var(--brand);
 	border-radius: 2rem;
@@ -91,4 +92,19 @@ header .button-nav:hover {
 	color: var(--text);
 	background: var(--brand);
 	box-shadow: 0rem 0rem 0.25rem var(--brand);
+}
+
+header .button-nav.connected {
+  cursor: initial;
+  border-color: var(--text32);
+  color: var(--text64);
+  text-shadow: 0rem 0rem 0rem transparent;
+}
+
+header .button-nav.connected:hover {
+  border-color: var(--text64);
+  text-shadow: 0rem 0rem 0rem transparent;
+  background: transparent;
+  color: var(--text);
+  box-shadow: 0rem 0rem 0rem transparent;
 }

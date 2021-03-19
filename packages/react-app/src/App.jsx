@@ -50,22 +50,30 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
-  //{address.substr(0, 5) + "..." + address.substr(-4, 4)}
   //<li>
     //<a href="#"><span class="material-icons">light_mode</span></a>
   //</li>
   return (
     <div> 
       <header>
-        <a href="#" class="logo">
+        <a href="#" className="logo">
           <img src="https://assets.codepen.io/194136/fujiDao.svg" />
         </a>
 
         <nav>
           <ul>
-            <li><a href="#" class="current">Dashboard</a></li>
+            <li><a href="/dashboard" className="current">Dashboard</a></li>
             <li><a href="#">All positions</a></li>
-            <li><a href="#" class="button-nav">Connect Wallet</a></li>
+            <li>{
+              address
+                ? <a className="button-nav connected">
+                    {address.substr(0, 5) + "..." + address.substr(-4, 4)}
+                  </a>
+                : <a className="button-nav" onClick={() => loadWeb3Modal()}>
+                    Connect Wallet
+                  </a>
+              }
+            </li>
           </ul>
         </nav>
       </header>
