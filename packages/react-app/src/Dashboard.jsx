@@ -9,7 +9,6 @@ import { makeStyles, createStyles, useTheme } from "@material-ui/core/styles";
 
 import DebtForm from "./DebtForm";
 import CollateralForm from "./CollateralForm";
-import SideHelper from "./SideHelper";
 
 const useStyles = makeStyles(theme => 
   createStyles({
@@ -89,13 +88,6 @@ function Dashboard({ contracts, provider, address, setRoute }) {
           </Typography>
         </Grid>
         <Grid item md={11}>
-          <SideHelper
-            daiAmount={debtBalance}
-            ethAmount={collateralBalance}
-            aaveRate={aaveRate}
-            compoundRate={compoundRate}
-            activeProvider={activeProviderAddr === aaveAddr ? "Aave" : "Compound"}
-          />
         </Grid>
         <Grid item md={12}>
           <form className={classes.form} noValidate>
