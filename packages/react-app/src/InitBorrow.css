@@ -65,21 +65,6 @@
 	text-shadow: 0rem 0rem 0.125rem var(--text);
 }
 
-.borrow-actions .subtitle {
-	font-size: 0.875rem;
-	margin-bottom: 0.5rem;
-	color: var(--text);
-	font-weight: 500;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.borrow-actions .subtitle .complementary-infos {
-	font-size: 0.75rem;
-	color: var(--text64);
-}
-
 .borrow-actions .helper {
 	background-color: var(--bg64);
 	padding: 0.5rem 0.75rem;
