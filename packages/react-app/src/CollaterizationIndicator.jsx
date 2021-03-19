@@ -14,7 +14,7 @@ function CollaterizationIndicator({ daiAmount, ethAmount }) {
   const price = useExchangePrice(mainnetProvider);
 
   const ratio = ethAmount && daiAmount && price
-    ? (ethAmount * price / daiAmount)
+    ? daiAmount / (ethAmount * price)
     : 0;
 
   return (
@@ -35,10 +35,10 @@ function CollaterizationIndicator({ daiAmount, ethAmount }) {
       <div class="ratio">
         <div class="svg-chart">
           <svg viewBox="0 0 36 36" class="inner-chart">
-            <path class="circle" stroke-dasharray="82, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle" stroke-dasharray={[ratio * 100, 100]} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
           </svg>
         </div>
-        <div class="percentage-chart">82%</div>
+        <div class="percentage-chart">{ratio ? Math.floor(ratio * 100) : '...'}%</div>
         <div class="bg-chart"></div>
       </div>
 
