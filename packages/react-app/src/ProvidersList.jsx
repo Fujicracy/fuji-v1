@@ -35,60 +35,60 @@ function ProvidersList({ contracts }) {
   const compoundR = parseFloat(`${compoundRate}`) / 1e27 * 100;
 
   return (
-    <div class="dark-block providers-block">
-      <div class="section-title">
+    <div className="dark-block providers-block">
+      <div className="section-title">
         <Typography variant="h3">
           Providers
         </Typography>
-        <div class="tooltip-info">
+        <div className="tooltip-info">
           <InfoOutlinedIcon />
-          <span class="tooltip">
+          <span className="tooltip">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
           </span>
         </div>
       </div>
 
-      <div class="providers">
-        <div class="provider">
-          <div class="title">
+      <div className="providers">
+        <div className="provider">
+          <div className="title">
             <img src="https://assets.codepen.io/194136/dai.svg" />
             <Typography variant="h3">
               DAI
             </Typography>
           </div>
-          <div class="stats">
-            <div class="stat best">
-              <span class="name">Aave</span>
-              <span class="number">
+          <div className="stats">
+            <div className="stat best">
+              <span className="name">Aave</span>
+              <span className="number">
                 {aaveRate ? aaveR.toFixed(1) : "..."} %
               </span>
             </div>
 
-            <div class="stat">
-              <span class="name">Compound</span>
-              <span class="number">
+            <div className="stat">
+              <span className="name">Compound</span>
+              <span className="number">
                 {compoundRate ? compoundR.toFixed(1) : "..."} %
               </span>
             </div>
           </div>
         </div>
 
-        <div class="provider">
-          <div class="title">
+        <div className="provider">
+          <div className="title">
             <img src="https://assets.codepen.io/194136/usdc.svg" />
             <Typography variant="h3">
               USDC
             </Typography>
           </div>
-          <div class="stats">
-            <div class="stat best">
-              <span class="name">Aave</span>
-              <span class="number">12,4%</span>
+          <div className="stats">
+            <div className="stat best">
+              <span className="name">Aave</span>
+              <span className="number">12,4%</span>
             </div>
 
-            <div class="stat">
-              <span class="name">Compound</span>
-              <span class="number">9,4%</span>
+            <div className="stat">
+              <span className="name">Compound</span>
+              <span className="number">9,4%</span>
             </div>
           </div>
         </div>

@@ -54,35 +54,35 @@ function CollateralForm({ contracts, provider, address }) {
         <Typography variant="h3">
           Collateral
         </Typography>
-        <div class="tooltip-info">
+        <div className="tooltip-info">
           <InfoOutlinedIcon />
-          <span class="tooltip tooltip-top">
-            <span class="bold">Keep your position safe.</span>
+          <span className="tooltip tooltip-top">
+            <span className="bold">Keep your position safe.</span>
           </span>
         </div>
       </Grid>
       <Grid item className="toggle-button">
-        <div class="button">
+        <div className="button">
           <input
             onChange={({ target }) => setAction(target.checked ? 'withdraw' : 'supply' )}
             type="checkbox"
-            class="checkbox"
+            className="checkbox"
           />
-          <div class="knobs">
-            <span class="toggle-options" data-toggle="Withdraw">
+          <div className="knobs">
+            <span className="toggle-options" data-toggle="Withdraw">
               <span>Supply</span>
             </span>
           </div>
-          <div class="layer"></div>
+          <div className="layer"></div>
         </div>
       </Grid>
       <Grid item>
-        <div class="subtitle">
-          <span class="complementary-infos">
+        <div className="subtitle">
+          <span className="complementary-infos">
             Balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} ETH Ξ
           </span>
         </div>
-        <div class="fake-input">
+        <div className="fake-input">
           <TextField
             className="input-container"
             required
@@ -97,12 +97,12 @@ function CollateralForm({ contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" class="icon"/>
+                  <Avatar alt="ETH" src="/ETH.png" className="icon"/>
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <Typography variant="body1" class="input-infos">
+                  <Typography variant="body1" className="input-infos">
                     ETH
                   </Typography>
                 </InputAdornment>

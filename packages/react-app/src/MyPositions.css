@@ -157,6 +157,7 @@
 	padding: 0.5rem 1rem;
 	font-size: 1rem;
 	font-weight: 400;
+  height: 2.5rem;
 	color: var(--text);
 	border: 0.063rem solid var(--text);
 	border-radius: 2rem;

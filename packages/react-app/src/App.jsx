@@ -51,7 +51,7 @@ function App(props) {
   }, [loadWeb3Modal]);
 
   //<li>
-    //<a href="#"><span class="material-icons">light_mode</span></a>
+    //<a href="#"><span className="material-icons">light_mode</span></a>
   //</li>
   return (
     <div> 
@@ -127,7 +127,7 @@ function App(props) {
           </Route>
         </Switch>
       </BrowserRouter>
-      <div class="bg-effect"></div>
+      <div className="bg-effect"></div>
     </div>
   );
 }

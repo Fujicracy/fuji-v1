@@ -165,35 +165,35 @@ function DebtForm({ contracts, provider, address }) {
         <Typography variant="h3">
           Debt
         </Typography>
-        <div class="tooltip-info">
+        <div className="tooltip-info">
           <InfoOutlinedIcon />
-          <span class="tooltip tooltip-top">
-            <span class="bold">Keep your position safe.</span>
+          <span className="tooltip tooltip-top">
+            <span className="bold">Keep your position safe.</span>
           </span>
         </div>
       </Grid>
       <Grid item className="toggle-button">
-        <div class="button">
+        <div className="button">
           <input
             onChange={({ target }) => setAction(target.checked ? 'borrow' : 'repay')}
             type="checkbox"
-            class="checkbox"
+            className="checkbox"
           />
-          <div class="knobs">
-            <span class="toggle-options" data-toggle="Borrow">
+          <div className="knobs">
+            <span className="toggle-options" data-toggle="Borrow">
               <span>Repay</span>
             </span>
           </div>
-          <div class="layer"></div>
+          <div className="layer"></div>
         </div>
       </Grid>
       <Grid item>
-        <div class="subtitle">
-          <span class="complementary-infos">
+        <div className="subtitle">
+          <span className="complementary-infos">
             Balance: {daiBalance ? formatUnits(daiBalance) : '...'} DAI Ξ
           </span>
         </div>
-        <div class="fake-input">
+        <div className="fake-input">
           <TextField
             className="input-container"
             required
@@ -208,12 +208,12 @@ function DebtForm({ contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="DAI" src="/DAI.png" class="icon"/>
+                  <Avatar alt="DAI" src="/DAI.png" className="icon"/>
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <Typography variant="body1" class="input-infos">
+                  <Typography variant="body1" className="input-infos">
                     DAI
                   </Typography>
                 </InputAdornment>

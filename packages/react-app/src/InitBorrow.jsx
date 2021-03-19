@@ -5,7 +5,6 @@ import { useBalance, useContractReader } from "./hooks";
 //import { Transactor } from "./helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Button from '@material-ui/core/Button';
@@ -68,8 +67,8 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
   }
 
   return (
-    <div class="container initial-step">
-      <div class="left-content">
+    <div className="container initial-step">
+      <div className="left-content">
         <Dialog open={txConfirmation} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Success</DialogTitle>
           <DialogContent>
@@ -87,42 +86,42 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
           </DialogActions>
         </Dialog>
         <HowItWorks />
-        <Grid container class="dark-block borrow-actions">
+        <div className="dark-block borrow-actions">
           <form noValidate>
-            <div class="borrow-options">
-              <div class="subtitle">Borrow</div>
-              <div class="select-options">
-                <div class="options-list">
+            <div className="borrow-options">
+              <div className="subtitle">Borrow</div>
+              <div className="select-options">
+                <div className="options-list">
                   <label>
-                    <input type="radio" name="borrow" value="dai" checked="checked" />
-                    <div class="fake-radio">
+                    <input type="radio" name="borrow" value="dai" checked />
+                    <div className="fake-radio">
                       <img src="https://assets.codepen.io/194136/dai.svg" />
-                      <span class="select-option-name">DAI</span>
+                      <span className="select-option-name">DAI</span>
                     </div>
                   </label>
                   <label>
                     <input type="radio" name="borrow" value="usdc" />
-                    <div class="fake-radio">
+                    <div className="fake-radio">
                       <img src="https://assets.codepen.io/194136/usdc.svg" />
-                      <span class="select-option-name">USDC</span>
+                      <span className="select-option-name">USDC</span>
                     </div>
                   </label>
                   <label>
                     <input type="radio" name="borrow" value="usdt" />
-                    <div class="fake-radio">
+                    <div className="fake-radio">
                       <img src="https://assets.codepen.io/194136/tether.svg" />
-                      <span class="select-option-name">USDT</span>
+                      <span className="select-option-name">USDT</span>
                     </div>
                   </label>
                 </div>
               </div>
             </div>
-            <Grid container class="borrow-inputs">
-              <Grid item class="borrow-amount-input">
-                <div class="subtitle">
+            <div className="borrow-inputs">
+              <div className="borrow-amount-input">
+                <div className="subtitle">
                   Amount to borrow
                 </div>
-                <div class="fake-input">
+                <div className="fake-input">
                   <TextField
                     className="input-container"
                     fullWidth
@@ -137,12 +136,12 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt="DAI" src="/DAI.png" class="icon"/>
+                          <Avatar alt="DAI" src="/DAI.png" className="icon"/>
                         </InputAdornment>
                       ),
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Typography variant="body1" class="input-infos">
+                          <Typography variant="body1" className="input-infos">
                             DAI
                           </Typography>
                         </InputAdornment>
@@ -155,15 +154,15 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
                       Please, type the amount you like to borrow!
                     </Typography>
                 }
-              </Grid>
-              <Grid class="collateral-input">
-                <div class="subtitle">
+              </div>
+              <div className="collateral-input">
+                <div className="subtitle">
                   Collateral
-                  <span class="complementary-infos">
+                  <span className="complementary-infos">
                     Wallet balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} Ξ
                   </span>
                 </div>
-                <div class="fake-input">
+                <div className="fake-input">
                   <TextField
                     className="input-container"
                     required
@@ -179,12 +178,12 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt="ETH" src="/ETH.png" class="icon"/>
+                          <Avatar alt="ETH" src="/ETH.png" className="icon"/>
                         </InputAdornment>
                       ),
                       endAdornment: (
                         <InputAdornment position="end">
-                          <Typography variant="body1" class="input-infos">
+                          <Typography variant="body1" className="input-infos">
                             ETH
                           </Typography>
                         </InputAdornment>
@@ -197,26 +196,26 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
                       Please, provide at least {formattedCollateral} ETH as collateral!
                     </Typography>
                 }
-              </Grid>
-            </Grid>
-            <Grid item class="helper">
+              </div>
+            </div>
+            <div className="helper">
               <Typography variant="body2">
                 You are saving <span>3758 DAI</span> by borrowing through FujiDAO. <br />
                 That’s a nifty <span>13%</span> saved, compared to the lowest provider.
               </Typography>
-            </Grid>
-            <Grid item>
+            </div>
+            <div>
               <Button
                 onClick={handleSubmit(onSubmit)}
                 className="main-button"
               >
                 Borrow
               </Button>
-            </Grid>
+            </div>
           </form>
-        </Grid>
+        </div>
       </div>
-      <div class="right-content">
+      <div className="right-content">
         <CollaterizationIndicator
           daiAmount={borrowAmount}
           ethAmount={collateralAmount}
@@ -231,10 +230,10 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
 
 function HowItWorks() {
   return (
-    <fieldset class="hiw">
-      <legend class="hiw-title">
-        <span class="hiw-title-content">
-          <span class="icon">
+    <fieldset className="hiw">
+      <legend className="hiw-title">
+        <span className="hiw-title-content">
+          <span className="icon">
             <InfoOutlinedIcon />
           </span>
           <Typography variant="h3">How it works</Typography>
@@ -242,8 +241,8 @@ function HowItWorks() {
       </legend>
 
       <Typography variant="body2">
-        Please enter the amount of <span class="bold">DAI</span> you'd like to borrow and the amount of
-        <span class="bold">ETH</span> to provide as collateral.
+        Please enter the amount of <span className="bold">DAI</span> you'd like to borrow and the amount of
+        <span className="bold">ETH</span> to provide as collateral.
         The minimum required amout of collateral is suggested.
       </Typography>
     </fieldset>

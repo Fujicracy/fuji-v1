@@ -16,17 +16,17 @@ function MyPositions({ contracts, address, setRoute }) {
   },[location])
 
   return (
-    <div class="container">
-      <div class="left-content">
-        <div class="fuji-stats">
-          <div class="dark-block">
-            <span class="title">Fuji total borrows:</span>
-            <span class="number">$ 1 239 223</span>
+    <div className="container">
+      <div className="left-content">
+        <div className="fuji-stats">
+          <div className="dark-block">
+            <span className="title">Fuji total borrows:</span>
+            <span className="number">$ 1 239 223</span>
           </div>
 
-          <div class="dark-block">
-            <span class="title">Fuji all positions:</span>
-            <span class="number">$ 1 239 223</span>
+          <div className="dark-block">
+            <span className="title">Fuji all positions:</span>
+            <span className="number">$ 1 239 223</span>
           </div>
         </div>
         <Grid
@@ -39,15 +39,15 @@ function MyPositions({ contracts, address, setRoute }) {
           <Typography variant="h3">
             My positions
           </Typography>
-          <div class="position-board">
+          <div className="position-board">
             <Grid item className="legend">
-              <span class="empty-tab"></span>
-              <div class="legend-elements">
+              <span className="empty-tab"></span>
+              <div className="legend-elements">
                 <span>Collateral</span>
                 <span>Debt</span>
                 <span>Debt Ratio</span>
               </div>
-              <span class="empty-button"></span>
+              <span className="empty-button"></span>
             </Grid>
             <Grid item className="one-position">
               <PositionElement
@@ -59,7 +59,7 @@ function MyPositions({ contracts, address, setRoute }) {
           </div>
         </Grid>
       </div>
-      <div class="right-content">
+      <div className="right-content">
         <ProvidersList
           contracts={contracts}
         />

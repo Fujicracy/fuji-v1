@@ -18,28 +18,28 @@ function CollaterizationIndicator({ daiAmount, ethAmount }) {
     : 0;
 
   return (
-    <div class="dark-block collateralization-block">
-      <div class="section-title">
+    <div className="dark-block collateralization-block">
+      <div className="section-title">
         <Typography variant="h3">
           Collaterization Ratio
         </Typography>
-        <div class="tooltip-info">
+        <div className="tooltip-info">
           <InfoOutlinedIcon />
-          <span class="tooltip">
-            <span class="bold">Keep your position safe.</span>
+          <span className="tooltip">
+            <span className="bold">Keep your position safe.</span>
             <br />The ratio between your collateral assets and the borrowed amout.
           </span>
         </div>
       </div>
 
-      <div class="ratio">
-        <div class="svg-chart">
-          <svg viewBox="0 0 36 36" class="inner-chart">
-            <path class="circle" strokeDasharray={[ratio * 100, 100]} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+      <div className="ratio">
+        <div className="svg-chart">
+          <svg viewBox="0 0 36 36" className="inner-chart">
+            <path className="circle" strokeDasharray={[ratio * 100, 100]} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
           </svg>
         </div>
-        <div class="percentage-chart">{ratio ? Math.floor(ratio * 100) : '...'}%</div>
-        <div class="bg-chart"></div>
+        <div className="percentage-chart">{ratio ? Math.floor(ratio * 100) : '...'}%</div>
+        <div className="bg-chart"></div>
       </div>
 
       <Typography variant="body2">

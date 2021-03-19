@@ -26,46 +26,46 @@ function PositionElement({ contracts, address, actionType }) {
   );
 
   return (
-    <div class="position-element">
-      <div class="position-about">
-        <div class="elmtXelmt">
-          <img class="behind" src="/ETH.png" />
-          <img class="front" src="https://assets.codepen.io/194136/dai.svg" />
+    <div className="position-element">
+      <div className="position-about">
+        <div className="elmtXelmt">
+          <img className="behind" src="/ETH.png" />
+          <img className="front" src="https://assets.codepen.io/194136/dai.svg" />
         </div>
-        <span class="elmt-name">ETH/DAI</span>
+        <span className="elmt-name">ETH/DAI</span>
       </div>
 
-      <div class="position-numbers">
-        <div class="collateral-number">
-          <span class="number">
+      <div className="position-numbers">
+        <div className="collateral-number">
+          <span className="number">
             <img src="/ETH.png" />
             <span>{
               collateralBalance ? parseFloat(formatEther(collateralBalance)).toFixed(2) : ''
               }</span>
           </span>
-          <span class="additional-infos">≈ $15 234</span>
+          <span className="additional-infos">≈ $15 234</span>
         </div>
 
-        <div class="borrow-number">
-          <span class="number">
+        <div className="borrow-number">
+          <span className="number">
             <img src="https://assets.codepen.io/194136/dai.svg" />
             <span>{
               debtBalance ? parseFloat(formatUnits(debtBalance)).toFixed(2) : ''
               }</span>
           </span>
-          <span class="additional-infos">≈ $15 234</span>
+          <span className="additional-infos">≈ $15 234</span>
         </div>
 
-        <div class="debt-ratio-number positive">
-          <span class="number">85 %</span>
+        <div className="debt-ratio-number positive">
+          <span className="number">85 %</span>
         </div>
       </div>
 
-      <div class="position-actions">{
+      <div className="position-actions">{
         actionType === PositionActions.Manage
-          ? <Button class="position-btn">Manage</Button>
+          ? <Button className="position-btn">Manage</Button>
           : actionType === PositionActions.Liquidate
-          ? <Button class="position-btn">Liquidate</Button>
+          ? <Button className="position-btn">Liquidate</Button>
           : <span style={{ width: "5rem" }}></span>
       }</div>
     </div>
