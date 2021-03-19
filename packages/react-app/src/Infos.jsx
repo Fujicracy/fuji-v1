@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => 
@@ -50,7 +48,7 @@ function Infos({ address, setRoute, loadWeb3Modal }) {
 
   useEffect(() => {
     setRoute(location.pathname);
-  },[location])
+  },[location, setRoute])
 
   return (
     <Container className={classes.container}> 
@@ -108,6 +106,7 @@ function Infos({ address, setRoute, loadWeb3Modal }) {
         </Grid>
         <Grid item md={6}>
           <img
+            alt="architecture"
             className={classes.demoImg}
             src="/step1.png"
             title="Protocol Architecture"
@@ -123,6 +122,7 @@ function Infos({ address, setRoute, loadWeb3Modal }) {
       >
         <Grid item md={6}>
           <img
+            alt="flashloan"
             className={classes.demoImg}
             src="/step2.png"
             title="Flashloan"

@@ -6,15 +6,15 @@ import { useContractReader } from "./hooks";
 import { DAI_ADDRESS } from "./constants";
 
 function ProvidersList({ contracts }) {
-  const activeProviderAddr = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "activeProvider",
-  );
+  //const activeProviderAddr = useContractReader(
+    //contracts,
+    //"VaultETHDAI",
+    //"activeProvider",
+  //);
 
-  const aaveAddr = contracts && contracts["ProviderAave"]
-    ? contracts["ProviderAave"].address
-    : '';
+  //const aaveAddr = contracts && contracts["ProviderAave"]
+    //? contracts["ProviderAave"].address
+    //: '';
   const aaveRate = useContractReader(
     contracts,
     "ProviderAave",
@@ -51,7 +51,7 @@ function ProvidersList({ contracts }) {
       <div className="providers">
         <div className="provider">
           <div className="title">
-            <img src="https://assets.codepen.io/194136/dai.svg" />
+            <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
             <Typography variant="h3">
               DAI
             </Typography>
@@ -75,7 +75,7 @@ function ProvidersList({ contracts }) {
 
         <div className="provider">
           <div className="title">
-            <img src="https://assets.codepen.io/194136/usdc.svg" />
+            <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
             <Typography variant="h3">
               USDC
             </Typography>

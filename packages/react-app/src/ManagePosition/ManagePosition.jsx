@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./ManagePosition.css";
-import { useContractReader } from "../hooks";
-import { DAI_ADDRESS } from "../constants";
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
@@ -24,44 +20,6 @@ function ManagePosition({ contracts, provider, address, setRoute }) {
   useEffect(() => {
     setRoute(location.pathname);
   }, [location, setRoute]);
-
-  //const debtBalance = useContractReader(
-    //contracts,
-    //"DebtToken",
-    //"balanceOf",
-    //[address]
-  //);
-  //const collateralBalance = useContractReader(
-    //contracts,
-    //"VaultETHDAI",
-    //"collaterals",
-    //[address]
-  //);
-  const activeProviderAddr = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "activeProvider",
-  );
-
-  const aaveAddr = contracts && contracts["ProviderAave"]
-    ? contracts["ProviderAave"].address
-    : '';
-  const aaveRate = useContractReader(
-    contracts,
-    "ProviderAave",
-    "getBorrowRateFor",
-    [DAI_ADDRESS]
-  );
-
-  //const compoundAddr = contracts && contracts["ProviderCompound"]
-    //? contracts["ProviderCompound"].address
-    //: '';
-  const compoundRate = useContractReader(
-    contracts,
-    "ProviderCompound",
-    "getBorrowRateFor",
-    [DAI_ADDRESS]
-  );
 
   return (
     <div className="container">

@@ -38,7 +38,7 @@ function Team({ setRoute }) {
 
   useEffect(() => {
     setRoute(location.pathname);
-  },[location])
+  },[location, setRoute])
 
   return (
     <div> 

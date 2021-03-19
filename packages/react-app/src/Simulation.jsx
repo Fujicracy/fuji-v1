@@ -13,7 +13,7 @@ function Simulation({ contracts, address, setRoute }) {
 
   useEffect(() => {
     setRoute(location.pathname);
-  },[location])
+  },[location, setRoute])
 
   const data = [
     {

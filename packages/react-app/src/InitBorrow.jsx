@@ -95,21 +95,21 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
                   <label>
                     <input type="radio" name="borrow" value="dai" checked />
                     <div className="fake-radio">
-                      <img src="https://assets.codepen.io/194136/dai.svg" />
+                      <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
                       <span className="select-option-name">DAI</span>
                     </div>
                   </label>
                   <label>
                     <input type="radio" name="borrow" value="usdc" />
                     <div className="fake-radio">
-                      <img src="https://assets.codepen.io/194136/usdc.svg" />
+                      <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
                       <span className="select-option-name">USDC</span>
                     </div>
                   </label>
                   <label>
                     <input type="radio" name="borrow" value="usdt" />
                     <div className="fake-radio">
-                      <img src="https://assets.codepen.io/194136/tether.svg" />
+                      <img alt="usdt" src="https://assets.codepen.io/194136/tether.svg" />
                       <span className="select-option-name">USDT</span>
                     </div>
                   </label>

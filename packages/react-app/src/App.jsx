@@ -7,11 +7,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useUserAddress } from "eth-hooks";
 import { useUserProvider, useContractLoader, useExternalContractLoader } from "./hooks";
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI } from "./constants";
-//import AppBar from "@material-ui/core/AppBar";
-//import Toolbar from '@material-ui/core/Toolbar';
-//import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import Home from "./Home";
 import Simulation from "./Simulation";
@@ -21,12 +16,7 @@ import ManagePosition from "./ManagePosition/ManagePosition";
 import Infos from "./Infos";
 import Team from "./Team";
 
-const useStyles = makeStyles(theme => 
-  createStyles()
-);
-
 function App(props) {
-  const classes = useStyles();
   const [injectedProvider, setInjectedProvider] = useState();
   const [route, setRoute] = useState();
 
@@ -56,20 +46,20 @@ function App(props) {
   return (
     <div> 
       <header>
-        <a href="#" className="logo">
-          <img src="https://assets.codepen.io/194136/fujiDao.svg" />
+        <a href="/" className="logo">
+          <img alt="logo" src="https://assets.codepen.io/194136/fujiDao.svg" />
         </a>
 
         <nav>
           <ul>
             <li><a href="/dashboard" className="current">Dashboard</a></li>
-            <li><a href="#">All positions</a></li>
+            <li><a href="/">All positions</a></li>
             <li>{
               address
-                ? <a className="button-nav connected">
+                ? <a href="javasctip:void(0)" className="button-nav connected">
                     {address.substr(0, 5) + "..." + address.substr(-4, 4)}
                   </a>
-                : <a className="button-nav" onClick={() => loadWeb3Modal()}>
+                : <a href="javasctip:void(0)" className="button-nav" onClick={() => loadWeb3Modal()}>
                     Connect Wallet
                   </a>
               }

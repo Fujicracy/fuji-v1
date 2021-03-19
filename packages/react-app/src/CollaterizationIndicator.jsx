@@ -10,7 +10,6 @@ const mainnetProvider = new JsonRpcProvider(
 );
 
 function CollaterizationIndicator({ daiAmount, ethAmount }) {
-  const classes = {};
   const price = useExchangePrice(mainnetProvider);
 
   const ratio = ethAmount && daiAmount && price

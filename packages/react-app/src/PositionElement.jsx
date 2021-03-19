@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 import { formatUnits, formatEther } from "@ethersproject/units";
 import { useContractReader } from "./hooks";
 import Button from '@material-ui/core/Button';
@@ -29,8 +28,8 @@ function PositionElement({ contracts, address, actionType }) {
     <div className="position-element">
       <div className="position-about">
         <div className="elmtXelmt">
-          <img className="behind" src="/ETH.png" />
-          <img className="front" src="https://assets.codepen.io/194136/dai.svg" />
+          <img alt="eth" className="behind" src="/ETH.png" />
+          <img alt="dai" className="front" src="https://assets.codepen.io/194136/dai.svg" />
         </div>
         <span className="elmt-name">ETH/DAI</span>
       </div>
@@ -38,7 +37,7 @@ function PositionElement({ contracts, address, actionType }) {
       <div className="position-numbers">
         <div className="collateral-number">
           <span className="number">
-            <img src="/ETH.png" />
+            <img alt="eth" src="/ETH.png" />
             <span>{
               collateralBalance ? parseFloat(formatEther(collateralBalance)).toFixed(2) : ''
               }</span>
@@ -48,7 +47,7 @@ function PositionElement({ contracts, address, actionType }) {
 
         <div className="borrow-number">
           <span className="number">
-            <img src="https://assets.codepen.io/194136/dai.svg" />
+            <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
             <span>{
               debtBalance ? parseFloat(formatUnits(debtBalance)).toFixed(2) : ''
               }</span>

@@ -40,7 +40,7 @@ function Home({ address, setRoute, loadWeb3Modal }) {
 
   useEffect(() => {
     setRoute(location.pathname);
-  },[location])
+  },[location, setRoute])
 
   return (
     <div> 
@@ -69,7 +69,7 @@ function Home({ address, setRoute, loadWeb3Modal }) {
           </Button>
         </Grid>
         <Grid item>
-          <iframe width="600" height="350" src="https://www.youtube.com/embed/GfwYYfmjYf8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+          <iframe title="marketmake" width="600" height="350" src="https://www.youtube.com/embed/GfwYYfmjYf8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
         </Grid>
       </Grid>
 
