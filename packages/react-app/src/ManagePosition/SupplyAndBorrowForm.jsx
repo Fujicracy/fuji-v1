@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { useForm } from "react-hook-form";
-import { useBalance, useContractReader } from "./hooks";
-import { Transactor } from "./helpers";
+import { useBalance, useContractReader } from "../hooks";
+import { Transactor } from "../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -16,28 +16,28 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 //import DialogTitle from '@material-ui/core/DialogTitle';
 
-function CollateralForm({ contracts, provider, address }) {
+function SupplyAndBorrowForm({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 
-  const [action, setAction] = useState('deposit');
-  const [amount, setAmount] = useState(1000);
+  const [supplyAmount, setSupplyAmount] = useState(0);
+  const [borrowAmount, setBorrowAmount] = useState(0);
   const [txConfirmation, setTxConfirmation] = useState(false);
 
   const ethBalance = useBalance(provider, address);
 
-  const collateralBalance = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "collaterals",
-    [address]
-  );
+  //const collateralBalance = useContractReader(
+    //contracts,
+    //"VaultETHDAI",
+    //"collaterals",
+    //[address]
+  //);
 
   const onSubmit = async() => {
     const res = await contracts
         .VaultETHDAI
         .withdraw(
-          parseEther(amount)
+          parseEther(supplyAmount)
         );
 
     if (res && res.hash) {
@@ -52,7 +52,7 @@ function CollateralForm({ contracts, provider, address }) {
     <Grid container direction="column">
       <Grid item className="section-title">
         <Typography variant="h3">
-          Collateral
+          Supply & Borrow
         </Typography>
         <div class="tooltip-info">
           <InfoOutlinedIcon />
@@ -61,26 +61,10 @@ function CollateralForm({ contracts, provider, address }) {
           </span>
         </div>
       </Grid>
-      <Grid item className="toggle-button">
-        <div class="button">
-          <input
-            onChange={({ target }) => setAction(target.checked ? 'withdraw' : 'deposit' )}
-            type="checkbox"
-            class="checkbox"
-          />
-          <div class="knobs">
-            <span class="toggle-options" data-toggle="Withdraw">
-              <span>Deposit</span>
-            </span>
-          </div>
-          <div class="layer"></div>
-        </div>
-      </Grid>
       <Grid item>
         <div class="subtitle">
-          Amount to {action}
           <span class="complementary-infos">
-            ETH balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} Ξ
+            Balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} ETH Ξ
           </span>
         </div>
         <div class="fake-input">
@@ -89,11 +73,11 @@ function CollateralForm({ contracts, provider, address }) {
             required
             fullWidth
             autoComplete="off"
-            name="amount"
+            name="supplyAmount"
             type="tel"
-            id="amount"
+            id="supplyAmount"
             variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
+            onChange={({ target }) => setSupplyAmount(target.value)}
             inputRef={register({ required: true, min: 0 })}
             InputProps={{
               startAdornment: (
@@ -111,9 +95,44 @@ function CollateralForm({ contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount
+        {errors?.supplyAmount
             && <Typography variant="body2">
-              Please, type the amount you like to withdraw!
+              Please, type the amount you like to supply!
+            </Typography>
+        }
+      </Grid>
+      <Grid item>
+        <div class="fake-input">
+          <TextField
+            className="input-container"
+            required
+            fullWidth
+            autoComplete="off"
+            id="borrowAmount"
+            name="borrowAmount"
+            type="tel"
+            variant="outlined"
+            onChange={({ target }) => setBorrowAmount(target.value)}
+            inputRef={register({ required: true, min: 0 })}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Avatar alt="DAI" src="/DAI.png" class="icon"/>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography variant="body1" class="input-infos">
+                    DAI
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+        {errors?.borrowAmount
+            && <Typography variant="body2">
+              Please, type the amount you like to borrow!
             </Typography>
         }
       </Grid>
@@ -122,11 +141,11 @@ function CollateralForm({ contracts, provider, address }) {
           onClick={handleSubmit(onSubmit)}
           className="main-button"
         >
-          {action === 'withdraw' ? "Withdraw" : "Deposit"}
+          Submit
         </Button>
       </Grid>
     </Grid>
   );
 }
 
-export default CollateralForm;
+export default SupplyAndBorrowForm;

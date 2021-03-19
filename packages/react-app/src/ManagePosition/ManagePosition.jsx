@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "./Dashboard.css";
-import { useContractReader } from "./hooks";
-import { DAI_ADDRESS } from "./constants";
+import "./ManagePosition.css";
+import { useContractReader } from "../hooks";
+import { DAI_ADDRESS } from "../constants";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-import PositionElement, { PositionActions } from "./PositionElement";
+import PositionElement, { PositionActions } from "../PositionElement";
 import DebtForm from "./DebtForm";
 import CollateralForm from "./CollateralForm";
-import ProvidersList from "./ProvidersList";
-import CollaterizationIndicator from "./CollaterizationIndicator";
+import SupplyAndBorrowForm from "./SupplyAndBorrowForm";
+import RepayAndWithdrawForm from "./RepayAndWithdrawForm";
+import ProvidersList from "../ProvidersList";
+import CollaterizationIndicator from "../CollaterizationIndicator";
 
-function Dashboard({ contracts, provider, address, setRoute }) {
+function ManagePosition({ contracts, provider, address, setRoute }) {
   const location = useLocation();
 
   const [actionsType, setActionsType] = useState('single');
@@ -70,7 +72,7 @@ function Dashboard({ contracts, provider, address, setRoute }) {
               <span class="back-icon">
                 <ArrowBackIosOutlinedIcon />
               </span>
-              <h3>Back to all my positions</h3>
+              <h3>Back to my positions</h3>
             </a>
           </div>
 
@@ -97,7 +99,7 @@ function Dashboard({ contracts, provider, address, setRoute }) {
                   <div class="toggle-mode">
                     <div class="button">
                       <input
-                        onChange={({ target }) => setActionsType(target.checked ? 'single' : 'combo' )}
+                        onChange={({ target }) => setActionsType(target.checked ? 'combo' : 'single')}
                         type="checkbox"
                         class="checkbox"
                       />
@@ -113,19 +115,33 @@ function Dashboard({ contracts, provider, address, setRoute }) {
 
                 <form noValidate>
                   <div class="manage-content">
-                    <div class="col-50">
-                      <DebtForm
-                        contracts={contracts}
-                        provider={provider}
-                        address={address}
-                      />
+                    <div class="col-50">{
+                      actionsType === 'single'
+                        ? <CollateralForm
+                          contracts={contracts}
+                          provider={provider}
+                          address={address}
+                        />
+                        : <SupplyAndBorrowForm 
+                          contracts={contracts}
+                          provider={provider}
+                          address={address}
+                        />
+                      }
                     </div>
-                    <div class="col-50">
-                      <CollateralForm
-                        contracts={contracts}
-                        provider={provider}
-                        address={address}
-                      />
+                    <div class="col-50">{
+                      actionsType === 'single'
+                        ? <DebtForm
+                          contracts={contracts}
+                          provider={provider}
+                          address={address}
+                        />
+                        : <RepayAndWithdrawForm 
+                          contracts={contracts}
+                          provider={provider}
+                          address={address}
+                        />
+                      }
                     </div>
                   </div>
                 </form>
@@ -175,4 +191,4 @@ function FlashClose() {
   );
 }
 
-export default Dashboard;
+export default ManagePosition;

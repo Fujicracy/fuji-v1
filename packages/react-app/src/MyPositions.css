@@ -39,6 +39,7 @@
 .one-position {
 	padding: 1rem;
 	background: var(--blocks56);
+  border: 0.1rem solid var(--text05);
 	backdrop-filter: blur(0.375rem);
 	-webkit-backdrop-filter: blur(0.375rem);
 	border-radius: 0.5rem;

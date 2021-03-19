@@ -29,6 +29,10 @@
 	margin-bottom: initial;
 }
 
+.manage-my-position {
+  border: 0.1rem solid var(--text05);
+}
+
 .manage-my-position .position-element {
 	padding-bottom: 1rem;
 	border-bottom: 0.063rem solid var(--text16);

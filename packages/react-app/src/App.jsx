@@ -17,7 +17,7 @@ import Home from "./Home";
 import Simulation from "./Simulation";
 import InitBorrow from "./InitBorrow";
 import MyPositions from "./MyPositions";
-import Dashboard from "./Dashboard";
+import ManagePosition from "./ManagePosition/ManagePosition";
 import Infos from "./Infos";
 import Team from "./Team";
 
@@ -87,7 +87,7 @@ function App(props) {
             />
           </Route>
           <Route path="/dashboard">
-            <Dashboard
+            <ManagePosition
               contracts={contracts}
               address={address}
               setRoute={setRoute}

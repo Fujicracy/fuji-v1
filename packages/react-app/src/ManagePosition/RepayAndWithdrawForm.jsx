@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useForm } from "react-hook-form";
-import { useContractReader, useContractLoader, useCustomContractLoader } from "./hooks";
-import { Transactor } from "./helpers";
+import { useContractReader } from "../hooks";
+import { Transactor } from "../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,12 +17,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-function DebtForm({ contracts, provider, address }) {
+function RepayAndWithdrawForm({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 
   const [action, setAction] = useState('repay');
-  const [amount, setAmount] = useState(1000);
+  const [repayAmount, setRepayAmount] = useState(0);
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [approveDialog, setApproveDialog] = useState(0);
   const [txStatus, setTxStatus] = useState(null);
 
@@ -52,7 +53,7 @@ function DebtForm({ contracts, provider, address }) {
       contracts
       .VaultETHDAI
       .payback(
-        parseUnits(amount)
+        parseUnits(repayAmount)
       )
     );
 
@@ -73,7 +74,7 @@ function DebtForm({ contracts, provider, address }) {
   const approve = async(infiniteApproval) => {
     const base = BigNumber.from(2);
     const e = BigNumber.from(256);
-    const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(amount);
+    const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(repayAmount);
 
     setApproveDialog(2);
     const res = await tx(
@@ -100,7 +101,7 @@ function DebtForm({ contracts, provider, address }) {
   }
 
   const onSubmit = async (data) => {
-    if (parseUnits(data.amount) > Number(allowance)) {
+    if (parseUnits(data.repayAmount) > Number(allowance)) {
       setApproveDialog(1);
     }
     else {
@@ -115,7 +116,7 @@ function DebtForm({ contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} color="primary">
-            Approve {amount}
+            Approve {repayAmount}
           </Button>
           <Button onClick={() => approve(true)} color="primary">
             Infinite Approve
@@ -145,7 +146,7 @@ function DebtForm({ contracts, provider, address }) {
     },
     '6': {
       title: 'Transaction successful',
-      content: `You have succefully ${action}ed ${amount} DAI`,
+      content: `You have succefully ${action}ed ${repayAmount} DAI`,
       actions: () => null
     },
   }
@@ -163,7 +164,7 @@ function DebtForm({ contracts, provider, address }) {
       </Dialog>
       <Grid item className="section-title">
         <Typography variant="h3">
-          Debt
+          Repay & Withdraw
         </Typography>
         <div class="tooltip-info">
           <InfoOutlinedIcon />
@@ -172,26 +173,10 @@ function DebtForm({ contracts, provider, address }) {
           </span>
         </div>
       </Grid>
-      <Grid item className="toggle-button">
-        <div class="button">
-          <input
-            onChange={({ target }) => setAction(target.checked ? 'borrow' : 'repay')}
-            type="checkbox"
-            class="checkbox"
-          />
-          <div class="knobs">
-            <span class="toggle-options" data-toggle="Borrow">
-              <span>Repay</span>
-            </span>
-          </div>
-          <div class="layer"></div>
-        </div>
-      </Grid>
       <Grid item>
         <div class="subtitle">
-          Amount to {action}
           <span class="complementary-infos">
-            DAI balance: {daiBalance ? formatUnits(daiBalance) : '...'} Ξ
+            Balance: {daiBalance ? formatUnits(daiBalance) : '...'} DAI Ξ
           </span>
         </div>
         <div class="fake-input">
@@ -200,11 +185,11 @@ function DebtForm({ contracts, provider, address }) {
             required
             fullWidth
             autoComplete="off"
-            id="amount"
-            name="amount"
+            id="repayAmount"
+            name="repayAmount"
             type="tel"
             variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
+            onChange={({ target }) => setRepayAmount(target.value)}
             inputRef={register({ required: true, min: 0 })}
             InputProps={{
               startAdornment: (
@@ -222,9 +207,44 @@ function DebtForm({ contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount
+        {errors?.repayAmount
             && <Typography variant="body2">
               Please, type the amount you like to repay!
+            </Typography>
+        }
+      </Grid>
+      <Grid item>
+        <div class="fake-input">
+          <TextField
+            className="input-container"
+            required
+            fullWidth
+            autoComplete="off"
+            name="withdrawAmount"
+            type="tel"
+            id="withdrawAmount"
+            variant="outlined"
+            onChange={({ target }) => setWithdrawAmount(target.value)}
+            inputRef={register({ required: true, min: 0 })}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Avatar alt="ETH" src="/ETH.png" class="icon"/>
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Typography variant="body1" class="input-infos">
+                    ETH
+                  </Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </div>
+        {errors?.amount
+            && <Typography variant="body2">
+              Please, type the amount you like to withdraw!
             </Typography>
         }
       </Grid>
@@ -233,11 +253,11 @@ function DebtForm({ contracts, provider, address }) {
           onClick={handleSubmit(onSubmit)}
           className="main-button"
         >
-          {action === 'repay' ? 'Repay' : 'Borrow'}
+          Submit
         </Button>
       </Grid>
     </Grid>
   );
 }
 
-export default DebtForm;
+export default RepayAndWithdrawForm;
