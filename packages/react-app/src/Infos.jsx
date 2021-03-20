@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -42,13 +41,8 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Infos({ address, setRoute, loadWeb3Modal }) {
+function Infos({ address, loadWeb3Modal }) {
   const classes = useStyles();
-  const location = useLocation();
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location, setRoute])
 
   return (
     <Container className={classes.container}> 

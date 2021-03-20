@@ -24,7 +24,7 @@ import HowItWorks from "./HowItWorks";
 // 1. defining the asset to borrow and the vault to be used
 // 2. defining the amount to be borrowed
 
-function InitBorrow({ contracts, provider, address, setRoute }) {
+function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
 
   const [borrowAmount, setBorrowAmount] = useState(1000);

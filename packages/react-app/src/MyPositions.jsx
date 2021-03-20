@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import "./MyPositions.css";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -8,12 +7,7 @@ import PositionElement, { PositionActions } from "./PositionElement";
 import ProvidersList from "./ProvidersList";
 import ProtocolStats from "./ProtocolStats";
 
-function MyPositions({ contracts, address, setRoute }) {
-  const location = useLocation();
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location, setRoute])
+function MyPositions({ contracts, address, }) {
 
   return (
     <div className="container">

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -34,13 +33,8 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Home({ address, setRoute, loadWeb3Modal }) {
+function Home({ address, loadWeb3Modal }) {
   const classes = useStyles();
-  const location = useLocation();
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location, setRoute])
 
   return (
     <div> 

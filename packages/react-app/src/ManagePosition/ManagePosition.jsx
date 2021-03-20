@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import "./ManagePosition.css";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -12,14 +11,9 @@ import RepayAndWithdrawForm from "./RepayAndWithdrawForm";
 import ProvidersList from "../ProvidersList";
 import CollaterizationIndicator from "../CollaterizationIndicator";
 
-function ManagePosition({ contracts, provider, address, setRoute }) {
-  const location = useLocation();
+function ManagePosition({ contracts, provider, address, }) {
 
   const [actionsType, setActionsType] = useState('single');
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  }, [location, setRoute]);
 
   return (
     <div className="container">

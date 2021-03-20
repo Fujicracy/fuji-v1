@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import "./Simulation.css";
 //import { formatUnits, formatEther } from "@ethersproject/units";
 //import { useContractReader } from "./hooks";
@@ -16,14 +15,9 @@ import { ResponsiveBar } from '@nivo/bar'
 import ProtocolStats from "./ProtocolStats";
 import HowItWorks from "./HowItWorks";
 
-function Simulation({ contracts, address, setRoute }) {
-  const location = useLocation();
+function Simulation({ contracts, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(1000);
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location, setRoute])
 
   const data = [
     {

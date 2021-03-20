@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link, NavLink } from "react-router-dom";
 import { Web3Provider } from "@ethersproject/providers";
 import "./App.css";
 import Web3Modal from "web3modal";
@@ -18,7 +18,6 @@ import Team from "./Team";
 
 function App(props) {
   const [injectedProvider, setInjectedProvider] = useState();
-  const [route, setRoute] = useState();
 
   const userProvider = useUserProvider(injectedProvider);
   const address = useUserAddress(userProvider);
@@ -41,84 +40,79 @@ function App(props) {
   }, [loadWeb3Modal]);
 
   //<li>
-    //<a href="#"><span className="material-icons">light_mode</span></a>
+    //<Link to="#"><span className="material-icons">light_mode</span></Link>
   //</li>
   return (
-    <div> 
+    <BrowserRouter>
       <header>
-        <a href="/" className="logo">
+        <Link to="/" className="logo">
           <img alt="logo" src="https://assets.codepen.io/194136/fujiDao.svg" />
-        </a>
+        </Link>
 
         <nav>
           <ul>
-            <li><a href="/dashboard" className="current">Dashboard</a></li>
-            <li><a href="/">All positions</a></li>
+            <li>
+              <NavLink to="/dashboard" activeClassName="current">Dashboard</NavLink>
+            </li>
+            <li>
+              <NavLink to="/my-positions" activeClassName="current">All positions</NavLink>
+            </li>
             <li>{
               address
                 ? <a href="javasctip:void(0)" className="button-nav connected">
-                    {address.substr(0, 5) + "..." + address.substr(-4, 4)}
-                  </a>
+                  {address.substr(0, 5) + "..." + address.substr(-4, 4)}
+                </a>
                 : <a href="javasctip:void(0)" className="button-nav" onClick={() => loadWeb3Modal()}>
-                    Connect Wallet
-                  </a>
+                  Connect Wallet
+                </a>
               }
             </li>
           </ul>
         </nav>
       </header>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/">
-            <Home
-              address={address}
-              loadWeb3Modal={loadWeb3Modal}
-              setRoute={setRoute}
-            />
-          </Route>
-          <Route path="/init-borrow">
-            <InitBorrow
-              contracts={contracts}
-              address={address}
-              setRoute={setRoute}
-              provider={userProvider}
-            />
-          </Route>
-          <Route path="/dashboard">
-            <ManagePosition
-              contracts={contracts}
-              address={address}
-              setRoute={setRoute}
-              provider={userProvider}
-            />
-          </Route>
-          <Route path="/my-positions">
-            <MyPositions
-              contracts={contracts}
-              address={address}
-              setRoute={setRoute}
-            />
-          </Route>
-          <Route path="/simulation">
-            <Simulation
-              address={address}
-              setRoute={setRoute}
-            />
-          </Route>
-          <Route path="/team">
-            <Team
-              setRoute={setRoute}
-            />
-          </Route>
-          <Route path="/about">
-            <Infos
-              setRoute={setRoute}
-            />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          <Home
+            address={address}
+            loadWeb3Modal={loadWeb3Modal}
+          />
+        </Route>
+        <Route path="/init-borrow">
+          <InitBorrow
+            contracts={contracts}
+            address={address}
+            provider={userProvider}
+          />
+        </Route>
+        <Route path="/dashboard">
+          <ManagePosition
+            contracts={contracts}
+            address={address}
+            provider={userProvider}
+          />
+        </Route>
+        <Route path="/my-positions">
+          <MyPositions
+            contracts={contracts}
+            address={address}
+          />
+        </Route>
+        <Route path="/simulation">
+          <Simulation
+            address={address}
+          />
+        </Route>
+        <Route path="/team">
+          <Team
+          />
+        </Route>
+        <Route path="/about">
+          <Infos
+          />
+        </Route>
+      </Switch>
       <div className="bg-effect"></div>
-    </div>
+    </BrowserRouter>
   );
 }
 //signer={userProvider ? userProvider.getSigner() : null}
@@ -137,10 +131,10 @@ const web3Modal = new Web3Modal({
 });
 
 //const logoutOfWeb3Modal = async () => {
-  //await web3Modal.clearCachedProvider();
-  //setTimeout(() => {
-    //window.location.reload();
-  //}, 1);
+//await web3Modal.clearCachedProvider();
+//setTimeout(() => {
+//window.location.reload();
+//}, 1);
 //};
 
 export default App;
