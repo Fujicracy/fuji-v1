@@ -7,6 +7,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_fliquidator",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_changeThreshold",
         "type": "uint256"
@@ -106,6 +111,19 @@
   {
     "inputs": [],
     "name": "flasherAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fliquidator",
     "outputs": [
       {
         "internalType": "address",
