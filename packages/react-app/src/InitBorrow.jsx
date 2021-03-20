@@ -6,7 +6,6 @@ import { useBalance, useContractReader } from "./hooks";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -18,6 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import CollaterizationIndicator from "./CollaterizationIndicator";
 import ProvidersList from "./ProvidersList";
+import HowItWorks from "./HowItWorks";
 
 // TODO rename to InitBorrow
 // need to have a route params
@@ -225,27 +225,6 @@ function InitBorrow({ contracts, provider, address, setRoute }) {
         />
       </div>
     </div>
-  );
-}
-
-function HowItWorks() {
-  return (
-    <fieldset className="hiw">
-      <legend className="hiw-title">
-        <span className="hiw-title-content">
-          <span className="icon">
-            <InfoOutlinedIcon />
-          </span>
-          <Typography variant="h3">How it works</Typography>
-        </span>
-      </legend>
-
-      <Typography variant="body2">
-        Please enter the amount of <span className="bold">DAI</span> you'd like to borrow and the amount of
-        <span className="bold">ETH</span> to provide as collateral.
-        The minimum required amout of collateral is suggested.
-      </Typography>
-    </fieldset>
   );
 }
 

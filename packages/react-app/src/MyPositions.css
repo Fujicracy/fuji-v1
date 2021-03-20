@@ -1,38 +1,4 @@
 /* ---------------- */
-/*     Stats        */
-/* ---------------- */
-
-.fuji-stats {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.fuji-stats .dark-block {
-	margin-right: 24px;
-	width: calc(50% - 0.75rem);
-	padding: 1.5rem 2rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-  color: var(--text);
-}
-
-.fuji-stats .dark-block:last-child {
-	margin-right: 0rem;
-}
-
-.fuji-stats .title {
-	font-size: 1rem;
-	font-weight: 600;
-}
-
-.fuji-stats .number {
-	font-size: 1rem;
-	font-weight: 400;
-}
-
-/* ---------------- */
 /*     Position     */
 /* ---------------- */
 

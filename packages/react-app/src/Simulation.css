@@ -1,9 +1,30 @@
+.fuji-charts {
+	margin-bottom: 2rem;
+	margin-top: 2rem;
+}
+
 .chart-container {
-  padding-top: 30px;
-  height: 33vh;
-  width: 70vw;
+	margin-bottom: 1rem;
+  height: 30vh;
+  width: 100%;
 }
 
 .chart-container text {
-	fill: var(--white) !important;
+	fill: var(--text64) !important;
+}
+
+.charts-buttons {
+  padding-top: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.charts-buttons .fake-input{
+  width: 50%;
+}
+
+.charts-buttons button {
+	width: calc(40% - 1rem);
+  height: 3.4rem;
+  margin-left: 1rem;
 }

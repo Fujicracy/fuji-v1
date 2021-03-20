@@ -1,0 +1,33 @@
+/* ---------------- */
+/*     Stats        */
+/* ---------------- */
+
+.protocol-stats {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.protocol-stats .dark-block {
+	margin-right: 24px;
+	width: calc(50% - 0.75rem);
+	padding: 1.5rem 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+  color: var(--text);
+}
+
+.protocol-stats .dark-block:last-child {
+	margin-right: 0rem;
+}
+
+.protocol-stats .title {
+	font-size: 1rem;
+	font-weight: 600;
+}
+
+.protocol-stats .number {
+	font-size: 1rem;
+	font-weight: 400;
+}
