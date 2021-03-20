@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from 'react-router-dom';
 import "./Simulation.css";
-//import { formatUnits, formatEther } from "@ethersproject/units";
-//import { useContractReader } from "./hooks";
-//import Grid from '@material-ui/core/Grid';
-//import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { ResponsiveBar } from '@nivo/bar'
 
-import ProtocolStats from "./ProtocolStats";
-import HowItWorks from "./HowItWorks";
+import ProtocolStats from "../ProtocolStats";
+import HowItWorks from "../HowItWorks";
 
 function Simulation({ contracts, address }) {
   const history = useHistory();
@@ -22,7 +17,9 @@ function Simulation({ contracts, address }) {
   const [borrowAmount, setBorrowAmount] = useState(1000);
   const [borrowAsset, setBorrowAsset] = useState('DAI');
 
-  const onBorrow = () => history.push(`/init-borrow?borrowAsset=${borrowAsset}&borrowAmount=${borrowAmount}`);
+  const onBorrow = () => history.push(
+    `/dashboard/init-borrow?borrowAsset=${borrowAsset}&borrowAmount=${borrowAmount}`
+  );
 
   const data = [
     {

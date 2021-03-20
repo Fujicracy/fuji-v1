@@ -9,10 +9,7 @@ import { useUserProvider, useContractLoader, useExternalContractLoader } from ".
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI } from "./constants";
 
 import Home from "./Home";
-import Simulation from "./Simulation";
-import InitBorrow from "./InitBorrow";
-import MyPositions from "./MyPositions";
-import ManagePosition from "./ManagePosition/ManagePosition";
+import Dashboard from "./Dashboard/Dashboard";
 import Infos from "./Infos";
 import Team from "./Team";
 
@@ -51,9 +48,11 @@ function App(props) {
 
         <nav>
           <ul>
+          {address && (
             <li>
               <NavLink to="/dashboard" activeClassName="current">Dashboard</NavLink>
             </li>
+          )}
             <li>
               <NavLink to="/my-positions" activeClassName="current">All positions</NavLink>
             </li>
@@ -77,29 +76,11 @@ function App(props) {
             loadWeb3Modal={loadWeb3Modal}
           />
         </Route>
-        <Route path="/init-borrow">
-          <InitBorrow
-            contracts={contracts}
-            address={address}
-            provider={userProvider}
-          />
-        </Route>
         <Route path="/dashboard">
-          <ManagePosition
+          <Dashboard
             contracts={contracts}
             address={address}
             provider={userProvider}
-          />
-        </Route>
-        <Route path="/my-positions">
-          <MyPositions
-            contracts={contracts}
-            address={address}
-          />
-        </Route>
-        <Route path="/simulation">
-          <Simulation
-            address={address}
           />
         </Route>
         <Route path="/team">

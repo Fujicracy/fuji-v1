@@ -3,9 +3,9 @@ import "./MyPositions.css";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import PositionElement, { PositionActions } from "./PositionElement";
-import ProvidersList from "./ProvidersList";
-import ProtocolStats from "./ProtocolStats";
+import PositionElement, { PositionActions } from "../PositionElement";
+import ProvidersList from "../ProvidersList";
+import ProtocolStats from "../ProtocolStats";
 
 function MyPositions({ contracts, address, }) {
 

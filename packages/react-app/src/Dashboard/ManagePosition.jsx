@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./ManagePosition.css";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -20,12 +21,12 @@ function ManagePosition({ contracts, provider, address, }) {
       <div className="left-content">
         <div className="positions manage-position">
           <div className="section-title">
-            <a href="/my-positions" className="back-to-link">
+            <Link to="my-positions" className="back-to-link">
               <span className="back-icon">
                 <ArrowBackIosOutlinedIcon />
               </span>
               <h3>Back to my positions</h3>
-            </a>
+            </Link>
           </div>
 
           <div className="position-board">

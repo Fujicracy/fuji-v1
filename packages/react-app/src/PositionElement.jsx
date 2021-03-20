@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from 'react-router-dom';
 import { formatUnits, formatEther } from "@ethersproject/units";
 import { useContractReader } from "./hooks";
 import Button from '@material-ui/core/Button';
@@ -10,6 +11,7 @@ export const PositionActions = {
 };
 
 function PositionElement({ contracts, address, actionType }) {
+  const history = useHistory();
 
   const debtBalance = useContractReader(
     contracts,
@@ -62,7 +64,7 @@ function PositionElement({ contracts, address, actionType }) {
 
       <div className="position-actions">{
         actionType === PositionActions.Manage
-          ? <Button className="position-btn">Manage</Button>
+          ? <Button className="position-btn" onClick={() => history.push('/dashboard/position')}>Manage</Button>
           : actionType === PositionActions.Liquidate
           ? <Button className="position-btn">Liquidate</Button>
           : <span style={{ width: "5rem" }}></span>
