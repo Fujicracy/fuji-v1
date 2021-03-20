@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from 'react-router-dom';
 import "./Simulation.css";
 //import { formatUnits, formatEther } from "@ethersproject/units";
 //import { useContractReader } from "./hooks";
@@ -16,8 +17,12 @@ import ProtocolStats from "./ProtocolStats";
 import HowItWorks from "./HowItWorks";
 
 function Simulation({ contracts, address }) {
+  const history = useHistory();
 
   const [borrowAmount, setBorrowAmount] = useState(1000);
+  const [borrowAsset, setBorrowAsset] = useState('DAI');
+
+  const onBorrow = () => history.push(`/init-borrow?borrowAsset=${borrowAsset}&borrowAmount=${borrowAmount}`);
 
   const data = [
     {
@@ -79,21 +84,33 @@ function Simulation({ contracts, address }) {
                 <div className="select-options">
                   <div className="options-list">
                     <label>
-                      <input type="radio" name="borrow" value="dai" checked />
+                      <input
+                        type="radio"
+                        name="borrow"
+                        value="DAI"
+                        onChange={({ target }) => setBorrowAsset('DAI')}
+                        checked={borrowAsset === 'DAI'}
+                      />
                       <div className="fake-radio">
                         <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
                         <span className="select-option-name">DAI</span>
                       </div>
                     </label>
                     <label>
-                      <input type="radio" name="borrow" value="usdc" />
+                      <input
+                        type="radio"
+                        name="borrow"
+                        value="USDC"
+                        onChange={({ target }) => setBorrowAsset('USDC')}
+                        checked={borrowAsset === 'USDC'}
+                      />
                       <div className="fake-radio">
                         <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
                         <span className="select-option-name">USDC</span>
                       </div>
                     </label>
                     <label>
-                      <input type="radio" name="borrow" value="usdt" />
+                      <input type="radio" name="borrow" value="usdt" disabled={true} />
                       <div className="fake-radio">
                         <img alt="usdt" src="https://assets.codepen.io/194136/tether.svg" />
                         <span className="select-option-name">USDT</span>
@@ -117,20 +134,25 @@ function Simulation({ contracts, address }) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt="DAI" src="/DAI.png" className="icon"/>
+                          <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon"/>
                         </InputAdornment>
                       ),
                       endAdornment: (
                         <InputAdornment position="end">
                           <Typography variant="body1" className="input-infos">
-                            DAI
+                            {borrowAsset}
                           </Typography>
                         </InputAdornment>
                       ),
                     }}
                   />
                 </div>
-                <Button className="main-button" > Borrow </Button>
+                <Button
+                  onClick={() => onBorrow()}
+                  className="main-button"
+                >
+                  Borrow
+                </Button>
               </div>
             </form>
         </div>

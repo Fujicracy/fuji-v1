@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useBalance, useContractReader } from "./hooks";
@@ -19,15 +20,12 @@ import CollaterizationIndicator from "./CollaterizationIndicator";
 import ProvidersList from "./ProvidersList";
 import HowItWorks from "./HowItWorks";
 
-// TODO rename to InitBorrow
-// need to have a route params
-// 1. defining the asset to borrow and the vault to be used
-// 2. defining the amount to be borrowed
-
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
+  const queries = new URLSearchParams(useLocation().search);
 
   const [borrowAmount, setBorrowAmount] = useState(1000);
+  const [borrowAsset, setBorrowAsset] = useState('DAI');
   const [collateralAmount, setCollateralAmount] = useState('');
   const [formattedCollateral, setFormattedCollateral] = useState(0);
   const [txConfirmation, setTxConfirmation] = useState(false);
@@ -40,6 +38,16 @@ function InitBorrow({ contracts, provider, address }) {
     "getNeededCollateralFor",
     [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
   );
+
+  useEffect(() => {
+    if (queries.get("borrowAmount"))
+      setBorrowAmount(queries.get("borrowAmount"));
+  }, [queries, setBorrowAmount]);
+
+  useEffect(() => {
+    if (queries.get("borrowAsset"))
+      setBorrowAsset(queries.get("borrowAsset"));
+  }, [queries, setBorrowAsset]);
 
   useEffect(() => {
     if (neededCollateral) {
@@ -93,21 +101,33 @@ function InitBorrow({ contracts, provider, address }) {
               <div className="select-options">
                 <div className="options-list">
                   <label>
-                    <input type="radio" name="borrow" value="dai" checked />
+                    <input
+                      type="radio"
+                      name="borrow"
+                      value="DAI"
+                      onChange={({ target }) => setBorrowAsset('DAI')}
+                      checked={borrowAsset === 'DAI'}
+                    />
                     <div className="fake-radio">
                       <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
                       <span className="select-option-name">DAI</span>
                     </div>
                   </label>
                   <label>
-                    <input type="radio" name="borrow" value="usdc" />
+                    <input
+                      type="radio"
+                      name="borrow"
+                      value="USDC"
+                      onChange={({ target }) => setBorrowAsset('USDC')}
+                      checked={borrowAsset === 'USDC'}
+                    />
                     <div className="fake-radio">
                       <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
                       <span className="select-option-name">USDC</span>
                     </div>
                   </label>
                   <label>
-                    <input type="radio" name="borrow" value="usdt" />
+                    <input type="radio" name="borrow" value="usdt" disabled={true} />
                     <div className="fake-radio">
                       <img alt="usdt" src="https://assets.codepen.io/194136/tether.svg" />
                       <span className="select-option-name">USDT</span>
@@ -125,7 +145,7 @@ function InitBorrow({ contracts, provider, address }) {
                   <TextField
                     className="input-container"
                     fullWidth
-                    placeholder="1000"
+                    placeholder={`${borrowAmount}`}
                     autoComplete="off"
                     id="borrowAmount"
                     name="borrowAmount"
@@ -136,13 +156,13 @@ function InitBorrow({ contracts, provider, address }) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt="DAI" src="/DAI.png" className="icon"/>
+                          <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon"/>
                         </InputAdornment>
                       ),
                       endAdornment: (
                         <InputAdornment position="end">
                           <Typography variant="body1" className="input-infos">
-                            DAI
+                            {borrowAsset}
                           </Typography>
                         </InputAdornment>
                       ),
