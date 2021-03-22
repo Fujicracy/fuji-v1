@@ -86,7 +86,7 @@ function InitBorrow({ contracts, provider, address }) {
           </DialogContent>
           <DialogActions>
             <Button
-              href="/my-positions"
+              href="/dashboard/my-positions"
               className="main-button"
             >
               Check my positions

@@ -16,14 +16,21 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+const Action = {
+  Repay: 0,
+  Borrow: 1
+}
 
 function DebtForm({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 
-  const [action, setAction] = useState('repay');
-  const [amount, setAmount] = useState(1000);
-  const [approveDialog, setApproveDialog] = useState(0);
+  const [action, setAction] = useState(Action.Repay);
+  const [focus, setFocus] = useState(false);
+  const [amount, setAmount] = useState();
+  const [dialog, setDialog] = useState({ step: 0, withApproval: false });
   const [txStatus, setTxStatus] = useState(null);
 
   const debtBalance = useContractReader(
@@ -46,8 +53,33 @@ function DebtForm({ contracts, provider, address }) {
     [address, contracts ? contracts["VaultETHDAI"].address : '0x']
   );
 
-  const payback = async() => {
-    setApproveDialog(4);
+  const borrow = async() => {
+    setDialog({ step: 4, withApproval: false });
+    const res = await tx(
+      contracts
+      .VaultETHDAI
+      .borrow(
+        parseUnits(amount)
+      )
+    );
+
+    if (res && res.hash) {
+      setDialog({ step: 5, withApproval: false });
+      const receipt = await res.wait();
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
+        setDialog({ step: 6, withApproval: false });
+      }
+    }
+    else {
+      // error
+      console.log(res);
+      setDialog({ step: 0, withApproval: false });
+    }
+  }
+
+  const payback = async(withApproval) => {
+    setDialog({ step: 4, withApproval });
+    console.log(amount);
     const res = await tx(
       contracts
       .VaultETHDAI
@@ -57,16 +89,16 @@ function DebtForm({ contracts, provider, address }) {
     );
 
     if (res && res.hash) {
-      setApproveDialog(5);
+      setDialog({ step: 5, withApproval });
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Repay')) {
-        setApproveDialog(6);
+        setDialog({ step: 6, withApproval });
       }
     }
     else {
       // error
       console.log(res);
-      setApproveDialog(0);
+      setDialog({ step: 0, withApproval: false });
     }
   }
 
@@ -75,7 +107,7 @@ function DebtForm({ contracts, provider, address }) {
     const e = BigNumber.from(256);
     const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(amount);
 
-    setApproveDialog(2);
+    setDialog({ step: 2, withApproval: true });
     const res = await tx(
       contracts
       .DAI
@@ -86,38 +118,44 @@ function DebtForm({ contracts, provider, address }) {
     );
 
     if (res && res.hash) {
-      setApproveDialog(3);
+      setDialog({ step: 3, withApproval: true });
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Approval')) {
-        payback();
+        payback(true);
       }
     }
     else {
       // error
       console.log(res);
-      setApproveDialog(0);
+      setDialog({ step: 0, withApproval: false });
     }
   }
 
   const onSubmit = async (data) => {
-    if (parseUnits(data.amount) > Number(allowance)) {
-      setApproveDialog(1);
+    if (action === Action.Repay) {
+      if (parseUnits(data.amount) > Number(allowance)) {
+        setDialog({ step: 1, withApproval: true });
+      }
+      else {
+        payback(false);
+      }
     }
     else {
-      payback();
+      borrow();
     }
   }
 
-  const approvalSteps = {
+  const dialogContents = {
     '1': {
       title: 'Approving... 1 of 2',
       content: 'You need first to approve a spending limit.',
+      loader: false,
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} color="primary">
-            Approve {amount}
+          <Button onClick={() => approve(false)} className="main-button">
+            Approve {amount} DAI
           </Button>
-          <Button onClick={() => approve(true)} color="primary">
+          <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
           </Button>
         </DialogActions>
@@ -126,40 +164,63 @@ function DebtForm({ contracts, provider, address }) {
     '2': {
       title: 'Approving... 1 of 2',
       content: 'Please check your wallet: \n Transaction is waiting for confirmation!',
+      loader: true,
       actions: () => null
     },
     '3': {
       title:  'Approving... 1 of 2',
       content: 'The transaction is pending, please wait!',
+      loader: true,
       actions: () => null
     },
     '4': {
-      title: `${action === 'repay' ? 'Repay' : 'Borrow'}ing... 2 of 2`,
+      title: `${action === Action.Repay
+          ? 'Repay' : 'Borrow'}ing... ${dialog.withApproval ? '2 of 2'
+          : ''}`,
       content: 'Please check your wallet: \n Transaction is waiting for confirmation!',
+      loader: true,
       actions: () => null
     },
     '5': {
-      title: `${action === 'repay' ? 'Repay' : 'Borrow'}ing... 2 of 2`,
+      title: `${action === Action.Repay
+          ? 'Repay' : 'Borrow'}ing... ${dialog.withApproval ? '2 of 2' :
+          ''}`,
       content: 'Transaction is pending, please wait!',
+      loader: true,
       actions: () => null
     },
     '6': {
       title: 'Transaction successful',
-      content: `You have succefully ${action}ed ${amount} DAI`,
-      actions: () => null
+      content: `You have succefully ${action === Action.Repay ? 'repay' : 'borrow'}ed ${amount} DAI.`,
+      loader: false,
+      actions: () => (
+        <DialogActions>
+          <Button
+            onClick={() => setDialog({ step: 0, withApproval: false })}
+            className="main-button"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      )
     },
   }
 
   return (
     <Grid container direction="column">
-      <Dialog open={approveDialog !== 0} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{approvalSteps[approveDialog]?.title}</DialogTitle>
+      <Dialog open={dialog.step !== 0} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">
+          {dialogContents[dialog.step]?.title}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {approvalSteps[approveDialog]?.content}
+            {dialogContents[dialog.step]?.content}
           </DialogContentText>
         </DialogContent>
-        {approvalSteps[approveDialog]?.actions()}
+        <DialogContent>
+          {dialogContents[dialog.step]?.loader && <CircularProgress />}
+        </DialogContent>
+        {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
         <Typography variant="h3">
@@ -175,7 +236,7 @@ function DebtForm({ contracts, provider, address }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? 'borrow' : 'repay')}
+            onChange={({ target }) => setAction(target.checked ? Action.Borrow : Action.Repay)}
             type="checkbox"
             className="checkbox"
           />
@@ -204,6 +265,8 @@ function DebtForm({ contracts, provider, address }) {
             type="tel"
             variant="outlined"
             onChange={({ target }) => setAmount(target.value)}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false || !!amount)}
             inputRef={register({ required: true, min: 0 })}
             InputProps={{
               startAdornment: (
@@ -221,7 +284,7 @@ function DebtForm({ contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount
+        {errors?.amount && focus
             && <Typography variant="body2">
               Please, type the amount you like to repay!
             </Typography>
@@ -230,9 +293,10 @@ function DebtForm({ contracts, provider, address }) {
       <Grid item>
         <Button
           onClick={handleSubmit(onSubmit)}
+          style={{ visibility: focus ? 'initial' : 'hidden' }}
           className="main-button"
         >
-          {action === 'repay' ? 'Repay' : 'Borrow'}
+          {action === Action.Repay ? 'Repay' : 'Borrow'}
         </Button>
       </Grid>
     </Grid>

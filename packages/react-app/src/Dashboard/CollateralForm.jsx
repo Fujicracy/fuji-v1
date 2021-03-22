@@ -21,7 +21,8 @@ function CollateralForm({ contracts, provider, address }) {
   const tx = Transactor(provider);
 
   const [action, setAction] = useState('supply');
-  const [amount, setAmount] = useState(1000);
+  const [focus, setFocus] = useState(false);
+  const [amount, setAmount] = useState();
   const [txConfirmation, setTxConfirmation] = useState(false);
 
   const ethBalance = useBalance(provider, address);
@@ -33,7 +34,23 @@ function CollateralForm({ contracts, provider, address }) {
     [address]
   );
 
-  const onSubmit = async() => {
+  const supply = async () => {
+    const res = await contracts
+        .VaultETHDAI
+        .deposit(
+          parseEther(amount),
+          { value: parseEther(amount) }
+        );
+
+    if (res && res.hash) {
+      setTxConfirmation(true);
+    }
+    else {
+      // error
+    }
+  }
+
+  const withdraw = async () => {
     const res = await contracts
         .VaultETHDAI
         .withdraw(
@@ -45,6 +62,15 @@ function CollateralForm({ contracts, provider, address }) {
     }
     else {
       // error
+    }
+  }
+
+  const onSubmit = async() => {
+    if (action === 'withdraw') {
+      withdraw();
+    }
+    else {
+      supply();
     }
   }
 
@@ -84,6 +110,7 @@ function CollateralForm({ contracts, provider, address }) {
         </div>
         <div className="fake-input">
           <TextField
+            autoFocus
             className="input-container"
             required
             fullWidth
@@ -93,6 +120,8 @@ function CollateralForm({ contracts, provider, address }) {
             id="collateralAmount"
             variant="outlined"
             onChange={({ target }) => setAmount(target.value)}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false || !!amount)}
             inputRef={register({ required: true, min: 0 })}
             InputProps={{
               startAdornment: (
@@ -110,7 +139,7 @@ function CollateralForm({ contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount
+        {errors?.amount && focus
             && <Typography variant="body2">
               Please, type the amount you like to withdraw!
             </Typography>
@@ -119,6 +148,7 @@ function CollateralForm({ contracts, provider, address }) {
       <Grid item>
         <Button
           onClick={handleSubmit(onSubmit)}
+          style={{ visibility: focus ? 'initial' : 'hidden' }}
           className="main-button"
         >
           {action === 'withdraw' ? "Withdraw" : "Supply"}
