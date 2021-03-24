@@ -10,20 +10,26 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-//import Dialog from '@material-ui/core/Dialog';
-//import DialogActions from '@material-ui/core/DialogActions';
-//import DialogContent from '@material-ui/core/DialogContent';
-//import DialogContentText from '@material-ui/core/DialogContentText';
-//import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
+const Action = {
+  Supply: 0,
+  Withdraw: 1
+}
 
 function CollateralForm({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 
-  const [action, setAction] = useState('supply');
+  const [action, setAction] = useState(Action.Supply);
+  const [dialog, setDialog] = useState(false);
   const [focus, setFocus] = useState(false);
   const [amount, setAmount] = useState();
-  const [txConfirmation, setTxConfirmation] = useState(false);
 
   const ethBalance = useBalance(provider, address);
 
@@ -35,38 +41,36 @@ function CollateralForm({ contracts, provider, address }) {
   );
 
   const supply = async () => {
-    const res = await contracts
-        .VaultETHDAI
-        .deposit(
-          parseEther(amount),
-          { value: parseEther(amount) }
-        );
+    const res = await tx(
+      contracts
+      .VaultETHDAI
+      .deposit(
+        parseEther(amount),
+        { value: parseEther(amount) }
+      )
+    );
 
     if (res && res.hash) {
-      setTxConfirmation(true);
-    }
-    else {
-      // error
+      // success
+      setDialog(true);
     }
   }
 
   const withdraw = async () => {
-    const res = await contracts
-        .VaultETHDAI
-        .withdraw(
-          parseEther(amount)
-        );
+    const res = await tx(
+      contracts
+      .VaultETHDAI
+      .withdraw(parseEther(amount))
+    );
 
     if (res && res.hash) {
-      setTxConfirmation(true);
-    }
-    else {
-      // error
+      // success
+      setDialog(true);
     }
   }
 
-  const onSubmit = async() => {
-    if (action === 'withdraw') {
+  const onSubmit = async () => {
+    if (action === Action.Withdraw) {
       withdraw();
     }
     else {
@@ -76,6 +80,27 @@ function CollateralForm({ contracts, provider, address }) {
 
   return (
     <Grid container direction="column">
+      <Dialog open={dialog} aria-labelledby="form-dialog-title">
+        <div className="close" onClick={() => setDialog(false)}>
+          <HighlightOffIcon />
+        </div>
+        <DialogTitle id="form-dialog-title">
+          Transaction successful
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You have succefully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount} ETH.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDialog(false)}
+            className="main-button"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid item className="section-title">
         <Typography variant="h3">
           Collateral
@@ -90,7 +115,7 @@ function CollateralForm({ contracts, provider, address }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? 'withdraw' : 'supply' )}
+            onChange={({ target }) => setAction(target.checked ? Action.Withdraw : Action.Supply )}
             type="checkbox"
             className="checkbox"
           />
@@ -148,10 +173,9 @@ function CollateralForm({ contracts, provider, address }) {
       <Grid item>
         <Button
           onClick={handleSubmit(onSubmit)}
-          style={{ visibility: focus ? 'initial' : 'hidden' }}
           className="main-button"
         >
-          {action === 'withdraw' ? "Withdraw" : "Supply"}
+          {action === Action.Withdraw ? "Withdraw" : "Supply"}
         </Button>
       </Grid>
     </Grid>

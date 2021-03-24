@@ -17,6 +17,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 const Action = {
   Repay: 0,
@@ -31,7 +32,6 @@ function DebtForm({ contracts, provider, address }) {
   const [focus, setFocus] = useState(false);
   const [amount, setAmount] = useState();
   const [dialog, setDialog] = useState({ step: 0, withApproval: false });
-  const [txStatus, setTxStatus] = useState(null);
 
   const debtBalance = useContractReader(
     contracts,
@@ -64,7 +64,8 @@ function DebtForm({ contracts, provider, address }) {
     );
 
     if (res && res.hash) {
-      setDialog({ step: 5, withApproval: false });
+      setDialog({ step: 0, withApproval: false });
+      //setDialog({ step: 5, withApproval: false });
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
         setDialog({ step: 6, withApproval: false });
@@ -72,14 +73,12 @@ function DebtForm({ contracts, provider, address }) {
     }
     else {
       // error
-      console.log(res);
       setDialog({ step: 0, withApproval: false });
     }
   }
 
   const payback = async(withApproval) => {
     setDialog({ step: 4, withApproval });
-    console.log(amount);
     const res = await tx(
       contracts
       .VaultETHDAI
@@ -89,7 +88,8 @@ function DebtForm({ contracts, provider, address }) {
     );
 
     if (res && res.hash) {
-      setDialog({ step: 5, withApproval });
+      setDialog({ step: 0, withApproval: false });
+      //setDialog({ step: 5, withApproval });
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Repay')) {
         setDialog({ step: 6, withApproval });
@@ -97,7 +97,6 @@ function DebtForm({ contracts, provider, address }) {
     }
     else {
       // error
-      console.log(res);
       setDialog({ step: 0, withApproval: false });
     }
   }
@@ -107,7 +106,8 @@ function DebtForm({ contracts, provider, address }) {
     const e = BigNumber.from(256);
     const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(amount);
 
-    setDialog({ step: 2, withApproval: true });
+    setDialog({ step: 0, withApproval: false });
+    //setDialog({ step: 2, withApproval: true });
     const res = await tx(
       contracts
       .DAI
@@ -118,7 +118,7 @@ function DebtForm({ contracts, provider, address }) {
     );
 
     if (res && res.hash) {
-      setDialog({ step: 3, withApproval: true });
+      //setDialog({ step: 3, withApproval: true });
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Approval')) {
         payback(true);
@@ -161,18 +161,18 @@ function DebtForm({ contracts, provider, address }) {
         </DialogActions>
       )
     },
-    '2': {
-      title: 'Approving... 1 of 2',
-      content: 'Please check your wallet: \n Transaction is waiting for confirmation!',
-      loader: true,
-      actions: () => null
-    },
-    '3': {
-      title:  'Approving... 1 of 2',
-      content: 'The transaction is pending, please wait!',
-      loader: true,
-      actions: () => null
-    },
+    //'2': {
+      //title: 'Approving... 1 of 2',
+      //content: 'Please check your wallet: \n Transaction is waiting for confirmation!',
+      //loader: true,
+      //actions: () => null
+    //},
+    //'3': {
+      //title:  'Approving... 1 of 2',
+      //content: 'The transaction is pending, please wait!',
+      //loader: true,
+      //actions: () => null
+    //},
     '4': {
       title: `${action === Action.Repay
           ? 'Repay' : 'Borrow'}ing... ${dialog.withApproval ? '2 of 2'
@@ -181,14 +181,14 @@ function DebtForm({ contracts, provider, address }) {
       loader: true,
       actions: () => null
     },
-    '5': {
-      title: `${action === Action.Repay
-          ? 'Repay' : 'Borrow'}ing... ${dialog.withApproval ? '2 of 2' :
-          ''}`,
-      content: 'Transaction is pending, please wait!',
-      loader: true,
-      actions: () => null
-    },
+    //'5': {
+      //title: `${action === Action.Repay
+          //? 'Repay' : 'Borrow'}ing... ${dialog.withApproval ? '2 of 2' :
+          //''}`,
+      //content: 'Transaction is pending, please wait!',
+      //loader: true,
+      //actions: () => null
+    //},
     '6': {
       title: 'Transaction successful',
       content: `You have succefully ${action === Action.Repay ? 'repay' : 'borrow'}ed ${amount} DAI.`,
@@ -209,6 +209,9 @@ function DebtForm({ contracts, provider, address }) {
   return (
     <Grid container direction="column">
       <Dialog open={dialog.step !== 0} aria-labelledby="form-dialog-title">
+        <div className="close" onClick={() => setDialog({ step: 0, withApproval: false })}>
+          <HighlightOffIcon />
+        </div>
         <DialogTitle id="form-dialog-title">
           {dialogContents[dialog.step]?.title}
         </DialogTitle>
@@ -217,9 +220,12 @@ function DebtForm({ contracts, provider, address }) {
             {dialogContents[dialog.step]?.content}
           </DialogContentText>
         </DialogContent>
-        <DialogContent>
-          {dialogContents[dialog.step]?.loader && <CircularProgress />}
-        </DialogContent>
+        {dialogContents[dialog.step]?.loader
+          ? <DialogContent>
+            <CircularProgress />
+          </DialogContent>
+          : ""
+        }
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
@@ -293,7 +299,6 @@ function DebtForm({ contracts, provider, address }) {
       <Grid item>
         <Button
           onClick={handleSubmit(onSubmit)}
-          style={{ visibility: focus ? 'initial' : 'hidden' }}
           className="main-button"
         >
           {action === Action.Repay ? 'Repay' : 'Borrow'}

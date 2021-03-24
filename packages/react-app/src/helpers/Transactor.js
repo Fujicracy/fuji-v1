@@ -1,6 +1,6 @@
 import { hexlify } from "@ethersproject/bytes";
 import { parseUnits } from "@ethersproject/units";
-import { notification } from "antd";
+import { useSnackbar } from 'notistack';
 
 import Notify from "bnc-notify";
 
@@ -36,11 +36,18 @@ export default function Transactor(provider, gasPrice, etherscan) {
         etherscanTxUrl = "https://blockscout.com/poa/xdai/tx/";
       }
 
+      let dismissPendingWallet;
       try {
         let result;
         if (tx instanceof Promise) {
+          const { dismiss } = notify.notification({
+            type: "pending",
+            message: 'Please check your wallet: \n Transaction is waiting for confirmation!',
+          });
+          dismissPendingWallet = dismiss;
           console.log("AWAITING TX", tx);
           result = await tx;
+          dismissPendingWallet();
         } else {
           if (!tx.gasPrice) {
             tx.gasPrice = gasPrice || parseUnits("4.1", "gwei");
@@ -59,14 +66,13 @@ export default function Transactor(provider, gasPrice, etherscan) {
           const { emitter } = notify.hash(result.hash);
           emitter.on("all", transaction => {
             return {
-              onclick: () => window.open((etherscan || etherscanTxUrl) + transaction.hash),
+              link: (etherscan || etherscanTxUrl) + transaction.hash,
             };
           });
         } else {
-          notification.info({
-            message: "Local Transaction Sent",
-            description: result.hash,
-            placement: "bottomRight",
+          notify.notification({
+            type: "success",
+            message: `Local Transaction Sent: ${result.hash}`
           });
         }
 
@@ -74,9 +80,10 @@ export default function Transactor(provider, gasPrice, etherscan) {
       } catch (e) {
         console.log(e);
         console.log("Transaction Error:", e.message);
-        notification.error({
-          message: "Transaction Error",
-          description: e.message,
+        dismissPendingWallet();
+        notify.notification({
+          type: "error",
+          message: `Transaction error: ${e.message}`
         });
       }
     };

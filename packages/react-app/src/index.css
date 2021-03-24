@@ -419,6 +419,26 @@ input[type=number] {
   border-radius: 1rem;
 }
 
+.MuiDialog-paper .close {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 2rem;
+  transition: all 250ms ease;
+}
+
+.MuiDialog-paper .close:hover {
+	opacity: 0.8;
+}
+
+.MuiDialogTitle-root,
+.MuiDialogContent-root,
+.MuiDialogActions-root {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
 
 .MuiDialogContentText-root {
   color: var(--text);
