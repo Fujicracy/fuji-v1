@@ -99,7 +99,7 @@
 }
 
 .inner-chart .circle {
-  stroke: var(--text32);
+  stroke: var(--text64);
 }
 
 .percentage-chart {

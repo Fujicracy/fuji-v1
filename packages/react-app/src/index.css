@@ -326,13 +326,17 @@ input[type=number] {
 	font-weight: 400;
 }
 
+.MuiInputAdornment-positionStart {
+  margin-right: 0;
+}
+
 /* ------------- */
 /*   TOOLTIPS    */
 /* ------------- */
 
 .tooltip-info {
 	margin-left: 0.5rem;
-	color: var(--brand);
+	color: var(--text32);
 	display: flex;
 	cursor: pointer;
 	position: relative;

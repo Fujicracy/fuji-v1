@@ -30,15 +30,8 @@ function DebtForm({ contracts, provider, address }) {
 
   const [action, setAction] = useState(Action.Repay);
   const [focus, setFocus] = useState(false);
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState('');
   const [dialog, setDialog] = useState({ step: 0, withApproval: false });
-
-  const debtBalance = useContractReader(
-    contracts,
-    "DebtToken",
-    "balanceOf",
-    [address]
-  );
 
   const daiBalance = useContractReader(
     contracts,
@@ -69,6 +62,7 @@ function DebtForm({ contracts, provider, address }) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
         setDialog({ step: 6, withApproval: false });
+        setAmount('');
       }
     }
     else {
@@ -93,6 +87,7 @@ function DebtForm({ contracts, provider, address }) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Repay')) {
         setDialog({ step: 6, withApproval });
+        setAmount('');
       }
     }
     else {
@@ -268,8 +263,9 @@ function DebtForm({ contracts, provider, address }) {
             autoComplete="off"
             id="debtAmount"
             name="amount"
-            type="tel"
+            type="number"
             variant="outlined"
+            value={amount}
             onChange={({ target }) => setAmount(target.value)}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false || !!amount)}

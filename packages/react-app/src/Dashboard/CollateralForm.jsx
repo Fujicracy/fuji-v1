@@ -29,16 +29,9 @@ function CollateralForm({ contracts, provider, address }) {
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState(false);
   const [focus, setFocus] = useState(false);
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState('');
 
   const ethBalance = useBalance(provider, address);
-
-  const collateralBalance = useContractReader(
-    contracts,
-    "VaultETHDAI",
-    "collaterals",
-    [address]
-  );
 
   const supply = async () => {
     const res = await tx(
@@ -53,6 +46,7 @@ function CollateralForm({ contracts, provider, address }) {
     if (res && res.hash) {
       // success
       setDialog(true);
+      setAmount('');
     }
   }
 
@@ -66,6 +60,7 @@ function CollateralForm({ contracts, provider, address }) {
     if (res && res.hash) {
       // success
       setDialog(true);
+      setAmount('');
     }
   }
 
@@ -135,15 +130,15 @@ function CollateralForm({ contracts, provider, address }) {
         </div>
         <div className="fake-input">
           <TextField
-            autoFocus
             className="input-container"
             required
             fullWidth
             autoComplete="off"
             name="amount"
-            type="tel"
+            type="number"
             id="collateralAmount"
             variant="outlined"
+            value={amount}
             onChange={({ target }) => setAmount(target.value)}
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false || !!amount)}

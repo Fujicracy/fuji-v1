@@ -24,13 +24,27 @@ function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const queries = new URLSearchParams(useLocation().search);
 
-  const [borrowAmount, setBorrowAmount] = useState(1000);
+  const [borrowAmount, setBorrowAmount] = useState('');
   const [borrowAsset, setBorrowAsset] = useState('DAI');
   const [collateralAmount, setCollateralAmount] = useState('');
   const [formattedCollateral, setFormattedCollateral] = useState(0);
   const [txConfirmation, setTxConfirmation] = useState(false);
 
   const ethBalance = useBalance(provider, address);
+
+  const collateralBalance = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "collaterals",
+    [address]
+  );
+
+  const debtBalance = useContractReader(
+    contracts,
+    "DebtToken",
+    "balanceOf",
+    [address]
+  );
 
   const neededCollateral = useContractReader(
     contracts,
@@ -39,15 +53,19 @@ function InitBorrow({ contracts, provider, address }) {
     [borrowAmount ? parseUnits(`${borrowAmount}`) : ''],
   );
 
+  const queryBorrowAmount = queries.get("borrowAmount");
   useEffect(() => {
-    if (queries.get("borrowAmount"))
-      setBorrowAmount(queries.get("borrowAmount"));
-  }, [queries, setBorrowAmount]);
+    if (queryBorrowAmount) {
+      setBorrowAmount(queryBorrowAmount);
+    }
+  }, [queryBorrowAmount, setBorrowAmount]);
 
+  const queryBorrowAsset = queries.get("borrowAsset");
   useEffect(() => {
-    if (queries.get("borrowAsset"))
-      setBorrowAsset(queries.get("borrowAsset"));
-  }, [queries, setBorrowAsset]);
+    if (queryBorrowAsset) {
+      setBorrowAsset(queryBorrowAsset);
+    }
+  }, [queryBorrowAsset, setBorrowAsset]);
 
   useEffect(() => {
     if (neededCollateral) {
@@ -149,8 +167,9 @@ function InitBorrow({ contracts, provider, address }) {
                     autoComplete="off"
                     id="borrowAmount"
                     name="borrowAmount"
-                    type="tel"
+                    type="number"
                     variant="outlined"
+                    value={borrowAmount}
                     onChange={({ target }) => setBorrowAmount(target.value)}
                     inputRef={register({ required: true, min: 0 })}
                     InputProps={{
@@ -189,10 +208,11 @@ function InitBorrow({ contracts, provider, address }) {
                     fullWidth
                     autoComplete="off"
                     name="collateralAmount"
-                    type="tel"
+                    type="number"
                     id="collateralAmount"
                     variant="outlined"
                     placeholder={`min ${formattedCollateral}`}
+                    value={collateralAmount}
                     onChange={({ target }) => setCollateralAmount(target.value)}
                     inputRef={register({ required: true, min: formattedCollateral})}
                     InputProps={{
@@ -237,8 +257,12 @@ function InitBorrow({ contracts, provider, address }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator
-          daiAmount={borrowAmount}
-          ethAmount={collateralAmount}
+          daiAmount={
+            Number(borrowAmount) + (debtBalance ? Number(formatUnits(debtBalance)) : 0)
+          }
+          ethAmount={
+            Number(collateralAmount) + (collateralBalance ? Number(formatEther(collateralBalance)) : 0)
+          }
         />
         <ProvidersList
           contracts={contracts}

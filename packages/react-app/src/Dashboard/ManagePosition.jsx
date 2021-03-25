@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useContractReader } from "../hooks";
 import "./ManagePosition.css";
+import { formatEther, formatUnits } from "@ethersproject/units";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
@@ -15,6 +17,22 @@ import CollaterizationIndicator from "../CollaterizationIndicator";
 function ManagePosition({ contracts, provider, address, }) {
 
   const [actionsType, setActionsType] = useState('single');
+  const [borrowAmount, setBorrowAmount] = useState(0);
+  const [collateralAmount, setCollateralAmount] = useState('');
+
+  const collateralBalance = useContractReader(
+    contracts,
+    "VaultETHDAI",
+    "collaterals",
+    [address]
+  );
+
+  const debtBalance = useContractReader(
+    contracts,
+    "DebtToken",
+    "balanceOf",
+    [address]
+  );
 
   return (
     <div className="container">
@@ -74,6 +92,7 @@ function ManagePosition({ contracts, provider, address, }) {
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          setCollateralAmount={setCollateralAmount}
                         />
                         : <SupplyAndBorrowForm 
                           contracts={contracts}
@@ -88,6 +107,7 @@ function ManagePosition({ contracts, provider, address, }) {
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          setBorrowAmount={setBorrowAmount}
                         />
                         : <RepayAndWithdrawForm 
                           contracts={contracts}
@@ -106,6 +126,12 @@ function ManagePosition({ contracts, provider, address, }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator
+          daiAmount={
+            Number(borrowAmount) + (debtBalance ? Number(formatUnits(debtBalance)) : 0)
+          }
+          ethAmount={
+            Number(collateralAmount) + (collateralBalance ? Number(formatEther(collateralBalance)) : 0)
+          }
         />
         <ProvidersList
           contracts={contracts}
