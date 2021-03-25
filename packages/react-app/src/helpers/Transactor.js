@@ -1,6 +1,5 @@
 import { hexlify } from "@ethersproject/bytes";
 import { parseUnits } from "@ethersproject/units";
-import { useSnackbar } from 'notistack';
 
 import Notify from "bnc-notify";
 
