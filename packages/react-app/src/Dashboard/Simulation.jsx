@@ -11,54 +11,94 @@ import { ResponsiveBar } from '@nivo/bar'
 import ProtocolStats from "../ProtocolStats";
 import HowItWorks from "../HowItWorks";
 
+const data = [
+  {
+    "period": "1 month",
+    "Aave": 60,
+    "Compound": 40,
+    "Fuji": 20,
+  },
+  {
+    "period": "3 months",
+    "Aave": 180,
+    "Compound": 120,
+    "Fuji": 60,
+  },
+  {
+    "period": "6 months",
+    "Aave": 360,
+    "Compound": 240,
+    "Fuji": 120,
+  },
+  {
+    "period": "1 year",
+    "Aave": 720,
+    "Compound": 480,
+    "Fuji": 240,
+  },
+];
+
+const calcInterest = (amount, period, protocol) => {
+  const apr = {
+    aave: 0.1,
+    compound: 0.07,
+    fuji: 0.05
+  };
+  return Number(amount) * Math.exp((period / 365) * apr[protocol]) - Number(amount);
+}
+
 function Simulation({ contracts, address }) {
   const history = useHistory();
 
   const [borrowAmount, setBorrowAmount] = useState(1000);
   const [borrowAsset, setBorrowAsset] = useState('DAI');
+  const [chartData, setChartData] = useState(data);
 
   const onBorrow = () => history.push(
     `/dashboard/init-borrow?borrowAsset=${borrowAsset}&borrowAmount=${borrowAmount}`
   );
 
-  const data = [
-    {
-      "period": "1 month",
-      "Aave": 60,
-      "AaveColor": "hsl(97, 70%, 50%)",
-      "Compound": 40,
-      "CompoundColor": "linear-gradient(180deg, #1E1B1C 0%, #101010 100%), rgba(255, 255, 255, 0.3)",
-      "Fuji": 20,
-      "FujiColor": "hsl(148, 70%, 50%)",
-    },
-    {
-      "period": "3 months",
-      "Aave": 180,
-      "AaveColor": "hsl(97, 70%, 50%)",
-      "Compound": 120,
-      "CompoundColor": "linear-gradient(180deg, #1E1B1C 0%, #101010 100%), rgba(255, 255, 255, 0.3)",
-      "Fuji": 60,
-      "FujiColor": "hsl(148, 70%, 50%)",
-    },
-    {
-      "period": "6 month",
-      "Aave": 360,
-      "AaveColor": "hsl(97, 70%, 50%)",
-      "Compound": 240,
-      "CompoundColor": "linear-gradient(180deg, #1E1B1C 0%, #101010 100%), rgba(255, 255, 255, 0.3)",
-      "Fuji": 120,
-      "FujiColor": "hsl(148, 70%, 50%)",
-    },
-    {
-      "period": "1 year",
-      "Aave": 720,
-      "AaveColor": "hsl(97, 70%, 50%)",
-      "Compound": 480,
-      "CompoundColor": "linear-gradient(180deg, #1E1B1C 0%, #101010 100%), rgba(255, 255, 255, 0.3)",
-      "Fuji": 240,
-      "FujiColor": "hsl(148, 70%, 50%)",
-    },
-  ]
+  const onChangeAmount = (v) => {
+    if (Number(v) < 1)
+      return;
+    const newData = chartData.map(el => {
+      if (el.period === "1 month") {
+        return {
+          period: "1 month",
+          Aave: calcInterest(v, 30, "aave"),
+          Compound: calcInterest(v, 30, "compound"),
+          Fuji: calcInterest(v, 30, "fuji"),
+        }
+      }
+      else if (el.period === "3 months") {
+        return {
+          period: "3 months",
+          Aave: calcInterest(v, 90, "aave"),
+          Compound: calcInterest(v, 90, "compound"),
+          Fuji: calcInterest(v, 90, "fuji"),
+        }
+      }
+      else if (el.period === "6 months") {
+        return {
+          period: "6 months",
+          Aave: calcInterest(v, 180, "aave"),
+          Compound: calcInterest(v, 180, "compound"),
+          Fuji: calcInterest(v, 180, "fuji"),
+        }
+      }
+      else if (el.period === "1 year") {
+        return {
+          period: "1 year",
+          Aave: calcInterest(v, 365, "aave"),
+          Compound: calcInterest(v, 365, "compound"),
+          Fuji: calcInterest(v, 365, "fuji"),
+        }
+      }
+    });
+    console.log(newData);
+    setChartData(newData);
+    setBorrowAmount(v);
+  }
 
   return (
     <div className="container initial-step">
@@ -72,7 +112,7 @@ function Simulation({ contracts, address }) {
           </div>
 
           <div className="chart-container">
-            <SimulationChart data={data} />
+            <SimulationChart data={chartData} />
           </div>
 
             <form noValidate>
@@ -127,7 +167,7 @@ function Simulation({ contracts, address }) {
                     name="borrowAmount"
                     type="tel"
                     variant="outlined"
-                    onChange={({ target }) => setBorrowAmount(target.value)}
+                    onChange={({ target }) => onChangeAmount(target.value)}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -181,6 +221,37 @@ function SimulationChart({ data }) {
       animate={true}
       motionStiffness={90}
       motionDamping={15}
+      defs={[
+        {
+          id: 'gradientFuji',
+          type: 'linearGradient',
+          colors: [
+            { offset: 0, color: '#F0014F', opacity: 1 },
+            { offset: 100, color: '#F0014F', opacity: 0.7 },
+          ],
+        },
+        {
+          id: 'gradientCompound',
+          type: 'linearGradient',
+          colors: [
+          { offset: 0, color: '#0B9ED9', opacity: 1 },
+          { offset: 100, color: '#0B9ED9', opacity: 0.7 },
+          ],
+        },
+        {
+          id: 'gradientAave',
+          type: 'linearGradient',
+          colors: [
+            { offset: 0, color: '#FFFFFF' },
+            { offset: 100, color: '#757575' },
+          ],
+        },
+      ]}
+      fill={[
+        { match: { id: 'Aave' }, id: 'gradientAave' },
+        { match: { id: 'Compound' }, id: 'gradientCompound' },
+        { match: { id: 'Fuji' }, id: 'gradientFuji' },
+      ]}
       theme={{
         "fontSize": 12,
         "axis": {
