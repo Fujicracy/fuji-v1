@@ -66,7 +66,7 @@ function ProvidersList({ contracts, markets }) {
         {markets && markets.includes("DAI")
           ? <div className="provider">
               <div className="title">
-                <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
+                <img alt="dai" src="/DAI.png" />
                 <Typography variant="h3">
                   DAI
                 </Typography>
@@ -92,7 +92,7 @@ function ProvidersList({ contracts, markets }) {
         {markets && markets.includes("USDC")
           ? <div className="provider">
              <div className="title">
-               <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
+               <img alt="usdc" src="/USDC.png" />
                <Typography variant="h3">
                  USDC
                </Typography>

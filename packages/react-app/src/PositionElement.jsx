@@ -32,7 +32,7 @@ function PositionElement({ contracts, address, actionType }) {
       <div className="position-about">
         <div className="elmtXelmt">
           <img alt="eth" className="behind" src="/ETH.png" />
-          <img alt="dai" className="front" src="https://assets.codepen.io/194136/dai.svg" />
+          <img alt="dai" className="front" src="/DAI.png" />
         </div>
         <span className="elmt-name">ETH/DAI</span>
       </div>
@@ -49,7 +49,7 @@ function PositionElement({ contracts, address, actionType }) {
 
         <div className="borrow-number">
           <span className="number">
-            <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
+            <img alt="dai" src="/DAI.png" />
             <span>{
               debtBalance ? parseFloat(formatUnits(debtBalance)).toFixed(2) : ''
               }</span>

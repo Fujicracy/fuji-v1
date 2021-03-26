@@ -129,7 +129,7 @@ function Simulation({ contracts, address }) {
                         checked={borrowAsset === 'DAI'}
                       />
                       <div className="fake-radio">
-                        <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
+                        <img alt="dai" src="/DAI.svg" />
                         <span className="select-option-name">DAI</span>
                       </div>
                     </label>
@@ -142,14 +142,14 @@ function Simulation({ contracts, address }) {
                         checked={borrowAsset === 'USDC'}
                       />
                       <div className="fake-radio">
-                        <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
+                        <img alt="usdc" src="/USDC.svg" />
                         <span className="select-option-name">USDC</span>
                       </div>
                     </label>
                     <label>
                       <input type="radio" name="borrow" value="usdt" disabled={true} />
                       <div className="fake-radio">
-                        <img alt="usdt" src="https://assets.codepen.io/194136/tether.svg" />
+                        <img alt="usdt" src="/USDT.svg" />
                         <span className="select-option-name">USDT</span>
                       </div>
                     </label>
