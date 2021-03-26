@@ -45,6 +45,7 @@ function MyPositions({ contracts, address, }) {
       <div className="right-content">
         <ProvidersList
           contracts={contracts}
+          markets={["DAI", "USDC"]}
         />
       </div>
     </div>

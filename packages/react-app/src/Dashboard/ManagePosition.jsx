@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useContractReader } from "../hooks";
 import "./ManagePosition.css";
 import { formatEther, formatUnits } from "@ethersproject/units";
@@ -15,9 +15,13 @@ import ProvidersList from "../ProvidersList";
 import CollaterizationIndicator from "../CollaterizationIndicator";
 
 function ManagePosition({ contracts, provider, address, }) {
+  const queries = new URLSearchParams(useLocation().search);
 
   const [actionsType, setActionsType] = useState('single');
   const [borrowAmount, setBorrowAmount] = useState(0);
+  const [borrowAsset, setBorrowAsset] = useState(
+    queries && queries.get("borrowAsset") ? queries.get("borrowAsset") : "DAI"
+  );
   const [collateralAmount, setCollateralAmount] = useState('');
 
   const collateralBalance = useContractReader(
@@ -92,7 +96,6 @@ function ManagePosition({ contracts, provider, address, }) {
                           contracts={contracts}
                           provider={provider}
                           address={address}
-                          setCollateralAmount={setCollateralAmount}
                         />
                         : <SupplyAndBorrowForm 
                           contracts={contracts}
@@ -107,7 +110,6 @@ function ManagePosition({ contracts, provider, address, }) {
                           contracts={contracts}
                           provider={provider}
                           address={address}
-                          setBorrowAmount={setBorrowAmount}
                         />
                         : <RepayAndWithdrawForm 
                           contracts={contracts}
@@ -135,6 +137,7 @@ function ManagePosition({ contracts, provider, address, }) {
         />
         <ProvidersList
           contracts={contracts}
+          markets={[borrowAsset]}
         />
       </div>
     </div>

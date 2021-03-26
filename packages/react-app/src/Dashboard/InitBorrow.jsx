@@ -240,7 +240,7 @@ function InitBorrow({ contracts, provider, address }) {
             </div>
             <div className="helper">
               <Typography variant="body2">
-                You are saving <span>3758 DAI</span> by borrowing through FujiDAO. <br />
+                You are saving <span>375 DAI</span> per year by borrowing with FujiDAO. <br />
                 That’s a nifty <span>13%</span> saved, compared to the lowest provider.
               </Typography>
             </div>
@@ -266,6 +266,7 @@ function InitBorrow({ contracts, provider, address }) {
         />
         <ProvidersList
           contracts={contracts}
+          markets={[borrowAsset]}
         />
       </div>
     </div>

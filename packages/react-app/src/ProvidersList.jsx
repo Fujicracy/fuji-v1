@@ -3,9 +3,9 @@ import "./ProvidersList.css";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
 import { useContractReader } from "./hooks";
-import { DAI_ADDRESS } from "./constants";
+import { DAI_ADDRESS, USDC_ADDRESS } from "./constants";
 
-function ProvidersList({ contracts }) {
+function ProvidersList({ contracts, markets }) {
   //const activeProviderAddr = useContractReader(
     //contracts,
     //"VaultETHDAI",
@@ -15,30 +15,44 @@ function ProvidersList({ contracts }) {
   //const aaveAddr = contracts && contracts["ProviderAave"]
     //? contracts["ProviderAave"].address
     //: '';
-  const aaveRate = useContractReader(
+  const aaveDai = useContractReader(
     contracts,
     "ProviderAave",
     "getBorrowRateFor",
     [DAI_ADDRESS]
   );
+  const aaveUsdc = useContractReader(
+    contracts,
+    "ProviderAave",
+    "getBorrowRateFor",
+    [USDC_ADDRESS]
+  );
 
   //const compoundAddr = contracts && contracts["ProviderCompound"]
     //? contracts["ProviderCompound"].address
     //: '';
-  const compoundRate = useContractReader(
+  const compoundDai = useContractReader(
     contracts,
     "ProviderCompound",
     "getBorrowRateFor",
     [DAI_ADDRESS]
   );
-  const aaveR = parseFloat(`${aaveRate}`) / 1e27 * 100;
-  const compoundR = parseFloat(`${compoundRate}`) / 1e27 * 100;
+  const compoundUsdc = useContractReader(
+    contracts,
+    "ProviderCompound",
+    "getBorrowRateFor",
+    [USDC_ADDRESS]
+  );
+  const aaveDaiRate = parseFloat(`${aaveDai}`) / 1e27 * 100;
+  const compoundDaiRate = parseFloat(`${compoundDai}`) / 1e27 * 100;
+  const aaveUsdcRate = parseFloat(`${aaveUsdc}`) / 1e27 * 100;
+  const compoundUsdcRate = parseFloat(`${compoundUsdc}`) / 1e27 * 100;
 
   return (
     <div className="dark-block providers-block">
       <div className="section-title">
         <Typography variant="h3">
-          Providers
+          Markets
         </Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
@@ -49,49 +63,57 @@ function ProvidersList({ contracts }) {
       </div>
 
       <div className="providers">
-        <div className="provider">
-          <div className="title">
-            <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
-            <Typography variant="h3">
-              DAI
-            </Typography>
-          </div>
-          <div className="stats">
-            <div className="stat best">
-              <span className="name">Aave</span>
-              <span className="number">
-                {aaveRate ? aaveR.toFixed(1) : "..."} %
-              </span>
-            </div>
+        {markets && markets.includes("DAI")
+          ? <div className="provider">
+              <div className="title">
+                <img alt="dai" src="https://assets.codepen.io/194136/dai.svg" />
+                <Typography variant="h3">
+                  DAI
+                </Typography>
+              </div>
+              <div className="stats">
+                <div className="stat best">
+                  <span className="name">Aave</span>
+                  <span className="number">
+                    {aaveDai ? aaveDaiRate.toFixed(1) : "..."} %
+                  </span>
+                </div>
 
-            <div className="stat">
-              <span className="name">Compound</span>
-              <span className="number">
-                {compoundRate ? compoundR.toFixed(1) : "..."} %
-              </span>
+                <div className="stat">
+                  <span className="name">Compound</span>
+                  <span className="number">
+                    {compoundDai ? compoundDaiRate.toFixed(1) : "..."} %
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          : ""}
 
-        <div className="provider">
-          <div className="title">
-            <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
-            <Typography variant="h3">
-              USDC
-            </Typography>
-          </div>
-          <div className="stats">
-            <div className="stat best">
-              <span className="name">Aave</span>
-              <span className="number">12,4%</span>
-            </div>
+        {markets && markets.includes("USDC")
+          ? <div className="provider">
+             <div className="title">
+               <img alt="usdc" src="https://assets.codepen.io/194136/usdc.svg" />
+               <Typography variant="h3">
+                 USDC
+               </Typography>
+             </div>
+             <div className="stats">
+               <div className="stat best">
+                 <span className="name">Aave</span>
+                 <span className="number">
+                   {aaveUsdc ? aaveUsdcRate.toFixed(1) : "..."} %
+                 </span>
+               </div>
 
-            <div className="stat">
-              <span className="name">Compound</span>
-              <span className="number">9,4%</span>
-            </div>
-          </div>
-        </div>
+               <div className="stat">
+                 <span className="name">Compound</span>
+                 <span className="number">
+                   {compoundUsdc ? compoundUsdcRate.toFixed(1) : "..."} %
+                 </span>
+               </div>
+             </div>
+           </div>
+         : ""}
       </div>
     </div>
   );
