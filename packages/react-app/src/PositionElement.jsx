@@ -25,6 +25,7 @@ function PositionElement({ contracts, address, actionType }) {
     "collaterals",
     [address]
   );
+  //<span className="additional-infos">≈ $15 234</span>
 
   return (
     <div className="position-element">
@@ -44,7 +45,6 @@ function PositionElement({ contracts, address, actionType }) {
               collateralBalance ? parseFloat(formatEther(collateralBalance)).toFixed(2) : ''
               }</span>
           </span>
-          <span className="additional-infos">≈ $15 234</span>
         </div>
 
         <div className="borrow-number">
@@ -54,7 +54,6 @@ function PositionElement({ contracts, address, actionType }) {
               debtBalance ? parseFloat(formatUnits(debtBalance)).toFixed(2) : ''
               }</span>
           </span>
-          <span className="additional-infos">≈ $15 234</span>
         </div>
 
         <div className="debt-ratio-number positive">

@@ -12,7 +12,6 @@ function MyPositions({ contracts, address, }) {
   return (
     <div className="container">
       <div className="left-content">
-        <ProtocolStats />
         <Grid
           container
           direction="column"
@@ -43,6 +42,7 @@ function MyPositions({ contracts, address, }) {
         </Grid>
       </div>
       <div className="right-content">
+        <ProtocolStats />
         <ProvidersList
           contracts={contracts}
           markets={["DAI", "USDC"]}
