@@ -20,7 +20,7 @@ function CollaterizationIndicator({ daiAmount, ethAmount }) {
     <div className="dark-block collateralization-block">
       <div className="section-title">
         <Typography variant="h3">
-          Collaterization Ratio
+          Borrow Limit Used
         </Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
@@ -42,7 +42,7 @@ function CollaterizationIndicator({ daiAmount, ethAmount }) {
       </div>
 
       <Typography variant="body2">
-        This ratio represents the safety of your loan derived from the proportion of collateral versus amount borrowed. Keep it above 1 to avoid liquidation.
+        This percentage is derived from the proportion of collateral versus amount borrowed plus a safety buffer. It's recommended to keep it below 90% to avoid liquidation.
       </Typography>
     </div>
   );
