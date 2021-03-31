@@ -9,19 +9,10 @@
 }
 
 .protocol-stats .dark-block {
-	/*margin-right: 24px;*/
-	/*width: calc(50% - 0.75rem);*/
 	padding: 1.5rem 2rem;
   border-color: var(--text05);
-	/*display: flex;*/
-	/*align-items: center;*/
-	/*justify-content: space-between;*/
   color: var(--text);
 }
-
-/*.protocol-stats .dark-block:last-child {*/
-	/*margin-right: 0rem;*/
-/*}*/
 
 .protocol-stats .section-title {
 	margin-bottom: 0rem;
@@ -29,9 +20,17 @@
 }
 
 .protocol-stats .number {
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 	font-weight: 500;
   text-align: end;
   color: var(--green);
   text-shadow: 0rem 0rem 0.125rem var(--green);
+}
+
+.right-content .protocol-stats {
+  flex-direction: column;
+}
+
+.right-content .protocol-stats .section-title {
+  margin-bottom: 1rem;
 }

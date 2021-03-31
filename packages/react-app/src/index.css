@@ -56,6 +56,11 @@ table {
 	border-spacing: 0;
 }
 
+button:focus {
+  outline:0;
+}
+
+
 /* ------------- */
 /*   VARIABLES   */
 /* ------------- */
@@ -327,8 +332,24 @@ input[type=number] {
 	font-weight: 400;
 }
 
+
+/* Progress bar */
+
+.MuiLinearProgress-root {
+  z-index: 20;
+}
+
 .MuiInputAdornment-positionStart {
   margin-right: 0;
+}
+
+.MuiLinearProgress-barColorPrimary {
+  background-color: var(--brand);
+  border-radius: 1rem;
+}
+
+.MuiLinearProgress-colorPrimary {
+  background-color: transparent;
 }
 
 /* ------------- */
