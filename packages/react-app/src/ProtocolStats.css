@@ -12,7 +12,7 @@
 	/*margin-right: 24px;*/
 	/*width: calc(50% - 0.75rem);*/
 	padding: 1.5rem 2rem;
-  border-color: var(--text32);
+  border-color: var(--text05);
 	/*display: flex;*/
 	/*align-items: center;*/
 	/*justify-content: space-between;*/
@@ -23,8 +23,9 @@
 	/*margin-right: 0rem;*/
 /*}*/
 
-.protocol-stats .title {
-	font-size: 0.875rem;
+.protocol-stats .section-title {
+	margin-bottom: 0rem;
+  color: var(--text);;
 }
 
 .protocol-stats .number {
@@ -32,4 +33,5 @@
 	font-weight: 500;
   text-align: end;
   color: var(--green);
+  text-shadow: 0rem 0rem 0.125rem var(--green);
 }

@@ -17,10 +17,11 @@
   padding-top: 2rem;
 	display: flex;
 	align-items: center;
+  justify-content: space-between;
 }
 
 .charts-buttons .fake-input{
-  width: 50%;
+  width: 60%;
 }
 
 .charts-buttons button {

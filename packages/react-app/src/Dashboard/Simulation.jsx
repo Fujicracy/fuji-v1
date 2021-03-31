@@ -117,7 +117,7 @@ function Simulation({ contracts, address }) {
 
             <form noValidate>
               <div className="borrow-options">
-                <div className="subtitle">Borrow</div>
+                <div className="section-title">Borrow</div>
                 <div className="select-options">
                   <div className="options-list">
                     <label>
