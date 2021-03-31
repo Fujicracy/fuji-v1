@@ -93,6 +93,7 @@ function App(props) {
         </Route>
       </Switch>
       <div className="bg-effect"></div>
+      <div class="ohno">Oh no!<br />This website isn't available (yet) on mobile</div>
     </BrowserRouter>
   );
 }
