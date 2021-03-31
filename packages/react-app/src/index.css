@@ -177,6 +177,13 @@ input[type=number] {
 	opacity: 0.8;
 }
 
+.main-button.disabled {
+  background-color: transparent;
+  border: 1px solid var(--text16);
+  color: var(--text16);
+  cursor: not-allowed;
+}
+
 .subtitle {
 	font-size: 0.875rem;
 	margin-bottom: 0.5rem;
@@ -284,8 +291,13 @@ input[type=number] {
 	background-color:  var(--text05);
 	display: flex;
 	justify-content: space-between;
+  border: 1px solid transparent;
 	align-items: center;
 	/*padding: 0rem 1rem;*/
+}
+
+.fake-input.error {
+  border: 1px solid var(--brand);
 }
 
 .borrow-amount-input, .collateral-input {
@@ -332,6 +344,13 @@ input[type=number] {
 	font-weight: 400;
 }
 
+.error-input-msg {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  display: block;
+}
 
 /* Progress bar */
 

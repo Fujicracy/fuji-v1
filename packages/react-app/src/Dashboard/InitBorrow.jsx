@@ -15,6 +15,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 
 import CollaterizationIndicator from "../CollaterizationIndicator";
 import ProvidersList from "../ProvidersList";
@@ -190,7 +191,9 @@ function InitBorrow({ contracts, provider, address }) {
                 </div>
                 {errors?.borrowAmount
                     && <Typography variant="body2">
+                    <div className="error-input-msg">
                       Please, type the amount you like to borrow!
+                    </div>
                     </Typography>
                 }
               </div>
@@ -233,7 +236,9 @@ function InitBorrow({ contracts, provider, address }) {
                 </div>
                 {errors?.collateralAmount
                     && <Typography variant="body2">
-                      Please, provide at least {formattedCollateral} ETH as collateral!
+                    <div className="error-input-msg">
+                      Please, provide at least <span class="brand-color">{formattedCollateral} ETH</span> as collateral!
+                    </div>
                     </Typography>
                 }
               </div>
