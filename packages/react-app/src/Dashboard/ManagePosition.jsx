@@ -52,16 +52,6 @@ function ManagePosition({ contracts, provider, address, }) {
           </div>
 
           <div className="position-board">
-            <div className="legend">
-              <span className="empty-tab"></span>
-              <div className="legend-elements">
-                <span>Collateral</span>
-                <span>Debt</span>
-                <span>Debt Ratio</span>
-              </div>
-              <span className="empty-button"></span>
-            </div>
-
             <div className="manage-my-position one-position">
               <PositionElement
                 actionType={PositionActions.None}

@@ -165,7 +165,7 @@ function Simulation({ contracts, address }) {
                     autoComplete="off"
                     id="borrowAmount"
                     name="borrowAmount"
-                    type="tel"
+                    type="number"
                     variant="outlined"
                     onChange={({ target }) => onChangeAmount(target.value)}
                     InputProps={{

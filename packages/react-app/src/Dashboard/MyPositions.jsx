@@ -22,15 +22,6 @@ function MyPositions({ contracts, address, }) {
             My positions
           </Typography>
           <div className="position-board">
-            <Grid item className="legend">
-              <span className="empty-tab"></span>
-              <div className="legend-elements">
-                <span>Collateral</span>
-                <span>Debt</span>
-                <span>Debt Ratio</span>
-              </div>
-              <span className="empty-button"></span>
-            </Grid>
             <Grid item className="one-position">
               <PositionElement
                 actionType={PositionActions.Manage}

@@ -18,6 +18,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	height: 48px;
 }
 
 .positions .position-element:last-child {
@@ -55,17 +56,19 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
+	height: 100%;
 }
 
 .position-numbers .collateral-number,
 .position-numbers .borrow-number,
 .position-numbers .debt-ratio-number {
 	width: 6.938rem;
-	height: auto;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center
+	justify-content: center;
+	position: relative;
 }
 
 .one-position.positive .debt-ratio-number .number {
@@ -141,6 +144,23 @@
 	box-shadow: 0rem 0rem 0.25rem var(--brand);
 }
 
+.position-board .one-position:first-child {
+	margin-top: 40px;
+}
+
+.position-board .one-position:first-child .collateral-number:before, 
+.position-board .one-position:first-child .borrow-number:before, 
+.position-board .one-position:first-child .debt-ratio-number:before {
+	content: attr(data-element) '';
+	position: absolute;
+	color: var(--text);
+	font-size: 0.875rem;
+  font-weight: 600;
+  width: 100%;
+  top: -60px;
+  text-align: center;
+}
+
 /* ---------------- */
 /*     Positions    */
 /* ---------------- */
@@ -185,4 +205,8 @@
 	font-size: 0.875rem;
 	font-weight: 600;
 	width: 6.938rem;
+}
+
+.manage-position .position-board {
+	margin-top: 80px;
 }

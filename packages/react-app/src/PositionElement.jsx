@@ -38,7 +38,7 @@ function PositionElement({ contracts, address, actionType }) {
       </div>
 
       <div className="position-numbers">
-        <div className="collateral-number">
+        <div className="collateral-number" data-element="Collateral">
           <span className="number">
             <img alt="eth" src="/ETH.png" />
             <span>{
@@ -47,7 +47,7 @@ function PositionElement({ contracts, address, actionType }) {
           </span>
         </div>
 
-        <div className="borrow-number">
+        <div className="borrow-number" data-element="Debt">
           <span className="number">
             <img alt="dai" src="/DAI.png" />
             <span>{
@@ -56,7 +56,7 @@ function PositionElement({ contracts, address, actionType }) {
           </span>
         </div>
 
-        <div className="debt-ratio-number positive">
+        <div className="debt-ratio-number positive" data-element="Debt ratio">
           <span className="number">85 %</span>
         </div>
       </div>
