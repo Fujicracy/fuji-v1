@@ -60,5 +60,8 @@
       "**/@graphprotocol/graph-ts",
       "**/@graphprotocol/graph-ts/**"
     ]
+  },
+  "devDependencies": {
+    "hardhat-contract-sizer": "^2.0.3"
   }
 }
