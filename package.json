@@ -23,7 +23,7 @@
     "test:alpha-compound": "yarn workspace @scaffold-eth/hardhat test:alpha-compound",
     "test:alpha-aave": "yarn workspace @scaffold-eth/hardhat test:alpha-aave",
     "test:alpha-dydx": "yarn workspace @scaffold-eth/hardhat test:alpha-dydx",
-    "test:compound": "yarn workspace @scaffold-eth/hardhat test:compound",
+    "test:alpha-f1155": "yarn workspace @scaffold-eth/hardhat test:alpha-f1155",
     "start": "yarn workspace @scaffold-eth/react-app start:dev",
     "compile": "yarn workspace @scaffold-eth/hardhat compile",
     "deploy": "yarn workspace @scaffold-eth/hardhat deploy",
