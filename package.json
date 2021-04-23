@@ -17,6 +17,7 @@
     "build": "yarn workspace @scaffold-eth/react-app build --max-old-space-size=12288",
     "chain": "yarn workspace @scaffold-eth/hardhat chain",
     "fork": "yarn workspace @scaffold-eth/hardhat fork",
+    "fork2": "yarn workspace @scaffold-eth/hardhat fork2",
     "node": "yarn workspace @scaffold-eth/hardhat chain",
     "contracts:size": "yarn workspace @scaffold-eth/hardhat contracts:size",
     "test:alpha-whitelisting": "yarn workspace @scaffold-eth/hardhat test:alpha-whitelisting",
