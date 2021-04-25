@@ -8,8 +8,10 @@ packages/hardhat/*.txt
 packages/hardhat/artifacts
 packages/react-app/src/contracts
 packages/hardhat/cache
+packages/subgraph
 
-docker/**/data
+docker
+# docker/**/data
 
 packages/subgraph/config/config.json
 
