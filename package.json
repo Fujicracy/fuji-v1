@@ -20,6 +20,7 @@
     "fork2": "yarn workspace @scaffold-eth/hardhat fork2",
     "node": "yarn workspace @scaffold-eth/hardhat chain",
     "contracts:size": "yarn workspace @scaffold-eth/hardhat contracts:size",
+    "test:alpha-vaultext": "yarn workspace @scaffold-eth/hardhat test:alpha-vaultext",
     "test:alpha-whitelisting": "yarn workspace @scaffold-eth/hardhat test:alpha-whitelisting",
     "test:alpha-compound": "yarn workspace @scaffold-eth/hardhat test:alpha-compound",
     "test:alpha-aave": "yarn workspace @scaffold-eth/hardhat test:alpha-aave",
