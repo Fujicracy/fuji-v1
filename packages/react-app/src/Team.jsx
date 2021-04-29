@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Card from '@material-ui/core/Card';
@@ -32,13 +31,8 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Team({ setRoute }) {
+function Team() {
   const classes = useStyles();
-  const location = useLocation();
-
-  useEffect(() => {
-    setRoute(location.pathname);
-  },[location])
 
   return (
     <div> 
