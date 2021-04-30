@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.6.12 <0.8.0;
+pragma solidity >=0.4.25 <0.8.0;
 pragma experimental ABIEncoderV2;
 
 import { IVault } from "./IVault.sol";
@@ -24,7 +24,7 @@ interface IAlphaWhitelist {
   ) external returns(bool);
 }
 
-contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
+contract VaultETHUSDT is IVault, VaultBase, ReentrancyGuard {
 
   uint256 internal constant BASE = 1e18;
 
@@ -59,13 +59,13 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     require(
       msg.sender == fujiAdmin.getFlasher(),
       Errors.VL_NOT_AUTHORIZED);
-      _;
+    _;
   }
 
   constructor () public {
 
     vAssets.collateralAsset = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE); // ETH
-    vAssets.borrowAsset = address(0x6B175474E89094C44Da98b954EedeAC495271d0F); // DAI
+    vAssets.borrowAsset = address(0xdAC17F958D2ee523a2206206994597C13D831ec7); // USDT
 
     // 1.05
     safetyF.a = 21;
@@ -99,6 +99,7 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     payback(_paybackAmount);
     withdraw(_collateralAmount);
   }
+
 
   /**
   * @dev Deposit Vault's type collateral to activeProvider
@@ -302,6 +303,14 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   //Setter, change state functions
 
   /**
+  * @dev Sets the fujiAdmin Address
+  * @param _fujiAdmin: FujiAdmin Contract Address
+  */
+  function setfujiAdmin(address _fujiAdmin) public onlyOwner {
+    fujiAdmin = IFujiAdmin(_fujiAdmin);
+  }
+
+  /**
   * @dev Sets a new active provider for the Vault
   * @param _provider: fuji address of the new provider
   * Emits a {SetActiveProvider} event.
@@ -313,14 +322,6 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   }
 
   //Administrative functions
-
-  /**
-  * @dev Sets the fujiAdmin Address
-  * @param _fujiAdmin: FujiAdmin Contract Address
-  */
-  function setfujiAdmin(address _fujiAdmin) public onlyOwner {
-    fujiAdmin = IFujiAdmin(_fujiAdmin);
-  }
 
   /**
   * @dev Sets a fujiERC1155 Collateral and Debt Asset manager for this vault and initializes it.
@@ -415,7 +416,7 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   function getNeededCollateralFor(uint256 _amount, bool _withFactors) public view override returns(uint256) {
     // Get price of DAI in ETH
     (,int256 latestPrice,,,) = oracle.latestRoundData();
-    uint256 minimumReq = (_amount.mul(uint256(latestPrice))).div(BASE);
+    uint256 minimumReq = (_amount.mul(1e12).mul(uint256(latestPrice))).div(BASE);
 
     if (_withFactors) {
       return minimumReq.mul(collatF.a).mul(safetyF.a).div(collatF.b).div(safetyF.b);
