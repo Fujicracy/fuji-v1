@@ -1,0 +1,15 @@
+.alpha-warning {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  width: auto;
+}
+
+.alpha-warning .flask-icon {
+  margin-right: 0.875rem;
+}
+
+.flask-icon img {
+  width: 35px;
+  height: 35px;
+}

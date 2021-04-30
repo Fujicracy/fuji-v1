@@ -10,7 +10,7 @@ import { getBorrowId, getCollateralId } from "../helpers";
 
 import PositionElement, { PositionActions } from "../PositionElement";
 import ProvidersList from "../ProvidersList";
-import ProtocolStats from "../ProtocolStats";
+import AlphaWarning from "../AlphaWarning";
 
 function MyPositions({ contracts, address, }) {
   const history = useHistory();
@@ -141,7 +141,7 @@ function MyPositions({ contracts, address, }) {
         </Grid>
       </div>
       <div className="right-content">
-        <ProtocolStats />
+        <AlphaWarning />
         <ProvidersList
           contracts={contracts}
           markets={["DAI", "USDC"]}

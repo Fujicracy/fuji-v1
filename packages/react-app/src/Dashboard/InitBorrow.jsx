@@ -22,6 +22,7 @@ import { ETH_CAP_VALUE } from "../constants";
 import CollaterizationIndicator from "../CollaterizationIndicator";
 import ProvidersList from "../ProvidersList";
 import HowItWorks from "../HowItWorks";
+import AlphaWarning from "../AlphaWarning";
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -353,6 +354,9 @@ function InitBorrow({ contracts, provider, address }) {
         </div>
       </div>
       <div className="right-content">
+        <div style={{ marginBottom: "2rem" }}>
+          <AlphaWarning/>
+        </div>
         <CollaterizationIndicator
           debtBalance={
             Number(borrowAmount) + (debtBalance ? Number(formatUnits(debtBalance, decimals)) : 0)
