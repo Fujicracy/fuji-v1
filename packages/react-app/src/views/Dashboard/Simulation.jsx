@@ -26,7 +26,7 @@ function Simulation({ contracts, address }) {
 
   const calcInterest = (amount, period, protocol) => {
     const apr = rates[protocol][borrowAsset.toLowerCase()];
-    const i = Number(amount) * Math.exp((period / 365) * (Number(apr !== '...' ? apr : 10) / 100)) - Number(amount);
+    const i = Number(amount) * Math.exp((period / 365) * (Number(apr ? apr : 10) / 100)) - Number(amount);
     return i.toFixed(0);
   }
 

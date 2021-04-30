@@ -1,8 +1,24 @@
 import React from "react";
+import { useSpring, animated, config } from 'react-spring'
 import "./ProvidersList.css";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
 import { useContractReader, useRates } from "../hooks";
+
+function AnimatedCounter({ countTo }) {
+
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: Number(countTo ? countTo : 0),
+    config: config.stiff
+  });
+
+  return (
+    <animated.span>
+      {countTo ? number.to(n => n.toFixed(2)) : "..."}
+    </animated.span>
+  );
+}
 
 function ProvidersList({ contracts, markets }) {
   const activeProviderDai = useContractReader(
@@ -48,14 +64,14 @@ function ProvidersList({ contracts, markets }) {
               <div className={providerAave?.address === activeProviderDai ? 'stat best' : 'stat'}>
                 <span className="name">Aave</span>
                 <span className="number">
-                  {rates.aave.dai} %
+                  <AnimatedCounter countTo={rates.aave.dai} /> %
                 </span>
               </div>
 
               <div className={providerCompound?.address === activeProviderDai ? 'stat best' : 'stat'}>
                 <span className="name">Compound</span>
                 <span className="number">
-                  {rates.compound.dai} %
+                  <AnimatedCounter countTo={rates.compound.dai} /> %
                 </span>
               </div>
             </div>
@@ -74,14 +90,14 @@ function ProvidersList({ contracts, markets }) {
               <div className={providerAave?.address === activeProviderUsdc ? 'stat best' : 'stat'}>
                 <span className="name">Aave</span>
                 <span className="number">
-                  {rates.aave.usdc} %
+                  <AnimatedCounter countTo={rates.aave.usdc} /> %
                 </span>
               </div>
 
               <div className={providerCompound?.address === activeProviderUsdc ? 'stat best' : 'stat'}>
                 <span className="name">Compound</span>
                 <span className="number">
-                  {rates.compound.usdc} %
+                  <AnimatedCounter countTo={rates.compound.usdc} /> %
                 </span>
               </div>
             </div>
