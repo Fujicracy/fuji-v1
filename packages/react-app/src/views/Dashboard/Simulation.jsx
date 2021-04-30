@@ -7,11 +7,11 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { ResponsiveBar } from '@nivo/bar'
-import { useRates } from "../hooks";
+import { useRates } from "../../hooks";
 
-import ProtocolStats from "../ProtocolStats";
-import HowItWorks from "../HowItWorks";
-import ProvidersList from "../ProvidersList";
+import ProvidersList from "../../components/ProvidersList";
+import HowItWorks from "../../components/HowItWorks";
+import ProtocolStats from "../../components/ProtocolStats";
 
 function Simulation({ contracts, address }) {
   const history = useHistory();

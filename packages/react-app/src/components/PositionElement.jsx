@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useExchangePrice } from "./hooks";
+import { useExchangePrice } from "../hooks";
 import { useHistory } from 'react-router-dom';
 import { formatUnits, formatEther } from "@ethersproject/units";
 import Button from '@material-ui/core/Button';

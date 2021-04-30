@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useRates } from "../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../helpers";
+import { useBalance, useContractReader, useRates } from "../../hooks";
+import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,12 +17,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from "../constants";
+import { ETH_CAP_VALUE } from "../../constants";
 
-import CollaterizationIndicator from "../CollaterizationIndicator";
-import ProvidersList from "../ProvidersList";
-import HowItWorks from "../HowItWorks";
-import AlphaWarning from "../AlphaWarning";
+import CollaterizationIndicator from "../../components/CollaterizationIndicator";
+import ProvidersList from "../../components/ProvidersList";
+import HowItWorks from "../../components/HowItWorks";
+import AlphaWarning from "../../components/AlphaWarning";
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();

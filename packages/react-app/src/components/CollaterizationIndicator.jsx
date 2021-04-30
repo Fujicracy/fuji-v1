@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useExchangePrice } from "./hooks";
+import { useExchangePrice } from "../hooks";
 import { useSpring, animated } from 'react-spring'
 import "./CollaterizationIndicator.css";
-import { PositionRatios } from "./helpers";
+import { PositionRatios } from "../helpers";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';

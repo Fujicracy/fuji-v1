@@ -5,12 +5,12 @@ import { formatUnits } from "@ethersproject/units";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import { useContractReader } from "../hooks";
-import { getBorrowId, getCollateralId } from "../helpers";
+import { useContractReader } from "../../hooks";
+import { getBorrowId, getCollateralId } from "../../helpers";
 
-import PositionElement, { PositionActions } from "../PositionElement";
-import ProvidersList from "../ProvidersList";
-import AlphaWarning from "../AlphaWarning";
+import PositionElement, { PositionActions } from "../../components/PositionElement";
+import ProvidersList from "../../components/ProvidersList";
+import AlphaWarning from "../../components/AlphaWarning";
 
 function MyPositions({ contracts, address, }) {
   const history = useHistory();

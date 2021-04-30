@@ -2,7 +2,7 @@ import React from "react";
 import "./ProvidersList.css";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
-import { useContractReader, useRates } from "./hooks";
+import { useContractReader, useRates } from "../hooks";
 
 function ProvidersList({ contracts, markets }) {
   const activeProviderDai = useContractReader(

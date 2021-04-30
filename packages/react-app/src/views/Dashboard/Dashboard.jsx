@@ -5,16 +5,16 @@ import {
   useExternalContractLoader,
   useContractReader,
   useAuth,
-} from "../hooks";
-import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from "../constants";
-import { getCollateralId } from "../helpers";
+} from "../../hooks";
+import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from "../../constants";
+import { getCollateralId } from "../../helpers";
 
 import MyPositions from "./MyPositions";
 import ManagePosition from "./ManagePosition";
 import InitBorrow from "./InitBorrow";
 import Simulation from "./Simulation";
 import Error from "../Error";
-import Loader from "../Loader";
+import Loader from "../../components/Loader";
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 

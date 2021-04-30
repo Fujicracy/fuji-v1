@@ -3,11 +3,11 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 import { ProvideAuth } from "./hooks";
 
-import Home from "./Home";
-import Dashboard from "./Dashboard/Dashboard";
-import Infos from "./Infos";
-import Team from "./Team";
-import Error from "./Error";
+import Home from "./views/Home";
+import Dashboard from "./views/Dashboard/Dashboard";
+import Infos from "./views/Infos";
+import Team from "./views/Team";
+import Error from "./views/Error";
 
 function App(props) {
   return (
