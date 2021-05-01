@@ -30,7 +30,7 @@ yarn deploy
 ```
 # in another terminal window
 cd fuji
-yarn react-app:start
+yarn start
 ```
 
 4. _(optional)_ Run service bots
