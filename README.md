@@ -6,9 +6,9 @@ Fuji is a protocol that aims to optimize loan expenses for DeFi users. It achiev
 
 ---
 
-This project was bootstraped with [scaffold-eth](https://github.com/austintgriffith/scaffold-eth). The repository makes use of [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces). Workspaces can be found in `/packages`
+This project was bootstraped with [scaffold-eth](https://github.com/austintgriffith/scaffold-eth). The repository makes use of [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces). Workspaces can be found in `/packages`.
 
-> QuickStart
+## QuickStart
 
 1. Install dependancies and run a mainnet fork
 ```

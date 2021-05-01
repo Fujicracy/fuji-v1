@@ -12,7 +12,7 @@
   "scripts": {
     "react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
     "react-app:eject": "yarn workspace @fuji/react-app eject",
-    "react-app:start": "yarn workspace @fuji/react-app start",
+    "react-app:start": "yarn workspace @fuji/react-app start:dev",
     "react-app:test": "yarn workspace @fuji/react-app test",
     "build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
     "chain": "yarn workspace @fuji/hardhat chain",
