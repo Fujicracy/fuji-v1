@@ -11,74 +11,61 @@ const main = async () => {
 
   const DAI_ADDR = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
   const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
+  const UNISWAP_ROUTER_ADDR = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+  const CHAINLINK_ORACLE_ADDR = "0x773616E4d11A78F511299002da57A0a94577F1f4";
 
   const deployerWallet = ethers.provider.getSigner();
 
-  //const deployerAddress = await deployerWallet.getAddress();
-  //const FujiMapping = await deploy("FujiMapping", [ //This contract has to be deployed first
-    //deployerAddress,
-    //"mainnet"
-  //]);
-  //await FujiMapping.addCtknMapping([
-    ////Mainnet mappings for Compound Protocol ctoken
-    //"0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643" //cDAI
-    ////Kovan mappings for Compound Protocol ctoken
-    ////0xF0d0EB522cfa50B716B3b1604C4F0fA6f04376AD, //cDAI
-  //]);
+  // Step 1 of Deploy: Contracts which address is required to be hardcoded in other contracts
+  //Fuji Mapping, for testing this is not required.
+  //const treasury = await deploy("GnosisSafe");
+
+  // Step 2 Of Deploy: Functional Contracts
+  const fujiadmin = await deploy("FujiAdmin");
+  const fliquidator = await deploy("Fliquidator");
   const flasher = await deploy("Flasher");
+  const controller = await deploy("Controller");
+  const f1155 = await deploy("FujiERC1155");
+
+  // Step 3 Of Deploy: Provider Contracts
   const aave = await deploy("ProviderAave");
   const compound = await deploy("ProviderCompound");
+  const dydx = await deploy("ProviderDYDX");
 
-  const controller = await deploy("Controller", [
-    flasher.address, //flasher
-    "10000000000000000000000000" //changeThreshold percentagedecimal to ray (0.02 x 10^27)
+  // Step 4 Of Deploy Core Money Handling Contracts
+  const aWhitelist = await deploy("AlphaWhitelist", [
+    "100",
+    ethers.utils.parseEther("12"),
+    fliquidator.address
   ]);
+  const vaultdai = await deploy("VaultETHDAI");
+  const vaultusdc = await deploy("VaultETHUSDC");
 
-  const vault = await deploy("VaultETHDAI", [
-    controller.address,
-    "0x773616E4d11A78F511299002da57A0a94577F1f4", // oracle
-    "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", // uniswap
-  ]);
-  const debtToken = await deploy("DebtToken", [
-    vault.address,
-    DAI_ADDR,
-    "Fuji DAI debt token",
-    "faDAI"
-  ]);
+  // Step 5 - General Plug-ins and Set-up Transactions
+  await fujiadmin.setFlasher(flasher.address);
+  await fujiadmin.setFliquidator(fliquidator.address);
+  //await fujiadmin.setTreasury(treasury.address);
+  await fujiadmin.setController(controller.address);
+  await fujiadmin.setaWhitelist(aWhitelist.address);
+  await fliquidator.setfujiAdmin(fujiadmin.address);
+  await fliquidator.setSwapper(UNISWAP_ROUTER_ADDR);
+  await flasher.setfujiAdmin(fujiadmin.address);
+  await controller.setfujiAdmin(fujiadmin.address);
+  await f1155.setPermit(vaultdai.address, true);
+  await f1155.setPermit(vaultusdc.address, true);
 
-  //Set up the environment for testing Fuji contracts.
+  // Step 6 - Vault Set-up
+  await vaultdai.setfujiAdmin(fujiadmin.address)
+  await vaultdai.setProviders([compound.address, aave.address, dydx.address]);
+  await vaultdai.setActiveProvider(compound.address);
+  await vaultdai.setFujiERC1155(f1155.address);
+  await vaultdai.setOracle(CHAINLINK_ORACLE_ADDR);
 
-  vault.setDebtToken(debtToken.address);
-  await flasher.setController(controller.address);
-  await flasher.setVaultAuthorization(vault.address, true);
-  await vault.setFlasher(flasher.address);
-  await vault.addProvider(aave.address);
-  await vault.addProvider(compound.address);
-  await controller.addVault(vault.address);
-
-  // const exampleToken = await deploy("ExampleToken")
-  // const examplePriceOracle = await deploy("ExamplePriceOracle")
-  // const smartContractWallet = await deploy("SmartContractWallet",[exampleToken.address,examplePriceOracle.address])
-
-  /*
-
-  //If you want to send some ETH to a contract on deploy (make your constructor payable!)
-
-  const yourContract = await deploy("YourContract", [], {
-  value: ethers.utils.parseEther("0.05")
-  });
-  */
-
-
-
-  /*
-  //If you want to send value to an address from the deployer
-  await deployerWallet.sendTransaction({
-    to: "",
-    value: ethers.utils.parseEther("10")
-  })*/
-
-
+  await vaultusdc.setfujiAdmin(fujiadmin.address);
+  await vaultusdc.setProviders([compound.address, aave.address, dydx.address]);
+  await vaultusdc.setActiveProvider(compound.address);
+  await vaultusdc.setFujiERC1155(f1155.address);
+  await vaultusdc.setOracle(CHAINLINK_ORACLE_ADDR);
 
   console.log(
     " 💾  Artifacts (address, abi, and args) saved to: ",

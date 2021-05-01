@@ -3,6 +3,7 @@ const fs = require("fs");
 const chalk = require("chalk");
 
 require("@nomiclabs/hardhat-waffle");
+require("hardhat-contract-sizer");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
@@ -34,6 +35,7 @@ function mnemonic() {
 module.exports = {
   defaultNetwork,
 
+
   // don't forget to set your provider like:
   // REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
   // (then your frontend will talk to your contracts on the live network!)
@@ -42,6 +44,7 @@ module.exports = {
   networks: {
     localhost: {
       url: "http://localhost:8545",
+      timeout: 80000,
       /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
@@ -95,30 +98,78 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.4.25"
+        version: "0.7.4",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       },
       {
-        version: "0.7.0"
+        version: "0.4.25",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       },
-	  {
-        version: "0.6.12"
+      {
+        version: "0.5.3",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       },
-	  {
-        version: "0.6.0"
+      {
+        version: "0.6.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       },
-	  {
-        version: "0.6.2"
+      {
+        version: "0.6.12",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       },
-	  {
-        version: "0.7.4"
+      {
+        version: "0.6.2",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
+      },
+      {
+        version: "0.7.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
+      },
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000
+          }
+        }
       }
-    ],
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200
-      }
-    }
+    ]
   },
   mocha: {
     timeout: 80000

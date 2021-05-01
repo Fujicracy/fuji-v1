@@ -1,12 +1,13 @@
 import { hexlify } from "@ethersproject/bytes";
 import { parseUnits } from "@ethersproject/units";
-import { notification } from "antd";
 
 import Notify from "bnc-notify";
 
 // this should probably just be renamed to "notifier"
 // it is basically just a wrapper around BlockNative's wonderful Notify.js
 // https://docs.blocknative.com/notify
+
+const BLOCKNATIVE_KEY = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
 export default function Transactor(provider, gasPrice, etherscan) {
   if (typeof provider !== "undefined") {
@@ -16,7 +17,7 @@ export default function Transactor(provider, gasPrice, etherscan) {
       const network = await provider.getNetwork();
       console.log("network", network);
       const options = {
-        dappId: "0b58206a-f3c0-4701-a62f-73c7243e8c77", // GET YOUR OWN KEY AT https://account.blocknative.com
+        dappId: BLOCKNATIVE_KEY,
         system: "ethereum",
         networkId: network.chainId,
         // darkMode: Boolean, // (default: false)
@@ -36,11 +37,18 @@ export default function Transactor(provider, gasPrice, etherscan) {
         etherscanTxUrl = "https://blockscout.com/poa/xdai/tx/";
       }
 
+      let dismissPendingWallet;
       try {
         let result;
         if (tx instanceof Promise) {
+          const { dismiss } = notify.notification({
+            type: "pending",
+            message: 'Please check your wallet: \n Transaction is waiting for confirmation!',
+          });
+          dismissPendingWallet = dismiss;
           console.log("AWAITING TX", tx);
           result = await tx;
+          dismissPendingWallet();
         } else {
           if (!tx.gasPrice) {
             tx.gasPrice = gasPrice || parseUnits("4.1", "gwei");
@@ -59,14 +67,13 @@ export default function Transactor(provider, gasPrice, etherscan) {
           const { emitter } = notify.hash(result.hash);
           emitter.on("all", transaction => {
             return {
-              onclick: () => window.open((etherscan || etherscanTxUrl) + transaction.hash),
+              link: (etherscan || etherscanTxUrl) + transaction.hash,
             };
           });
         } else {
-          notification.info({
-            message: "Local Transaction Sent",
-            description: result.hash,
-            placement: "bottomRight",
+          notify.notification({
+            type: "success",
+            message: `Local Transaction Sent: ${result.hash}`
           });
         }
 
@@ -74,9 +81,10 @@ export default function Transactor(provider, gasPrice, etherscan) {
       } catch (e) {
         console.log(e);
         console.log("Transaction Error:", e.message);
-        notification.error({
-          message: "Transaction Error",
-          description: e.message,
+        dismissPendingWallet();
+        notify.notification({
+          type: "error",
+          message: `Transaction error: ${e.message}`
         });
       }
     };
