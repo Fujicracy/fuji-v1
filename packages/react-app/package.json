@@ -1,5 +1,5 @@
 {
-  "name": "FujiDAO-react-app",
+  "name": "@fuji/react-app",
   "version": "1.0.0",
   "browserslist": {
     "production": [
