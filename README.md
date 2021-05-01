@@ -30,5 +30,5 @@ yarn deploy
 ```
 # in another terminal window
 cd fuji
-yarn react-app:start
+yarn start
 ```
