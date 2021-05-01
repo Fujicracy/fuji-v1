@@ -6,24 +6,29 @@ Fuji is a protocol that aims to optimize loan expenses for DeFi users. It achiev
 
 ---
 
-Scaffold-eth was used to bootstrap this project.
+This project was bootstraped with [scaffold-eth](https://github.com/austintgriffith/scaffold-eth). The repository makes use of [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces). Workspaces can be found in `/packages`
 
 > QuickStart
 
-`cd fuji`
+1. Install dependancies and run a mainnet fork
+```
+cd fuji
+yarn install
+yarn fork
+```
 
-`yarn install`
+2. Deploy contracts
+> `packages/hardhat/artifacts` will be created and contracts abis and addresses will be copied to `packages/hardhat/react-app/scr/contracts`
 
-`yarn start`
+```
+# in another terminal window
+cd fuji
+yarn deploy
+```
 
-> in a second terminal window:
-
-`cd fuji`
-
-`yarn fork`
-
-> in a third terminal window:
-
-`cd fuji`
-
-`yarn deploy`
+3. Run react front-end
+```
+# in another terminal window
+cd fuji
+yarn react-app:start
+```
