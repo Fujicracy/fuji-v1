@@ -6,5 +6,8 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "ethers": "^5.1.4"
+  },
+  "scripts": {
+    "liquidate": "node liquidate.js"
   }
 }

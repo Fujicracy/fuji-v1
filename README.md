@@ -32,3 +32,11 @@ yarn deploy
 cd fuji
 yarn react-app:start
 ```
+
+4. _(optional)_ Run service bots
+> Execute liquidations for undercollaterized positions
+```
+# in another terminal window
+cd fuji
+yarn bots:liquidate
+```
