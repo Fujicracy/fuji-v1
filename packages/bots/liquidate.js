@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const fs = require("fs");
-const { ethers } = require('ethers');
+const { ethers, Wallet, Signer } = require('ethers');
 const { loadContracts } = require('./utils');
 
-const provider = new ethers.providers.JsonRpcProvider();
+const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+const signer = new Wallet(process.env.PRIVATE_KEY, provider);
 
 const vaultsList = [
   'VaultETHDAI',
@@ -39,11 +42,12 @@ async function checkUserPosition(addr, vaultName, contracts) {
   if (collateralBalance.lt(neededCollateral)) {
     console.log('-> proceed to liquidation');
     const index = await getLiquidationProviderIndex(vaultName, contracts);
-    await contracts.Fliquidator.flashLiquidate(addr, contracts[vaultName].address, index)
+    await contracts.Fliquidator.connect(signer).flashLiquidate(addr, contracts[vaultName].address, index)
       .catch(e => {
-        const body = JSON.parse(e.body);
-        const { message } = body.error;
-        console.log(`----> Liquidation failed: ${message}`);
+        console.log(e);
+        //const body = JSON.parse(e.body);
+        //const { message } = body.error;
+        //console.log(`----> Liquidation failed: ${message}`);
       });
   }
   else {
@@ -52,7 +56,7 @@ async function checkUserPosition(addr, vaultName, contracts) {
 }
 
 async function checkForLiquidations() {
-  const contracts = await loadContracts(provider);
+  const contracts = await loadContracts(signer);
 
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
@@ -72,6 +76,7 @@ async function checkForLiquidations() {
 }
 
 function main() {
+  console.log('Start checking for liquidations...');
   setInterval(checkForLiquidations, 60000);
 }
 
