@@ -1,45 +1,78 @@
 const fs = require("fs");
-const { ethers, Contract } = require('ethers');
+const { ethers } = require('ethers');
+const { loadContracts } = require('./utils');
 
 const provider = new ethers.providers.JsonRpcProvider();
 
-const f1155_ADDR = fs.readFileSync('../hardhat/artifacts/FujiERC1155.address').toString();
-const f1155_ABI = require('../hardhat/artifacts/contracts/FujiERC1155/FujiERC1155.sol/FujiERC1155.json').abi;
-const f1155 = new Contract(f1155_ADDR, f1155_ABI, provider);
+const vaultsList = [
+  'VaultETHDAI',
+  'VaultETHUSDC',
+];
+const DAI_ADDR = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+const USDC_ADDR = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
-const fliquidator_ADDR = fs.readFileSync('../hardhat/artifacts/Fliquidator.address').toString();
-const fliquidator_ABI = require('../hardhat/artifacts/contracts/Fliquidator.sol/Fliquidator.json').abi;
-const fliquidator = new Contract(fliquidator_ADDR, fliquidator_ABI, provider);
+async function getLiquidationProviderIndex(vaultName, contracts) {
+  const providerIndex = {
+    'aave': '0',
+    'dydx': '1',
+  };
+  const { borrowAsset } = await contracts[vaultName].vAssets();
+  const activeProvider = await contracts[vaultName].activeProvider();
+  const dydxProviderAddr = contracts.ProviderDYDX.address;
 
-const vaultETHDAI_ADDR = fs.readFileSync('../hardhat/artifacts/VaultETHDAI.address').toString();
-const vaultETHDAI_ABI = require('../hardhat/artifacts/contracts/Vaults/VaultETHDAI.sol/VaultETHDAI.json').abi;
-const vaultETHDAI = new Contract(vaultETHDAI_ADDR, vaultETHDAI_ABI, provider);
+  if ([DAI_ADDR, USDC_ADDR].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
+    return providerIndex['dydx'];
+  }
+  return providerIndex['aave'];
+}
 
+async function checkUserPosition(addr, vaultName, contracts) {
+  console.log(`Checking ${addr} position in ${vaultName}:`);
+  const { borrowID, collateralID } = await contracts[vaultName].vAssets();
 
-const filterBorrowers = vaultETHDAI.filters.Borrow();
+  const collateralBalance = await contracts.FujiERC1155.balanceOf(addr, collateralID);
+  const borrowBalance = await contracts.FujiERC1155.balanceOf(addr, borrowID);
 
-async function checkUserPosition(addr, vault) {
-  const { borrowAsset, collateralAsset, borrowID, collateralID } = await vault.vAssets();
-
-  const collateralBalance = await f1155.balanceOf(addr, collateralID);
-  const borrowBalance = await f1155.balanceOf(addr, borrowID);
-
-  const neededCollateral = await vault.getNeededCollateralFor(borrowBalance, "true");
-  console.log(collateralBalance.lt(neededCollateral));
+  const neededCollateral = await contracts[vaultName]
+    .getNeededCollateralFor(borrowBalance, "true");
 
   if (collateralBalance.lt(neededCollateral)) {
-    await fliquidator.flashLiquidate(addr, vault.address, "1");
+    console.log('-> proceed to liquidation');
+    const index = await getLiquidationProviderIndex(vaultName, contracts);
+    await contracts.Fliquidator.flashLiquidate(addr, contracts[vaultName].address, index)
+      .catch(e => {
+        const body = JSON.parse(e.body);
+        const { message } = body.error;
+        console.log(`----> Liquidation failed: ${message}`);
+      });
+  }
+  else {
+    console.log('-> position is safe');
   }
 }
 
-async function listenForEvents() {
-  console.log('start filter ...');
-  const events = await vaultETHDAI.queryFilter(filterBorrowers, -10);
-  const borrowers = events.map(e => e.args.userAddrs);
+async function checkForLiquidations() {
+  const contracts = await loadContracts(provider);
 
-  for (let i = 0; i < borrowers.length; i++) {
-    await checkUserPosition(borrowers[i], vaultETHDAI);
+  for (let v = 0; v < vaultsList.length; v++) {
+    const vaultName = vaultsList[v];
+    const filterBorrowers = contracts[vaultName].filters.Borrow();
+    const events = await contracts[vaultName].queryFilter(filterBorrowers, -10);
+    const borrowers = events
+      .map(e => e.args.userAddrs)
+      .reduce( (acc, userAddr) => (
+        acc.includes(userAddr) ? acc : [...acc, userAddr]
+      ), []);
+
+    for (let i = 0; i < borrowers.length; i++) {
+      const borrower = borrowers[i];
+      await checkUserPosition(borrower, vaultName, contracts);
+    }
   }
 }
 
-listenForEvents();
+function main() {
+  setInterval(checkForLiquidations, 60000);
+}
+
+main();
