@@ -5,8 +5,9 @@ const { ethers, Wallet, Signer } = require('ethers');
 const { loadContracts } = require('./utils');
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+let signer;
 if (process.env.PRIVATE_KEY) {
-  const signer = new Wallet(process.env.PRIVATE_KEY, provider);
+  signer = new Wallet(process.env.PRIVATE_KEY, provider);
 }
 else {
   throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
