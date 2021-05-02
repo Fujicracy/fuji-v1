@@ -18,7 +18,8 @@ yarn fork
 ```
 
 2. Deploy contracts
-> `packages/hardhat/artifacts` will be created and contracts abis and addresses will be copied to `packages/hardhat/react-app/scr/contracts`
+- `packages/hardhat/artifacts` is created
+- contracts abis and addresses are copied to `packages/react-app/src/contracts` and to `packages/bots/contracts`
 
 ```
 # in another terminal window
@@ -26,7 +27,19 @@ cd fuji
 yarn deploy
 ```
 
-3. Run react front-end
+3. Front-end
+
+3.1. Create `.env` in `packages/react-app` and set the following variables:
+```
+REACT_APP_INFURA_ID=
+REACT_APP_CHAIN_ID=31337
+```
+
+3.2. [Configure new network](https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC-and-or-Block-Explorer) on your metamask:
+- new RPC url -> http://localhost:8545
+- Chain ID -> 31337
+
+3.3. Run a development server
 ```
 # in another terminal window
 cd fuji
