@@ -39,7 +39,13 @@ REACT_APP_CHAIN_ID=31337
 - new RPC url -> http://localhost:8545
 - Chain ID -> 31337
 
-3.3. Run a development server
+3.3. Send some local ETH to your metamask address so that you can make transactions
+```
+cd fuji
+yarn send --from 0 --to YOUR_ADDRESS --amount 10
+```
+
+3.4. Run a development server
 ```
 # in another terminal window
 cd fuji
