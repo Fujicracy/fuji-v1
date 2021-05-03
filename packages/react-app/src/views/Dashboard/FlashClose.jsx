@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Transactor, getVaultName } from "../../helpers";
+import { DAI_ADDRESS, USDC_ADDRESS } from "../../constants";
 import "./FlashClose.css";
 import { parseUnits } from "@ethersproject/units";
 //import TextField from '@material-ui/core/TextField';
@@ -13,6 +14,21 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
+async function getLiquidationProviderIndex(vaultName, contracts) {
+  const providerIndex = {
+    'aave': '0',
+    'dydx': '1',
+  };
+  const { borrowAsset } = await contracts[vaultName].vAssets();
+  const activeProvider = await contracts[vaultName].activeProvider();
+  const dydxProviderAddr = contracts.ProviderDYDX.address;
+
+  if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
+    return providerIndex['dydx'];
+  }
+  return providerIndex['aave'];
+}
+
 function FlashClose({ borrowAsset, contracts, provider, address }) {
   const tx = Transactor(provider);
 
@@ -24,13 +40,16 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
   const decimals = borrowAsset === "USDC" ? 6 : 18;
   const onFlashClose = async () => {
     setLoading(true);
+    const vaultName = getVaultName(borrowAsset);
+    const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
 
     const res = await tx(
       contracts
       .Fliquidator
       .flashClose(
         parseUnits(amount, decimals),
-        contracts[getVaultName(borrowAsset)].address,
+        contracts[vaultName].address,
+        providerIndex,
         { gasPrice: parseUnits("40", "gwei") }
       )
     );
