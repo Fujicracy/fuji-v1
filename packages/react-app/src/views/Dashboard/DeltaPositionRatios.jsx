@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useExchangePrice } from "../hooks";
-import { PositionRatios } from "../helpers";
+import { useExchangePrice } from "../../hooks";
+import { PositionRatios } from "../../helpers";
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';

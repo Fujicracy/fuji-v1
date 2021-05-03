@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Transactor, getVaultName } from "../helpers";
+import { Transactor, getVaultName } from "../../helpers";
 import "./FlashClose.css";
 import { parseUnits } from "@ethersproject/units";
 //import TextField from '@material-ui/core/TextField';

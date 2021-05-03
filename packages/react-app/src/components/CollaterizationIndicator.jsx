@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useExchangePrice } from "./hooks";
+import { useExchangePrice } from "../hooks";
 import { useSpring, animated } from 'react-spring'
 import "./CollaterizationIndicator.css";
-import { PositionRatios } from "./helpers";
+import { PositionRatios } from "../helpers";
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -14,6 +14,18 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 function hsl(r) {
   const hue = r / 100 * 120;
   return `hsl(${Math.min(hue, 120)}, 100%, 50%)`;
+}
+
+function hslToHex(r) {
+  const h = Math.min(r / 100 * 120, 120);
+  const l = 50 /100;
+  const a = 100 * Math.min(l, 1 - l) / 100;
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
 }
 
 function logslider(value) {
@@ -59,7 +71,7 @@ function CollaterizationIndicator({ debtBalance, collateralBalance }) {
   }, [price, collateralBalance, debtBalance]);
 
   const props = useSpring({
-    to: { strokeDasharray: [healthRatio, 100] },
+    to: { strokeDasharray: [healthRatio, 100], filter: `drop-shadow(0px 0px .5px ${hslToHex(healthRatio)})` },
     from: { strokeDasharray: [oldHealthRatio, 100] },
   });
 

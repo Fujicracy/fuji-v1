@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import "./Error.css";
-import { useAuth } from "./hooks";
+import { useAuth } from "../hooks";
 import Button from '@material-ui/core/Button';
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useForm } from "react-hook-form";
-import { useBalance, useContractReader } from "../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../helpers";
+import { useBalance, useContractReader } from "../../hooks";
+import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from "../constants";
+import { ETH_CAP_VALUE } from "../../constants";
 import DeltaPositionRatios from "./DeltaPositionRatios"
 
 const Action = {

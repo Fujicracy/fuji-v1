@@ -1,0 +1,19 @@
+.alpha-warning {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  width: auto;
+  background: linear-gradient(180deg, rgba(41, 41, 41, 0.64) 0%, var(--blocks) 100%);
+  border-radius: 0.5rem;
+  border: 1px solid;
+  border-color: hsla(340, 99%, 47%, 1);
+}
+
+.alpha-warning .flask-icon {
+  margin-right: 0.875rem;
+}
+
+.flask-icon img {
+  width: 35px;
+  height: 35px;
+}

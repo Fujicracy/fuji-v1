@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { useContractReader } from "../hooks";
+import { useContractReader } from "../../hooks";
 import "./ManagePosition.css";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 
-import { getBorrowId, getCollateralId } from "../helpers";
-import PositionElement, { PositionActions } from "../PositionElement";
+import { getBorrowId, getCollateralId } from "../../helpers";
 import FlashClose from "./FlashClose";
 import DebtForm from "./DebtForm";
 import CollateralForm from "./CollateralForm";
 import SupplyAndBorrowForm from "./SupplyAndBorrowForm";
 import RepayAndWithdrawForm from "./RepayAndWithdrawForm";
-import ProvidersList from "../ProvidersList";
-import CollaterizationIndicator from "../CollaterizationIndicator";
+import PositionElement, { PositionActions } from "../../components/PositionElement";
+import CollaterizationIndicator from "../../components/CollaterizationIndicator";
+import ProvidersList from "../../components/ProvidersList";
 
 function ManagePosition({ contracts, provider, address, }) {
   const queries = new URLSearchParams(useLocation().search);

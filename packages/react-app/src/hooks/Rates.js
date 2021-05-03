@@ -30,13 +30,13 @@ export default function useRates(contracts) {
 
   const formatRate = (rate) => {
     const r = parseFloat(`${rate}`) / 1e27 * 100;
-    return rate ? r.toFixed(2) : "...";
+    return rate ? r : undefined;
   }
 
   // TODO fetch real Fuji APY
   const formatFujiRate = (rate) => {
     const r = parseFloat(`${rate}`) / 1e27 * 100 / 1.15;
-    return rate ? r.toFixed(2) : "...";
+    return rate ? r : undefined;
   }
 
   return {
