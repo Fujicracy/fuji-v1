@@ -38,6 +38,7 @@
     "surge": "yarn workspace @fuji/react-app surge",
     "s3": "yarn workspace @fuji/react-app s3",
     "ship": "yarn workspace @fuji/react-app ship",
+    "bots:liquidate": "yarn workspace @fuji/bots liquidate",
     "generate": "yarn workspace @fuji/hardhat generate",
     "account": "yarn workspace @fuji/hardhat account",
     "mine": "cd packages/hardhat && npx hardhat mine",

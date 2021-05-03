@@ -10,15 +10,16 @@ This project was bootstraped with [scaffold-eth](https://github.com/austintgriff
 
 ## QuickStart
 
-1. Install dependancies and run a mainnet fork
+### 1. Install dependancies and run a mainnet fork
 ```
 cd fuji
 yarn install
 yarn fork
 ```
 
-2. Deploy contracts
-> `packages/hardhat/artifacts` will be created and contracts abis and addresses will be copied to `packages/hardhat/react-app/scr/contracts`
+### 2. Deploy contracts
+- `packages/hardhat/artifacts` is created
+- contracts abis and addresses are copied to `packages/react-app/src/contracts` and to `packages/bots/contracts`
 
 ```
 # in another terminal window
@@ -26,9 +27,35 @@ cd fuji
 yarn deploy
 ```
 
-3. Run react front-end
+### 3. Front-end
+
+3.1. Create `.env` in `packages/react-app` and set the following variables:
+```
+REACT_APP_INFURA_ID=
+REACT_APP_CHAIN_ID=31337
+```
+
+3.2. [Configure new network](https://metamask.zendesk.com/hc/en-us/articles/360043227612-How-to-add-custom-Network-RPC-and-or-Block-Explorer) on your metamask:
+- new RPC url -> http://localhost:8545
+- Chain ID -> 31337
+
+3.3. Send some local ETH to your metamask address so that you can make transactions
+```
+cd fuji
+yarn send --from 0 --to YOUR_ADDRESS --amount 10
+```
+
+3.4. Run a development server
 ```
 # in another terminal window
 cd fuji
 yarn start
+```
+
+### 4. _(optional)_ Run service bots
+> Execute liquidations for undercollaterized positions
+```
+# in another terminal window
+cd fuji
+yarn bots:liquidate
 ```
