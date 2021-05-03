@@ -1,0 +1,36 @@
+/* ---------------- */
+/*     Stats        */
+/* ---------------- */
+
+.protocol-stats {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.protocol-stats .dark-block {
+	padding: 1.5rem 2rem;
+  border-color: var(--text05);
+  color: var(--text);
+}
+
+.protocol-stats .section-title {
+	margin-bottom: 0rem;
+  color: var(--text);;
+}
+
+.protocol-stats .number {
+	font-size: 1.4rem;
+	font-weight: 500;
+  text-align: end;
+  color: var(--green);
+  text-shadow: 0rem 0rem 0.125rem var(--green);
+}
+
+.right-content .protocol-stats {
+  flex-direction: column;
+}
+
+.right-content .protocol-stats .section-title {
+  margin-bottom: 1rem;
+}
