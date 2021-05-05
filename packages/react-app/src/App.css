@@ -215,6 +215,10 @@ footer .footer-links ul li a:hover {
   }
 }
 
+/* ------------------------------ */
+/*   Customize bnc-notify styles  */
+/* ------------------------------ */
+
 .bn-notify-custom .bn-notify-notification {
   color: #F5F5FD;
 }
@@ -243,4 +247,19 @@ footer .footer-links ul li a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ----------------------------- */
+/*   Customize web3modal styles  */
+/* ----------------------------- */
+.web3modal-modal-card {
+  padding: 12px 20px;
+  display: flex;
+}
+
+.web3modal-modal-card .web3modal-provider-wrapper {
+  margin: 10px;
+  border-radius: 8px;
+  width: auto;
+  padding: 0;
 }
