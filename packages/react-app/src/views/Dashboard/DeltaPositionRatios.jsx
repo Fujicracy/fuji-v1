@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-function DeltaPositionRatios({ currentCollateral, currentDebt, newCollateral, newDebt }) {
+function DeltaPositionRatios({ borrowAsset, currentCollateral, currentDebt, newCollateral, newDebt }) {
   const price = useExchangePrice();
 
   const [healthFactor, setHealthFactor] = useState([]);
@@ -16,23 +16,34 @@ function DeltaPositionRatios({ currentCollateral, currentDebt, newCollateral, ne
   const [ltv, setLtv] = useState([]);
 
   useEffect(() => {
+    let position = {
+      borrowAsset,
+      collateralBalance: currentCollateral,
+      debtBalance: currentDebt
+    };
     const {
       healthFactor: oldHf,
       ltv: oldLtv,
       borrowLimit: oldLimit
-    } = PositionRatios(currentCollateral, currentDebt, price);
+    } = PositionRatios(position, price);
+
+    position = {
+      borrowAsset,
+      collateralBalance: newCollateral,
+      debtBalance: newDebt
+    };
     const {
       healthFactor: newHf,
       ltv: newLtv,
       borrowLimit: newLimit
-    } = PositionRatios(newCollateral, newDebt, price);
+    } = PositionRatios(position, price);
 
     setHealthFactor([oldHf, newHf]);
     setLtv([oldLtv * 100, newLtv * 100]);
     setLimit([oldLimit * 100, newLimit * 100]);
-  }, [price, currentCollateral, currentDebt, newCollateral, newDebt]);
+  }, [price, borrowAsset, currentCollateral, currentDebt, newCollateral, newDebt]);
 
-  const formatValue = (value, precision) => value && value !== Infinity ? value.toFixed(precision) : "...";
+  const formatValue = (value, precision) => value !== undefined && value !== Infinity ? value.toFixed(precision) : "...";
 
   return (
     <List style={{ width: "100%" }}>

@@ -102,6 +102,12 @@ function InitBorrow({ contracts, provider, address }) {
     }
   }, [queryBorrowAsset, setBorrowAsset]);
 
+  const position = {
+    borrowAsset,
+    debtBalance: !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
+    collateralBalance: !collateralBalance || !collateralAmount ? 0 : collateralBalance.add(parseEther(collateralAmount))
+  };
+
   const tx = Transactor(provider);
   const onSubmit = async () => {
     const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
@@ -358,12 +364,7 @@ function InitBorrow({ contracts, provider, address }) {
           <AlphaWarning/>
         </div>
         <CollaterizationIndicator
-          debtBalance={
-            Number(borrowAmount) + (debtBalance ? Number(formatUnits(debtBalance, decimals)) : 0)
-          }
-          collateralBalance={
-            Number(collateralAmount) + (collateralBalance ? Number(formatEther(collateralBalance)) : 0)
-          }
+          position={position}
         />
         <ProvidersList
           contracts={contracts}

@@ -131,13 +131,7 @@ function ManagePosition({ contracts, provider, address, }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator
-          borrowAsset={borrowAsset}
-          debtBalance={
-            (debtBalance ? Number(formatUnits(debtBalance, decimals)) : 0)
-          }
-          collateralBalance={
-            (collateralBalance ? Number(formatEther(collateralBalance)) : 0)
-          }
+          position={position}
         />
         <ProvidersList
           contracts={contracts}

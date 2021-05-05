@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useExchangePrice } from "../hooks";
 import { useSpring, animated } from 'react-spring'
 import "./CollaterizationIndicator.css";
@@ -39,36 +39,34 @@ function logslider(value) {
   }
 }
 
-function CollaterizationIndicator({ debtBalance, collateralBalance }) {
+function CollaterizationIndicator({ position }) {
   const price = useExchangePrice();
 
   const [more, setMore] = useState(false);
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
-  const [oldHealthRatio, setOldHealthRatio] = useState(0);
+  const [oldHealthRatio, setOldHealthRatio] = useReducer((oldV, newV) => newV, healthRatio);
   const [borrowLimit, setLimit] = useState(0);
   const [ltv, setLtv] = useState(0);
   const [liqPrice, setLiqPrice] = useState(0);
 
   useEffect(() => {
-    if (collateralBalance !== undefined && debtBalance !== undefined && price) {
-      const {
-        healthFactor,
-        liqPrice,
-        ltv,
-        borrowLimit
-      } = PositionRatios(collateralBalance, debtBalance, price);
+    const {
+      healthFactor,
+      liqPrice,
+      ltv,
+      borrowLimit
+    } = PositionRatios(position, price);
 
-      setHealthFactor(healthFactor);
-      setLiqPrice(liqPrice);
-      setLtv(ltv);
-      setLimit(borrowLimit);
+    setHealthFactor(healthFactor);
+    setLiqPrice(liqPrice);
+    setLtv(ltv);
+    setLimit(borrowLimit);
 
-      const hr = logslider(healthFactor);
-      setOldHealthRatio(healthRatio);
-      setHealthRatio(hr);
-    }
-  }, [price, collateralBalance, debtBalance]);
+    const hr = logslider(healthFactor);
+    setOldHealthRatio(healthRatio);
+    setHealthRatio(hr);
+  }, [price, position, healthRatio]);
 
   const props = useSpring({
     to: { strokeDasharray: [healthRatio, 100], filter: `drop-shadow(0px 0px .5px ${hslToHex(healthRatio)})` },

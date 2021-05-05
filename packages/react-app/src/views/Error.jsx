@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import "./Error.css";
+import { NETWORK, CHAIN_ID } from "../constants";
 import { useAuth } from "../hooks";
 import Button from '@material-ui/core/Button';
-
-const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
 function Error() {
   const history = useHistory();
@@ -49,7 +48,7 @@ function Error() {
         ? (
             <h1 className="error-title">
               <span className="brand-color">You are on the wrong network</span>
-              <span className="text-color"> > Please, switch to Kovan!</span>
+              <span className="text-color"> > Please, switch to {NETWORK}</span>
             </h1>
         )
         : errorType === "not-connected"

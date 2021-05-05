@@ -127,12 +127,13 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
+          borrowAsset={borrowAsset}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newDebt={debtBalance}
           newCollateral={
             !collateralBalance || !amount
-              ? ""
+              ? 0
               : action === Action.Withdraw
                 ? collateralBalance.sub(parseEther(amount))
                 : collateralBalance.add(parseEther(amount))

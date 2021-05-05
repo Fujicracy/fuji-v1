@@ -197,15 +197,16 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
+          borrowAsset={borrowAsset}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newCollateral={collateralBalance}
           newDebt={
             !debtBalance || !amount
-              ? ""
+              ? 0
               : action === Action.Repay
-                ? debtBalance.sub(parseUnits(amount))
-                : debtBalance.add(parseUnits(amount))
+                ? debtBalance.sub(parseUnits(amount, decimals))
+                : debtBalance.add(parseUnits(amount, decimals))
           }
         />
       ),

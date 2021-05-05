@@ -125,7 +125,7 @@ header .button-nav.connected:hover {
 /*     FOOTER    */
 /* ------------- */
 footer {
-  position: relative;
+  position: fixed;
   bottom: 0rem;
   left: 0rem;
   width: calc(100% - 4rem);
@@ -213,4 +213,34 @@ footer .footer-links ul li a:hover {
   .ohno {
     display: flex;
   }
+}
+
+.bn-notify-custom .bn-notify-notification {
+  color: #F5F5FD;
+}
+
+.bn-notify-custom .bn-notify-notification:before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -2;
+  margin: -1px; /* !importanté */
+  border-radius: inherit; /* !importanté */
+  background: linear-gradient(to right, #FE3477, #F0014F);
+}
+
+.bn-notify-custom .bn-notify-notification:after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  border-radius: inherit; /* !importanté */
+  background: linear-gradient(to top, #191919, #292929);
+}
+
+.bn-notify-custom .bn-notify-notification-status-icon {
+  width: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -138,7 +138,7 @@ function Dashboard() {
                     ? <Loader />
                     : collateralBalanceDai.gt(0) || collateralBalanceUsdc.gt(0)
                       ? <Redirect to="/dashboard/my-positions" />
-                      : <Redirect to="/dashboard/simulation" />
+                      : <Redirect to="/dashboard/init-borrow" />
                   }
                 </ProtectedRoute>
                 <ProtectedRoute path={`${path}/simulation`}>
