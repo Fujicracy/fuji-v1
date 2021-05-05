@@ -41,8 +41,9 @@ async function loadContracts(providerOrSigner) {
   } catch (e) {
     console.log("ERROR LOADING CONTRACTS!!", e);
   }
-} 
+}
 
 module.exports = {
   loadContracts,
+  loadSingleContract
 };
