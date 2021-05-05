@@ -79,7 +79,7 @@ function MyPositions({ contracts, address, }) {
                     <div className="legend-elements">
                       <span>Collateral</span>
                       <span>Debt</span>
-                      <span>Debt Ratio</span>
+                      <span>Health Factor</span>
                     </div>
                     <span className="empty-button"></span>
                   </Grid>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useExchangePrice } from "../hooks";
+import { PositionRatios } from "../helpers";
 import { useHistory } from 'react-router-dom';
 import { formatUnits, formatEther } from "@ethersproject/units";
 import Button from '@material-ui/core/Button';
@@ -10,11 +11,28 @@ export const PositionActions = {
   Liquidate: 2,
 };
 
+function hsl(r) {
+  const hue = r / 100 * 120;
+  return `hsl(${Math.min(hue, 120)}, 100%, 50%)`;
+}
+
+function logslider(value) {
+  if(value < 1){
+    return 0
+  } else if  (value >= 1 && value <= 2){
+    return 50 * value-50
+  } else {
+    const constant = 50 * Math.log10(2);
+    return (100 - (constant/Math.log10(value)))
+  }
+}
+
 function PositionElement({ position, actionType }) {
   const history = useHistory();
   const price = useExchangePrice();
 
-  const [ratio, setRatio] = useState('');
+  const [healthFactor, setHealthFactor] = useState(0);
+  const [healthRatio, setHealthRatio] = useState(0);
 
   const { debtBalance, collateralBalance, borrowAsset } = position;
 
@@ -24,13 +42,12 @@ function PositionElement({ position, actionType }) {
   const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : null;
 
   useEffect(() => {
-    if (debt && collateral && price) {
-      // collateralization and healthy factor
-      const factor = 1.33;
-      const r = debt / (collateral * price) * factor;
-      setRatio(r);
-    }
-  }, [price, collateral, debt]);
+    const { healthFactor } = PositionRatios(collateral, debt, price);
+
+    setHealthFactor(healthFactor);
+    const hr = logslider(healthFactor);
+    setHealthRatio(hr);
+  }, [collateral, debt, price]);
 
   return (
     <div className="position-element">
@@ -61,9 +78,15 @@ function PositionElement({ position, actionType }) {
           <span className="additional-infos">≈ ${debt ? debt.toFixed(2) : "..."}</span>
         </div>
 
-        <div className="debt-ratio-number positive" data-element="Debt ratio">
-          <span className="number">{ratio ? Math.floor(ratio * 100) : "..."} %</span>
-        </div>
+        {
+          (actionType === PositionActions.Manage || actionType === PositionActions.Liquidate) && (
+            <div className="debt-ratio-number positive" data-element="Health Factor">
+              <span className="number" style={{ color: hsl(healthRatio) }}>
+                {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : ".."}
+              </span>
+            </div>
+          )
+        }
       </div>
 
       <div className="position-actions">{
