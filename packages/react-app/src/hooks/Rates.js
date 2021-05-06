@@ -28,6 +28,19 @@ export default function useRates(contracts) {
     [USDC_ADDRESS]
   );
 
+  const dydxDai = useContractReader(
+    contracts,
+    "ProviderDYDX",
+    "getBorrowRateFor",
+    [DAI_ADDRESS]
+  );
+  const dydxUsdc = useContractReader(
+    contracts,
+    "ProviderDYDX",
+    "getBorrowRateFor",
+    [USDC_ADDRESS]
+  );
+
   const formatRate = (rate) => {
     const r = parseFloat(`${rate}`) / 1e27 * 100;
     return rate ? r : undefined;
@@ -39,6 +52,9 @@ export default function useRates(contracts) {
     return rate ? r : undefined;
   }
 
+  const minDaiRate = Math.min(aaveDai, compoundDai, dydxDai)
+  const minUsdcRate = Math.min(aaveUsdc, compoundUsdc, dydxUsdc)
+
   return {
     aave: {
       dai: formatRate(aaveDai),
@@ -48,9 +64,13 @@ export default function useRates(contracts) {
       dai: formatRate(compoundDai),
       usdc: formatRate(compoundUsdc),
     },
+    dydx: {
+      dai: formatRate(dydxDai),
+      usdc: formatRate(dydxUsdc),
+    },
     fuji: {
-      dai: aaveDai < (compoundDai) ? formatFujiRate(aaveDai) : formatFujiRate(compoundDai),
-      usdc: aaveUsdc < (compoundUsdc) ? formatFujiRate(aaveUsdc) : formatFujiRate(compoundUsdc),
+      dai: formatFujiRate(minDaiRate),
+      usdc: formatFujiRate(minUsdcRate),
     }
   }
 }

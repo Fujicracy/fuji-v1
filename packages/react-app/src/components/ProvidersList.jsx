@@ -34,6 +34,7 @@ function ProvidersList({ contracts, markets }) {
 
   const providerAave = contracts && contracts["ProviderAave"];
   const providerCompound = contracts && contracts["ProviderCompound"];
+  const providerDYDX = contracts && contracts["ProviderDYDX"];
 
   const rates = useRates(contracts);
 
@@ -74,6 +75,13 @@ function ProvidersList({ contracts, markets }) {
                   <AnimatedCounter countTo={rates.compound.dai} /> %
                 </span>
               </div>
+
+              <div className={providerDYDX?.address === activeProviderDai ? 'stat best' : 'stat'}>
+                <span className="name">dYdX</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.dydx.dai} /> %
+                </span>
+              </div>
             </div>
           </div>
         )}
@@ -98,6 +106,13 @@ function ProvidersList({ contracts, markets }) {
                 <span className="name">Compound</span>
                 <span className="number">
                   <AnimatedCounter countTo={rates.compound.usdc} /> %
+                </span>
+              </div>
+
+              <div className={providerDYDX?.address === activeProviderUsdc ? 'stat best' : 'stat'}>
+                <span className="name">dYdX</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.dydx.usdc} /> %
                 </span>
               </div>
             </div>
