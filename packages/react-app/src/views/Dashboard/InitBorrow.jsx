@@ -41,7 +41,8 @@ function InitBorrow({ contracts, provider, address }) {
   );
 
   const providerAave = contracts && contracts["ProviderAave"];
-  //const providerCompound = contracts && contracts["ProviderCompound"];
+  const providerCompound = contracts && contracts["ProviderCompound"];
+  // const providerDYDX = contracts && contracts["ProviderDYDX"];
 
   const rates = useRates(contracts);
 
@@ -52,9 +53,10 @@ function InitBorrow({ contracts, provider, address }) {
     let rate;
     if (activeProvider === providerAave.address) {
       rate = rates.aave[borrowAsset.toLowerCase()];
-    }
-    else {
+    } else if (activeProvider === providerCompound.address) {
       rate = rates.compound[borrowAsset.toLowerCase()];
+    } else {
+      rate = rates.dydx[borrowAsset.toLowerCase()];
     }
 
     const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
@@ -340,7 +342,9 @@ function InitBorrow({ contracts, provider, address }) {
                     ? '...'
                     : activeProvider === providerAave.address
                       ? "Aave"
-                      : "Compound"
+                      : activeProvider === providerCompound.address
+                        ? "Compound"
+                        : "dYdX"
                   }</span>.
               </Typography>
             </div>
