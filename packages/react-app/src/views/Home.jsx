@@ -17,7 +17,7 @@ function Home() {
         <div className="home-content">
           <div className="home-cta">
             <a
-              href="https://medium.com/fuji-finance/fuji-explained-433c36d76344"
+              href="https://docs.fujidao.org/"
               className="second-action"
               target="_blank"
               rel="noopener noreferrer"
@@ -34,7 +34,7 @@ function Home() {
           <ul>
             <li>
               <a href="https://twitter.com/FujiFinance" target="_blank" rel="noopener noreferrer">
-                <img alt="twitter" src="/twitter.svg" />
+                <img className="footer-icon" alt="twitter" src="/twitter.svg" />
               </a>
             </li>
 
@@ -44,7 +44,17 @@ function Home() {
 
             <li>
               <a href="https://t.me/joinchat/U4cKWMsxuUG0JOGV" target="_blank" rel="noopener noreferrer">
-                <img alt="telegram" src="/telegram.svg" />
+                <img className="footer-icon" alt="telegram" src="/telegram.svg" />
+              </a>
+            </li>
+
+            <li>
+              ·
+            </li>
+
+            <li>
+              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+                <img className="footer-icon" alt="discord" src="/discord.png" />
               </a>
             </li>
           </ul>
