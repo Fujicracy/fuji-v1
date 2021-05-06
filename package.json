@@ -19,6 +19,8 @@
     "fork2": "yarn workspace @fuji/hardhat fork2",
     "node": "yarn workspace @fuji/hardhat chain",
     "contracts:size": "yarn workspace @fuji/hardhat contracts:size",
+    "contracts:lint": "yarn workspace @fuji/hardhat lint",
+    "contracts:format": "yarn workspace @fuji/hardhat format",
     "test:alpha-controller": "yarn workspace @fuji/hardhat test:alpha-controller",
     "test:alpha-fliquidator": "yarn workspace @fuji/hardhat test:alpha-fliquidator",
     "test:alpha-vaultext": "yarn workspace @fuji/hardhat test:alpha-vaultext",
