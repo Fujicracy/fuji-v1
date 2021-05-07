@@ -110,6 +110,11 @@ function Dashboard() {
               <img src="/telegram_1.svg" alt="telegram" />
             </a>
           </li>
+          <li>
+            <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+              <img src="/discord_1.svg" alt="discord" />
+            </a>
+          </li>
         </ul>
       </nav>
 

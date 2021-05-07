@@ -54,7 +54,7 @@ function Home() {
 
             <li>
               <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
-                <img className="footer-icon" alt="discord" src="/discord.png" />
+                <img className="footer-icon" alt="discord" src="/discord.svg" />
               </a>
             </li>
           </ul>
