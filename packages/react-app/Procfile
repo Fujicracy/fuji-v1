@@ -1,2 +1,2 @@
+release: node packages/react-app/scripts/downloadContractsData.js
 web: node packages/react-app/server.js
-release: yarn contracts:download

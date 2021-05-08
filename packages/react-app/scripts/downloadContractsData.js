@@ -13,7 +13,7 @@ async function download(file) {
     await storage.bucket(bucketName)
       .file(`contracts/${file}`)
       .download({
-        destination: `./src/contracts/${file}`
+        destination: `./packages/react-app/src/contracts/${file}`
       });
     console.log(`Downloaded ${file} from bucket ${bucketName}`);
   } catch(e) {
