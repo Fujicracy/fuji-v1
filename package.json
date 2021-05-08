@@ -40,7 +40,7 @@
     "balance": "yarn workspace @fuji/hardhat balance",
     "send": "yarn workspace @fuji/hardhat send",
     "start": "yarn workspace @fuji/react-app start:dev",
-    "constracts:download": "yarn workspace @fuji/react-app contracts:download",
+    "contracts:download": "yarn workspace @fuji/react-app contracts:download",
     "ipfs": "yarn workspace @fuji/react-app ipfs",
     "surge": "yarn workspace @fuji/react-app surge",
     "s3": "yarn workspace @fuji/react-app s3",
