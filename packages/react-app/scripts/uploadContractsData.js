@@ -11,7 +11,7 @@ const storage = new Storage();
 async function upload(file) {
   try {
     await storage.bucket(bucketName)
-      .upload(`./packages/react-app/src/contracts/${file}`, {
+      .upload(`./src/contracts/${file}`, {
         destination: `contracts/${file}`
       });
     console.log(`Uploaded ${file} to bucket ${bucketName}`);
