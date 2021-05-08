@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Transactor, getVaultName } from "../../helpers";
+import { useGasPrice } from "../../hooks";
 import { DAI_ADDRESS, USDC_ADDRESS } from "../../constants";
 import "./FlashClose.css";
 import { parseUnits } from "@ethersproject/units";
@@ -31,6 +32,7 @@ async function getLiquidationProviderIndex(vaultName, contracts) {
 
 function FlashClose({ borrowAsset, contracts, provider, address }) {
   const tx = Transactor(provider);
+  const gasPrice = useGasPrice();
 
   const [dialog, setDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -50,7 +52,7 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
         parseUnits(amount, decimals),
         contracts[vaultName].address,
         providerIndex,
-        { gasPrice: parseUnits("40", "gwei") }
+        { gasPrice }
       )
     );
 
