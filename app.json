@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "postdeploy": "yarn contracts:download"
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-multi-procfile"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
