@@ -45,18 +45,21 @@ function Simulation({ contracts, address }) {
         period: "3 months",
         Aave: calcInterest(v, 90, "aave"),
         Compound: calcInterest(v, 90, "compound"),
+        dYdX: calcInterest(v, 90, "dydx"),
         Fuji: calcInterest(v, 90, "fuji"),
       },
       {
         period: "6 months",
         Aave: calcInterest(v, 180, "aave"),
         Compound: calcInterest(v, 180, "compound"),
+        dYdX: calcInterest(v, 180, "dydx"),
         Fuji: calcInterest(v, 180, "fuji"),
       },
       {
         period: "1 year",
         Aave: calcInterest(v, 365, "aave"),
         Compound: calcInterest(v, 365, "compound"),
+        dYdX: calcInterest(v, 365, "dydx"),
         Fuji: calcInterest(v, 365, "fuji"),
       },
     ];
@@ -176,7 +179,7 @@ function SimulationChart({ data, borrowAsset, borrowAmount }) {
       layout="vertical"
       groupMode="grouped"
       data={data}
-      keys={[ 'Aave', 'Compound', 'Fuji' ]}
+      keys={[ 'Aave', 'Compound', 'dYdX', 'Fuji' ]}
       indexBy="period"
       margin={{
         top: 30,
@@ -227,10 +230,19 @@ function SimulationChart({ data, borrowAsset, borrowAmount }) {
             { offset: 100, color: '#757575' },
           ],
         },
+        {
+          id: 'gradientdYdX',
+          type: 'linearGradient',
+          colors: [
+            { offset: 0, color: '#008A27' },
+            { offset: 100, color: '#004411' },
+          ],
+        },
       ]}
       fill={[
         { match: { id: 'Aave' }, id: 'gradientAave' },
         { match: { id: 'Compound' }, id: 'gradientCompound' },
+        { match: { id: 'dYdX' }, id: 'gradientdYdX' },
         { match: { id: 'Fuji' }, id: 'gradientFuji' },
       ]}
       theme={{

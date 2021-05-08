@@ -69,4 +69,11 @@ const web3Modal = new Web3Modal({
       },
     },
   },
+  theme: {
+    background: "rgb(0, 0, 0)",
+    main: "rgb(245, 245, 253)",
+    secondary: "rgba(245, 245, 253, 0.8)",
+    border: "rgb(240, 1, 79)",
+    hover: "rgb(41, 41, 41)"
+  },
 });

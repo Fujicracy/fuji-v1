@@ -10,12 +10,25 @@ const provider = new JsonRpcProvider(
   `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`
 );
 
-export default function useExchangePrice(pollTime) {
+export default function useExchangePrice(asset = 'ETH', pollTime) {
   const [price, setPrice] = useState(0);
+  let priceFeedProxy = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
+
+  switch(asset) {
+    case 'DAI':
+      priceFeedProxy = '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9';
+      break;
+
+    case 'USDC':
+      priceFeedProxy = '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6';
+      break;
+  }
+
+  console.log('ask exchange price for ', asset)
 
   const oracle = useExternalContractLoader(
     provider,
-    "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+    priceFeedProxy,
     CHAINLINK_ABI
   );
 
