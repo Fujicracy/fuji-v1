@@ -1,1 +1,2 @@
 web: node packages/react-app/server.js
+release: yarn contracts:download
