@@ -6,7 +6,7 @@ const contractList = require("../src/contracts/contracts.js");
 const bucketName = 'fuji-mainnet-eth';
 
 // Creates a client
-const storage = new Storage();
+const storage = new Storage({ keyFilename: './goog-auth.json' });
 
 async function upload(file) {
   try {
