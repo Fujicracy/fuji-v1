@@ -52,7 +52,7 @@ function getProviderName(providerAddr, contracts) {
 async function switchProviders(contracts, vault, newProviderAddr) {
   const index = await getLiquidationProviderIndex(vault, contracts);
   await contracts.Controller.connect(signer)
-    .forcedRefinancing(vault.address, newProviderAddr, 1, 1, index, false)
+    .doRefinancing(vault.address, newProviderAddr, 1, 1, index, false)
     .catch(e => console.log(e));
 }
 
