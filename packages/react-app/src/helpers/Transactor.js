@@ -80,11 +80,15 @@ export default function Transactor(provider, gasPrice, etherscan) {
         return result;
       } catch (e) {
         console.log(e);
-        console.log("Transaction Error:", e.message);
         dismissPendingWallet();
+
+        let msg = e.message;
+        if (e.message.startsWith('cannot estimate gas')) {
+          msg = 'Insufficient ETH balance to pay for gas!';
+        }
         notify.notification({
           type: "error",
-          message: `Transaction error: ${e.message}`
+          message: `Transaction error: ${msg}`
         });
       }
     };
