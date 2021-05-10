@@ -157,9 +157,9 @@ footer .footer-socials a img {
   transition: all 250ms ease;
 }
 
-footer .footer-socials a:hover img {
-  filter: brightness(0.5) sepia(1) hue-rotate(314deg) saturate(5);
-}
+/*footer .footer-socials a:hover img {*/
+  /*filter: brightness(0.5) sepia(1) hue-rotate(314deg) saturate(5);*/
+/*}*/
 
 footer .footer-socials ul li,
 footer .footer-links ul li {

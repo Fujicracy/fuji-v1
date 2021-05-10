@@ -31,6 +31,38 @@ function App(props) {
           <Error />
         </Route>
       </Switch>
+      <footer>
+        <nav className="footer-socials">
+          <ul>
+            <li>
+              <a href="https://twitter.com/FujiFinance" target="_blank" rel="noopener noreferrer">
+                <img src="/twitter_1.svg" alt="twitter" />
+              </a>
+            </li>
+            <li>
+              <a href="https://t.me/joinchat/U4cKWNCUevKVsrtY" target="_blank" rel="noopener noreferrer">
+                <img src="/telegram_1.svg" alt="telegram" />
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+                <img src="/discord_1.svg" alt="discord" />
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <nav className="footer-links">
+          <ul>
+            <li>
+              <a href="https://docs.fujidao.org" target="_blank" rel="noopener noreferrer">
+                Documentation
+              </a>
+            </li>
+            <li>© Fuji DAO 2021</li>
+          </ul>
+        </nav>
+      </footer>
       <div className="bg-effect"></div>
       <div className="ohno">Oh no!<br />This website isn't available (yet) on mobile</div>
     </BrowserRouter>
