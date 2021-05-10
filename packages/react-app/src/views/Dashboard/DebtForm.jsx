@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useForm } from "react-hook-form";
-import { useContractReader, useExchangePrice } from "../../hooks";
+import { useContractReader, useExchangePrice, useGasPrice } from "../../hooks";
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -30,6 +30,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
   const price = useExchangePrice();
   const tx = Transactor(provider);
+  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Repay);
   const [focus, setFocus] = useState(false);
@@ -87,7 +88,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       contracts[getVaultName(borrowAsset)]
       .borrow(
         parseUnits(amount, decimals),
-        { gasPrice: parseUnits("40", "gwei") }
+        { gasPrice }
       )
     );
 
@@ -118,7 +119,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       contracts[getVaultName(borrowAsset)]
       .payback(
         parseUnits(_amount, decimals),
-        { gasPrice: parseUnits("40", "gwei") }
+        { gasPrice }
       )
     );
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useForm } from "react-hook-form";
-import { useBalance, useContractReader } from "../../hooks";
+import { useBalance, useContractReader, useGasPrice } from "../../hooks";
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -28,6 +28,7 @@ const Action = {
 function CollateralForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
   const tx = Transactor(provider);
+  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
@@ -72,7 +73,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       contracts[getVaultName(borrowAsset)]
       .deposit(
         parseEther(amount),
-        { value: parseEther(amount), gasPrice: parseUnits("40", "gwei") }
+        { value: parseEther(amount), gasPrice }
       )
     );
 
@@ -89,7 +90,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
     const _amount = Number(amount) === Number(leftCollateral) ? "-1" : amount;
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
-      .withdraw(parseEther(_amount), { gasPrice: parseUnits("40", "gwei") })
+      .withdraw(parseEther(_amount), { gasPrice })
     );
 
     if (res && res.hash) {
