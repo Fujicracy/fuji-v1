@@ -48,12 +48,12 @@ body {
 .home-content {
   color: white;
   font-family: sans-serif;
-  width: 400px;
+  width: 330px;
   text-align: center;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  top: calc(50% + 400px);
+  top: calc(50% + 380px);
 }
 
 .home-logo img {
@@ -106,7 +106,7 @@ body {
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   z-index: -2;
-  margin: -1px;
+  margin: -2px;
   border-radius: inherit;
   background: linear-gradient(to right, #FE3477, #F0014F);
 }
@@ -116,16 +116,16 @@ body {
   position: absolute;
   top: 0; right: 0; bottom: 0; left: 0;
   z-index: -1;
-  border-radius: inherit;
-  background: black;
+  border-radius: 3px;
+  background: var(--bg);
 }
 
 .home-cta .main-action {
   color: white;
   background: linear-gradient(92.29deg, #FE3477 0%, #F0014F 100%);
   /*background-color: var(--brand);*/
-  /*border: none;*/
-  /*box-shadow: 0px 0px 6px var(--brand);*/
+  border: none;
+  box-shadow: 0px 0px 6px var(--brand);
   /*text-shadow: 0px 0px 2px var(--text);*/
 }
 
