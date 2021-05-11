@@ -40,13 +40,13 @@ function App(props) {
               </a>
             </li>
             <li>
-              <a href="https://t.me/joinchat/U4cKWNCUevKVsrtY" target="_blank" rel="noopener noreferrer">
-                <img src="/telegram_1.svg" alt="telegram" />
+              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+                <img src="/discord_1.svg" alt="discord" />
               </a>
             </li>
             <li>
-              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
-                <img src="/discord_1.svg" alt="discord" />
+              <a href="https://t.me/joinchat/U4cKWNCUevKVsrtY" target="_blank" rel="noopener noreferrer">
+                <img src="/telegram_1.svg" alt="telegram" />
               </a>
             </li>
           </ul>
