@@ -95,13 +95,29 @@ body {
 }
 
 .home-cta .second-action {
-  border: 2px solid var(--brand);
   color: white;
   height: 37px;
-  /*background: transparent;*/
-  /*box-shadow: 0px 0px 6px var(--brand);*/
-  /*text-shadow: 0px 0px 2px var(--text);*/
   margin-right: 24px;
+  position: relative;
+}
+
+.second-action:before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -2;
+  margin: -1px;
+  border-radius: inherit;
+  background: linear-gradient(to right, #FE3477, #F0014F);
+}
+
+.second-action:after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: black;
 }
 
 .home-cta .main-action {
