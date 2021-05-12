@@ -27,7 +27,7 @@ const networks = {
 
 const chainId = process.env.REACT_APP_CHAIN_ID;
 
-const ETH_CAP_VALUE = 5;
+const ETH_CAP_VALUE = 2;
 
 module.exports = {
   DAI_ADDRESS: dai[chainId],
