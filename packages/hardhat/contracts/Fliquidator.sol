@@ -139,14 +139,14 @@ contract Fliquidator is Ownable, ReentrancyGuard {
     // Compute how much collateral needs to be swapt
     uint256 collateralInPlay = getCollateralInPlay(vAssets.borrowAsset, userDebtBalance.add(bonus));
 
+    // Burn Collateral F1155 tokens
+    F1155.burn(_userAddr, vAssets.collateralID, collateralInPlay);
+
     // Withdraw collateral
     IVault(_vault).withdraw(int256(collateralInPlay));
 
     // Swap Collateral
     swap(vAssets.borrowAsset, userDebtBalance.add(bonus), collateralInPlay);
-
-    // Burn Collateral F1155 tokens
-    F1155.burn(_userAddr, vAssets.collateralID, collateralInPlay);
 
     // Transfer to Liquidator the debtBalance + bonus
     IERC20(vAssets.borrowAsset).uniTransfer(msg.sender, userDebtBalance.add(bonus));
@@ -351,20 +351,23 @@ contract Fliquidator is Ownable, ReentrancyGuard {
     // Repay BaseProtocol debt to release collateral
     IVault(_vault).payback(int256(_amount));
 
-    // Withdraw collateral
-    IVault(_vault).withdraw(int256(userCollateral));
-
     // Compute the Liquidator Bonus bonusFlashL
     uint256 bonus = IVault(_vault).getLiquidationBonusFor(userDebtBalance, true);
+
     // Compute how much collateral needs to be swapt
     uint256 collateralInPlay = getCollateralInPlay(vAssets.borrowAsset, userDebtBalance.add(_flashloanFee).add(bonus));
+
+    // Burn Collateral F1155 tokens
+    F1155.burn(_userAddr, vAssets.collateralID, collateralInPlay);
+
+    // Withdraw collateral
+    IVault(_vault).withdraw(int256(userCollateral));
 
     uint256 remainingCollat = swap(
       vAssets.borrowAsset,
       _amount.add(_flashloanFee).add(bonus),
       collateralInPlay
     );
-    console.log(remainingCollat);
 
     // Send flasher the underlying to repay Flashloan
     IERC20(vAssets.borrowAsset).uniTransfer(payable(_fujiAdmin.getFlasher()), _amount.add(_flashloanFee));
@@ -377,9 +380,6 @@ contract Fliquidator is Ownable, ReentrancyGuard {
 
     // Burn Debt F1155 tokens
     F1155.burn(_userAddr, vAssets.borrowID, userDebtBalance);
-
-    // Burn Collateral F1155 tokens
-    F1155.burn(_userAddr, vAssets.collateralID, collateralInPlay);
 
     emit LogFlashLiquidate(_userAddr, _liquidatorAddr, vAssets.borrowAsset, userDebtBalance);
   }
