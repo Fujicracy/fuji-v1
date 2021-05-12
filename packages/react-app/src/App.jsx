@@ -1,15 +1,15 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import "./App.css";
-import { ProvideAuth } from "./hooks";
+import React from 'react'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import './App.css'
+import { ProvideAuth } from './hooks'
 
-import Home from "./views/Home";
-import Dashboard from "./views/Dashboard/Dashboard";
-import Infos from "./views/Infos";
-import Team from "./views/Team";
-import Error from "./views/Error";
+import Home from './views/Home'
+import Dashboard from './views/Dashboard/Dashboard'
+import Infos from './views/Infos'
+import Team from './views/Team'
+import Error from './views/Error'
 
-function App(props) {
+const App = () => {
   return (
     <BrowserRouter>
       <Switch>
@@ -27,14 +27,18 @@ function App(props) {
         <Route path="/about">
           <Infos />
         </Route>
-        <Route path={"*"}>
+        <Route path="*">
           <Error />
         </Route>
       </Switch>
-      <div className="bg-effect"></div>
-      <div className="ohno">Oh no!<br />This website isn't available (yet) on mobile</div>
+      <div className="bg-effect" />
+      <div className="ohno">
+        Oh no!
+        <br />
+        This website isn&apos;t available (yet) on mobile
+      </div>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App

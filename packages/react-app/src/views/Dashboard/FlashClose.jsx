@@ -1,117 +1,138 @@
-import React, { useState } from "react";
-import { Transactor, getVaultName } from "../../helpers";
-import { useGasPrice } from "../../hooks";
-import { DAI_ADDRESS, USDC_ADDRESS } from "../../constants";
-import "./FlashClose.css";
-import { parseUnits } from "@ethersproject/units";
-//import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import React, { useState } from 'react'
+import { parseUnits } from '@ethersproject/units'
+// import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import { Transactor, getVaultName } from '../../helpers'
+import { DAI_ADDRESS, USDC_ADDRESS } from '../../constants'
+import { useGasPrice } from '../../hooks'
+
+import './FlashClose.css'
 
 async function getLiquidationProviderIndex(vaultName, contracts) {
   const providerIndex = {
-    'aave': '0',
-    'dydx': '1',
-  };
-  const { borrowAsset } = await contracts[vaultName].vAssets();
-  const activeProvider = await contracts[vaultName].activeProvider();
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
+    aave: '0',
+    dydx: '1',
+  }
+  const { borrowAsset } = await contracts[vaultName].vAssets()
+  const activeProvider = await contracts[vaultName].activeProvider()
+  const dydxProviderAddr = contracts.ProviderDYDX.address
 
   if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
-    return providerIndex['dydx'];
+    return providerIndex.dydx
   }
-  return providerIndex['aave'];
+  return providerIndex.aave
 }
 
-function FlashClose({ borrowAsset, contracts, provider, address }) {
-  const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
+function FlashClose({ borrowAsset, contracts, provider /* , address */ }) {
+  const tx = Transactor(provider)
+  const gasPrice = useGasPrice()
 
-  const [dialog, setDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [confirmation, setConfirmation] = useState(false);
-  const [amount, setAmount] = useState('');
+  const [dialog, setDialog] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [confirmation, setConfirmation] = useState(false)
+  const [amount, setAmount] = useState('')
 
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const decimals = borrowAsset === 'USDC' ? 6 : 18
   const onFlashClose = async () => {
-    setLoading(true);
-    const vaultName = getVaultName(borrowAsset);
-    const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
+    setLoading(true)
+    const vaultName = getVaultName(borrowAsset)
+    const providerIndex = await getLiquidationProviderIndex(vaultName, contracts)
 
     const res = await tx(
-      contracts
-      .Fliquidator
-      .flashClose(
+      contracts.Fliquidator.flashClose(
         parseUnits(amount, decimals),
         contracts[vaultName].address,
         providerIndex,
-        { gasPrice }
-      )
-    );
+        { gasPrice },
+      ),
+    )
 
     if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "FlashClose")) {
-        setConfirmation(true);
+      const receipt = await res.wait()
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(e => {
+          return e.event === 'FlashClose'
+        })
+      ) {
+        setConfirmation(true)
       }
     }
-    setLoading(false);
-    setAmount('');
+    setLoading(false)
+    setAmount('')
   }
 
   return (
     <>
       <Dialog open={dialog} aria-labelledby="form-dialog-title">
-        <div className="close" onClick={() => {
-          setDialog(false);
-          setAmount('');
-        }}>
+        <button
+          type="button"
+          className="close"
+          onClick={() => {
+            setDialog(false)
+            setAmount('')
+          }}
+        >
           <HighlightOffIcon />
-        </div>
-        <DialogTitle id="form-dialog-title">
-          {confirmation ? "Success" : "Flash Close"}
-        </DialogTitle>
-        <DialogContent>{
-          confirmation
-            ? <DialogContentText>
-                Your transaction have been processed.
-              </DialogContentText>
-            : <DialogContentText>
-                You are about to repay your debt position with your collateral.
-                We are going to use a flash loan for that purpose. <br/><br/>
-                <span className="bold">Fee: 1%</span>
-              </DialogContentText>
-          }
+        </button>
+        <DialogTitle id="form-dialog-title">{confirmation ? 'Success' : 'Flash Close'}</DialogTitle>
+        <DialogContent>
+          {confirmation ? (
+            <DialogContentText>Your transaction have been processed.</DialogContentText>
+          ) : (
+            <DialogContentText>
+              You are about to repay your debt position with your collateral. We are going to use a
+              flash loan for that purpose. <br />
+              <br />
+              <span className="bold">Fee: 1%</span>
+            </DialogContentText>
+          )}
         </DialogContent>
-        <DialogActions>{
-          confirmation
-            ? <Button
-                className="main-button"
-                onClick={() => {
-                  setDialog(false);
-                  setConfirmation(false);
-                }}
-              >
-                Close
-              </Button>
-            : <Button
-                onClick={() => onFlashClose()}
-                className="main-button"
-                disabled={loading}
-                startIcon={loading
-                  ? <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
-                  : ""}
-              >
-                {loading ? "Repaying..." : "Confirm"}
-              </Button>
-          }
+        <DialogActions>
+          {confirmation ? (
+            <Button
+              className="main-button"
+              onClick={() => {
+                setDialog(false)
+                setConfirmation(false)
+              }}
+            >
+              Close
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                return onFlashClose()
+              }}
+              className="main-button"
+              disabled={loading}
+              startIcon={
+                loading ? (
+                  <CircularProgress
+                    style={{
+                      width: 25,
+                      height: 25,
+                      marginRight: '10px',
+                      color: 'rgba(0, 0, 0, 0.26)',
+                    }}
+                  />
+                ) : (
+                  ''
+                )
+              }
+            >
+              {loading ? 'Repaying...' : 'Confirm'}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
       <div className="flash-close">
@@ -131,17 +152,19 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
           </div>
 
           <div className="actions">
-            <Button onClick={() => {
-              setDialog(true);
-              setAmount("-1");
-            }}>
+            <Button
+              onClick={() => {
+                setDialog(true)
+                setAmount('-1')
+              }}
+            >
               Repay
             </Button>
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default FlashClose;
+export default FlashClose

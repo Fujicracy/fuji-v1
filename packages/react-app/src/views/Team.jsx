@@ -1,23 +1,23 @@
-import React from "react";
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import Card from '@material-ui/core/Card';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import Link from '@material-ui/core/Link'
+import Card from '@material-ui/core/Card'
+import CardMedia from '@material-ui/core/CardMedia'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(theme => 
-  createStyles({
+const useStyles = makeStyles(theme => {
+  return createStyles({
     mainArea: {
-      position: "fixed",
-      top: "30%"
+      position: 'fixed',
+      top: '30%',
     },
     card: {
-      border: "5px solid" + theme.palette.primary.main,
+      border: '5px solid' + theme.palette.primary.main,
       padding: theme.spacing(2, 0),
       borderRadius: 50,
-      boxSizing: "border-box",
-      boxShadow: "10px 15px 4px rgba(0, 0, 0, 0.25);",
+      boxSizing: 'border-box',
+      boxShadow: '10px 15px 4px rgba(0, 0, 0, 0.25);',
     },
     pic: {
       height: theme.spacing(30),
@@ -26,31 +26,21 @@ const useStyles = makeStyles(theme =>
     subtitle: {
       color: theme.palette.secondary.main,
       paddingTop: theme.spacing(2),
-      fontWeight: "500",
+      fontWeight: '500',
     },
   })
-);
+})
 
 function Team() {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
-    <div> 
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        spacing={3}
-        className={classes.mainArea}
-      >
+    <div>
+      <Grid container justify="center" alignItems="center" spacing={3} className={classes.mainArea}>
         <Grid item md={2}>
           <Link href="https://twitter.com/BoyanBarakov" target="_blank">
             <Card className={classes.card}>
-              <CardMedia
-                className={classes.pic}
-                image="/BoyanB.jpg"
-                title="Boyan Barakov"
-              />
+              <CardMedia className={classes.pic} image="/BoyanB.jpg" title="Boyan Barakov" />
             </Card>
           </Link>
           <Typography variant="h5" className={classes.subtitle}>
@@ -60,11 +50,7 @@ function Team() {
         <Grid item md={2}>
           <Link href="https://twitter.com/DaigaroC" target="_blank">
             <Card className={classes.card}>
-              <CardMedia
-                className={classes.pic}
-                image="/DaigaroC.jpg"
-                title="Daigaro Cota"
-              />
+              <CardMedia className={classes.pic} image="/DaigaroC.jpg" title="Daigaro Cota" />
             </Card>
           </Link>
           <Typography variant="h5" className={classes.subtitle}>
@@ -74,11 +60,7 @@ function Team() {
         <Grid item md={2}>
           <Link href="https://twitter.com/TheEdgarMoreau" target="_blank">
             <Card className={classes.card}>
-              <CardMedia
-                className={classes.pic}
-                image="/EdgarM.jpg"
-                title="Edgar Moreau"
-              />
+              <CardMedia className={classes.pic} image="/EdgarM.jpg" title="Edgar Moreau" />
             </Card>
           </Link>
           <Typography variant="h5" className={classes.subtitle}>
@@ -86,9 +68,8 @@ function Team() {
           </Typography>
         </Grid>
       </Grid>
-
     </div>
-   );
+  )
 }
 
-export default Team;
+export default Team

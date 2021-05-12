@@ -1,47 +1,42 @@
-import React, { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { useContractReader } from "../../hooks";
-import "./ManagePosition.css";
-import { formatEther, formatUnits } from "@ethersproject/units";
-import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+import React from 'react'
+import { useLocation, Link } from 'react-router-dom'
+import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined'
 
-import { getBorrowId, getCollateralId } from "../../helpers";
-import FlashClose from "./FlashClose";
-import DebtForm from "./DebtForm";
-import CollateralForm from "./CollateralForm";
-import SupplyAndBorrowForm from "./SupplyAndBorrowForm";
-import RepayAndWithdrawForm from "./RepayAndWithdrawForm";
-import PositionElement, { PositionActions } from "../../components/PositionElement";
-import CollaterizationIndicator from "../../components/CollaterizationIndicator";
-import ProvidersList from "../../components/ProvidersList";
+import { getBorrowId, getCollateralId } from '../../helpers'
+import PositionElement, { PositionActions } from '../../components/PositionElement'
+import CollaterizationIndicator from '../../components/CollaterizationIndicator'
+import ProvidersList from '../../components/ProvidersList'
+import { useContractReader } from '../../hooks'
 
-function ManagePosition({ contracts, provider, address, }) {
-  const queries = new URLSearchParams(useLocation().search);
+import FlashClose from './FlashClose'
+import DebtForm from './DebtForm'
+import CollateralForm from './CollateralForm'
+import SupplyAndBorrowForm from './SupplyAndBorrowForm'
+import RepayAndWithdrawForm from './RepayAndWithdrawForm'
 
-  //const [actionsType, setActionsType] = useState('single');
-  const actionsType = "single";
-  //const [borrowAmount, setBorrowAmount] = useState(0);
-  //const [collateralAmount, setCollateralAmount] = useState('');
+import './ManagePosition.css'
 
-  const borrowAsset = queries && queries.get("borrowAsset")
-    ? queries.get("borrowAsset")
-    : "DAI";
+function ManagePosition({ contracts, provider, address }) {
+  const queries = new URLSearchParams(useLocation().search)
 
-  const debtBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getBorrowId(borrowAsset)]
-  );
-  const collateralBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getCollateralId(borrowAsset)]
-  );
+  // const [actionsType, setActionsType] = useState('single');
+  const actionsType = 'single'
+  // const [borrowAmount, setBorrowAmount] = useState(0);
+  // const [collateralAmount, setCollateralAmount] = useState('');
 
-  const position = { collateralBalance, debtBalance, borrowAsset };
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const borrowAsset = queries && queries.get('borrowAsset') ? queries.get('borrowAsset') : 'DAI'
+
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getBorrowId(borrowAsset),
+  ])
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId(borrowAsset),
+  ])
+
+  const position = { collateralBalance, debtBalance, borrowAsset }
+  // const decimals = borrowAsset === 'USDC' ? 6 : 18
 
   return (
     <div className="container">
@@ -58,13 +53,10 @@ function ManagePosition({ contracts, provider, address, }) {
 
           <div className="position-board">
             <div className="manage-my-position one-position">
-              <PositionElement
-                actionType={PositionActions.None}
-                position={position}
-              />
+              <PositionElement actionType={PositionActions.None} position={position} />
 
               <div className="manage-settings">
-                {/*<div className="manage-mode">
+                {/* <div className="manage-mode">
                   <div className="toggle-mode">
                     <div className="button">
                       <input
@@ -80,41 +72,43 @@ function ManagePosition({ contracts, provider, address, }) {
                       <div className="layer"></div>
                     </div>
                   </div>
-                </div>*/}
+                </div> */}
 
                 <form noValidate>
                   <div className="manage-content">
-                    <div className="col-50">{
-                      actionsType === 'single'
-                        ? <CollateralForm
+                    <div className="col-50">
+                      {actionsType === 'single' ? (
+                        <CollateralForm
                           borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
                         />
-                        : <SupplyAndBorrowForm 
+                      ) : (
+                        <SupplyAndBorrowForm
                           borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
                         />
-                      }
+                      )}
                     </div>
-                    <div className="col-50">{
-                      actionsType === 'single'
-                        ? <DebtForm
+                    <div className="col-50">
+                      {actionsType === 'single' ? (
+                        <DebtForm
                           borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
                         />
-                        : <RepayAndWithdrawForm 
+                      ) : (
+                        <RepayAndWithdrawForm
                           borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
                         />
-                      }
+                      )}
                     </div>
                   </div>
                 </form>
@@ -130,16 +124,11 @@ function ManagePosition({ contracts, provider, address, }) {
         />
       </div>
       <div className="right-content">
-        <CollaterizationIndicator
-          position={position}
-        />
-        <ProvidersList
-          contracts={contracts}
-          markets={[borrowAsset]}
-        />
+        <CollaterizationIndicator position={position} />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
       </div>
     </div>
-  );
+  )
 }
 
-export default ManagePosition;
+export default ManagePosition

@@ -1,83 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { useHistory, useParams, useLocation } from 'react-router-dom';
-import "./Error.css";
-import { NETWORK, CHAIN_ID } from "../constants";
-import { useAuth } from "../hooks";
-import Button from '@material-ui/core/Button';
+import React, { useState, useEffect } from 'react'
+import { useHistory, useParams, useLocation } from 'react-router-dom'
+import './Error.css'
+import Button from '@material-ui/core/Button'
+import { NETWORK, CHAIN_ID } from '../constants'
+import { useAuth } from '../hooks'
 
 function Error() {
-  const history = useHistory();
-  const { errorType } = useParams();
-  const location = useLocation();
+  const history = useHistory()
+  const { errorType } = useParams()
+  const location = useLocation()
 
-  const { address, loadWeb3Modal } = useAuth();
-  const { from } = location.state || { from: { pathname: "/dashboard" } };
+  const { address, loadWeb3Modal } = useAuth()
+  const { from } = location.state || { from: { pathname: '/dashboard' } }
 
-  const [chainId, setChainId] = useState(
-    Number(window.ethereum ? window.ethereum.chainId : null)
-  );
+  const [chainId, setChainId] = useState(Number(window.ethereum ? window.ethereum.chainId : null))
 
   useEffect(() => {
     if (window.ethereum && window.ethereum.on) {
-      window.ethereum.on('chainChanged', (chainID) => {
-        setChainId(Number(chainID));
-      });
+      window.ethereum.on('chainChanged', chainID => {
+        setChainId(Number(chainID))
+      })
     }
-  }, [chainId]);
+  }, [chainId])
 
   useEffect(() => {
-    if (errorType === "wrong-network") {
+    if (errorType === 'wrong-network') {
       if (chainId === Number(CHAIN_ID)) {
-        history.replace(from);
-        history.go(0);
+        history.replace(from)
+        history.go(0)
       }
     }
-  }, [errorType, chainId, history, from]);
+  }, [errorType, chainId, history, from])
 
   useEffect(() => {
-    if (errorType === "not-connected") {
-      if (address && address.startsWith("0x")) {
-        history.replace(from);
+    if (errorType === 'not-connected') {
+      if (address && address.startsWith('0x')) {
+        history.replace(from)
       }
     }
-  }, [errorType, address, history, from]);
+  }, [errorType, address, history, from])
 
-  return (
-    <div className="error-page">{
-      errorType === "wrong-network"
-        ? (
-            <h1 className="error-title">
-              <span className="brand-color">You are on the wrong network</span>
-              <span className="text-color"> > Please, switch to {NETWORK}</span>
-            </h1>
-        )
-        : errorType === "not-connected"
-          ? (
-            <>
-              <h1 className="error-title">
-                <span className="brand-color">You are not connected</span>
-                <span className="text-color"> > Please, connect your wallet!</span>
-              </h1>
-              <Button className="main-button" onClick={() => loadWeb3Modal()}>
-                Connect wallet
-              </Button>
-            </>
-          )
-          : (
-            <>
-              <img alt="not-found-404" src="/not-found-404.svg" />
-              <h1 className="error-title">
-                <span className="brand-color">Are you lost?</span>
-                <span className="text-color">> Nothing was found at this URL</span>
-              </h1>
-              <Button className="main-button" href="/">
-                Go back Home
-              </Button>
-            </>
-          )
-      }
-    </div>
-  );
+  let contentEl = (
+    <>
+      <img alt="not-found-404" src="/not-found-404.svg" />
+      <h1 className="error-title">
+        <span className="brand-color">Are you lost?</span>
+        <span className="text-color">&gt; Nothing was found at this URL</span>
+      </h1>
+      <Button className="main-button" href="/">
+        Go back Home
+      </Button>
+    </>
+  )
+
+  if (errorType === 'wrong-network') {
+    contentEl = (
+      <h1 className="error-title">
+        <span className="brand-color">You are on the wrong network</span>
+        <span className="text-color"> &gt; Please, switch to {NETWORK}</span>
+      </h1>
+    )
+  } else if (errorType === 'not-connected') {
+    contentEl = (
+      <>
+        <h1 className="error-title">
+          <span className="brand-color">You are not connected</span>
+          <span className="text-color"> &gt; Please, connect your wallet!</span>
+        </h1>
+        <Button
+          className="main-button"
+          onClick={() => {
+            return loadWeb3Modal()
+          }}
+        >
+          Connect wallet
+        </Button>
+      </>
+    )
+  }
+
+  return <div className="error-page">{contentEl}</div>
 }
 
-export default Error;
+export default Error

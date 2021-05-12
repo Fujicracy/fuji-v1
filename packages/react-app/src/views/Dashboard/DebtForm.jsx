@@ -1,200 +1,207 @@
-import React, { useEffect, useState } from "react";
-import { formatUnits, parseUnits } from "@ethersproject/units";
-import { BigNumber } from "@ethersproject/bignumber";
-import { useForm } from "react-hook-form";
-import { useContractReader, useExchangePrice, useGasPrice } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import React, { useEffect, useState } from 'react'
+import get from 'lodash/get'
+import { formatUnits, parseUnits } from '@ethersproject/units'
+import { BigNumber } from '@ethersproject/bignumber'
+import { useForm } from 'react-hook-form'
+import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
+import { Transactor, getBorrowId, getCollateralId, getVaultName } from '../../helpers'
+import { useContractReader, useExchangePrice, useGasPrice } from '../../hooks'
 
-import DeltaPositionRatios from "./DeltaPositionRatios"
+import DeltaPositionRatios from './DeltaPositionRatios'
 
 const Action = {
   Repay: 0,
-  Borrow: 1
+  Borrow: 1,
 }
 
 function DebtForm({ borrowAsset, contracts, provider, address }) {
-  const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
-  const price = useExchangePrice();
-  const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
+  const { register, errors, setValue, handleSubmit, clearErrors } = useForm()
+  const price = useExchangePrice()
+  const tx = Transactor(provider)
+  const gasPrice = useGasPrice()
 
-  const [action, setAction] = useState(Action.Repay);
-  const [focus, setFocus] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState('');
-  const [leftToBorrow, setLeftToBorrow] = useState('');
-  const [dialog, setDialog] = useState({ step: null, withApproval: false });
+  const [action, setAction] = useState(Action.Repay)
+  const [focus, setFocus] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [amount, setAmount] = useState('')
+  const [leftToBorrow, setLeftToBorrow] = useState('')
+  const [dialog, setDialog] = useState({ step: null, withApproval: false })
 
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const decimals = borrowAsset === 'USDC' ? 6 : 18
 
-  const _balance = useContractReader(
-    contracts,
-    borrowAsset,
-    "balanceOf",
-    [address]
-  );
-  const balance = _balance ? Number(formatUnits(_balance, decimals)).toFixed(6) : null;
-  const allowance = useContractReader(
-    contracts,
-    borrowAsset,
-    "allowance",
-    [address, contracts ? contracts[getVaultName(borrowAsset)].address : '0x']
-  );
+  const contractBalance = useContractReader(contracts, borrowAsset, 'balanceOf', [address])
+  const balance = contractBalance ? Number(formatUnits(contractBalance, decimals)).toFixed(6) : null
+  const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
+    address,
+    contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
+  ])
 
-  const debtBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getBorrowId(borrowAsset)]
-  );
-  const collateralBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getCollateralId(borrowAsset)]
-  );
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getBorrowId(borrowAsset),
+  ])
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId(borrowAsset),
+  ])
 
   const neededCollateral = useContractReader(
     contracts,
     getVaultName(borrowAsset),
-    "getNeededCollateralFor",
-    [(debtBalance ? debtBalance : "0"), "true"],
-  );
+    'getNeededCollateralFor',
+    [debtBalance || '0', 'true'],
+  )
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
-      const left = (diff / 1.35) * price;
-      setLeftToBorrow(left.toFixed(6));
+      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)))
+      const left = (diff / 1.35) * price
+      setLeftToBorrow(left.toFixed(6))
     }
-  }, [neededCollateral, collateralBalance, price]);
+  }, [neededCollateral, collateralBalance, price])
 
-  const borrow = async() => {
+  const borrow = async () => {
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-      .borrow(
-        parseUnits(amount, decimals),
-        { gasPrice }
-      )
-    );
+      contracts[getVaultName(borrowAsset)].borrow(parseUnits(amount, decimals), { gasPrice }),
+    )
 
     if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Borrow")) {
-        setDialog({ step: 'success', withApproval: false });
+      const receipt = await res.wait()
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(e => {
+          return e.event === 'Borrow'
+        })
+      ) {
+        setDialog({ step: 'success', withApproval: false })
       }
-    }
-    else {
+    } else {
       // error
-      setDialog({ step: null, withApproval: false });
+      setDialog({ step: null, withApproval: false })
     }
-    setLoading(false);
+    setLoading(false)
   }
 
-  const payback = async(withApproval) => {
-    setDialog({ step: 'repaying', withApproval });
+  const payback = async withApproval => {
+    setDialog({ step: 'repaying', withApproval })
     // if amount is equal debt, user repays their whole debt (-1)
-    let _amount = parseUnits(amount, decimals).eq(debtBalance) ? "-1" : amount;
+    let checkAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount
     // another check when user wants to repay max
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
-    _amount = _amount === "-1" && debtBalance.eq(_balance) ? formatUnits(_balance, decimals) : _amount;
-    console.log(_amount);
+    checkAmount =
+      checkAmount === '-1' && debtBalance.eq(contractBalance)
+        ? formatUnits(contractBalance, decimals)
+        : checkAmount
+    console.log(checkAmount)
 
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-      .payback(
-        parseUnits(_amount, decimals),
-        { gasPrice }
-      )
-    );
+      contracts[getVaultName(borrowAsset)].payback(parseUnits(checkAmount, decimals), { gasPrice }),
+    )
 
     if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Repay")) {
-        setDialog({ step: 'success', withApproval });
+      const receipt = await res.wait()
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(e => {
+          return e.event === 'Repay'
+        })
+      ) {
+        setDialog({ step: 'success', withApproval })
       }
-    }
-    else {
+    } else {
       // error
-      setDialog({ step: null, withApproval: false });
+      setDialog({ step: null, withApproval: false })
     }
-    setLoading(false);
+    setLoading(false)
   }
 
-  const approve = async(infiniteApproval) => {
-    let _amount = amount;
+  const approve = async infiniteApproval => {
+    let checkAmount = amount
     // when repaying max debt, amount needs to be scaled by 2%
     // so that user approves a bit more in order to account for
     // the accrued interest
     // TODO add message to inform user
     if (parseUnits(amount, decimals).eq(debtBalance)) {
-      _amount = (Number(amount) * 1.02).toFixed(6);
+      checkAmount = (Number(amount) * 1.02).toFixed(6)
     }
 
-    const base = BigNumber.from(2);
-    const e = BigNumber.from(256);
-    const approveAmount = infiniteApproval
-      ? base.pow(e).sub(1)
-      : parseUnits(_amount, decimals);
-    setDialog({ step: 'approvalPending', withApproval: true });
+    const base = BigNumber.from(2)
+    const e = BigNumber.from(256)
+    const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(checkAmount, decimals)
+    setDialog({ step: 'approvalPending', withApproval: true })
     const res = await tx(
-      contracts[borrowAsset]
-      .approve(
+      contracts[borrowAsset].approve(
         contracts[getVaultName(borrowAsset)].address,
         BigNumber.from(approveAmount),
-        { gasPrice: parseUnits("40", "gwei") }
-      )
-    );
+        { gasPrice: parseUnits('40', 'gwei') },
+      ),
+    )
 
     if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Approval")) {
-        payback(true);
+      const receipt = await res.wait()
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(err => {
+          return err.event === 'Approval'
+        })
+      ) {
+        payback(true)
       }
-    }
-    else {
+    } else {
       // error
-      setDialog({ step: null, withApproval: false });
-      setLoading(false);
+      setDialog({ step: null, withApproval: false })
+      setLoading(false)
     }
   }
 
   const onSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
     if (action === Action.Repay) {
       if (parseUnits(amount, decimals).gt(allowance)) {
-        setDialog({ step: 'approval', withApproval: true });
+        setDialog({ step: 'approval', withApproval: true })
+      } else {
+        payback(false)
       }
-      else {
-        payback(false);
-      }
-    }
-    else {
-      borrow();
+    } else {
+      borrow()
     }
   }
 
   const onConfirmation = () => {
-    setDialog({ step: 'deltaRatios', withApproval: false });
+    setDialog({ step: 'deltaRatios', withApproval: false })
+  }
+
+  const getNewDebtAmount = () => {
+    if (!debtBalance || !amount) {
+      return 0
+    }
+
+    if (action === Action.Repay) {
+      return debtBalance.sub(parseUnits(amount, decimals))
+    }
+
+    return debtBalance.add(parseUnits(amount, decimals))
   }
 
   const dialogContents = {
-    'deltaRatios': {
+    deltaRatios: {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
@@ -202,87 +209,93 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newCollateral={collateralBalance}
-          newDebt={
-            !debtBalance || !amount
-              ? 0
-              : action === Action.Repay
-                ? debtBalance.sub(parseUnits(amount, decimals))
-                : debtBalance.add(parseUnits(amount, decimals))
-          }
+          newDebt={getNewDebtAmount()}
         />
       ),
-      actions: () => (
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialog({ step: null, withApproval: false });
-              onSubmit();
-            }}
-            className="main-button"
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      )
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setDialog({ step: null, withApproval: false })
+                onSubmit()
+              }}
+              className="main-button"
+            >
+              Confirm
+            </Button>
+          </DialogActions>
+        )
+      },
     },
-    'approval': {
+    approval: {
       title: 'Approving... 1 of 2',
-      content: (
-        <DialogContentText>
-          You need first to approve a spending limit.
-        </DialogContentText>
-      ),
-      actions: () => (
-        <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(amount).toFixed(0)} {borrowAsset}
-          </Button>
-          <Button onClick={() => approve(true)} className="main-button">
-            Infinite Approve
-          </Button>
-        </DialogActions>
-      )
+      content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                return approve(false)
+              }}
+              className="main-button"
+            >
+              Approve {Number(amount).toFixed(0)} {borrowAsset}
+            </Button>
+            <Button
+              onClick={() => {
+                return approve(true)
+              }}
+              className="main-button"
+            >
+              Infinite Approve
+            </Button>
+          </DialogActions>
+        )
+      },
     },
-    'success': {
+    success: {
       title: 'Transaction successful',
       content: (
         <DialogContentText>
-          You have successfully {action === Action.Repay ? 'repay' : 'borrow'}ed {amount} {borrowAsset}.
+          You have successfully {action === Action.Repay ? 'repay' : 'borrow'}ed {amount}{' '}
+          {borrowAsset}.
         </DialogContentText>
       ),
-      actions: () => (
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialog({ step: null, withApproval: false });
-              setAmount('');
-              setValue("amount", "", { shouldValidate: false });
-            }}
-            className="main-button"
-          >
-            Close
-          </Button>
-        </DialogActions>
-      )
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setDialog({ step: null, withApproval: false })
+                setAmount('')
+                setValue('amount', '', { shouldValidate: false })
+              }}
+              className="main-button"
+            >
+              Close
+            </Button>
+          </DialogActions>
+        )
+      },
     },
   }
 
   const getBtnContent = () => {
     if (action === Action.Repay) {
       if (!loading) {
-        return 'Repay';
+        return 'Repay'
       }
 
       if (dialog.step === 'approvalPending') {
-        return 'Approving... 1 of 2';
+        return 'Approving... 1 of 2'
       }
-      else if (dialog.step === 'repaying') {
-        return `Repaying... ${dialog.withApproval ? '2 of 2' : ''}`;
+      if (dialog.step === 'repaying') {
+        return `Repaying... ${dialog.withApproval ? '2 of 2' : ''}`
       }
     }
-    else {
-      return loading ? 'Borrowing...' : 'Borrow';
-    }
+
+    return loading ? 'Borrowing...' : 'Borrow'
   }
 
   return (
@@ -291,25 +304,25 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
         open={['approval', 'success', 'deltaRatios'].includes(dialog.step)}
         aria-labelledby="form-dialog-title"
       >
-        <div className="close" onClick={() => {
-          setDialog({ step: null, withApproval: false });
-          setValue("amount", "", { shouldValidate: false });
-          setLoading(false);
-        }}>
+        <button
+          type="button"
+          className="close"
+          onClick={() => {
+            setDialog({ step: null, withApproval: false })
+            setValue('amount', '', { shouldValidate: false })
+            setLoading(false)
+          }}
+        >
           <HighlightOffIcon />
-        </div>
+        </button>
         <DialogTitle id="form-dialog-title">
-          {dialogContents[dialog.step]?.title}
+          {get(dialogContents[dialog.step], 'title')}
         </DialogTitle>
-        <DialogContent>
-          {dialogContents[dialog.step]?.content}
-        </DialogContent>
-        {dialogContents[dialog.step]?.actions()}
+        <DialogContent>{get(dialogContents[dialog.step], 'content')}</DialogContent>
+        {dialogContents[dialog.step] && dialogContents[dialog.step].actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">
-          Debt
-        </Typography>
+        <Typography variant="h3">Debt</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
           <span className="tooltip tooltip-top">
@@ -321,7 +334,9 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? Action.Borrow : Action.Repay)}
+            onChange={({ target }) => {
+              return setAction(target.checked ? Action.Borrow : Action.Repay)
+            }}
             type="checkbox"
             className="checkbox"
           />
@@ -330,25 +345,27 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
               <span>Repay</span>
             </span>
           </div>
-          <div className="layer"></div>
+          <div className="layer" />
         </div>
       </Grid>
       <Grid item>
         <div className="subtitle">
-          <span className="complementary-infos">{
-            action === Action.Repay
-              ? (
-                <>
-                  <span>Available to repay:</span>
-                  <span>{balance ? Number(balance).toFixed(2) : '...'} {borrowAsset} Ξ</span>
-                </>
-              ) : (
-                <>
-                  <span>Available to borrow:</span>
-                  <span>{leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} {borrowAsset} Ξ</span>
-                </>
-              )
-            }
+          <span className="complementary-infos">
+            {action === Action.Repay ? (
+              <>
+                <span>Available to repay:</span>
+                <span>
+                  {balance ? Number(balance).toFixed(2) : '...'} {borrowAsset} Ξ
+                </span>
+              </>
+            ) : (
+              <>
+                <span>Available to borrow:</span>
+                <span>
+                  {leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} {borrowAsset} Ξ
+                </span>
+              </>
+            )}
           </span>
         </div>
         <div className="fake-input">
@@ -362,44 +379,48 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
             type="number"
             step="any"
             variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
-            onFocus={() => setFocus(true)}
-            onBlur={() => clearErrors()}
-            inputRef={
-              register({
-                required: { value: true, message: "insufficient-amount" },
-                min: { value: 0, message: "insufficient-amount" },
-                max: {
-                  value: action === Action.Repay ? balance : leftToBorrow,
-                  message: "insufficient-balance"
-                },
-              })
-            }
+            onChange={({ target }) => {
+              return setAmount(target.value)
+            }}
+            onFocus={() => {
+              return setFocus(true)
+            }}
+            onBlur={() => {
+              return clearErrors()
+            }}
+            inputRef={register({
+              required: { value: true, message: 'insufficient-amount' },
+              min: { value: 0, message: 'insufficient-amount' },
+              max: {
+                value: action === Action.Repay ? balance : leftToBorrow,
+                message: 'insufficient-balance',
+              },
+            })}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon"/>
+                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  {focus &&
+                  {focus && (
                     <Button
                       className="max-button"
                       onClick={() => {
-                        const debt = formatUnits(debtBalance, decimals);
-                        const maxRepay = Number(debt) > Number(balance) ? balance : debt;
+                        const debt = formatUnits(debtBalance, decimals)
+                        const maxRepay = Number(debt) > Number(balance) ? balance : debt
 
-                        setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
-                        setValue("amount", action === Action.Repay ? maxRepay : leftToBorrow, {
+                        setAmount(action === Action.Repay ? maxRepay : leftToBorrow)
+                        setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
                           shouldValidate: true,
-                          shouldDirty: true
-                        });
+                          shouldDirty: true,
+                        })
                       }}
                     >
                       max
                     </Button>
-                  }
+                  )}
                   <Typography variant="body1" className="input-infos">
                     {borrowAsset}
                   </Typography>
@@ -408,36 +429,40 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount?.message === "insufficient-amount"
-            && <Typography className="error-input-msg" variant="body2">
-                Please, type the amount you like to {action === Action.Repay ? "repay" : "borrow"}
-              </Typography>
-        }
-        {errors?.amount?.message === "insufficient-balance" && action === Action.Repay
-            && <Typography className="error-input-msg" variant="body2">
-                Insufficient {borrowAsset} balance
-              </Typography>
-        }
-        {errors?.amount?.message === "insufficient-balance" && action === Action.Borrow
-            && <Typography className="error-input-msg" variant="body2">
-                You can borrow max. {leftToBorrow} {borrowAsset}. Provide more collateral!
-              </Typography>
-        }
+        {get(errors, 'amount.message') === 'insufficient-amount' && (
+          <Typography className="error-input-msg" variant="body2">
+            Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
+          </Typography>
+        )}
+        {get(errors, 'amount.message') === 'insufficient-balance' && action === Action.Repay && (
+          <Typography className="error-input-msg" variant="body2">
+            Insufficient {borrowAsset} balance
+          </Typography>
+        )}
+        {get(errors, 'amount.message') === 'insufficient-balance' && action === Action.Borrow && (
+          <Typography className="error-input-msg" variant="body2">
+            You can borrow max. {leftToBorrow} {borrowAsset}. Provide more collateral!
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <Button
           onClick={handleSubmit(onConfirmation)}
           className="main-button"
           disabled={loading}
-          startIcon={loading &&
-            <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
+          startIcon={
+            loading && (
+              <CircularProgress
+                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+              />
+            )
           }
         >
           {getBtnContent()}
         </Button>
       </Grid>
     </Grid>
-  );
+  )
 }
 
-export default DebtForm;
+export default DebtForm

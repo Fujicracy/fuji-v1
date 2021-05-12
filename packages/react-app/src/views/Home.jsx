@@ -1,15 +1,14 @@
-import React from "react";
+import React from 'react'
 import { useSpring, animated, config } from 'react-spring'
-import { Link } from "react-router-dom";
-import "./Home.css";
+import { Link } from 'react-router-dom'
+import './Home.css'
 
 function Home() {
-
   const props = useSpring({
     from: { factor: 1, opacity: 0 },
     to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses},
-  });
+    config: { duration: 800, ...config.molasses },
+  })
 
   return (
     <div>
@@ -24,7 +23,9 @@ function Home() {
             >
               Learn
             </a>
-            <Link to="/dashboard" className="main-action">App</Link>
+            <Link to="/dashboard" className="main-action">
+              App
+            </Link>
           </div>
         </div>
       </animated.div>
@@ -38,22 +39,26 @@ function Home() {
               </a>
             </li>
 
-            <li>
-              ·
-            </li>
+            <li>·</li>
 
             <li>
-              <a href="https://t.me/joinchat/U4cKWMsxuUG0JOGV" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://t.me/joinchat/U4cKWMsxuUG0JOGV"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img className="footer-icon" alt="telegram" src="/telegram.svg" />
               </a>
             </li>
 
-            <li>
-              ·
-            </li>
+            <li>·</li>
 
             <li>
-              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://discord.com/invite/dnvJeEMeDJ"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img className="footer-icon" alt="discord" src="/discord.svg" />
               </a>
             </li>
@@ -61,7 +66,7 @@ function Home() {
         </nav>
       </div>
     </div>
-   );
+  )
 }
 
-export default Home;
+export default Home

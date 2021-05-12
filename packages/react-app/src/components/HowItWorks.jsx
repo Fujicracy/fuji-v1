@@ -1,7 +1,8 @@
-import React from "react";
-import Typography from '@material-ui/core/Typography';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import "./HowItWorks.css";
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+
+import './HowItWorks.css'
 
 function HowItWorks() {
   return (
@@ -16,12 +17,13 @@ function HowItWorks() {
       </legend>
 
       <Typography variant="body2">
-        By borrowing from Fuji, users effectively <span className="bold">reduce</span> their loan expenses.
-        The protocol constantly <span className="bold">monitors</span> borrow markets
-        and automatically <span className="bold">refinances</span> its debt positions at the best available rates.
+        By borrowing from Fuji, users effectively <span className="bold">reduce</span> their loan
+        expenses. The protocol constantly <span className="bold">monitors</span> borrow markets and
+        automatically <span className="bold">refinances</span> its debt positions at the best
+        available rates.
       </Typography>
     </fieldset>
-  );
+  )
 }
 
-export default HowItWorks;
+export default HowItWorks
