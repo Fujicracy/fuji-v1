@@ -237,7 +237,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           {dialogContents[dialog] && dialogContents[dialog].title}
         </DialogTitle>
 
-        <DialogContent>{dialogContents[dialog].content}</DialogContent>
+        <DialogContent>{dialogContents[dialog] && dialogContents[dialog].content}</DialogContent>
         {dialogContents[dialog] && dialogContents[dialog].actions()}
       </Dialog>
       <Grid item className="section-title">
