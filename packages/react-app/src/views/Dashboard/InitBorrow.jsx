@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useRates } from "../../hooks";
+import { useBalance, useContractReader, useRates, useGasPrice } from "../../hooks";
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
@@ -27,6 +27,7 @@ import AlphaWarning from "../../components/AlphaWarning";
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const queries = new URLSearchParams(useLocation().search);
+  const gasPrice = useGasPrice();
 
   const [borrowAmount, setBorrowAmount] = useState('1000');
   const [borrowAsset, setBorrowAsset] = useState('DAI');
@@ -41,7 +42,8 @@ function InitBorrow({ contracts, provider, address }) {
   );
 
   const providerAave = contracts && contracts["ProviderAave"];
-  //const providerCompound = contracts && contracts["ProviderCompound"];
+  const providerCompound = contracts && contracts["ProviderCompound"];
+  // const providerDYDX = contracts && contracts["ProviderDYDX"];
 
   const rates = useRates(contracts);
 
@@ -52,9 +54,10 @@ function InitBorrow({ contracts, provider, address }) {
     let rate;
     if (activeProvider === providerAave.address) {
       rate = rates.aave[borrowAsset.toLowerCase()];
-    }
-    else {
+    } else if (activeProvider === providerCompound.address) {
       rate = rates.compound[borrowAsset.toLowerCase()];
+    } else {
+      rate = rates.dydx[borrowAsset.toLowerCase()];
     }
 
     const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
@@ -122,7 +125,7 @@ function InitBorrow({ contracts, provider, address }) {
         .depositAndBorrow(
           parseEther(collateralAmount),
           parseUnits(borrowAmount, decimals),
-          { value: parseEther(collateralAmount), gasPrice: parseUnits("40", "gwei") }
+          { value: parseEther(collateralAmount), gasPrice }
         )
     );
 
@@ -340,7 +343,9 @@ function InitBorrow({ contracts, provider, address }) {
                     ? '...'
                     : activeProvider === providerAave.address
                       ? "Aave"
-                      : "Compound"
+                      : activeProvider === providerCompound.address
+                        ? "Compound"
+                        : "dYdX"
                   }</span>.
               </Typography>
             </div>

@@ -28,13 +28,13 @@ function logslider(value) {
 }
 
 function PositionElement({ position, actionType }) {
+  const { debtBalance, collateralBalance, borrowAsset } = position;
   const history = useHistory();
   const price = useExchangePrice();
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
 
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
-
-  const { debtBalance, collateralBalance, borrowAsset } = position;
 
   const decimals = borrowAsset === "USDC" ? 6 : 18;
 
@@ -75,7 +75,7 @@ function PositionElement({ position, actionType }) {
             <img alt={borrowAsset} src={`/${borrowAsset}.png`} />
             <span>{debt ? debt.toFixed(2) : "..."}</span>
           </span>
-          <span className="additional-infos">≈ ${debt ? debt.toFixed(2) : "..."}</span>
+          <span className="additional-infos">≈ ${debt ? (debt * borrowAssetPrice).toFixed(2) : "..."}</span>
         </div>
 
         {

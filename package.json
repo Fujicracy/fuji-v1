@@ -9,6 +9,10 @@
     "yarn"
   ],
   "private": true,
+  "engines": {
+    "node": "12.13.1",
+    "npm": "6.12.1"
+  },
   "scripts": {
     "react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
     "react-app:eject": "yarn workspace @fuji/react-app eject",
@@ -36,6 +40,8 @@
     "balance": "yarn workspace @fuji/hardhat balance",
     "send": "yarn workspace @fuji/hardhat send",
     "start": "yarn workspace @fuji/react-app start:dev",
+    "contracts:download": "yarn workspace @fuji/react-app contracts:download",
+    "contracts:upload": "yarn workspace @fuji/react-app contracts:upload",
     "ipfs": "yarn workspace @fuji/react-app ipfs",
     "surge": "yarn workspace @fuji/react-app surge",
     "s3": "yarn workspace @fuji/react-app s3",
