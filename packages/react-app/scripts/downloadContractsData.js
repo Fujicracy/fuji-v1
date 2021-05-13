@@ -15,7 +15,14 @@ async function download(file) {
       .download({
         destination: `./src/contracts/${file}`
       });
-    console.log(`Downloaded ${file} from bucket ${bucketName}`);
+    console.log(`Downloaded ${file} to "react-app/src/contracts"`);
+
+    await storage.bucket(bucketName)
+      .file(`contracts/${file}`)
+      .download({
+        destination: `../bots/contracts/${file}`
+      });
+    console.log(`Downloaded ${file}  to "bots/contracts"`);
   } catch(e) {
     console.error(e.message);
   }
