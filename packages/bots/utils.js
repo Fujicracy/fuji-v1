@@ -15,6 +15,14 @@ const loadSingleContract = (contractName, signer) => {
   return newContract;
 };
 
+const getContractsList = () => {
+  return fs.readdirSync('./contracts')
+    .filter(file => file.match(/.*\.address\.js$/))
+    .map(file => {
+      return file.split('.')[0];
+    });
+}
+
 async function loadContracts(providerOrSigner) {
   try {
     // we need to check to see if this providerOrSigner has a signer or not
@@ -30,7 +38,7 @@ async function loadContracts(providerOrSigner) {
       signer = providerOrSigner;
     }
 
-    const contractList = require("./contracts/contracts.js");
+    const contractList = getContractsList();
 
     const newContracts = contractList.reduce((accumulator, contractName) => {
       accumulator[contractName] = loadSingleContract(contractName, signer);
