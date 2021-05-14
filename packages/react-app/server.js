@@ -10,6 +10,13 @@ const port = Number(process.env.PORT) || 3000;
 const storage = new Storage();
 const bucket = storage.bucket('fuji-mainnet-eth');
 
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  }
+  return next();
+});
+
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/contracts-data', async (req, res) => {
