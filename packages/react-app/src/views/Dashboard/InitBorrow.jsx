@@ -337,7 +337,6 @@ function InitBorrow({ contracts, provider, address }) {
             </div>
             <div className="helper">
               <Typography variant="body2">
-                You are saving <span>{calcSavedAmount(Number(borrowAmount))} {borrowAsset}</span> per year by borrowing with Fuji. <br />
                 The liquidity for this transaction is coming from <span>{
                   !activeProvider
                     ? '...'
