@@ -136,7 +136,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-content: center;
-  z-index: 0;
+  z-index: -1;
 }
 
 footer .footer-socials,
