@@ -12,55 +12,21 @@ function Home() {
   });
 
   return (
-    <div>
-      <animated.div style={props} className="home-container">
-        <div className="home-content">
-          <div className="home-cta">
-            <a
-              href="https://docs.fujidao.org/"
-              className="second-action"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn
-            </a>
-            <Link to="/dashboard" className="main-action">App</Link>
-          </div>
+    <animated.div style={props} className="home-container">
+      <div className="home-content">
+        <div className="home-cta">
+          <a
+            href="https://docs.fujidao.org/"
+            className="second-action"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn
+          </a>
+          <Link to="/dashboard" className="main-action">App</Link>
         </div>
-      </animated.div>
-
-      <div className="home-footer">
-        <nav>
-          <ul>
-            <li>
-              <a href="https://twitter.com/FujiFinance" target="_blank" rel="noopener noreferrer">
-                <img className="footer-icon" alt="twitter" src="/twitter.svg" />
-              </a>
-            </li>
-
-            <li>
-              ·
-            </li>
-
-            <li>
-              <a href="https://t.me/joinchat/U4cKWMsxuUG0JOGV" target="_blank" rel="noopener noreferrer">
-                <img className="footer-icon" alt="telegram" src="/telegram.svg" />
-              </a>
-            </li>
-
-            <li>
-              ·
-            </li>
-
-            <li>
-              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
-                <img className="footer-icon" alt="discord" src="/discord.svg" />
-              </a>
-            </li>
-          </ul>
-        </nav>
       </div>
-    </div>
+    </animated.div>
    );
 }
 

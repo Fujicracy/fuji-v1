@@ -96,36 +96,6 @@ function Dashboard() {
     </header>
   );
 
-  const footer = () => (
-    <footer>
-      <nav className="footer-socials">
-        <ul>
-          <li>
-            <a href="https://twitter.com/FujiFinance" target="_blank" rel="noopener noreferrer">
-              <img src="/twitter_1.svg" alt="twitter" />
-            </a>
-          </li>
-          <li>
-            <a href="https://t.me/joinchat/U4cKWNCUevKVsrtY" target="_blank" rel="noopener noreferrer">
-              <img src="/telegram_1.svg" alt="telegram" />
-            </a>
-          </li>
-          <li>
-            <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
-              <img src="/discord_1.svg" alt="discord" />
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <nav className="footer-links">
-        <ul>
-          <li>© Fuji DAO 2021</li>
-        </ul>
-      </nav>
-    </footer>
-  );
-
   //<li>
     //<Link to="#"><span className="material-icons">light_mode</span></Link>
   //</li>
@@ -176,7 +146,6 @@ function Dashboard() {
                   <Error />
                 </Route>
               </Switch>
-              {footer()}
             </>
           )
         }
