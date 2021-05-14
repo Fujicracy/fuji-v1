@@ -72,25 +72,25 @@ function Dashboard() {
                     My positions
                   </NavLink>
                 </li>
+                <li>
+                  <a
+                    href="/"
+                    onClick={() => !address ? loadWeb3Modal() : logoutOfWeb3Modal()}
+                    onMouseEnter={() => setLogout(true)}
+                    onMouseLeave={() => setLogout(false)}
+                    className={address ? "button-nav connected" : "button-nav"}
+                  >
+                    {!address
+                      ? "Connect Wallet"
+                      : logout
+                        ? "Disconnect"
+                        : address.substr(0, 6) + "..." + address.substr(-4, 4)
+                    }
+                  </a>
+                </li>
               </>
             )
             : ""}
-          <li>
-            <a
-              href="/"
-              onClick={() => !address ? loadWeb3Modal() : logoutOfWeb3Modal()}
-              onMouseEnter={() => setLogout(true)}
-              onMouseLeave={() => setLogout(false)}
-              className={address ? "button-nav connected" : "button-nav"}
-            >
-              {!address
-                ? "Connect Wallet"
-                : logout
-                  ? "Disconnect"
-                  : address.substr(0, 6) + "..." + address.substr(-4, 4)
-              }
-            </a>
-          </li>
         </ul>
       </nav>
     </header>
