@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
 import { useBalance, useContractReader, useRates, useGasPrice } from "../../hooks";
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import { useForm } from "react-hook-form";
@@ -120,13 +121,22 @@ function InitBorrow({ contracts, provider, address }) {
     }
 
     setLoading(true);
+    const _tx = contracts[getVaultName(borrowAsset)]
+      .estimateGas
+      .depositAndBorrow(
+        parseEther(collateralAmount),
+        parseUnits(borrowAmount, decimals),
+        { value: parseEther(collateralAmount), gasPrice }
+      );
+    const _gasLimit = await _tx;
+    const gasLimit = _gasLimit.add(_gasLimit.div(BigNumber.from('10')));
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
-        .depositAndBorrow(
-          parseEther(collateralAmount),
-          parseUnits(borrowAmount, decimals),
-          { value: parseEther(collateralAmount), gasPrice }
-        )
+      .depositAndBorrow(
+        parseEther(collateralAmount),
+        parseUnits(borrowAmount, decimals),
+        { value: parseEther(collateralAmount), gasPrice, gasLimit }
+      )
     );
 
     if (res && res.hash) {
@@ -148,7 +158,7 @@ function InitBorrow({ contracts, provider, address }) {
   const dialogContents = {
     'success': {
       title: 'Success',
-      content: 'Your transaction have been processed, you can now check your position and follow the evolution of your debt position.',
+      content: 'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
       actions: () => (
         <DialogActions>
           <Button
