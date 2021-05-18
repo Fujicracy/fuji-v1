@@ -180,9 +180,9 @@ footer .footer-links ul li a {
   transition: all 250ms ease;
 }
 
-footer .footer-links ul li a:hover {
-  color: var(--brand);
-}
+/*footer .footer-links ul li a:hover {*/
+  /*color: var(--brand);*/
+/*}*/
 
 /* ------------- */
 /*   RESPONSIVE  */

@@ -202,7 +202,7 @@ function InitBorrow({ contracts, provider, address }) {
         <div className="dark-block borrow-actions">
           <form noValidate>
             <div className="borrow-options">
-              <div className="subtitle">Borrow</div>
+              <div className="section-title">Borrow</div>
               <div className="select-options">
                 <div className="options-list">
                   <label>

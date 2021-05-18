@@ -24,8 +24,6 @@ export default function useExchangePrice(asset = 'ETH', pollTime) {
       break;
   }
 
-  console.log('ask exchange price for ', asset)
-
   const oracle = useExternalContractLoader(
     provider,
     priceFeedProxy,
