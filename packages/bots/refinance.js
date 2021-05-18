@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require("fs");
 const chalk = require("chalk");
 const { ethers, Wallet } = require('ethers');
-const { loadContracts } = require('./utils');
+const { loadContracts, getGasPrice } = require('./utils');
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
 let signer;
@@ -55,9 +55,9 @@ function getProviderName(providerAddr, contracts) {
 
 async function switchProviders(contracts, vault, newProviderAddr) {
   const index = await getLiquidationProviderIndex(vault, contracts);
-  await contracts.Controller.connect(signer)
-    .doRefinancing(vault.address, newProviderAddr, 1, 1, index)
-    .catch(e => console.log(e));
+  const gasPrice = await getGasPrice();
+  return await contracts.Controller.connect(signer)
+    .doRefinancing(vault.address, newProviderAddr, 1, 1, index, { gasPrice });
 }
 
 async function shouldChange(currentRate, newRate, lastSwitch) {
@@ -91,30 +91,30 @@ async function checkRates(vaultName, contracts) {
 
   const providers = await vault.getProviders();
 
-  const rates = [];
+  let bestRate = currentRate;
+  let bestProviderIndex;
   for (let i = 0; i < providers.length; i++) {
     const providerName = getProviderName(providers[i], contracts);
     const rate = await contracts[providerName].getBorrowRateFor(borrowAsset);
-    rates.push(rate);
+
+    // determine provider with best rate
+    if (rate.lt(bestRate)) {
+      bestRate = rate;
+      bestProviderIndex = i;
+    }
   }
 
-  // determine the index of the best provider and its rate
-  const { index: bestProviderIndex } = rates
-    .reduce(({ savedRate, index }, rate, i) => (
-      savedRate.gt(rate) ? { savedRate: rate, index: i } : { savedRate, index }
-    ), { savedRate: currentRate, index: null });
-
   const filterSwitches = vault.filters.Switch();
-  // Filter events from the last 10 blocks, only for testing purposes.
-  // When in prod, check vault addresses and determine from which block to start.
-  const events = await vault.queryFilter(filterSwitches, -10);
+  // Filter all Switch events
+  const events = await vault.queryFilter(filterSwitches);
   const lastSwitch = events[events.length - 1];
-  const toChange = await shouldChange(currentRate, rates[bestProviderIndex], lastSwitch);
+  const toChange = await shouldChange(currentRate, bestRate, lastSwitch);
 
   if (toChange) {
     console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
     await switchProviders(contracts, vault, providers[bestProviderIndex])
-      .then(_ => console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`)));
+      .then(_ => console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`)))
+      .catch(e => console.log(e));
   }
   else {
     console.log(chalk.cyan('-> not due for refinance'));
@@ -132,9 +132,10 @@ async function main() {
   console.log('Start checking for refinancing...');
 
   const contracts = await loadContracts(signer);
-  checkForRefinance(contracts);
+  await checkForRefinance(contracts);
 
-  setInterval(() => checkForRefinance(contracts), 60000);
+  // run every 10 min
+  setInterval(async () => await checkForRefinance(contracts), 10 * 60 * 1000);
 }
 
 main();

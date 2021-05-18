@@ -1,3 +1,4 @@
+const axios = require('axios');
 const { Contract } = require('ethers');
 const fs = require("fs");
 
@@ -51,7 +52,17 @@ async function loadContracts(providerOrSigner) {
   }
 }
 
+async function getGasPrice(speed) {
+  return axios
+    .get('https://ethgasstation.info/json/ethgasAPI.json')
+    .then(response => {
+      return response.data[speed || 'fastest'] * 100000000;
+    })
+    .catch(error => console.log(error));
+}
+
 module.exports = {
   loadContracts,
-  loadSingleContract
+  loadSingleContract,
+  getGasPrice,
 };
