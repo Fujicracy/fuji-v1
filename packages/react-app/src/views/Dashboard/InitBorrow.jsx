@@ -4,7 +4,7 @@ import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useBalance, useContractReader, useRates, useGasPrice } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
+import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from "../../helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
@@ -121,15 +121,15 @@ function InitBorrow({ contracts, provider, address }) {
     }
 
     setLoading(true);
-    const _tx = contracts[getVaultName(borrowAsset)]
-      .estimateGas
-      .depositAndBorrow(
+    const gasLimit = await GasEstimator(
+      contracts[getVaultName(borrowAsset)],
+      'depositAndBorrow',
+      [
         parseEther(collateralAmount),
         parseUnits(borrowAmount, decimals),
         { value: parseEther(collateralAmount), gasPrice }
-      );
-    const _gasLimit = await _tx;
-    const gasLimit = _gasLimit.add(_gasLimit.div(BigNumber.from('10')));
+      ]
+    );
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
       .depositAndBorrow(

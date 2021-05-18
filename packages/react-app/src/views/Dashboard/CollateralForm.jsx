@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
 import { useForm } from "react-hook-form";
 import { useBalance, useContractReader, useGasPrice } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
+import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -69,11 +69,19 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   }, [neededCollateral, collateralBalance]);
 
   const supply = async () => {
+    const gasLimit = await GasEstimator(
+      contracts[getVaultName(borrowAsset)],
+      'deposit',
+      [
+        parseEther(amount),
+        { value: parseEther(amount), gasPrice }
+      ]
+    );
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
       .deposit(
         parseEther(amount),
-        { value: parseEther(amount), gasPrice }
+        { value: parseEther(amount), gasPrice, gasLimit }
       )
     );
 
@@ -88,9 +96,14 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
 
   const withdraw = async () => {
     const _amount = Number(amount) === Number(leftCollateral) ? "-1" : amount;
+    const gasLimit = await GasEstimator(
+      contracts[getVaultName(borrowAsset)],
+      'withdraw',
+      [parseEther(_amount), { gasPrice }]
+    );
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
-      .withdraw(parseEther(_amount), { gasPrice })
+      .withdraw(parseEther(_amount), { gasPrice, gasLimit })
     );
 
     if (res && res.hash) {

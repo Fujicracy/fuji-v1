@@ -3,7 +3,7 @@ import { formatUnits, parseUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useForm } from "react-hook-form";
 import { useContractReader, useExchangePrice, useGasPrice } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
+import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -84,11 +84,16 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   }, [neededCollateral, collateralBalance, price]);
 
   const borrow = async() => {
+    const gasLimit = await GasEstimator(
+      contracts[getVaultName(borrowAsset)],
+      'borrow',
+      [ parseUnits(amount, decimals), { gasPrice } ]
+    );
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
       .borrow(
         parseUnits(amount, decimals),
-        { gasPrice }
+        { gasPrice, gasLimit }
       )
     );
 
@@ -113,13 +118,17 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
     _amount = _amount === "-1" && debtBalance.eq(_balance) ? formatUnits(_balance, decimals) : _amount;
-    console.log(_amount);
 
+    const gasLimit = await GasEstimator(
+      contracts[getVaultName(borrowAsset)],
+      'payback',
+      [ parseUnits(_amount, decimals), { gasPrice } ]
+    );
     const res = await tx(
       contracts[getVaultName(borrowAsset)]
       .payback(
         parseUnits(_amount, decimals),
-        { gasPrice }
+        { gasPrice, gasLimit }
       )
     );
 

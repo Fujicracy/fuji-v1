@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Transactor, getVaultName } from "../../helpers";
+import { Transactor, GasEstimator, getVaultName } from "../../helpers";
 import { useGasPrice } from "../../hooks";
 import { DAI_ADDRESS, USDC_ADDRESS } from "../../constants";
 import "./FlashClose.css";
@@ -19,6 +19,7 @@ async function getLiquidationProviderIndex(vaultName, contracts) {
   const providerIndex = {
     'aave': '0',
     'dydx': '1',
+    'cream': '2'
   };
   const { borrowAsset } = await contracts[vaultName].vAssets();
   const activeProvider = await contracts[vaultName].activeProvider();
@@ -27,7 +28,7 @@ async function getLiquidationProviderIndex(vaultName, contracts) {
   if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
     return providerIndex['dydx'];
   }
-  return providerIndex['aave'];
+  return providerIndex['cream'];
 }
 
 function FlashClose({ borrowAsset, contracts, provider, address }) {
@@ -45,6 +46,16 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
     const vaultName = getVaultName(borrowAsset);
     const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
 
+    const gasLimit = await GasEstimator(
+      contracts.Fliquidator,
+      'flashClose',
+      [
+        parseUnits(amount, decimals),
+        contracts[vaultName].address,
+        providerIndex,
+        { gasPrice }
+      ]
+    );
     const res = await tx(
       contracts
       .Fliquidator
@@ -52,7 +63,7 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
         parseUnits(amount, decimals),
         contracts[vaultName].address,
         providerIndex,
-        { gasPrice }
+        { gasPrice, gasLimit }
       )
     );
 
