@@ -56,8 +56,21 @@ function getProviderName(providerAddr, contracts) {
 async function switchProviders(contracts, vault, newProviderAddr) {
   const index = await getLiquidationProviderIndex(vault, contracts);
   const gasPrice = await getGasPrice();
-  return await contracts.Controller.connect(signer)
+  const _gasLimit = await contracts.Controller
+    .estimateGas
     .doRefinancing(vault.address, newProviderAddr, 1, 1, index, { gasPrice });
+  // increase by 10%
+  const gasLimit = gasLimit.add(_gasLimit.div(BigNumber.from('10')));
+
+  return await contracts.Controller.connect(signer)
+    .doRefinancing(
+      vault.address,
+      newProviderAddr,
+      1,
+      1,
+      index,
+      { gasPrice, gasLimit }
+    );
 }
 
 async function shouldChange(currentRate, newRate, lastSwitch) {
