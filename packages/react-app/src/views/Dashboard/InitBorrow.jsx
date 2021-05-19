@@ -89,14 +89,14 @@ function InitBorrow({ contracts, provider, address }) {
     if (queryBorrowAmount) {
       setBorrowAmount(queryBorrowAmount)
     }
-  }, [queryBorrowAmount, setBorrowAmount])
+  }, [queryBorrowAmount])
 
   const queryBorrowAsset = queries.get('borrowAsset')
   useEffect(() => {
     if (queryBorrowAsset) {
       setBorrowAsset(queryBorrowAsset)
     }
-  }, [queryBorrowAsset, setBorrowAsset])
+  }, [queryBorrowAsset])
 
   const position = {
     borrowAsset,

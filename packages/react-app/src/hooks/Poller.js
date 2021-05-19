@@ -5,7 +5,7 @@ export default function usePoller(fn, delay, extraWatch) {
   // Remember the latest fn.
   useEffect(() => {
     savedCallback.current = fn
-  }, [fn])
+  }, [])
   // Set up the interval.
   // eslint-disable-next-line consistent-return
   useEffect(() => {
@@ -23,5 +23,5 @@ export default function usePoller(fn, delay, extraWatch) {
   // run at start too
   useEffect(() => {
     fn()
-  }, [extraWatch, fn])
+  }, [extraWatch])
 }
