@@ -10,6 +10,7 @@ const USDT_ADDR = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 const ETH_ADDR = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 const aWETH_ADDR = "0x030bA81f1c18d280636F32af80b9AAd02Cf0854e";
 const cETH_ADDR = "0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5";
+const crETH_ADDR = "0xD06527D5e56A3495252A528C4987003b712860eE";
 
 const ONE_ETH = ethers.utils.parseEther("1.0");
 
@@ -23,6 +24,7 @@ const VaultHarvester = require("../artifacts/contracts/Vaults/VaultHarvester.sol
 const Aave = require("../artifacts/contracts/Providers/ProviderAave.sol/ProviderAave.json");
 const Compound = require("../artifacts/contracts/Providers/ProviderCompound.sol/ProviderCompound.json");
 const Dydx = require("../artifacts/contracts/Providers/ProviderDYDX.sol/ProviderDYDX.json")
+const CreamV1 = require("../artifacts/contracts/Providers/ProviderCreamFinanceV1.sol/ProviderCreamFinanceV1.json");
 const F1155 = require("../artifacts/contracts/FujiERC1155/FujiERC1155.sol/FujiERC1155.json");
 const Flasher = require("../artifacts/contracts/Flashloans/Flasher.sol/Flasher.json");
 const Controller = require("../artifacts/contracts/Controller.sol/Controller.json");
@@ -35,6 +37,7 @@ const fixture = async ([wallet, other], provider) => {
   const usdt = await ethers.getContractAt("IERC20", USDT_ADDR);
   const aweth = await ethers.getContractAt("IERC20", aWETH_ADDR);
   const ceth = await ethers.getContractAt("ICErc20", cETH_ADDR);
+  const creth = await ethers.getContractAt("ICrErc20", crETH_ADDR);
   const oracle = await ethers.getContractAt("AggregatorV3Interface", CHAINLINK_ORACLE_ADDR);
 
   // Step 1 of Deploy: Contracts which address is required to be hardcoded in other contracts
@@ -52,6 +55,7 @@ const fixture = async ([wallet, other], provider) => {
   const aave = await deployContract(wallet, Aave, []);
   const compound = await deployContract(wallet, Compound, []);
   const dydx = await deployContract(wallet, Dydx, []);
+  const creamv1 = await deployContract(wallet, CreamV1, []);
 
   // Step 4 Of Deploy Core Money Handling Contracts
   const aWhitelist = await deployContract(wallet, AWhitelist,
@@ -82,19 +86,19 @@ const fixture = async ([wallet, other], provider) => {
 
   // Step 6 - Vault Set-up
   await vaultdai.setFujiAdmin(fujiadmin.address)
-  await vaultdai.setProviders([compound.address, aave.address, dydx.address]);
+  await vaultdai.setProviders([compound.address, aave.address, dydx.address, creamv1.address]);
   await vaultdai.setActiveProvider(compound.address);
   await vaultdai.setFujiERC1155(f1155.address);
   await vaultdai.setOracle(CHAINLINK_ORACLE_ADDR);
 
   await vaultusdc.setFujiAdmin(fujiadmin.address);
-  await vaultusdc.setProviders([compound.address, aave.address, dydx.address]);
+  await vaultusdc.setProviders([compound.address, aave.address, dydx.address, creamv1.address]);
   await vaultusdc.setActiveProvider(compound.address);
   await vaultusdc.setFujiERC1155(f1155.address);
   await vaultusdc.setOracle(CHAINLINK_ORACLE_ADDR);
 
   await vaultusdt.setFujiAdmin(fujiadmin.address);
-  await vaultusdt.setProviders([compound.address, aave.address]);
+  await vaultusdt.setProviders([compound.address, aave.address, creamv1.address]);
   await vaultusdt.setActiveProvider(compound.address);
   await vaultusdt.setFujiERC1155(f1155.address);
   await vaultusdt.setOracle(CHAINLINK_ORACLE_ADDR);
@@ -105,6 +109,7 @@ const fixture = async ([wallet, other], provider) => {
     usdt,
     aweth,
     ceth,
+    creth,
     oracle,
     treasury,
     fujiadmin,
@@ -115,6 +120,7 @@ const fixture = async ([wallet, other], provider) => {
     aave,
     compound,
     dydx,
+    creamv1,
     aWhitelist,
     vaultharvester,
     vaultdai,

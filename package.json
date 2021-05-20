@@ -35,6 +35,7 @@
     "test:alpha-compound": "yarn workspace @fuji/hardhat test:alpha-compound",
     "test:alpha-aave": "yarn workspace @fuji/hardhat test:alpha-aave",
     "test:alpha-dydx": "yarn workspace @fuji/hardhat test:alpha-dydx",
+    "test:alpha-creamv1": "yarn workspace @fuji/hardhat test:alpha-creamv1",
     "test:alpha-f1155": "yarn workspace @fuji/hardhat test:alpha-f1155",
     "compile": "yarn workspace @fuji/hardhat compile",
     "deploy": "yarn workspace @fuji/hardhat deploy && yarn contracts:publish",
