@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Transactor, GasEstimator, getVaultName } from "../../helpers";
-import { useGasPrice } from "../../hooks";
-import { DAI_ADDRESS, USDC_ADDRESS } from "../../constants";
-import "./FlashClose.css";
-import { parseUnits } from "@ethersproject/units";
+import React, { useState } from 'react';
+import { Transactor, GasEstimator, getVaultName } from '../../helpers';
+import { useGasPrice } from '../../hooks';
+import { DAI_ADDRESS, USDC_ADDRESS } from '../../constants';
+import './FlashClose.css';
+import { parseUnits } from '@ethersproject/units';
 //import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,9 +17,9 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 async function getLiquidationProviderIndex(vaultName, contracts) {
   const providerIndex = {
-    'aave': '0',
-    'dydx': '1',
-    'cream': '2'
+    aave: '0',
+    dydx: '1',
+    cream: '2',
   };
   const { borrowAsset } = await contracts[vaultName].vAssets();
   const activeProvider = await contracts[vaultName].activeProvider();
@@ -40,89 +40,96 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
   const [confirmation, setConfirmation] = useState(false);
   const [amount, setAmount] = useState('');
 
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const decimals = borrowAsset === 'USDC' ? 6 : 18;
   const onFlashClose = async () => {
     setLoading(true);
     const vaultName = getVaultName(borrowAsset);
     const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
 
-    const gasLimit = await GasEstimator(
-      contracts.Fliquidator,
-      'flashClose',
-      [
-        parseUnits(amount, decimals),
-        contracts[vaultName].address,
-        providerIndex,
-        { gasPrice }
-      ]
-    );
+    const gasLimit = await GasEstimator(contracts.Fliquidator, 'flashClose', [
+      parseUnits(amount, decimals),
+      contracts[vaultName].address,
+      providerIndex,
+      { gasPrice },
+    ]);
     const res = await tx(
-      contracts
-      .Fliquidator
-      .flashClose(
+      contracts.Fliquidator.flashClose(
         parseUnits(amount, decimals),
         contracts[vaultName].address,
         providerIndex,
-        { gasPrice, gasLimit }
-      )
+        { gasPrice, gasLimit },
+      ),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "FlashClose")) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'FlashClose')) {
         setConfirmation(true);
       }
     }
     setLoading(false);
     setAmount('');
-  }
+  };
 
   return (
     <>
       <Dialog open={dialog} aria-labelledby="form-dialog-title">
-        <div className="close" onClick={() => {
-          setDialog(false);
-          setAmount('');
-        }}>
+        <div
+          className="close"
+          onClick={() => {
+            setDialog(false);
+            setAmount('');
+          }}
+        >
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">
-          {confirmation ? "Success" : "Flash Close"}
-        </DialogTitle>
-        <DialogContent>{
-          confirmation
-            ? <DialogContentText>
-                Your transaction have been processed.
-              </DialogContentText>
-            : <DialogContentText>
-                You are about to repay your debt position with your collateral.
-                We are going to use a flash loan for that purpose. <br/><br/>
-                <span className="bold">Fee: 1%</span>
-              </DialogContentText>
-          }
+        <DialogTitle id="form-dialog-title">{confirmation ? 'Success' : 'Flash Close'}</DialogTitle>
+        <DialogContent>
+          {confirmation ? (
+            <DialogContentText>Your transaction have been processed.</DialogContentText>
+          ) : (
+            <DialogContentText>
+              You are about to repay your debt position with your collateral. We are going to use a
+              flash loan for that purpose. <br />
+              <br />
+              <span className="bold">Fee: 1%</span>
+            </DialogContentText>
+          )}
         </DialogContent>
-        <DialogActions>{
-          confirmation
-            ? <Button
-                className="main-button"
-                onClick={() => {
-                  setDialog(false);
-                  setConfirmation(false);
-                }}
-              >
-                Close
-              </Button>
-            : <Button
-                onClick={() => onFlashClose()}
-                className="main-button"
-                disabled={loading}
-                startIcon={loading
-                  ? <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
-                  : ""}
-              >
-                {loading ? "Repaying..." : "Confirm"}
-              </Button>
-          }
+        <DialogActions>
+          {confirmation ? (
+            <Button
+              className="main-button"
+              onClick={() => {
+                setDialog(false);
+                setConfirmation(false);
+              }}
+            >
+              Close
+            </Button>
+          ) : (
+            <Button
+              onClick={() => onFlashClose()}
+              className="main-button"
+              disabled={loading}
+              startIcon={
+                loading ? (
+                  <CircularProgress
+                    style={{
+                      width: 25,
+                      height: 25,
+                      marginRight: '10px',
+                      color: 'rgba(0, 0, 0, 0.26)',
+                    }}
+                  />
+                ) : (
+                  ''
+                )
+              }
+            >
+              {loading ? 'Repaying...' : 'Confirm'}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
       <div className="flash-close">
@@ -142,10 +149,12 @@ function FlashClose({ borrowAsset, contracts, provider, address }) {
           </div>
 
           <div className="actions">
-            <Button onClick={() => {
-              setDialog(true);
-              setAmount("-1");
-            }}>
+            <Button
+              onClick={() => {
+                setDialog(true);
+                setAmount('-1');
+              }}
+            >
               Repay
             </Button>
           </div>

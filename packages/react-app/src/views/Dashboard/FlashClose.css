@@ -1,55 +1,55 @@
 .flash-close {
-	margin-top: 2.5rem;
-	width: auto;
-	padding: 1rem 2rem;
-	border: 0.125rem solid var(--text05);
-	backdrop-filter: blur(0.375rem);
-	-webkit-backdrop-filter: blur(0.375rem);
-	background: var(--blocks);
-	border-radius: 1rem;
+  margin-top: 2.5rem;
+  width: auto;
+  padding: 1rem 2rem;
+  border: 0.125rem solid var(--text05);
+  backdrop-filter: blur(0.375rem);
+  -webkit-backdrop-filter: blur(0.375rem);
+  background: var(--blocks);
+  border-radius: 1rem;
 }
 
 .flash-close .section-title {
-	margin-bottom: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
   color: var(--text);
 }
 
 .flash-close .content {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .flash-close .description {
-	margin-right: 2rem;
-	font-size: 0.875rem;
+  margin-right: 2rem;
+  font-size: 0.875rem;
   color: var(--text);
 }
 
 .flash-close button {
-	cursor: pointer;
-	padding: 0.5rem 1rem;
-	font-size: 1rem;
-	font-weight: 400;
-	color: var(--text);
-	border: 0.063rem solid var(--text);
-	border-radius: 2rem;
-	box-sizing: border-box;
-	background: transparent;
-	transition: all 250ms ease;
-	margin-right: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  border: 0.063rem solid var(--text);
+  border-radius: 2rem;
+  box-sizing: border-box;
+  background: transparent;
+  transition: all 250ms ease;
+  margin-right: 1rem;
   width: auto;
   height: 2.5rem;
-	backdrop-filter: blur(0.375rem);
-	-webkit-backdrop-filter: blur(0.375rem);
+  backdrop-filter: blur(0.375rem);
+  -webkit-backdrop-filter: blur(0.375rem);
 }
 
 .flash-close button:last-child {
-	margin-right: 0rem;
+  margin-right: 0rem;
 }
 
 .flash-close button:hover {
-	color: var(--bg);
-	border-color: var(--bg);
-	background: var(--text);
+  color: var(--bg);
+  border-color: var(--bg);
+  background: var(--text);
 }

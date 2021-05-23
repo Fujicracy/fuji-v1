@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import "./InitBorrow.css";
-import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useBalance, useContractReader, useGasPrice } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from "../../helpers";
-import { useForm } from "react-hook-form";
+import './InitBorrow.css';
+import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
+import { useBalance, useContractReader, useGasPrice } from '../../hooks';
+import {
+  Transactor,
+  getBorrowId,
+  getCollateralId,
+  getVaultName,
+  GasEstimator,
+} from '../../helpers';
+import { useForm } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -17,12 +23,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from "../../constants";
+import { ETH_CAP_VALUE } from '../../constants';
 
-import CollaterizationIndicator from "../../components/CollaterizationIndicator";
-import ProvidersList from "../../components/ProvidersList";
-import HowItWorks from "../../components/HowItWorks";
-import AlphaWarning from "../../components/AlphaWarning";
+import CollaterizationIndicator from '../../components/CollaterizationIndicator';
+import ProvidersList from '../../components/ProvidersList';
+import HowItWorks from '../../components/HowItWorks';
+import AlphaWarning from '../../components/AlphaWarning';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -35,70 +41,62 @@ function InitBorrow({ contracts, provider, address }) {
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const activeProvider = useContractReader(
-    contracts,
-    getVaultName(borrowAsset),
-    "activeProvider",
-  );
+  const activeProvider = useContractReader(contracts, getVaultName(borrowAsset), 'activeProvider');
 
-  const providerAave = contracts && contracts["ProviderAave"];
-  const providerCompound = contracts && contracts["ProviderCompound"];
+  const providerAave = contracts && contracts['ProviderAave'];
+  const providerCompound = contracts && contracts['ProviderCompound'];
   // const providerDYDX = contracts && contracts["ProviderDYDX"];
 
   //const rates = useRates(contracts);
 
   //const calcSavedAmount = (amount) => {
-    //if (!amount || amount === 0 || !providerAave)
-      //return '...';
+  //if (!amount || amount === 0 || !providerAave)
+  //return '...';
 
-    //let rate;
-    //if (activeProvider === providerAave.address) {
-      //rate = rates.aave[borrowAsset.toLowerCase()];
-    //} else if (activeProvider === providerCompound.address) {
-      //rate = rates.compound[borrowAsset.toLowerCase()];
-    //} else {
-      //rate = rates.dydx[borrowAsset.toLowerCase()];
-    //}
+  //let rate;
+  //if (activeProvider === providerAave.address) {
+  //rate = rates.aave[borrowAsset.toLowerCase()];
+  //} else if (activeProvider === providerCompound.address) {
+  //rate = rates.compound[borrowAsset.toLowerCase()];
+  //} else {
+  //rate = rates.dydx[borrowAsset.toLowerCase()];
+  //}
 
-    //const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
+  //const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
 
-    //return (0.1 * interest).toFixed(1);
+  //return (0.1 * interest).toFixed(1);
   //}
 
   const _ethBalance = useBalance(provider, address);
   const ethBalance = _ethBalance ? Number(formatEther(_ethBalance)).toFixed(6) : null;
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const decimals = borrowAsset === 'USDC' ? 6 : 18;
 
-  const collateralBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getCollateralId(borrowAsset)]
-  );
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId(borrowAsset),
+  ]);
 
-  const debtBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getBorrowId(borrowAsset)]
-  );
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getBorrowId(borrowAsset),
+  ]);
 
   const _neededCollateral = useContractReader(
     contracts,
     getVaultName(borrowAsset),
-    "getNeededCollateralFor",
-    [borrowAmount ? parseUnits(borrowAmount, decimals) : '', "true"],
+    'getNeededCollateralFor',
+    [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
   const neededCollateral = _neededCollateral ? Number(formatEther(_neededCollateral)) : null;
 
-  const queryBorrowAmount = queries.get("borrowAmount");
+  const queryBorrowAmount = queries.get('borrowAmount');
   useEffect(() => {
     if (queryBorrowAmount) {
       setBorrowAmount(queryBorrowAmount);
     }
   }, [queryBorrowAmount, setBorrowAmount]);
 
-  const queryBorrowAsset = queries.get("borrowAsset");
+  const queryBorrowAsset = queries.get('borrowAsset');
   useEffect(() => {
     if (queryBorrowAsset) {
       setBorrowAsset(queryBorrowAsset);
@@ -107,8 +105,12 @@ function InitBorrow({ contracts, provider, address }) {
 
   const position = {
     borrowAsset,
-    debtBalance: !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
-    collateralBalance: !collateralBalance || !collateralAmount ? 0 : collateralBalance.add(parseEther(collateralAmount))
+    debtBalance:
+      !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
+    collateralBalance:
+      !collateralBalance || !collateralAmount
+        ? 0
+        : collateralBalance.add(parseEther(collateralAmount)),
   };
 
   const tx = Transactor(provider);
@@ -120,56 +122,49 @@ function InitBorrow({ contracts, provider, address }) {
     }
 
     setLoading(true);
-    const gasLimit = await GasEstimator(
-      contracts[getVaultName(borrowAsset)],
-      'depositAndBorrow',
-      [
-        parseEther(collateralAmount),
-        parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice }
-      ]
-    );
+    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'depositAndBorrow', [
+      parseEther(collateralAmount),
+      parseUnits(borrowAmount, decimals),
+      { value: parseEther(collateralAmount), gasPrice },
+    ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-      .depositAndBorrow(
+      contracts[getVaultName(borrowAsset)].depositAndBorrow(
         parseEther(collateralAmount),
         parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice, gasLimit }
-      )
+        { value: parseEther(collateralAmount), gasPrice, gasLimit },
+      ),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Borrow")) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
         setDialog('success');
       }
     }
     setLoading(false);
-  }
+  };
   //<label>
-    //<input type="radio" name="borrow" value="usdt" disabled={true} />
-    //<div className="fake-radio">
-      //<img alt="usdt" src="/USDT.svg" />
-      //<span className="select-option-name">USDT</span>
-    //</div>
+  //<input type="radio" name="borrow" value="usdt" disabled={true} />
+  //<div className="fake-radio">
+  //<img alt="usdt" src="/USDT.svg" />
+  //<span className="select-option-name">USDT</span>
+  //</div>
   //</label>
 
   const dialogContents = {
-    'success': {
+    success: {
       title: 'Success',
-      content: 'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
+      content:
+        'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
       actions: () => (
         <DialogActions>
-          <Button
-            href="/dashboard/my-positions"
-            className="main-button"
-          >
+          <Button href="/dashboard/my-positions" className="main-button">
             Check my positions
           </Button>
         </DialogActions>
-      )
+      ),
     },
-    'capCollateral': {
+    capCollateral: {
       title: 'Collateral Cap',
       content: `The total amount of ETH you provide as collateral exceeds ${ETH_CAP_VALUE} ETH. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon.`,
       actions: () => (
@@ -180,29 +175,31 @@ function InitBorrow({ contracts, provider, address }) {
             }}
             className="main-button"
           >
-           Close
+            Close
           </Button>
         </DialogActions>
-      )
-    }
-  }
+      ),
+    },
+  };
 
   return (
     <div className="container initial-step">
-      <Dialog open={dialog === 'success' || dialog === 'capCollateral'} aria-labelledby="form-dialog-title">
-        <div className="close" onClick={() => {
-          setDialog('');
-          setLoading(false);
-        }}>
+      <Dialog
+        open={dialog === 'success' || dialog === 'capCollateral'}
+        aria-labelledby="form-dialog-title"
+      >
+        <div
+          className="close"
+          onClick={() => {
+            setDialog('');
+            setLoading(false);
+          }}
+        >
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">
-          {dialogContents[dialog]?.title}
-        </DialogTitle>
+        <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {dialogContents[dialog]?.content}
-          </DialogContentText>
+          <DialogContentText>{dialogContents[dialog]?.content}</DialogContentText>
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
@@ -245,9 +242,7 @@ function InitBorrow({ contracts, provider, address }) {
             </div>
             <div className="borrow-inputs">
               <div className="borrow-amount-input">
-                <div className="subtitle">
-                  Amount to borrow
-                </div>
+                <div className="subtitle">Amount to borrow</div>
                 <div className="fake-input">
                   <TextField
                     className="input-container"
@@ -265,7 +260,7 @@ function InitBorrow({ contracts, provider, address }) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon"/>
+                          <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
                         </InputAdornment>
                       ),
                       endAdornment: (
@@ -278,17 +273,19 @@ function InitBorrow({ contracts, provider, address }) {
                     }}
                   />
                 </div>
-                {errors?.borrowAmount
-                    && <Typography className="error-input-msg" variant="body2">
-                          Please, type the amount you like to borrow
-                      </Typography>
-                }
+                {errors?.borrowAmount && (
+                  <Typography className="error-input-msg" variant="body2">
+                    Please, type the amount you like to borrow
+                  </Typography>
+                )}
               </div>
               <div className="collateral-input">
                 <div className="subtitle">
                   Collateral
                   <span className="complementary-infos">
-                    <span>Your balance: {ethBalance ? Number(ethBalance).toFixed(3) : '...'} Ξ</span>
+                    <span>
+                      Your balance: {ethBalance ? Number(ethBalance).toFixed(3) : '...'} Ξ
+                    </span>
                   </span>
                 </div>
                 <div className="fake-input">
@@ -304,17 +301,15 @@ function InitBorrow({ contracts, provider, address }) {
                     variant="outlined"
                     placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
                     onChange={({ target }) => setCollateralAmount(target.value)}
-                    inputRef={
-                      register({
-                          required: { value: true, message: "required-amount" },
-                          min: { value: neededCollateral, message: "insufficient-collateral" },
-                          max: { value: ethBalance, message: "insufficient-balance" },
-                      })
-                    }
+                    inputRef={register({
+                      required: { value: true, message: 'required-amount' },
+                      min: { value: neededCollateral, message: 'insufficient-collateral' },
+                      max: { value: ethBalance, message: 'insufficient-balance' },
+                    })}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Avatar alt="ETH" src="/ETH.png" className="icon"/>
+                          <Avatar alt="ETH" src="/ETH.png" className="icon" />
                         </InputAdornment>
                       ),
                       endAdornment: (
@@ -327,34 +322,38 @@ function InitBorrow({ contracts, provider, address }) {
                     }}
                   />
                 </div>
-                {errors?.collateralAmount?.message === "required-amount"
-                    && <Typography className="error-input-msg" variant="body2">
-                        Please, type the amount you want to provide as collateral
-                      </Typography>
-                }
-                {errors?.collateralAmount?.message === "insufficient-collateral"
-                    && <Typography className="error-input-msg" variant="body2">
-                          Please, provide at least <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as collateral!
-                      </Typography>
-                }
-                {errors?.collateralAmount?.message === "insufficient-balance"
-                    && <Typography className="error-input-msg" variant="body2">
-                        Insufficient ETH balance
-                      </Typography>
-                }
+                {errors?.collateralAmount?.message === 'required-amount' && (
+                  <Typography className="error-input-msg" variant="body2">
+                    Please, type the amount you want to provide as collateral
+                  </Typography>
+                )}
+                {errors?.collateralAmount?.message === 'insufficient-collateral' && (
+                  <Typography className="error-input-msg" variant="body2">
+                    Please, provide at least{' '}
+                    <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
+                    collateral!
+                  </Typography>
+                )}
+                {errors?.collateralAmount?.message === 'insufficient-balance' && (
+                  <Typography className="error-input-msg" variant="body2">
+                    Insufficient ETH balance
+                  </Typography>
+                )}
               </div>
             </div>
             <div className="helper">
               <Typography variant="body2">
-                The liquidity for this transaction is coming from <span>{
-                  !activeProvider
+                The liquidity for this transaction is coming from{' '}
+                <span>
+                  {!activeProvider
                     ? '...'
                     : activeProvider === providerAave.address
-                      ? "Aave"
-                      : activeProvider === providerCompound.address
-                        ? "Compound"
-                        : "dYdX"
-                  }</span>.
+                    ? 'Aave'
+                    : activeProvider === providerCompound.address
+                    ? 'Compound'
+                    : 'dYdX'}
+                </span>
+                .
               </Typography>
             </div>
             <div>
@@ -362,27 +361,33 @@ function InitBorrow({ contracts, provider, address }) {
                 onClick={handleSubmit(onSubmit)}
                 className="main-button"
                 disabled={loading}
-                startIcon={loading
-                  ? <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
-                  : ""}
+                startIcon={
+                  loading ? (
+                    <CircularProgress
+                      style={{
+                        width: 25,
+                        height: 25,
+                        marginRight: '10px',
+                        color: 'rgba(0, 0, 0, 0.26)',
+                      }}
+                    />
+                  ) : (
+                    ''
+                  )
+                }
               >
-                Borrow{loading ? "ing..." : ""}
+                Borrow{loading ? 'ing...' : ''}
               </Button>
             </div>
           </form>
         </div>
       </div>
       <div className="right-content">
-        <div style={{ marginBottom: "2rem" }}>
-          <AlphaWarning/>
+        <div style={{ marginBottom: '2rem' }}>
+          <AlphaWarning />
         </div>
-        <CollaterizationIndicator
-          position={position}
-        />
-        <ProvidersList
-          contracts={contracts}
-          markets={[borrowAsset]}
-        />
+        <CollaterizationIndicator position={position} />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
       </div>
     </div>
   );

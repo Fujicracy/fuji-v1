@@ -14,7 +14,7 @@
   position: relative;
 }
 
-.positions .position-element  {
+.positions .position-element {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -149,8 +149,8 @@
   margin-top: 40px;
 }
 
-.position-board .one-position:first-child .collateral-number:before, 
-.position-board .one-position:first-child .borrow-number:before, 
+.position-board .one-position:first-child .collateral-number:before,
+.position-board .one-position:first-child .borrow-number:before,
 .position-board .one-position:first-child .debt-ratio-number:before {
   content: attr(data-element) '';
   position: absolute;
@@ -167,7 +167,7 @@
 /* ---------------- */
 
 /*.positions {*/
-  /*margin-top: 3.5rem;*/
+/*margin-top: 3.5rem;*/
 /*}*/
 
 .positions h3 {

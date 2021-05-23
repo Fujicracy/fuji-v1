@@ -5,32 +5,32 @@ body {
 }
 
 /*.home-footer {*/
-  /*position: absolute;*/
-  /*bottom: 32px;*/
-  /*left: 32px;*/
+/*position: absolute;*/
+/*bottom: 32px;*/
+/*left: 32px;*/
 /*}*/
 
 /*.home-footer nav ul {*/
-  /*display: flex;*/
-  /*align-items: center;*/
-  /*justify-content: space-between;*/
+/*display: flex;*/
+/*align-items: center;*/
+/*justify-content: space-between;*/
 /*}*/
 
 /*.home-footer nav ul li {*/
-  /*margin-right: 1rem;*/
-  /*color: var(--brand);*/
+/*margin-right: 1rem;*/
+/*color: var(--brand);*/
 /*}*/
 
 /*.home-footer nav ul li a {*/
-  /*color: var(--brand);*/
-  /*text-shadow: 0px 0px 6px var(--brand);*/
-  /*filter: drop-shadow(0px 0px 6px var(--brand));*/
-  /*transition: all 250ms ease-in;*/
+/*color: var(--brand);*/
+/*text-shadow: 0px 0px 6px var(--brand);*/
+/*filter: drop-shadow(0px 0px 6px var(--brand));*/
+/*transition: all 250ms ease-in;*/
 /*}*/
 
 /*.home-footer nav ul li a:hover {*/
-  /*text-shadow: 0px 0px 0px transparent;*/
-  /*filter: drop-shadow(0px 0px 0px var(--brand));*/
+/*text-shadow: 0px 0px 0px transparent;*/
+/*filter: drop-shadow(0px 0px 0px var(--brand));*/
 /*}*/
 
 .home-container {
@@ -41,8 +41,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  background: url("/fuji-landing.svg") no-repeat
-    center center;
+  background: url('/fuji-landing.svg') no-repeat center center;
 }
 
 .home-content {
@@ -104,17 +103,23 @@ body {
 .second-action:before {
   content: '';
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: -2;
   margin: -2px;
   border-radius: inherit;
-  background: linear-gradient(to right, #FE3477, #F0014F);
+  background: linear-gradient(to right, #fe3477, #f0014f);
 }
 
 .second-action:after {
   content: '';
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: -1;
   border-radius: 3px;
   background: var(--bg);
@@ -122,7 +127,7 @@ body {
 
 .home-cta .main-action {
   color: white;
-  background: linear-gradient(92.29deg, #FE3477 0%, #F0014F 100%);
+  background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   /*background-color: var(--brand);*/
   border: none;
   box-shadow: 0px 0px 6px var(--brand);

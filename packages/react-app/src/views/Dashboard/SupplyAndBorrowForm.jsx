@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { useForm } from "react-hook-form";
-import { useBalance, useContractReader } from "../../hooks";
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
+import React, { useEffect, useState } from 'react';
+import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
+import { useForm } from 'react-hook-form';
+import { useBalance, useContractReader } from '../../hooks';
+import { Transactor, getBorrowId, getCollateralId, getVaultName } from '../../helpers';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from "../../constants";
+import { ETH_CAP_VALUE } from '../../constants';
 
 function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -29,27 +29,28 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  const decimals = borrowAsset === 'USDC' ? 6 : 18;
   const ethBalance = useBalance(provider, address);
 
-  const collateralBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getCollateralId(borrowAsset)]
-  );
-  const debtBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getBorrowId(borrowAsset)]
-  );
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId(borrowAsset),
+  ]);
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getBorrowId(borrowAsset),
+  ]);
 
   const neededCollateral = useContractReader(
     contracts,
     getVaultName(borrowAsset),
-    "getNeededCollateralFor",
-    [borrowAmount ? parseUnits(`${borrowAmount}`, decimals).add(debtBalance ? debtBalance : "0") : '', "true"],
+    'getNeededCollateralFor',
+    [
+      borrowAmount
+        ? parseUnits(`${borrowAmount}`, decimals).add(debtBalance ? debtBalance : '0')
+        : '',
+      'true',
+    ],
   );
 
   useEffect(() => {
@@ -59,41 +60,39 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
     }
   }, [neededCollateral]);
 
-  const onSubmit = async() => {
-    const totalCollateral =
-      Number(collateralAmount) + Number(formatUnits(collateralBalance));
+  const onSubmit = async () => {
+    const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
     if (totalCollateral > ETH_CAP_VALUE) {
       setDialog('capCollateral');
       return;
     }
     setLoading(true);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-        .depositAndBorrow(
-          parseEther(collateralAmount),
-          parseUnits(borrowAmount, decimals),
-          { value: parseEther(collateralAmount), gasPrice: parseUnits("40", "gwei") }
-        )
+      contracts[getVaultName(borrowAsset)].depositAndBorrow(
+        parseEther(collateralAmount),
+        parseUnits(borrowAmount, decimals),
+        { value: parseEther(collateralAmount), gasPrice: parseUnits('40', 'gwei') },
+      ),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Borrow")) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
         setDialog('success');
       }
     }
     setLoading(false);
-  }
+  };
 
   const resetForm = () => {
     setDialog('');
     setLoading(false);
     setBorrowAmount('');
     setCollateralAmount('');
-  }
+  };
 
   const dialogContents = {
-    'success': {
+    success: {
       title: 'Transaction success',
       content: 'Your transaction has been processed',
       actions: () => (
@@ -102,9 +101,9 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             Close
           </Button>
         </DialogActions>
-      )
+      ),
     },
-    'capCollateral': {
+    capCollateral: {
       title: 'Collateral Cap',
       content: `The total amount of ETH you provide as collateral exceeds ${ETH_CAP_VALUE} ETH. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon.`,
       actions: () => (
@@ -115,45 +114,43 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             }}
             className="main-button"
           >
-           Close
+            Close
           </Button>
         </DialogActions>
-      )
-    }
-  }
+      ),
+    },
+  };
 
   return (
     <Grid container direction="column">
-      <Dialog open={dialog === 'success' || dialog === 'capCollateral'} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={dialog === 'success' || dialog === 'capCollateral'}
+        aria-labelledby="form-dialog-title"
+      >
         <div className="close" onClick={() => resetForm()}>
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">
-          {dialogContents[dialog]?.title}
-        </DialogTitle>
+        <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {dialogContents[dialog]?.content}
-          </DialogContentText>
+          <DialogContentText>{dialogContents[dialog]?.content}</DialogContentText>
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">
-          Supply & Borrow
-        </Typography>
+        <Typography variant="h3">Supply & Borrow</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
           <span className="tooltip tooltip-top">
             <span className="bold">Supply</span> more collateral and
-            <span className="bold"> borrow</span> {borrowAsset} in a single transaction. 
+            <span className="bold"> borrow</span> {borrowAsset} in a single transaction.
           </span>
         </div>
       </Grid>
       <Grid item>
         <div className="subtitle">
           <span className="complementary-infos">
-            Your balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} ETH Ξ
+            Your balance: {ethBalance ? parseFloat(formatEther(ethBalance)).toFixed(2) : '...'} ETH
+            Ξ
           </span>
         </div>
         <div className="fake-input">
@@ -172,7 +169,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon"/>
+                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -185,11 +182,12 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.collateralAmount
-            && <Typography className="error-input-msg" variant="body2">
-                  Please, provide at least <span className="brand-color">{formattedCollateral} ETH</span> as collateral!
-              </Typography>
-        }
+        {errors?.collateralAmount && (
+          <Typography className="error-input-msg" variant="body2">
+            Please, provide at least <span className="brand-color">{formattedCollateral} ETH</span>{' '}
+            as collateral!
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <div className="fake-input">
@@ -208,7 +206,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon"/>
+                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -221,22 +219,28 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.borrowAmount
-            && <Typography className="error-input-msg" variant="body2">
-                  Please, type the amount you like to borrow!
-              </Typography>
-        }
+        {errors?.borrowAmount && (
+          <Typography className="error-input-msg" variant="body2">
+            Please, type the amount you like to borrow!
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <Button
           onClick={handleSubmit(onSubmit)}
           className="main-button"
           disabled={loading}
-          startIcon={loading
-            ? <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
-            : ""}
+          startIcon={
+            loading ? (
+              <CircularProgress
+                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+              />
+            ) : (
+              ''
+            )
+          }
         >
-          {loading ? "Processing..." : "Submit"}
+          {loading ? 'Processing...' : 'Submit'}
         </Button>
       </Grid>
     </Grid>

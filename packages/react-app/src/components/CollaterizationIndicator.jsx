@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useReducer } from "react";
-import { useExchangePrice } from "../hooks";
-import { useSpring, animated } from 'react-spring'
-import "./CollaterizationIndicator.css";
-import { PositionRatios } from "../helpers";
+import React, { useState, useEffect, useReducer } from 'react';
+import { useExchangePrice } from '../hooks';
+import { useSpring, animated } from 'react-spring';
+import './CollaterizationIndicator.css';
+import { PositionRatios } from '../helpers';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
@@ -10,32 +10,33 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-
 function hsl(r) {
-  const hue = r / 100 * 120;
+  const hue = (r / 100) * 120;
   return `hsl(${Math.min(hue, 120)}, 100%, 50%)`;
 }
 
 function hslToHex(r) {
-  const h = Math.min(r / 100 * 120, 120);
-  const l = 50 /100;
-  const a = 100 * Math.min(l, 1 - l) / 100;
+  const h = Math.min((r / 100) * 120, 120);
+  const l = 50 / 100;
+  const a = (100 * Math.min(l, 1 - l)) / 100;
   const f = n => {
     const k = (n + h / 30) % 12;
     const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color).toString(16).padStart(2, '0');
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0');
   };
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
 function logslider(value) {
-  if(value < 1){
-    return 0
-  } else if  (value >= 1 && value <= 2){
-    return 50 * value-50
+  if (value < 1) {
+    return 0;
+  } else if (value >= 1 && value <= 2) {
+    return 50 * value - 50;
   } else {
     const constant = 50 * Math.log10(2);
-    return (100 - (constant/Math.log10(value)))
+    return 100 - constant / Math.log10(value);
   }
 }
 
@@ -51,12 +52,7 @@ function CollaterizationIndicator({ position }) {
   const [liqPrice, setLiqPrice] = useState(0);
 
   useEffect(() => {
-    const {
-      healthFactor,
-      liqPrice,
-      ltv,
-      borrowLimit
-    } = PositionRatios(position, price);
+    const { healthFactor, liqPrice, ltv, borrowLimit } = PositionRatios(position, price);
 
     setHealthFactor(healthFactor);
     setLiqPrice(liqPrice);
@@ -69,21 +65,24 @@ function CollaterizationIndicator({ position }) {
   }, [price, position, healthRatio]);
 
   const props = useSpring({
-    to: { strokeDasharray: [healthRatio, 100], filter: `drop-shadow(0px 0px .5px ${hslToHex(healthRatio)})` },
+    to: {
+      strokeDasharray: [healthRatio, 100],
+      filter: `drop-shadow(0px 0px .5px ${hslToHex(healthRatio)})`,
+    },
     from: { strokeDasharray: [oldHealthRatio, 100] },
   });
 
   return (
     <div className="dark-block collateralization-block">
       <div className="section-title">
-        <Typography variant="h3">
-          Health Factor
-        </Typography>
+        <Typography variant="h3">Health Factor</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
           <span className="tooltip">
-            The health factor represents the safety of your loan derived from the proportion of collateral versus amount borrowed.
-            <br/><span className="bold">Keep it above 1 to avoid liquidation.</span>
+            The health factor represents the safety of your loan derived from the proportion of
+            collateral versus amount borrowed.
+            <br />
+            <span className="bold">Keep it above 1 to avoid liquidation.</span>
           </span>
         </div>
       </div>
@@ -100,20 +99,16 @@ function CollaterizationIndicator({ position }) {
           </svg>
         </div>
         <div className="percentage-chart">
-          {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : ".."}
+          {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
         </div>
         <div className="bg-chart"></div>
       </div>
 
       <div className="position-details first">
         <div className="title">
-          <Typography variant="h3">
-            Borrow Limit Used
-          </Typography>
+          <Typography variant="h3">Borrow Limit Used</Typography>
         </div>
-        <div className="number">
-          {borrowLimit ? (borrowLimit * 100).toFixed(1) : "..."} %
-        </div>
+        <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
       </div>
       <Collapse in={more}>
         <div className="position-details">
@@ -123,38 +118,28 @@ function CollaterizationIndicator({ position }) {
               <InfoOutlinedIcon />
               <span className="tooltip">
                 The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                <br/>
-                A max. LTV of 75% means the user can borrow up to $75 in the principal currency for every $100 worth of collateral.
-                <br/><span className="bold">With LTV above 75% they risk a liquidation.</span>
+                <br />
+                A max. LTV of 75% means the user can borrow up to $75 in the principal currency for
+                every $100 worth of collateral.
+                <br />
+                <span className="bold">With LTV above 75% they risk a liquidation.</span>
               </span>
             </div>
           </div>
-          <div className="number">
-            {ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : "..."} %
-          </div>
+          <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
         </div>
         <div className="position-details">
-          <div className="title">
-            LTV liquidation threshold
-          </div>
-          <div className="number">
-            75 %
-          </div>
+          <div className="title">LTV liquidation threshold</div>
+          <div className="number">75 %</div>
         </div>
         <div className="position-details">
-          <div className="title">
-            Current ETH price
-          </div>
-          <div className="number">
-            $ {price ? price.toFixed(2) : "..."}
-          </div>
+          <div className="title">Current ETH price</div>
+          <div className="number">$ {price ? price.toFixed(2) : '...'}</div>
         </div>
         <div className="position-details">
-          <div className="title">
-            ETH liquidation price
-          </div>
+          <div className="title">ETH liquidation price</div>
           <div className="number">
-            $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : "..."}
+            $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
           </div>
         </div>
       </Collapse>
@@ -165,7 +150,7 @@ function CollaterizationIndicator({ position }) {
           onClick={() => setMore(!more)}
           endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         >
-          Show {more ? "less" : "more"}
+          Show {more ? 'less' : 'more'}
         </Button>
       </div>
     </div>

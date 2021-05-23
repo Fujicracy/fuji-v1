@@ -1,13 +1,13 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import "./App.css";
-import { ProvideAuth } from "./hooks";
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import './App.css';
+import { ProvideAuth } from './hooks';
 
-import Home from "./views/Home";
-import Dashboard from "./views/Dashboard/Dashboard";
-import Infos from "./views/Infos";
-import Team from "./views/Team";
-import Error from "./views/Error";
+import Home from './views/Home';
+import Dashboard from './views/Dashboard/Dashboard';
+import Infos from './views/Infos';
+import Team from './views/Team';
+import Error from './views/Error';
 
 function App(props) {
   return (
@@ -27,7 +27,7 @@ function App(props) {
         <Route path="/about">
           <Infos />
         </Route>
-        <Route path={"*"}>
+        <Route path={'*'}>
           <Error />
         </Route>
       </Switch>
@@ -40,12 +40,20 @@ function App(props) {
               </a>
             </li>
             <li>
-              <a href="https://discord.com/invite/dnvJeEMeDJ" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://discord.com/invite/dnvJeEMeDJ"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src="/discord_1.svg" alt="discord" />
               </a>
             </li>
             <li>
-              <a href="https://t.me/joinchat/U4cKWNCUevKVsrtY" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://t.me/joinchat/U4cKWNCUevKVsrtY"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src="/telegram_1.svg" alt="telegram" />
               </a>
             </li>
@@ -64,7 +72,11 @@ function App(props) {
         </nav>
       </footer>
       <div className="bg-effect"></div>
-      <div className="ohno">Oh no!<br />This website isn't available (yet) on mobile</div>
+      <div className="ohno">
+        Oh no!
+        <br />
+        This website isn't available (yet) on mobile
+      </div>
     </BrowserRouter>
   );
 }

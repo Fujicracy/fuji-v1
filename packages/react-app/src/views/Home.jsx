@@ -1,14 +1,13 @@
-import React from "react";
-import { useSpring, animated, config } from 'react-spring'
-import { Link } from "react-router-dom";
-import "./Home.css";
+import React from 'react';
+import { useSpring, animated, config } from 'react-spring';
+import { Link } from 'react-router-dom';
+import './Home.css';
 
 function Home() {
-
   const props = useSpring({
     from: { factor: 1, opacity: 0 },
     to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses},
+    config: { duration: 800, ...config.molasses },
   });
 
   return (
@@ -23,11 +22,13 @@ function Home() {
           >
             Learn
           </a>
-          <Link to="/dashboard" className="main-action">App</Link>
+          <Link to="/dashboard" className="main-action">
+            App
+          </Link>
         </div>
       </div>
     </animated.div>
-   );
+  );
 }
 
 export default Home;

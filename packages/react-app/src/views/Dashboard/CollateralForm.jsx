@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { formatEther, parseEther, formatUnits } from "@ethersproject/units";
-import { useForm } from "react-hook-form";
-import { useBalance, useContractReader, useGasPrice } from "../../hooks";
-import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from "../../helpers";
+import React, { useEffect, useState } from 'react';
+import { formatEther, parseEther, formatUnits } from '@ethersproject/units';
+import { useForm } from 'react-hook-form';
+import { useBalance, useContractReader, useGasPrice } from '../../hooks';
+import {
+  Transactor,
+  GasEstimator,
+  getBorrowId,
+  getCollateralId,
+  getVaultName,
+} from '../../helpers';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,13 +23,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from "../../constants";
-import DeltaPositionRatios from "./DeltaPositionRatios"
+import { ETH_CAP_VALUE } from '../../constants';
+import DeltaPositionRatios from './DeltaPositionRatios';
 
 const Action = {
   Supply: 0,
-  Withdraw: 1
-}
+  Withdraw: 1,
+};
 
 function CollateralForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
@@ -40,24 +46,20 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   const _ethBalance = useBalance(provider, address);
   const ethBalance = _ethBalance ? Number(formatEther(_ethBalance)).toFixed(6) : null;
 
-  const debtBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getBorrowId(borrowAsset)]
-  );
-  const collateralBalance = useContractReader(
-    contracts,
-    "FujiERC1155",
-    "balanceOf",
-    [address, getCollateralId(borrowAsset)]
-  );
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getBorrowId(borrowAsset),
+  ]);
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId(borrowAsset),
+  ]);
 
   const neededCollateral = useContractReader(
     contracts,
     getVaultName(borrowAsset),
-    "getNeededCollateralFor",
-    [(debtBalance ? debtBalance : "0"), "true"],
+    'getNeededCollateralFor',
+    [debtBalance ? debtBalance : '0', 'true'],
   );
 
   useEffect(() => {
@@ -69,55 +71,48 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   }, [neededCollateral, collateralBalance]);
 
   const supply = async () => {
-    const gasLimit = await GasEstimator(
-      contracts[getVaultName(borrowAsset)],
-      'deposit',
-      [
-        parseEther(amount),
-        { value: parseEther(amount), gasPrice }
-      ]
-    );
+    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'deposit', [
+      parseEther(amount),
+      { value: parseEther(amount), gasPrice },
+    ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-      .deposit(
-        parseEther(amount),
-        { value: parseEther(amount), gasPrice, gasLimit }
-      )
+      contracts[getVaultName(borrowAsset)].deposit(parseEther(amount), {
+        value: parseEther(amount),
+        gasPrice,
+        gasLimit,
+      }),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Deposit")) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Deposit')) {
         setDialog('success');
       }
     }
     setLoading(false);
-  }
+  };
 
   const withdraw = async () => {
-    const _amount = Number(amount) === Number(leftCollateral) ? "-1" : amount;
-    const gasLimit = await GasEstimator(
-      contracts[getVaultName(borrowAsset)],
-      'withdraw',
-      [parseEther(_amount), { gasPrice }]
-    );
+    const _amount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
+    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'withdraw', [
+      parseEther(_amount),
+      { gasPrice },
+    ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)]
-      .withdraw(parseEther(_amount), { gasPrice, gasLimit })
+      contracts[getVaultName(borrowAsset)].withdraw(parseEther(_amount), { gasPrice, gasLimit }),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Withdraw")) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Withdraw')) {
         setDialog('success');
       }
     }
     setLoading(false);
-  }
+  };
 
   const onSubmit = async () => {
-    const totalCollateral =
-      Number(amount) + Number(formatUnits(collateralBalance));
+    const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
     if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
       setDialog('capCollateral');
       return;
@@ -126,18 +121,17 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
     setLoading(true);
     if (action === Action.Withdraw) {
       withdraw();
-    }
-    else {
+    } else {
       supply();
     }
-  }
+  };
 
   const onConfirmation = () => {
     setDialog('deltaRatios');
-  }
+  };
 
   const dialogContents = {
-    'deltaRatios': {
+    deltaRatios: {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
@@ -149,8 +143,8 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             !collateralBalance || !amount
               ? 0
               : action === Action.Withdraw
-                ? collateralBalance.sub(parseEther(amount))
-                : collateralBalance.add(parseEther(amount))
+              ? collateralBalance.sub(parseEther(amount))
+              : collateralBalance.add(parseEther(amount))
           }
         />
       ),
@@ -166,13 +160,14 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             Confirm
           </Button>
         </DialogActions>
-      )
+      ),
     },
-    'success': {
+    success: {
       title: 'Transactor successful',
       content: (
         <DialogContentText>
-          You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount} ETH.
+          You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount}{' '}
+          ETH.
         </DialogContentText>
       ),
       actions: () => (
@@ -181,20 +176,23 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             onClick={() => {
               setDialog('');
               setAmount('');
-              setValue("amount", "", { shouldValidate: false });
+              setValue('amount', '', { shouldValidate: false });
             }}
             className="main-button"
           >
             Close
           </Button>
         </DialogActions>
-      )
+      ),
     },
-    'capCollateral': {
+    capCollateral: {
       title: 'Collateral Cap',
       content: (
         <DialogContentText>
-          The total amount of ETH you provide as collateral exceeds {ETH_CAP_VALUE} ETH. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon.
+          The total amount of ETH you provide as collateral exceeds {ETH_CAP_VALUE} ETH. This limit
+          is set because the contracts are not audited yet and we want to cap the risk. Please, bear
+          in mind that the alpha version is meant just to demonstrate the functioning of the
+          protocol in real conditions. A fully fledged version will be available soon.
         </DialogContentText>
       ),
       actions: () => (
@@ -205,34 +203,34 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             }}
             className="main-button"
           >
-           Close
+            Close
           </Button>
         </DialogActions>
-      )
-    }
-  }
+      ),
+    },
+  };
 
   return (
     <Grid container direction="column">
-      <Dialog open={['dialog', 'capCollateral', 'deltaRatios'].includes(dialog)} aria-labelledby="form-dialog-title">
-        <div className="close" onClick={() => {
-          setDialog('');
-          setAmount('');
-        }}>
+      <Dialog
+        open={['dialog', 'capCollateral', 'deltaRatios'].includes(dialog)}
+        aria-labelledby="form-dialog-title"
+      >
+        <div
+          className="close"
+          onClick={() => {
+            setDialog('');
+            setAmount('');
+          }}
+        >
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">
-          {dialogContents[dialog]?.title}
-        </DialogTitle>
-        <DialogContent>
-          {dialogContents[dialog]?.content}
-        </DialogContent>
+        <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
+        <DialogContent>{dialogContents[dialog]?.content}</DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">
-          Collateral
-        </Typography>
+        <Typography variant="h3">Collateral</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
           <span className="tooltip tooltip-top">
@@ -244,7 +242,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? Action.Withdraw : Action.Supply )}
+            onChange={({ target }) => setAction(target.checked ? Action.Withdraw : Action.Supply)}
             type="checkbox"
             className="checkbox"
           />
@@ -258,20 +256,18 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       </Grid>
       <Grid item>
         <div className="subtitle">
-          <span className="complementary-infos">{
-            action === Action.Supply
-              ? (
-                <>
-                  <span>Available to supply:</span>
-                  <span>{ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ</span>
-                </>
-              ) : (
-                <>
-                  <span>Available to withdraw:</span>
-                  <span>{leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ</span>
-                </>
-              )
-            }
+          <span className="complementary-infos">
+            {action === Action.Supply ? (
+              <>
+                <span>Available to supply:</span>
+                <span>{ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ</span>
+              </>
+            ) : (
+              <>
+                <span>Available to withdraw:</span>
+                <span>{leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ</span>
+              </>
+            )}
           </span>
         </div>
         <div className="fake-input">
@@ -288,38 +284,36 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             onChange={({ target }) => setAmount(target.value)}
             onFocus={() => setFocus(true)}
             onBlur={() => clearErrors()}
-            inputRef={
-              register({
-                required: { value: true, message: "insufficient-amount" },
-                min: { value: 0, message: "insufficient-amount" },
-                max: {
-                  value: action === Action.Supply ? ethBalance : leftCollateral,
-                  message: "insufficient-balance"
-                },
-              })
-            }
+            inputRef={register({
+              required: { value: true, message: 'insufficient-amount' },
+              min: { value: 0, message: 'insufficient-amount' },
+              max: {
+                value: action === Action.Supply ? ethBalance : leftCollateral,
+                message: 'insufficient-balance',
+              },
+            })}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon"/>
+                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  {focus &&
+                  {focus && (
                     <Button
                       className="max-button"
                       onClick={() => {
                         setAmount(action === Action.Supply ? ethBalance : leftCollateral);
-                        setValue("amount", action === Action.Supply ? ethBalance : leftCollateral, {
+                        setValue('amount', action === Action.Supply ? ethBalance : leftCollateral, {
                           shouldValidate: true,
-                          shouldDirty: true
+                          shouldDirty: true,
                         });
                       }}
                     >
                       max
                     </Button>
-                  }
+                  )}
                   <Typography variant="body1" className="input-infos">
                     ETH
                   </Typography>
@@ -328,33 +322,37 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             }}
           />
         </div>
-        {errors?.amount?.message === "insufficient-amount"
-            && <Typography className="error-input-msg" variant="body2">
-              Please, type an amount to {action === Action.Withdraw ? "withdraw" : "supply"}
-            </Typography>
-        }
-        {errors?.amount?.message === "insufficient-balance" && action === Action.Supply
-            && <Typography className="error-input-msg" variant="body2">
-                Insufficient ETH balance
-              </Typography>
-        }
-        {errors?.amount?.message === "insufficient-balance" && action === Action.Withdraw
-            && <Typography className="error-input-msg" variant="body2">
-                You can withdraw max. {leftCollateral} ETH
-              </Typography>
-        }
+        {errors?.amount?.message === 'insufficient-amount' && (
+          <Typography className="error-input-msg" variant="body2">
+            Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
+          </Typography>
+        )}
+        {errors?.amount?.message === 'insufficient-balance' && action === Action.Supply && (
+          <Typography className="error-input-msg" variant="body2">
+            Insufficient ETH balance
+          </Typography>
+        )}
+        {errors?.amount?.message === 'insufficient-balance' && action === Action.Withdraw && (
+          <Typography className="error-input-msg" variant="body2">
+            You can withdraw max. {leftCollateral} ETH
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <Button
           onClick={handleSubmit(onConfirmation)}
           className="main-button"
           disabled={loading}
-          startIcon={loading &&
-            <CircularProgress style={{ width: 25, height: 25, marginRight: "10px", color: "rgba(0, 0, 0, 0.26)" }} />
-            }
+          startIcon={
+            loading && (
+              <CircularProgress
+                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+              />
+            )
+          }
         >
-          {action === Action.Withdraw ? "Withdraw" : "Supply"}
-          {loading ? "ing..." : ""}
+          {action === Action.Withdraw ? 'Withdraw' : 'Supply'}
+          {loading ? 'ing...' : ''}
         </Button>
       </Grid>
     </Grid>
