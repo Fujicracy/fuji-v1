@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useContractReader } from "../../hooks";
 import "./ManagePosition.css";
-import { formatEther, formatUnits } from "@ethersproject/units";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 
 import { getBorrowId, getCollateralId } from "../../helpers";
@@ -41,7 +40,7 @@ function ManagePosition({ contracts, provider, address, }) {
   );
 
   const position = { collateralBalance, debtBalance, borrowAsset };
-  const decimals = borrowAsset === "USDC" ? 6 : 18;
+  //const decimals = borrowAsset === "USDC" ? 6 : 18;
 
   return (
     <div className="container">

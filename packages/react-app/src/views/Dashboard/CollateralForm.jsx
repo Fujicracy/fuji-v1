@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
+import { formatEther, parseEther, formatUnits } from "@ethersproject/units";
 import { useForm } from "react-hook-form";
 import { useBalance, useContractReader, useGasPrice } from "../../hooks";
 import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from "../../helpers";

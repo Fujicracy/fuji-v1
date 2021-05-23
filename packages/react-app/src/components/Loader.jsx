@@ -1,5 +1,5 @@
 import React from "react";
-import * as LottiePlayer from "@lottiefiles/lottie-player";
+import "@lottiefiles/lottie-player";
 
 function Loader() {
   return (

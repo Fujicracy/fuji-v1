@@ -1,19 +1,18 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
-import { Contract } from "@ethersproject/contracts";
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { Contract } from '@ethersproject/contracts';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const loadData = async (contractName, type) => {
   try {
     return require(`../contracts/${contractName}.${type}.js`);
-  }
-  catch (e) {
+  } catch (e) {
     console.log(`Fetching ${contractName} "${type}" data...`);
     const r = await axios(`/contracts-data?name=${contractName}&type=${type}`);
     return r.data;
   }
-}
+};
 
 const loadContract = async (contractName, signer) => {
   const address = await loadData(contractName, 'address');
@@ -21,8 +20,7 @@ const loadContract = async (contractName, signer) => {
   const bytecode = await loadData(contractName, 'bytecode');
 
   const contract = new Contract(address, abi, signer);
-  if (bytecode)
-    contract.bytecode = bytecode;
+  if (bytecode) contract.bytecode = bytecode;
 
   return contract;
 };
@@ -32,12 +30,12 @@ export default function useContractLoader(providerOrSigner) {
 
   useEffect(() => {
     async function loadContracts() {
-      if (typeof providerOrSigner !== "undefined") {
-        const contractList = require("../contracts/contracts.js");
+      if (typeof providerOrSigner !== 'undefined') {
+        const contractList = require('../contracts/contracts.js');
         // we need to check to see if this providerOrSigner has a signer or not
         let signer;
         let accounts;
-        if (providerOrSigner && typeof providerOrSigner.listAccounts === "function") {
+        if (providerOrSigner && typeof providerOrSigner.listAccounts === 'function') {
           accounts = await providerOrSigner.listAccounts();
         }
 
@@ -48,11 +46,12 @@ export default function useContractLoader(providerOrSigner) {
         }
 
         const newContracts = {};
-        for (let i = 0; i < contractList.length; i++) {
+        for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
           try {
+            // eslint-disable-next-line no-await-in-loop
             newContracts[contractName] = await loadContract(contractName, signer);
-          } catch(e) {
+          } catch (e) {
             console.log(`ERROR: Contract ${contractName} cannot be loaded!`);
           }
         }

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import "./InitBorrow.css";
 import { formatEther, parseEther, formatUnits, parseUnits } from "@ethersproject/units";
-import { BigNumber } from "@ethersproject/bignumber";
-import { useBalance, useContractReader, useRates, useGasPrice } from "../../hooks";
+import { useBalance, useContractReader, useGasPrice } from "../../hooks";
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from "../../helpers";
 import { useForm } from "react-hook-form";
 import TextField from '@material-ui/core/TextField';
@@ -46,25 +45,25 @@ function InitBorrow({ contracts, provider, address }) {
   const providerCompound = contracts && contracts["ProviderCompound"];
   // const providerDYDX = contracts && contracts["ProviderDYDX"];
 
-  const rates = useRates(contracts);
+  //const rates = useRates(contracts);
 
-  const calcSavedAmount = (amount) => {
-    if (!amount || amount === 0 || !providerAave)
-      return '...';
+  //const calcSavedAmount = (amount) => {
+    //if (!amount || amount === 0 || !providerAave)
+      //return '...';
 
-    let rate;
-    if (activeProvider === providerAave.address) {
-      rate = rates.aave[borrowAsset.toLowerCase()];
-    } else if (activeProvider === providerCompound.address) {
-      rate = rates.compound[borrowAsset.toLowerCase()];
-    } else {
-      rate = rates.dydx[borrowAsset.toLowerCase()];
-    }
+    //let rate;
+    //if (activeProvider === providerAave.address) {
+      //rate = rates.aave[borrowAsset.toLowerCase()];
+    //} else if (activeProvider === providerCompound.address) {
+      //rate = rates.compound[borrowAsset.toLowerCase()];
+    //} else {
+      //rate = rates.dydx[borrowAsset.toLowerCase()];
+    //}
 
-    const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
+    //const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
 
-    return (0.1 * interest).toFixed(1);
-  }
+    //return (0.1 * interest).toFixed(1);
+  //}
 
   const _ethBalance = useBalance(provider, address);
   const ethBalance = _ethBalance ? Number(formatEther(_ethBalance)).toFixed(6) : null;

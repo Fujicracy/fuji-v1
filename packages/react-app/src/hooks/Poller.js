@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 export default function usePoller(fn, delay, extraWatch) {
   const savedCallback = useRef();
@@ -9,17 +9,20 @@ export default function usePoller(fn, delay, extraWatch) {
   // Set up the interval.
   // eslint-disable-next-line consistent-return
   useEffect(() => {
-    console.log("tick")
+    console.log('tick');
     function tick() {
       savedCallback.current();
     }
     if (delay !== null) {
       const id = setInterval(tick, delay);
-      return () => clearInterval(id);
+      return () => {
+        return clearInterval(id);
+      };
     }
   }, [delay]);
   // run at start too
   useEffect(() => {
     fn();
-  },[ extraWatch ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extraWatch]);
 }
