@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require("fs");
 const chalk = require("chalk");
 const { ethers, Wallet } = require('ethers');
-const { loadContracts, getGasPrice } = require('./utils');
+const { loadContracts, getGasPrice, getLiquidationProviderIndex } = require('./utils');
 
 const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
 let signer;
@@ -18,26 +18,6 @@ const vaultsList = [
   'VaultETHDAI',
   'VaultETHUSDC',
 ];
-const DAI_ADDR = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
-const USDC_ADDR = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
-
-async function getLiquidationProviderIndex(vault, contracts) {
-  const providerIndex = {
-    aave: 0,
-    dydx: 1,
-    compound: 2
-  };
-  const { borrowAsset } = await vault.vAssets();
-  const activeProvider = await vault.activeProvider();
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
-
-  if ([DAI_ADDR, USDC_ADDR].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
-    // use dydx flashloans when underlying asset is DAI or USDC and
-    // current activeProvider is not dYdX
-    return providerIndex.dydx;
-  }
-  return providerIndex.compound;
-}
 
 function getProviderName(providerAddr, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
@@ -60,7 +40,7 @@ async function switchProviders(contracts, vault, newProviderAddr) {
     .estimateGas
     .doRefinancing(vault.address, newProviderAddr, 1, 1, index, { gasPrice });
   // increase by 10%
-  const gasLimit = gasLimit.add(_gasLimit.div(BigNumber.from('10')));
+  const gasLimit = gasLimit.add(_gasLimit.div(ethers.BigNumber.from('10')));
 
   return await contracts.Controller.connect(signer)
     .doRefinancing(
@@ -125,9 +105,16 @@ async function checkRates(vaultName, contracts) {
 
   if (toChange) {
     console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
-    await switchProviders(contracts, vault, providers[bestProviderIndex])
-      .then(_ => console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`)))
-      .catch(e => console.log(e));
+
+    const res = await switchProviders(contracts, vault, providers[bestProviderIndex]);
+
+    if (res && res.hash) {
+      console.log(`TX submited: ${res.hash}`);
+      const receipt = await res.wait();
+      if (receipt && receipt.events && receipt.events.find(e => e.event === "Switch")) {
+        console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`));
+      }
+    }
   }
   else {
     console.log(chalk.cyan('-> not due for refinance'));
@@ -147,8 +134,8 @@ async function main() {
   const contracts = await loadContracts(signer);
   await checkForRefinance(contracts);
 
-  // run every 10 min
-  setInterval(async () => await checkForRefinance(contracts), 10 * 60 * 1000);
+  // run every 15 min
+  setInterval(async () => await checkForRefinance(contracts), 15 * 60 * 1000);
 }
 
 main();
