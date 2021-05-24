@@ -16,7 +16,9 @@
   "scripts": {
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint:fix",
+    "lint:sol": "yarn workspace @fuji/hardhat lint:sol",
     "format": "yarn workspaces run format",
+    "format:sol": "yarn workspace @fuji/hardhat format:sol",
     "react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
     "react-app:eject": "yarn workspace @fuji/react-app eject",
     "react-app:test": "yarn workspace @fuji/react-app test",
@@ -58,8 +60,11 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{js,jsx,sol}": [
+    "**/*.{js,jsx}": [
       "yarn lint"
+    ],
+    "**/*.sol": [
+      "yarn lint:sol"
     ]
   },
   "workspaces": {
