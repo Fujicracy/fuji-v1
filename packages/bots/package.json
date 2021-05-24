@@ -9,6 +9,8 @@
     "ethers": "^5.1.4"
   },
   "scripts": {
+    "lint": "echo 1",
+    "format": "echo 1",
     "liquidate": "node liquidate.js"
   }
 }

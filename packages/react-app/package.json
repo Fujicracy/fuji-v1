@@ -33,18 +33,6 @@
     "s3": "node ./scripts/s3.js",
     "ship": "yarn surge"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "app/**/*.{js,jsx,json}": [
-      "yarn lint:fix",
-      "yarn stylelint",
-      "prettier --config .prettierrc --write"
-    ]
-  },
   "dependencies": {
     "@ethersproject/address": "^5.0.5",
     "@ethersproject/bignumber": "^5.0.8",
@@ -91,9 +79,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "husky": "^6.0.0",
     "ipfs-http-client": "^45.0.0",
-    "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
     "s3-folder-upload": "^2.3.1",
     "surge": "^0.21.5"
