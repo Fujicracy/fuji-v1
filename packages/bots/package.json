@@ -3,14 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-prettier": "^3.1.4"
+  },
   "dependencies": {
     "axios": "^0.20.0",
+    "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
     "ethers": "^5.1.4"
   },
   "scripts": {
-    "lint": "echo 1",
-    "format": "echo 1",
+    "lint": "eslint . --format table",
+    "lint:fix": "yarn lint --fix",
+    "format": "prettier --write . '!contracts/**.js'",
     "liquidate": "node liquidate.js"
   }
 }

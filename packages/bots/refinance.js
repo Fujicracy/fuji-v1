@@ -1,23 +1,24 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const fs = require("fs");
 const chalk = require("chalk");
-const { ethers, Wallet } = require('ethers');
-const { loadContracts, getGasPrice, getLiquidationProviderIndex } = require('./utils');
+const { ethers, Wallet } = require("ethers");
+const {
+  loadContracts,
+  getGasPrice,
+  getLiquidationProviderIndex,
+} = require("./utils");
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+const provider = new ethers.providers.JsonRpcProvider(
+  process.env.ETHEREUM_PROVIDER_URL
+);
 let signer;
 if (process.env.PRIVATE_KEY) {
   signer = new Wallet(process.env.PRIVATE_KEY, provider);
-}
-else {
+} else {
   throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
 }
 
-const vaultsList = [
-  'VaultETHDAI',
-  'VaultETHUSDC',
-];
+const vaultsList = ["VaultETHDAI", "VaultETHUSDC"];
 
 function getProviderName(providerAddr, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
@@ -25,32 +26,39 @@ function getProviderName(providerAddr, contracts) {
   const compoundProviderAddr = contracts.ProviderCompound.address;
 
   if (providerAddr === dydxProviderAddr) {
-    return 'ProviderDYDX';
-  } else if (providerAddr === aaveProviderAddr) {
-    return 'ProviderAave';
-  } else if (providerAddr === compoundProviderAddr) {
-    return 'ProviderCompound';
+    return "ProviderDYDX";
   }
+  if (providerAddr === aaveProviderAddr) {
+    return "ProviderAave";
+  }
+  if (providerAddr === compoundProviderAddr) {
+    return "ProviderCompound";
+  }
+  return "";
 }
 
 async function switchProviders(contracts, vault, newProviderAddr) {
   const index = await getLiquidationProviderIndex(vault, contracts);
   const gasPrice = await getGasPrice();
-  const _gasLimit = await contracts.Controller
-    .estimateGas
-    .doRefinancing(vault.address, newProviderAddr, 1, 1, index, { gasPrice });
+  let gasLimit = await contracts.Controller.estimateGas.doRefinancing(
+    vault.address,
+    newProviderAddr,
+    1,
+    1,
+    index,
+    { gasPrice }
+  );
   // increase by 10%
-  const gasLimit = gasLimit.add(_gasLimit.div(ethers.BigNumber.from('10')));
+  gasLimit = gasLimit.add(gasLimit.div(ethers.BigNumber.from("10")));
 
-  return await contracts.Controller.connect(signer)
-    .doRefinancing(
-      vault.address,
-      newProviderAddr,
-      1,
-      1,
-      index,
-      { gasPrice, gasLimit }
-    );
+  return contracts.Controller.connect(signer).doRefinancing(
+    vault.address,
+    newProviderAddr,
+    1,
+    1,
+    index,
+    { gasPrice, gasLimit }
+  );
 }
 
 async function shouldChange(currentRate, newRate, lastSwitch) {
@@ -65,22 +73,23 @@ async function shouldChange(currentRate, newRate, lastSwitch) {
   const currentBlockNumber = await provider.getBlockNumber();
   const timeCheck = !lastSwitch
     ? true // first switch
-    // check if last switch was at least 1h ago
-    : currentBlockNumber - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
-  
+    : // check if last switch was at least 1h ago
+      currentBlockNumber - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
+
   return currentRate.sub(newRate).gte(APR_THRESHOLD) && timeCheck;
 }
 
 async function checkRates(vaultName, contracts) {
-  console.log('Checking', chalk.yellow(`${vaultName} ...`));
+  console.log("Checking", chalk.yellow(`${vaultName} ...`));
   const vault = contracts[vaultName];
   const { borrowAsset } = await vault.vAssets();
   const activeProviderAddr = await vault.activeProvider();
-  
+
   const activeProviderName = getProviderName(activeProviderAddr, contracts);
 
-  const currentRate = await contracts[activeProviderName]
-    .getBorrowRateFor(borrowAsset);
+  const currentRate = await contracts[activeProviderName].getBorrowRateFor(
+    borrowAsset
+  );
 
   const providers = await vault.getProviders();
 
@@ -106,18 +115,27 @@ async function checkRates(vaultName, contracts) {
   if (toChange) {
     console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
 
-    const res = await switchProviders(contracts, vault, providers[bestProviderIndex]);
+    const res = await switchProviders(
+      contracts,
+      vault,
+      providers[bestProviderIndex]
+    );
 
     if (res && res.hash) {
       console.log(`TX submited: ${res.hash}`);
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === "Switch")) {
-        console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`));
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find((e) => e.event === "Switch")
+      ) {
+        console.log(
+          chalk.blue(`---> successfully switched provider of ${vaultName}`)
+        );
       }
     }
-  }
-  else {
-    console.log(chalk.cyan('-> not due for refinance'));
+  } else {
+    console.log(chalk.cyan("-> not due for refinance"));
   }
 }
 
@@ -129,13 +147,13 @@ async function checkForRefinance(contracts) {
 }
 
 async function main() {
-  console.log('Start checking for refinancing...');
+  console.log("Start checking for refinancing...");
 
   const contracts = await loadContracts(signer);
   await checkForRefinance(contracts);
 
   // run every 15 min
-  setInterval(async () => await checkForRefinance(contracts), 15 * 60 * 1000);
+  setInterval(async () => checkForRefinance(contracts), 15 * 60 * 1000);
 }
 
 main();

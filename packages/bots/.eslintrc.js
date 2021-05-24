@@ -1,11 +1,16 @@
+const fs = require("fs");
+const path = require("path");
+
+const prettierOptions = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "./.prettier"), "utf8")
+);
+
 module.exports = {
-  env: {
-    mocha: true,
-  },
-  extends: ["airbnb", "plugin:prettier/recommended"],
+  extends: ["airbnb", "plugin:prettier/recommended", "prettier"],
   plugins: ["babel"],
+  ignorePatterns: ["**/contracts/**"],
   rules: {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": ["error", prettierOptions],
     "import/extensions": [
       "error",
       "ignorePackages",

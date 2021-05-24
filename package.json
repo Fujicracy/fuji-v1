@@ -15,6 +15,7 @@
   },
   "scripts": {
     "lint": "yarn workspaces run lint",
+    "lint:fix": "yarn workspaces run lint:fix",
     "format": "yarn workspaces run format",
     "react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
     "react-app:eject": "yarn workspace @fuji/react-app eject",
