@@ -59,8 +59,7 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,sol}": [
-      "yarn lint",
-      "yarn format"
+      "yarn lint"
     ]
   },
   "workspaces": {
