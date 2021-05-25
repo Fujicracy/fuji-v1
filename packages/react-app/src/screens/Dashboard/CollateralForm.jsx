@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { formatEther, parseEther, formatUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-import { useBalance, useContractReader, useGasPrice } from '../../hooks';
-import {
-  Transactor,
-  GasEstimator,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-} from '../../helpers';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -23,6 +15,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {
+  Transactor,
+  GasEstimator,
+  getBorrowId,
+  getCollateralId,
+  getVaultName,
+} from '../../helpers';
+import { useBalance, useContractReader, useGasPrice } from '../../hooks';
 import { ETH_CAP_VALUE } from '../../constants';
 import DeltaPositionRatios from './DeltaPositionRatios';
 
@@ -43,8 +43,10 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
 
-  const _ethBalance = useBalance(provider, address);
-  const ethBalance = _ethBalance ? Number(formatEther(_ethBalance)).toFixed(6) : null;
+  const unformattedEthBalance = useBalance(provider, address);
+  const ethBalance = unformattedEthBalance
+    ? Number(formatEther(unformattedEthBalance)).toFixed(6)
+    : null;
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -59,7 +61,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
     contracts,
     getVaultName(borrowAsset),
     'getNeededCollateralFor',
-    [debtBalance ? debtBalance : '0', 'true'],
+    [debtBalance || '0', 'true'],
   );
 
   useEffect(() => {
@@ -85,7 +87,13 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Deposit')) {
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(e => {
+          return e.event === 'Deposit';
+        })
+      ) {
         setDialog('success');
       }
     }
@@ -93,18 +101,27 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   };
 
   const withdraw = async () => {
-    const _amount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
+    const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
     const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'withdraw', [
-      parseEther(_amount),
+      parseEther(unformattedAmount),
       { gasPrice },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].withdraw(parseEther(_amount), { gasPrice, gasLimit }),
+      contracts[getVaultName(borrowAsset)].withdraw(parseEther(unformattedAmount), {
+        gasPrice,
+        gasLimit,
+      }),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Withdraw')) {
+      if (
+        receipt &&
+        receipt.events &&
+        receipt.events.find(e => {
+          return e.event === 'Withdraw';
+        })
+      ) {
         setDialog('success');
       }
     }
@@ -130,6 +147,11 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
     setDialog('deltaRatios');
   };
 
+  const handleClose = () => {
+    setDialog('');
+    setAmount('');
+  };
+
   const dialogContents = {
     deltaRatios: {
       title: 'Postion Ratio Changes',
@@ -148,19 +170,21 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           }
         />
       ),
-      actions: () => (
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialog({ step: null, withApproval: false });
-              onSubmit();
-            }}
-            className="main-button"
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      ),
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setDialog({ step: null, withApproval: false });
+                onSubmit();
+              }}
+              className="main-button"
+            >
+              Confirm
+            </Button>
+          </DialogActions>
+        );
+      },
     },
     success: {
       title: 'Transactor successful',
@@ -170,20 +194,22 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           ETH.
         </DialogContentText>
       ),
-      actions: () => (
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialog('');
-              setAmount('');
-              setValue('amount', '', { shouldValidate: false });
-            }}
-            className="main-button"
-          >
-            Close
-          </Button>
-        </DialogActions>
-      ),
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setDialog('');
+                setAmount('');
+                setValue('amount', '', { shouldValidate: false });
+              }}
+              className="main-button"
+            >
+              Close
+            </Button>
+          </DialogActions>
+        );
+      },
     },
     capCollateral: {
       title: 'Collateral Cap',
@@ -195,18 +221,20 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           protocol in real conditions. A fully fledged version will be available soon.
         </DialogContentText>
       ),
-      actions: () => (
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialog('');
-            }}
-            className="main-button"
-          >
-            Close
-          </Button>
-        </DialogActions>
-      ),
+      actions: () => {
+        return (
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setDialog('');
+              }}
+              className="main-button"
+            >
+              Close
+            </Button>
+          </DialogActions>
+        );
+      },
     },
   };
 
@@ -216,19 +244,14 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
         open={['dialog', 'capCollateral', 'deltaRatios'].includes(dialog)}
         aria-labelledby="form-dialog-title"
       >
-        <div
-          className="close"
-          onClick={() => {
-            setDialog('');
-            setAmount('');
-          }}
-        >
+        <div className="close" onClick={handleClose}>
           <HighlightOffIcon />
         </div>
         <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
         <DialogContent>{dialogContents[dialog]?.content}</DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
+
       <Grid item className="section-title">
         <Typography variant="h3">Collateral</Typography>
         <div className="tooltip-info">
@@ -242,7 +265,9 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? Action.Withdraw : Action.Supply)}
+            onChange={({ target }) => {
+              return setAction(target.checked ? Action.Withdraw : Action.Supply);
+            }}
             type="checkbox"
             className="checkbox"
           />
@@ -251,7 +276,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
               <span>Supply</span>
             </span>
           </div>
-          <div className="layer"></div>
+          <div className="layer" />
         </div>
       </Grid>
       <Grid item>
@@ -281,9 +306,15 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             step="any"
             id="collateralAmount"
             variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
-            onFocus={() => setFocus(true)}
-            onBlur={() => clearErrors()}
+            onChange={({ target }) => {
+              return setAmount(target.value);
+            }}
+            onFocus={() => {
+              return setFocus(true);
+            }}
+            onBlur={() => {
+              return clearErrors();
+            }}
             inputRef={register({
               required: { value: true, message: 'insufficient-amount' },
               min: { value: 0, message: 'insufficient-amount' },

@@ -91,9 +91,9 @@ function Dashboard() {
     </header>
   );
 
-  //<li>
-  //<Link to="#"><span className="material-icons">light_mode</span></Link>
-  //</li>
+  // <li>
+  // <Link to="#"><span className="material-icons">light_mode</span></Link>
+  // </li>
 
   return (
     <>

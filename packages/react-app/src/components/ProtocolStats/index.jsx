@@ -1,5 +1,6 @@
 import React from 'react';
-import './ProtocolStats.css';
+
+import './styles.css';
 
 function ProtocolStats() {
   return (
