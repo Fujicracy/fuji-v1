@@ -8,12 +8,15 @@ const prettierOptions = JSON.parse(
 module.exports = {
   env: {
     browser: true,
-    es6: true,
+    es6: false,
+  },
+  parserOptions: {
+    ecmaVersion: 11,
   },
   extends: ['airbnb', 'plugin:prettier/recommended', 'prettier'],
   plugins: ['prettier', 'json', 'react', 'react-hooks'],
   rules: {
-    'arrow-body-style': ['error', 'always'],
+    'arrow-body-style': 'off',
     'brace-style': ['error', '1tbs'],
     'prettier/prettier': ['error', prettierOptions],
     'react/forbid-prop-types': 'off',
@@ -45,8 +48,11 @@ module.exports = {
     ],
     'react/destructuring-assignment': 'off',
     'no-console': 'off',
+    'no-nested-ternary': 'off',
     'jsx-a11y/accessible-emoji': ['off'],
     'jsx-a11y/label-has-associated-control': ['off'],
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react/jsx-props-no-spreading': ['off'],
