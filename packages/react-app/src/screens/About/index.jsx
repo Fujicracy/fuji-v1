@@ -142,7 +142,7 @@ function Infos() {
               <Typography className={classes.subtitle}>Edgar Moreau</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">Magician&nbsp;</Typography>
+                <Typography variant="h6">DeFi Magician&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/edgar-moreau-1b074b133/"
                   target="_blank"
