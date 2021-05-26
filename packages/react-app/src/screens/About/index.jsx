@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme =>
     },
     twitter: {
       fontSize: 16,
-      color: theme.palette.secondary.main,
+      color: '#FE014A',
       paddingBottom: theme.spacing(5),
     },
     meta: {
