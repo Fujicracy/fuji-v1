@@ -29,6 +29,7 @@ coverage
 build
 
 # misc
+tenderly.yaml
 .DS_Store
 .env*
 
