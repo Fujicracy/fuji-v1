@@ -91,17 +91,17 @@ function Infos() {
           </Grid>
 
           <Grid container className={classes.item}>
-            <Grid item md={12}>
+            <Grid item xs={12}>
               <Typography className={classes.title}>Core Team</Typography>
             </Grid>
 
-            <Grid item md={4}>
+            <Grid item xs={4}>
               <img src={teamDaigaroPhoto} alt="Daigaro Cota" />
 
               <Typography className={classes.subtitle}>Daigaro Cota</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+                <Typography variant="h6">Contracts Dev&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/daigaro-cota/"
                   target="_blank"
@@ -115,13 +115,13 @@ function Infos() {
               </a>
             </Grid>
 
-            <Grid item md={4}>
+            <Grid item xs={4}>
               <img src={teamBoyanPhoto} alt="Boyan Barakov" />
 
               <Typography className={classes.subtitle}>Boyan Barakov</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+                <Typography variant="h6">.sol hiker&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/boyan-barakov-3b91891a/"
                   target="_blank"
@@ -136,13 +136,13 @@ function Infos() {
               </a>
             </Grid>
 
-            <Grid item md={4}>
+            <Grid item xs={4}>
               <img src={teamEdgarPhoto} alt="Edgar Moreau" />
 
               <Typography className={classes.subtitle}>Edgar Moreau</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">Role in here &nbsp;&nbsp;</Typography>
+                <Typography variant="h6">Magician&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/edgar-moreau-1b074b133/"
                   target="_blank"
