@@ -76,23 +76,46 @@ function Infos() {
         </Grid>
 
         <Grid item md={4} className={classes.item}>
-          <img src={daigaroPhoto} alt="Daigaro" />
+          <img src={daigaroPhoto} alt="Daigaro Cota" />
 
           <Typography className={classes.subtitle}>Daigaro Cota</Typography>
 
           <div className={classes.meta}>
-            <Typography variant="h6">Role in here &nbsp;&nbsp;</Typography>
-            <img src={linkedinIcon} alt="Daigaro Linkedin" />
+            <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+            <img src={linkedinIcon} alt="Daigaro's Linkedin" />
           </div>
 
           <Typography className={classes.telegram}>@DaigaroC</Typography>
         </Grid>
 
         <Grid item md={4} className={classes.item}>
-          <img src={boyanPhoto} alt="Boyan" />
+          <img src={boyanPhoto} alt="Boyan Barakov" />
+
+          <Typography className={classes.subtitle}>Boyan Barakov</Typography>
+
+          <div className={classes.meta}>
+            <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+            <img src={linkedinIcon} alt="Boyan's Linkedin" />
+          </div>
+
+          <Typography className={classes.telegram}>@BoyanBarakov</Typography>
         </Grid>
+
         <Grid item md={4} className={classes.item}>
-          <img src={edgarPhoto} alt="Edgar" />
+          <img src={edgarPhoto} alt="Edgar Moreau" />
+
+          <Typography className={classes.subtitle}>Edgar Moreau</Typography>
+
+          <div className={classes.meta}>
+            <Typography variant="h6">Role in here &nbsp;&nbsp;</Typography>
+            <img src={linkedinIcon} alt="Edgar's Linkedin" />
+          </div>
+
+          <Typography className={classes.telegram}>@TheEdgarMoreau</Typography>
+        </Grid>
+
+        <Grid item md={12} className={classes.item}>
+          <Typography className={classes.title}>Partners</Typography>
         </Grid>
       </Grid>
     </Container>
