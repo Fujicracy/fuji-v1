@@ -1,8 +1,16 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import { Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { boyanPhoto, daigaroPhoto, edgarPhoto, linkedinIcon } from '../../assets/images';
+import {
+  linkedinIcon,
+  teamBoyanPhoto,
+  teamDaigaroPhoto,
+  teamEdgarPhoto,
+  partnerDelphi,
+  partnerCapital,
+  partnerMaven,
+  partnerSpartan,
+} from '../../assets/images';
 import Header from '../../components/Header';
 
 const useStyles = makeStyles(theme =>
@@ -22,7 +30,7 @@ const useStyles = makeStyles(theme =>
     item: {
       textAlign: 'center',
       padding: theme.spacing(3, 1, 0, 2),
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(20),
     },
     title: {
       fontWeight: '900',
@@ -34,7 +42,7 @@ const useStyles = makeStyles(theme =>
       fontSize: 24,
     },
     text: {
-      paddingBottom: theme.spacing(4),
+      paddingBottom: theme.spacing(5),
       fontStyle: 'normal',
       '& span': {
         fontWeight: '700',
@@ -44,12 +52,22 @@ const useStyles = makeStyles(theme =>
     telegram: {
       fontSize: 16,
       color: theme.palette.secondary.main,
+      paddingBottom: theme.spacing(5),
     },
     meta: {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    partner: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingBottom: theme.spacing(2),
+    },
+    partnerImage: {
+      maxWidth: '80%',
     },
   }),
 );
@@ -60,6 +78,7 @@ function Infos() {
   return (
     <Container className={classes.container}>
       <Header />
+
       <Grid container className={classes.section}>
         <Grid item md={12} className={classes.item}>
           <Typography className={classes.title}>Our Vision</Typography>
@@ -71,51 +90,76 @@ function Infos() {
           </Typography>
         </Grid>
 
-        <Grid item md={12} className={classes.item}>
-          <Typography className={classes.title}>Core Team</Typography>
+        <Grid container className={classes.item}>
+          <Grid item md={12}>
+            <Typography className={classes.title}>Core Team</Typography>
+          </Grid>
+
+          <Grid item md={4}>
+            <img src={teamDaigaroPhoto} alt="Daigaro Cota" />
+
+            <Typography className={classes.subtitle}>Daigaro Cota</Typography>
+
+            <div className={classes.meta}>
+              <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+              <img src={linkedinIcon} alt="Daigaro's Linkedin" />
+            </div>
+
+            <Typography className={classes.telegram}>@DaigaroC</Typography>
+          </Grid>
+
+          <Grid item md={4}>
+            <img src={teamBoyanPhoto} alt="Boyan Barakov" />
+
+            <Typography className={classes.subtitle}>Boyan Barakov</Typography>
+
+            <div className={classes.meta}>
+              <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
+              <img src={linkedinIcon} alt="Boyan's Linkedin" />
+            </div>
+
+            <Typography className={classes.telegram}>@BoyanBarakov</Typography>
+          </Grid>
+
+          <Grid item md={4}>
+            <img src={teamEdgarPhoto} alt="Edgar Moreau" />
+
+            <Typography className={classes.subtitle}>Edgar Moreau</Typography>
+
+            <div className={classes.meta}>
+              <Typography variant="h6">Role in here &nbsp;&nbsp;</Typography>
+              <img src={linkedinIcon} alt="Edgar's Linkedin" />
+            </div>
+
+            <Typography className={classes.telegram}>@TheEdgarMoreau</Typography>
+          </Grid>
         </Grid>
 
-        <Grid item md={4} className={classes.item}>
-          <img src={daigaroPhoto} alt="Daigaro Cota" />
+        <Grid container className={classes.item}>
+          <Grid item md={12}>
+            <Typography className={classes.title}>Partners</Typography>
+          </Grid>
 
-          <Typography className={classes.subtitle}>Daigaro Cota</Typography>
-
-          <div className={classes.meta}>
-            <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
-            <img src={linkedinIcon} alt="Daigaro's Linkedin" />
-          </div>
-
-          <Typography className={classes.telegram}>@DaigaroC</Typography>
-        </Grid>
-
-        <Grid item md={4} className={classes.item}>
-          <img src={boyanPhoto} alt="Boyan Barakov" />
-
-          <Typography className={classes.subtitle}>Boyan Barakov</Typography>
-
-          <div className={classes.meta}>
-            <Typography variant="h6">Role &nbsp;&nbsp;</Typography>
-            <img src={linkedinIcon} alt="Boyan's Linkedin" />
-          </div>
-
-          <Typography className={classes.telegram}>@BoyanBarakov</Typography>
-        </Grid>
-
-        <Grid item md={4} className={classes.item}>
-          <img src={edgarPhoto} alt="Edgar Moreau" />
-
-          <Typography className={classes.subtitle}>Edgar Moreau</Typography>
-
-          <div className={classes.meta}>
-            <Typography variant="h6">Role in here &nbsp;&nbsp;</Typography>
-            <img src={linkedinIcon} alt="Edgar's Linkedin" />
-          </div>
-
-          <Typography className={classes.telegram}>@TheEdgarMoreau</Typography>
-        </Grid>
-
-        <Grid item md={12} className={classes.item}>
-          <Typography className={classes.title}>Partners</Typography>
+          <Grid item md={6} className={classes.partner}>
+            <img
+              src={partnerDelphi}
+              className={classes.partnerImage}
+              alt="Partner - Delphi Digital"
+            />
+          </Grid>
+          <Grid item md={6} className={classes.partner}>
+            <img
+              src={partnerCapital}
+              className={classes.partnerImage}
+              alt="Partner - Origin Capital"
+            />
+          </Grid>
+          <Grid item md={6} className={classes.partner}>
+            <img src={partnerMaven} className={classes.partnerImage} alt="Partner - Maven 11" />
+          </Grid>
+          <Grid item md={6} className={classes.partner}>
+            <img src={partnerSpartan} className={classes.partnerImage} alt="Partner - Spartan" />
+          </Grid>
         </Grid>
       </Grid>
     </Container>
