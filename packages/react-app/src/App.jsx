@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, NavLink, Route } from 'react-router-dom';
 import './App.css';
 import { ProvideAuth } from './hooks';
 
@@ -68,6 +68,9 @@ function App() {
 
         <nav className="footer-links">
           <ul>
+            <li>
+              <NavLink to="/about">About</NavLink>
+            </li>
             <li>
               <a href="https://docs.fujidao.org" target="_blank" rel="noopener noreferrer">
                 Documentation
