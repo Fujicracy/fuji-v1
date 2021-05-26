@@ -6,6 +6,7 @@ import { ProvideAuth } from './hooks';
 import Home from './screens/Home';
 import Dashboard from './screens/Dashboard';
 import Infos from './screens/Infos';
+import About from './screens/About';
 import Team from './screens/Team';
 import Error from './screens/Error';
 
@@ -25,6 +26,11 @@ function App() {
           <Team />
         </Route>
         <Route path="/about">
+          <ProvideAuth>
+            <About />
+          </ProvideAuth>
+        </Route>
+        <Route path="/info">
           <Infos />
         </Route>
         <Route path="*">
