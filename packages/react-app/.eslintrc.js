@@ -8,7 +8,7 @@ const prettierOptions = JSON.parse(
 module.exports = {
   env: {
     browser: true,
-    es6: false,
+    es6: true,
   },
   parserOptions: {
     ecmaVersion: 11,
