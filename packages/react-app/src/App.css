@@ -223,6 +223,7 @@ footer .footer-links ul li a {
 
 .bn-notify-custom .bn-notify-notification {
   color: #f5f5fd;
+  background: transparent;
 }
 
 .bn-notify-custom .bn-notify-notification:before {
