@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import './InitBorrow.css';
+import './styles.css';
 import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
-import { useBalance, useContractReader, useGasPrice } from '../../hooks';
-import {
-  Transactor,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-  GasEstimator,
-} from '../../helpers';
 import { useForm } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
@@ -23,12 +15,20 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from '../../constants';
 
-import CollaterizationIndicator from '../../components/CollaterizationIndicator';
-import ProvidersList from '../../components/ProvidersList';
-import HowItWorks from '../../components/HowItWorks';
-import AlphaWarning from '../../components/AlphaWarning';
+import {
+  Transactor,
+  getBorrowId,
+  getCollateralId,
+  getVaultName,
+  GasEstimator,
+} from '../../../helpers';
+import { useBalance, useContractReader, useGasPrice } from '../../../hooks';
+import { ETH_CAP_VALUE } from '../../../constants';
+import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
+import ProvidersList from '../../../components/ProvidersList';
+import HowItWorks from '../../../components/HowItWorks';
+import AlphaWarning from '../../../components/AlphaWarning';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -43,32 +43,34 @@ function InitBorrow({ contracts, provider, address }) {
 
   const activeProvider = useContractReader(contracts, getVaultName(borrowAsset), 'activeProvider');
 
-  const providerAave = contracts && contracts['ProviderAave'];
-  const providerCompound = contracts && contracts['ProviderCompound'];
+  const providerAave = contracts && contracts.ProviderAave;
+  const providerCompound = contracts && contracts.ProviderCompound;
   // const providerDYDX = contracts && contracts["ProviderDYDX"];
 
-  //const rates = useRates(contracts);
+  // const rates = useRates(contracts);
 
-  //const calcSavedAmount = (amount) => {
-  //if (!amount || amount === 0 || !providerAave)
-  //return '...';
+  // const calcSavedAmount = (amount) => {
+  // if (!amount || amount === 0 || !providerAave)
+  // return '...';
 
-  //let rate;
-  //if (activeProvider === providerAave.address) {
-  //rate = rates.aave[borrowAsset.toLowerCase()];
-  //} else if (activeProvider === providerCompound.address) {
-  //rate = rates.compound[borrowAsset.toLowerCase()];
-  //} else {
-  //rate = rates.dydx[borrowAsset.toLowerCase()];
-  //}
+  // let rate;
+  // if (activeProvider === providerAave.address) {
+  // rate = rates.aave[borrowAsset.toLowerCase()];
+  // } else if (activeProvider === providerCompound.address) {
+  // rate = rates.compound[borrowAsset.toLowerCase()];
+  // } else {
+  // rate = rates.dydx[borrowAsset.toLowerCase()];
+  // }
 
-  //const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
+  // const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
 
-  //return (0.1 * interest).toFixed(1);
-  //}
+  // return (0.1 * interest).toFixed(1);
+  // }
 
-  const _ethBalance = useBalance(provider, address);
-  const ethBalance = _ethBalance ? Number(formatEther(_ethBalance)).toFixed(6) : null;
+  const unFormattedEthBalance = useBalance(provider, address);
+  const ethBalance = unFormattedEthBalance
+    ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
+    : null;
   const decimals = borrowAsset === 'USDC' ? 6 : 18;
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -81,13 +83,15 @@ function InitBorrow({ contracts, provider, address }) {
     getBorrowId(borrowAsset),
   ]);
 
-  const _neededCollateral = useContractReader(
+  const unFormattedNeededCollateral = useContractReader(
     contracts,
     getVaultName(borrowAsset),
     'getNeededCollateralFor',
     [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
-  const neededCollateral = _neededCollateral ? Number(formatEther(_neededCollateral)) : null;
+  const neededCollateral = unFormattedNeededCollateral
+    ? Number(formatEther(unFormattedNeededCollateral))
+    : null;
 
   const queryBorrowAmount = queries.get('borrowAmount');
   useEffect(() => {
@@ -143,13 +147,13 @@ function InitBorrow({ contracts, provider, address }) {
     }
     setLoading(false);
   };
-  //<label>
-  //<input type="radio" name="borrow" value="usdt" disabled={true} />
-  //<div className="fake-radio">
-  //<img alt="usdt" src="/USDT.svg" />
-  //<span className="select-option-name">USDT</span>
-  //</div>
-  //</label>
+  // <label>
+  // <input type="radio" name="borrow" value="usdt" disabled={true} />
+  // <div className="fake-radio">
+  // <img alt="usdt" src="/USDT.svg" />
+  // <span className="select-option-name">USDT</span>
+  // </div>
+  // </label>
 
   const dialogContents = {
     success: {
@@ -216,7 +220,7 @@ function InitBorrow({ contracts, provider, address }) {
                       type="radio"
                       name="borrow"
                       value="DAI"
-                      onChange={({ target }) => setBorrowAsset('DAI')}
+                      onChange={() => setBorrowAsset('DAI')}
                       checked={borrowAsset === 'DAI'}
                     />
                     <div className="fake-radio">
@@ -229,7 +233,7 @@ function InitBorrow({ contracts, provider, address }) {
                       type="radio"
                       name="borrow"
                       value="USDC"
-                      onChange={({ target }) => setBorrowAsset('USDC')}
+                      onChange={() => setBorrowAsset('USDC')}
                       checked={borrowAsset === 'USDC'}
                     />
                     <div className="fake-radio">

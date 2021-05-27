@@ -1,7 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import './HowItWorks.css';
+
+import './styles.css';
 
 function HowItWorks() {
   return (

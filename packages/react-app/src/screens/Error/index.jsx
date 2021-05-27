@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
-import './Error.css';
-import { NETWORK, CHAIN_ID } from '../constants';
-import { useAuth } from '../hooks';
 import Button from '@material-ui/core/Button';
+
+import { NETWORK, CHAIN_ID } from '../../constants';
+import { useAuth } from '../../hooks';
+
+import './styles.css';
 
 function Error() {
   const history = useHistory();
@@ -45,15 +47,22 @@ function Error() {
       {errorType === 'wrong-network' ? (
         <h1 className="error-title">
           <span className="brand-color">You are on the wrong network</span>
-          <span className="text-color"> > Please, switch to {NETWORK}</span>
+          <span className="text-color">
+            `{'>'}` Please, switch to {NETWORK}
+          </span>
         </h1>
       ) : errorType === 'not-connected' ? (
         <>
           <h1 className="error-title">
             <span className="brand-color">You are not connected</span>
-            <span className="text-color"> > Please, connect your wallet!</span>
+            <span className="text-color">`{'>'}` Please, connect your wallet!</span>
           </h1>
-          <Button className="main-button" onClick={() => loadWeb3Modal()}>
+          <Button
+            className="main-button"
+            onClick={() => {
+              return loadWeb3Modal();
+            }}
+          >
             Connect wallet
           </Button>
         </>
@@ -62,7 +71,7 @@ function Error() {
           <img alt="not-found-404" src="/not-found-404.svg" />
           <h1 className="error-title">
             <span className="brand-color">Are you lost?</span>
-            <span className="text-color">> Nothing was found at this URL</span>
+            <span className="text-color">`{'>'}` Nothing was found at this URL</span>
           </h1>
           <Button className="main-button" href="/">
             Go back Home

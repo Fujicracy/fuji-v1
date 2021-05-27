@@ -1,27 +1,37 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
-import './ProvidersList.css';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
-import { useContractReader, useRates } from '../hooks';
+
+import { useContractReader, useRates } from '../../hooks';
+
+import './styles.css';
 
 function AnimatedCounter({ countTo }) {
   const { number } = useSpring({
     from: { number: 0 },
-    number: Number(countTo ? countTo : 0),
+    number: Number(countTo || 0),
     config: config.stiff,
   });
 
-  return <animated.span>{countTo ? number.to(n => n.toFixed(2)) : '...'}</animated.span>;
+  return (
+    <animated.span>
+      {countTo
+        ? number.to(n => {
+            return n.toFixed(2);
+          })
+        : '...'}
+    </animated.span>
+  );
 }
 
 function ProvidersList({ contracts, markets }) {
   const activeProviderDai = useContractReader(contracts, 'VaultETHDAI', 'activeProvider');
   const activeProviderUsdc = useContractReader(contracts, 'VaultETHUSDC', 'activeProvider');
 
-  const providerAave = contracts && contracts['ProviderAave'];
-  const providerCompound = contracts && contracts['ProviderCompound'];
-  const providerDYDX = contracts && contracts['ProviderDYDX'];
+  const providerAave = contracts && contracts.ProviderAave;
+  const providerCompound = contracts && contracts.ProviderCompound;
+  const providerDYDX = contracts && contracts.ProviderDYDX;
 
   const rates = useRates(contracts);
 

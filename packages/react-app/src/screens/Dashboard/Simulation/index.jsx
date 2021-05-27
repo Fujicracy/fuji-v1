@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import './Simulation.css';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { ResponsiveBar } from '@nivo/bar';
-import { useRates } from '../../hooks';
 
-import ProvidersList from '../../components/ProvidersList';
-import HowItWorks from '../../components/HowItWorks';
-import ProtocolStats from '../../components/ProtocolStats';
+import { useRates } from '../../../hooks';
+import ProvidersList from '../../../components/ProvidersList';
+import HowItWorks from '../../../components/HowItWorks';
+import ProtocolStats from '../../../components/ProtocolStats';
 
-function Simulation({ contracts, address }) {
+import './styles.css';
+
+function Simulation({ contracts /* , address */ }) {
   const history = useHistory();
   const rates = useRates(contracts);
 
@@ -26,7 +27,7 @@ function Simulation({ contracts, address }) {
   const calcInterest = (amount, period, protocol) => {
     const apr = rates[protocol][borrowAsset.toLowerCase()];
     const i =
-      Number(amount) * Math.exp((period / 365) * (Number(apr ? apr : 10) / 100)) - Number(amount);
+      Number(amount) * Math.exp((period / 365) * (Number(apr || 10) / 100)) - Number(amount);
     return i.toFixed(0);
   };
 
@@ -34,12 +35,12 @@ function Simulation({ contracts, address }) {
     if (Number(v) < 1) return [];
 
     return [
-      //{
-      //period: "1 month",
-      //Aave: calcInterest(v, 30, "aave"),
-      //Compound: calcInterest(v, 30, "compound"),
-      //Fuji: calcInterest(v, 30, "fuji"),
-      //},
+      // {
+      // period: "1 month",
+      // Aave: calcInterest(v, 30, "aave"),
+      // Compound: calcInterest(v, 30, "compound"),
+      // Fuji: calcInterest(v, 30, "fuji"),
+      // },
       {
         period: '3 months',
         Aave: calcInterest(v, 90, 'aave'),
@@ -66,13 +67,13 @@ function Simulation({ contracts, address }) {
 
   const chartData = onChangeAmount(borrowAmount);
 
-  //<label>
-  //<input type="radio" name="borrow" value="usdt" disabled={true} />
-  //<div className="fake-radio">
-  //<img alt="usdt" src="/USDT.svg" />
-  //<span className="select-option-name">USDT</span>
-  //</div>
-  //</label>
+  // <label>
+  // <input type="radio" name="borrow" value="usdt" disabled={true} />
+  // <div className="fake-radio">
+  // <img alt="usdt" src="/USDT.svg" />
+  // <span className="select-option-name">USDT</span>
+  // </div>
+  // </label>
   return (
     <div className="container">
       <div className="left-content">
@@ -100,7 +101,7 @@ function Simulation({ contracts, address }) {
                       type="radio"
                       name="borrow"
                       value="DAI"
-                      onChange={({ target }) => setBorrowAsset('DAI')}
+                      onChange={(/* { target } */) => setBorrowAsset('DAI')}
                       checked={borrowAsset === 'DAI'}
                     />
                     <div className="fake-radio">
@@ -113,7 +114,7 @@ function Simulation({ contracts, address }) {
                       type="radio"
                       name="borrow"
                       value="USDC"
-                      onChange={({ target }) => setBorrowAsset('USDC')}
+                      onChange={(/* { target } */) => setBorrowAsset('USDC')}
                       checked={borrowAsset === 'USDC'}
                     />
                     <div className="fake-radio">
@@ -184,18 +185,18 @@ function SimulationChart({ data, borrowAsset, borrowAmount }) {
       }}
       innerPadding={15}
       padding={0.2}
-      enableGridX={true}
+      enableGridX
       axisLeft={{
         legend: borrowAsset,
         legendPosition: 'middle',
         legendOffset: -45,
       }}
-      animate={true}
+      animate
       motionStiffness={90}
       motionDamping={15}
       tooltip={({ id, value, indexValue }) => (
         <p>
-          You'll pay ~{value} {borrowAsset} as interest for {indexValue}
+          You&apos;ll pay ~{value} {borrowAsset} as interest for {indexValue}
           <br />
           by borrowing {borrowAmount} {borrowAsset} from {id}
         </p>

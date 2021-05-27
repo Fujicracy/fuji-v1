@@ -3,13 +3,13 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './App.css';
 import { ProvideAuth } from './hooks';
 
-import Home from './views/Home';
-import Dashboard from './views/Dashboard/Dashboard';
-import Infos from './views/Infos';
-import Team from './views/Team';
-import Error from './views/Error';
+import Home from './screens/Home';
+import Dashboard from './screens/Dashboard';
+import Infos from './screens/Infos';
+import Team from './screens/Team';
+import Error from './screens/Error';
 
-function App(props) {
+function App() {
   return (
     <BrowserRouter>
       <Switch>
@@ -27,7 +27,7 @@ function App(props) {
         <Route path="/about">
           <Infos />
         </Route>
-        <Route path={'*'}>
+        <Route path="*">
           <Error />
         </Route>
       </Switch>
@@ -71,11 +71,11 @@ function App(props) {
           </ul>
         </nav>
       </footer>
-      <div className="bg-effect"></div>
+      <div className="bg-effect" />
       <div className="ohno">
         Oh no!
         <br />
-        This website isn't available (yet) on mobile
+        This website isn&apos;t available (yet) on mobile
       </div>
     </BrowserRouter>
   );

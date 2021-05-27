@@ -2,14 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
-import { useContractReader, useExchangePrice, useGasPrice } from '../../hooks';
-import {
-  Transactor,
-  GasEstimator,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-} from '../../helpers';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -24,8 +16,16 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {
+  Transactor,
+  GasEstimator,
+  getBorrowId,
+  getCollateralId,
+  getVaultName,
+} from '../../../helpers';
+import { useContractReader, useExchangePrice, useGasPrice } from '../../../hooks';
 
-import DeltaPositionRatios from './DeltaPositionRatios';
+import DeltaPositionRatios from '../DeltaPositionRatios';
 
 const Action = {
   Repay: 0,
@@ -47,8 +47,10 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
 
   const decimals = borrowAsset === 'USDC' ? 6 : 18;
 
-  const _balance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
-  const balance = _balance ? Number(formatUnits(_balance, decimals)).toFixed(6) : null;
+  const unFormattedBalance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
+  const balance = unFormattedBalance
+    ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
+    : null;
   const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
     address,
     contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
@@ -67,7 +69,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
     contracts,
     getVaultName(borrowAsset),
     'getNeededCollateralFor',
-    [debtBalance ? debtBalance : '0', 'true'],
+    [debtBalance || '0', 'true'],
   );
 
   useEffect(() => {
@@ -105,19 +107,21 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   const payback = async withApproval => {
     setDialog({ step: 'repaying', withApproval });
     // if amount is equal debt, user repays their whole debt (-1)
-    let _amount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
+    let unFormattedAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
     // another check when user wants to repay max
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
-    _amount =
-      _amount === '-1' && debtBalance.eq(_balance) ? formatUnits(_balance, decimals) : _amount;
+    unFormattedAmount =
+      unFormattedAmount === '-1' && debtBalance.eq(unFormattedBalance)
+        ? formatUnits(unFormattedBalance, decimals)
+        : unFormattedAmount;
 
     const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'payback', [
-      parseUnits(_amount, decimals),
+      parseUnits(unFormattedAmount, decimals),
       { gasPrice },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].payback(parseUnits(_amount, decimals), {
+      contracts[getVaultName(borrowAsset)].payback(parseUnits(unFormattedAmount, decimals), {
         gasPrice,
         gasLimit,
       }),
@@ -136,18 +140,20 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   };
 
   const approve = async infiniteApproval => {
-    let _amount = amount;
+    let unFormattedAmount = amount;
     // when repaying max debt, amount needs to be scaled by 2%
     // so that user approves a bit more in order to account for
     // the accrued interest
     // TODO add message to inform user
     if (parseUnits(amount, decimals).eq(debtBalance)) {
-      _amount = (Number(amount) * 1.02).toFixed(6);
+      unFormattedAmount = (Number(amount) * 1.02).toFixed(6);
     }
 
     const base = BigNumber.from(2);
     const e = BigNumber.from(256);
-    const approveAmount = infiniteApproval ? base.pow(e).sub(1) : parseUnits(_amount, decimals);
+    const approveAmount = infiniteApproval
+      ? base.pow(e).sub(1)
+      : parseUnits(unFormattedAmount, decimals);
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
       contracts[borrowAsset].approve(
@@ -159,7 +165,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Approval')) {
+      if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
         payback(true);
       }
     } else {
@@ -265,12 +271,13 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
 
       if (dialog.step === 'approvalPending') {
         return 'Approving... 1 of 2';
-      } else if (dialog.step === 'repaying') {
+      }
+      if (dialog.step === 'repaying') {
         return `Repaying... ${dialog.withApproval ? '2 of 2' : ''}`;
       }
-    } else {
-      return loading ? 'Borrowing...' : 'Borrow';
     }
+
+    return loading ? 'Borrowing...' : 'Borrow';
   };
 
   return (
@@ -315,7 +322,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
               <span>Repay</span>
             </span>
           </div>
-          <div className="layer"></div>
+          <div className="layer" />
         </div>
       </Grid>
       <Grid item>

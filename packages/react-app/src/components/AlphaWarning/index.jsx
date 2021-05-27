@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import './AlphaWarning.css';
+
+import './styles.css';
 
 function AlphaWarning() {
   return (

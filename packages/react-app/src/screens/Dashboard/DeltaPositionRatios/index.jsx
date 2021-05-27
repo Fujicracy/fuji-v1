@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useExchangePrice } from '../../hooks';
-import { PositionRatios } from '../../helpers';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import { PositionRatios } from '../../../helpers';
+import { useExchangePrice } from '../../../hooks';
 
 function DeltaPositionRatios({
   borrowAsset,

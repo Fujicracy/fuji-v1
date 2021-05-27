@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { useExchangePrice } from '../hooks';
 import { useSpring, animated } from 'react-spring';
-import './CollaterizationIndicator.css';
-import { PositionRatios } from '../helpers';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+
+import { useExchangePrice } from '../../hooks';
+import { PositionRatios } from '../../helpers';
+
+import './styles.css';
 
 function hsl(r) {
   const hue = (r / 100) * 120;
@@ -32,12 +34,12 @@ function hslToHex(r) {
 function logslider(value) {
   if (value < 1) {
     return 0;
-  } else if (value >= 1 && value <= 2) {
-    return 50 * value - 50;
-  } else {
-    const constant = 50 * Math.log10(2);
-    return 100 - constant / Math.log10(value);
   }
+  if (value >= 1 && value <= 2) {
+    return 50 * value - 50;
+  }
+  const constant = 50 * Math.log10(2);
+  return 100 - constant / Math.log10(value);
 }
 
 function CollaterizationIndicator({ position }) {
@@ -46,7 +48,9 @@ function CollaterizationIndicator({ position }) {
   const [more, setMore] = useState(false);
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
-  const [oldHealthRatio, setOldHealthRatio] = useReducer((oldV, newV) => newV, healthRatio);
+  const [oldHealthRatio, setOldHealthRatio] = useReducer((oldV, newV) => {
+    return newV;
+  }, healthRatio);
   const [borrowLimit, setLimit] = useState(0);
   const [ltv, setLtv] = useState(0);
   const [liqPrice, setLiqPrice] = useState(0);
@@ -101,7 +105,7 @@ function CollaterizationIndicator({ position }) {
         <div className="percentage-chart">
           {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
         </div>
-        <div className="bg-chart"></div>
+        <div className="bg-chart" />
       </div>
 
       <div className="position-details first">
@@ -147,7 +151,9 @@ function CollaterizationIndicator({ position }) {
         <Button
           size="small"
           disableRipple
-          onClick={() => setMore(!more)}
+          onClick={() => {
+            return setMore(!more);
+          }}
           endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         >
           Show {more ? 'less' : 'more'}

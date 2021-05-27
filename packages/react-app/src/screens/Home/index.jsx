@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import { Link } from 'react-router-dom';
-import './Home.css';
+
+import './styles.css';
 
 function Home() {
   const props = useSpring({

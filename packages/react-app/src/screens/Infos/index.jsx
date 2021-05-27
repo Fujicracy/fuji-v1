@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme =>
   }),
 );
 
-function Infos({ address, loadWeb3Modal }) {
+function Infos() {
   const classes = useStyles();
 
   return (
@@ -56,7 +56,7 @@ function Infos({ address, loadWeb3Modal }) {
             multiple lending protocols to provide its users with the lowest interest rate available.
           </Typography>
         </Grid>
-        <Grid item md={2}></Grid>
+        <Grid item md={2} />
         <Grid item md={6} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             Why we are building it
@@ -91,11 +91,11 @@ function Infos({ address, loadWeb3Modal }) {
             own <span>Proxy</span> contract.
           </Typography>
           <Typography variant="subtitle1" className={classes.text}>
-            A <span>Debt token</span> contract, based on Aave's debt token standard, that tracks
-            users' debt positions.
+            A <span>Debt token</span> contract, based on Aave&apos;s debt token standard, that
+            tracks users&apos; debt positions.
           </Typography>
         </Grid>
-        <Grid item md={1}></Grid>
+        <Grid item md={1} />
         <Grid item md={6}>
           <img
             alt="architecture"
@@ -110,7 +110,7 @@ function Infos({ address, loadWeb3Modal }) {
         <Grid item md={6}>
           <img alt="flashloan" className={classes.demoImg} src="/step2.png" title="Flashloan" />
         </Grid>
-        <Grid item md={1}></Grid>
+        <Grid item md={1} />
         <Grid item md={5} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             How it works

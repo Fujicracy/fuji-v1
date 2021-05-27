@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Transactor, GasEstimator, getVaultName } from '../../helpers';
-import { useGasPrice } from '../../hooks';
-import { DAI_ADDRESS, USDC_ADDRESS } from '../../constants';
-import './FlashClose.css';
 import { parseUnits } from '@ethersproject/units';
-//import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,6 +10,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
+import { DAI_ADDRESS, USDC_ADDRESS } from '../../../constants';
+import { useGasPrice } from '../../../hooks';
+import { Transactor, GasEstimator, getVaultName } from '../../../helpers';
+
+import './styles.css';
 
 async function getLiquidationProviderIndex(vaultName, contracts) {
   const providerIndex = {
@@ -26,12 +28,12 @@ async function getLiquidationProviderIndex(vaultName, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
 
   if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
-    return providerIndex['dydx'];
+    return providerIndex.dydx;
   }
-  return providerIndex['cream'];
+  return providerIndex.cream;
 }
 
-function FlashClose({ borrowAsset, contracts, provider, address }) {
+function FlashClose({ borrowAsset, contracts, provider }) {
   const tx = Transactor(provider);
   const gasPrice = useGasPrice();
 

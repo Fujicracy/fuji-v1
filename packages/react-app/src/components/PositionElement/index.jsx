@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useExchangePrice } from '../hooks';
-import { PositionRatios } from '../helpers';
 import { useHistory } from 'react-router-dom';
 import { formatUnits, formatEther } from '@ethersproject/units';
 import Button from '@material-ui/core/Button';
+
+import { useExchangePrice } from '../../hooks';
+import { PositionRatios } from '../../helpers';
 
 export const PositionActions = {
   None: 0,
@@ -19,12 +20,12 @@ function hsl(r) {
 function logslider(value) {
   if (value < 1) {
     return 0;
-  } else if (value >= 1 && value <= 2) {
-    return 50 * value - 50;
-  } else {
-    const constant = 50 * Math.log10(2);
-    return 100 - constant / Math.log10(value);
   }
+  if (value >= 1 && value <= 2) {
+    return 50 * value - 50;
+  }
+  const constant = 50 * Math.log10(2);
+  return 100 - constant / Math.log10(value);
 }
 
 function PositionElement({ position, actionType }) {
@@ -93,14 +94,16 @@ function PositionElement({ position, actionType }) {
         {actionType === PositionActions.Manage ? (
           <Button
             className="position-btn"
-            onClick={() => history.push(`/dashboard/position?borrowAsset=${borrowAsset}`)}
+            onClick={() => {
+              return history.push(`/dashboard/position?borrowAsset=${borrowAsset}`);
+            }}
           >
             Manage
           </Button>
         ) : actionType === PositionActions.Liquidate ? (
           <Button className="position-btn">Liquidate</Button>
         ) : (
-          <span style={{ width: '5rem' }}></span>
+          <span style={{ width: '5rem' }} />
         )}
       </div>
     </div>

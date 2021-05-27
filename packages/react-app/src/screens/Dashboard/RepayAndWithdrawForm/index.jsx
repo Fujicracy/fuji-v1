@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { formatUnits, parseUnits, parseEther } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
-import { useContractReader } from '../../hooks';
-import { Transactor, getVaultName } from '../../helpers';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -18,6 +16,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Transactor, getVaultName } from '../../../helpers';
+import { useContractReader } from '../../../hooks';
 
 function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -30,12 +30,12 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
 
   const decimals = borrowAsset === 'USDC' ? 6 : 18;
 
-  //const debtBalance = useContractReader(
-  //contracts,
-  //borrowAsset === "DAI" ? "DebtToken-DAI" : "DebtToken-USDC",
-  //"balanceOf",
-  //[address]
-  //);
+  // const debtBalance = useContractReader(
+  // contracts,
+  // borrowAsset === "DAI" ? "DebtToken-DAI" : "DebtToken-USDC",
+  // "balanceOf",
+  // [address]
+  // );
 
   const balance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
   const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
@@ -82,7 +82,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Approval')) {
+      if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
         paybackAndWithdraw(true);
       }
     } else {
@@ -91,7 +91,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
     }
   };
 
-  const onSubmit = async data => {
+  const onSubmit = async (/* data */) => {
     setLoading(true);
 
     if (parseUnits(borrowAmount, decimals) > Number(allowance)) {
@@ -143,9 +143,8 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
 
     if (dialog.step === 'approvalPending') {
       return 'Approving... 1 of 2';
-    } else {
-      return `Processing... ${dialog.withApproval ? '2 of 2' : ''}`;
     }
+    return `Processing... ${dialog.withApproval ? '2 of 2' : ''}`;
   };
 
   return (

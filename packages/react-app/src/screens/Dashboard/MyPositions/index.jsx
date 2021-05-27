@@ -1,16 +1,17 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import './MyPositions.css';
 import { formatUnits } from '@ethersproject/units';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import { useContractReader } from '../../hooks';
-import { getBorrowId, getCollateralId } from '../../helpers';
+import { useContractReader } from '../../../hooks';
+import { getBorrowId, getCollateralId } from '../../../helpers';
 
-import PositionElement, { PositionActions } from '../../components/PositionElement';
-import ProvidersList from '../../components/ProvidersList';
-import AlphaWarning from '../../components/AlphaWarning';
+import PositionElement, { PositionActions } from '../../../components/PositionElement';
+import ProvidersList from '../../../components/ProvidersList';
+import AlphaWarning from '../../../components/AlphaWarning';
+
+import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
@@ -59,16 +60,16 @@ function MyPositions({ contracts, address }) {
           <div className="position-board">
             {hasUsdcPosition || hasDaiPosition ? (
               <Grid item className="legend">
-                <span className="empty-tab"></span>
+                <span className="empty-tab" />
                 <div className="legend-elements">
                   <span>Collateral</span>
                   <span>Debt</span>
                   <span>Health Factor</span>
                 </div>
-                <span className="empty-button"></span>
+                <span className="empty-button" />
               </Grid>
             ) : (
-              <div style={{ height: '2.5rem' }}></div>
+              <div style={{ height: '2.5rem' }} />
             )}
             {hasDaiPosition ? (
               <Grid item className="one-position">
