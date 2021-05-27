@@ -1,11 +1,12 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, NavLink, Route } from 'react-router-dom';
 import './App.css';
 import { ProvideAuth } from './hooks';
 
 import Home from './screens/Home';
 import Dashboard from './screens/Dashboard';
 import Infos from './screens/Infos';
+import About from './screens/About';
 import Team from './screens/Team';
 import Error from './screens/Error';
 
@@ -25,6 +26,11 @@ function App() {
           <Team />
         </Route>
         <Route path="/about">
+          <ProvideAuth>
+            <About />
+          </ProvideAuth>
+        </Route>
+        <Route path="/info">
           <Infos />
         </Route>
         <Route path="*">
@@ -62,6 +68,9 @@ function App() {
 
         <nav className="footer-links">
           <ul>
+            <li>
+              <NavLink to="/about">About</NavLink>
+            </li>
             <li>
               <a href="https://docs.fujidao.org" target="_blank" rel="noopener noreferrer">
                 Documentation
