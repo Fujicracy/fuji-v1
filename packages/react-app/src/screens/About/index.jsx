@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme =>
     item: {
       textAlign: 'center',
       padding: theme.spacing(3, 1, 0, 2),
-      marginBottom: theme.spacing(20),
+      marginBottom: theme.spacing(4),
     },
     title: {
       fontWeight: '900',
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: theme.spacing(2),
+      paddingBottom: theme.spacing(3),
     },
     partnerImage: {
       maxWidth: '80%',
@@ -158,7 +158,7 @@ function Infos() {
             </Grid>
           </Grid>
 
-          <Grid container className={classes.item}>
+          <Grid container className={classes.item} spacing={4}>
             <Grid item md={12}>
               <Typography className={classes.title}>Partners</Typography>
             </Grid>
