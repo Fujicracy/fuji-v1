@@ -105,12 +105,12 @@ function Infos() {
                 <a
                   href="https://www.linkedin.com/in/daigaro-cota/"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <img src={linkedinIcon} alt="Daigaro's Linkedin" />
                 </a>
               </div>
-              <a href="https://twitter.com/DaigaroC" target="_blank" rel="noreferrer">
+              <a href="https://twitter.com/DaigaroC" target="_blank" rel="noreferrer noopener">
                 <Typography className={classes.twitter}>@DaigaroC</Typography>
               </a>
             </Grid>
@@ -125,13 +125,13 @@ function Infos() {
                 <a
                   href="https://www.linkedin.com/in/boyan-barakov-3b91891a/"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <img src={linkedinIcon} alt="Boyan's Linkedin" />
                 </a>
               </div>
 
-              <a href="https://twitter.com/BoyanBarakov" target="_blank" rel="noreferrer">
+              <a href="https://twitter.com/BoyanBarakov" target="_blank" rel="noreferrer noopener">
                 <Typography className={classes.twitter}>@BoyanBarakov</Typography>
               </a>
             </Grid>
@@ -146,13 +146,17 @@ function Infos() {
                 <a
                   href="https://www.linkedin.com/in/edgar-moreau-1b074b133/"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer noopener"
                 >
                   <img src={linkedinIcon} alt="Edgar's Linkedin" />
                 </a>
               </div>
 
-              <a href="https://twitter.com/TheEdgarMoreau" target="_blank" rel="noreferrer">
+              <a
+                href="https://twitter.com/TheEdgarMoreau"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 <Typography className={classes.twitter}>@TheEdgarMoreau</Typography>
               </a>
             </Grid>
