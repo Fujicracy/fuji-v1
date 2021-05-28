@@ -16,7 +16,7 @@ function Loader() {
       speed="1"
       loop
       autoplay
-    ></lottie-player>
+    />
   );
 }
 

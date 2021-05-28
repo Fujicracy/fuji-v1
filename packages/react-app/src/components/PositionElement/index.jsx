@@ -43,10 +43,10 @@ function PositionElement({ position, actionType }) {
   const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : null;
 
   useEffect(() => {
-    const { healthFactor } = PositionRatios(position, price);
+    const ratios = PositionRatios(position, price);
 
-    setHealthFactor(healthFactor);
-    const hr = logslider(healthFactor);
+    setHealthFactor(ratios.healthFactor);
+    const hr = logslider(ratios.healthFactor);
     setHealthRatio(hr);
   }, [price, position]);
 

@@ -56,14 +56,14 @@ function CollaterizationIndicator({ position }) {
   const [liqPrice, setLiqPrice] = useState(0);
 
   useEffect(() => {
-    const { healthFactor, liqPrice, ltv, borrowLimit } = PositionRatios(position, price);
+    const ratios = PositionRatios(position, price);
 
-    setHealthFactor(healthFactor);
-    setLiqPrice(liqPrice);
-    setLtv(ltv);
-    setLimit(borrowLimit);
+    setHealthFactor(ratios.healthFactor);
+    setLiqPrice(ratios.liqPrice);
+    setLtv(ratios.ltv);
+    setLimit(ratios.borrowLimit);
 
-    const hr = logslider(healthFactor);
+    const hr = logslider(ratios.healthFactor);
     setOldHealthRatio(healthRatio);
     setHealthRatio(hr);
   }, [price, position, healthRatio]);
