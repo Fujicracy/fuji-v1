@@ -12,7 +12,7 @@ export default function useContractReader(
   formatter,
   onChange,
 ) {
-  let adjustPollTime = 2000;
+  let adjustPollTime = 10000;
   if (pollTime) {
     adjustPollTime = pollTime;
   } else if (!pollTime && typeof args === 'number') {
