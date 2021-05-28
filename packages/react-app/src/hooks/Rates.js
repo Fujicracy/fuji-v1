@@ -15,6 +15,13 @@ export default function useRates(contracts) {
   const dydxDai = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [DAI_ADDRESS]);
   const dydxUsdc = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [USDC_ADDRESS]);
 
+  const ironbankDai = useContractReader(contracts, 'ProviderIronBank', 'getBorrowRateFor', [
+    DAI_ADDRESS,
+  ]);
+  const ironbankUsdc = useContractReader(contracts, 'ProviderIronBank', 'getBorrowRateFor', [
+    USDC_ADDRESS,
+  ]);
+
   const formatRate = rate => {
     const r = (parseFloat(`${rate}`) / 1e27) * 100;
     return rate ? r : undefined;
@@ -41,6 +48,10 @@ export default function useRates(contracts) {
     dydx: {
       dai: formatRate(dydxDai),
       usdc: formatRate(dydxUsdc),
+    },
+    ironbank: {
+      dai: formatRate(ironbankDai),
+      usdc: formatRate(ironbankUsdc),
     },
     fuji: {
       dai: formatFujiRate(minDaiRate),

@@ -45,7 +45,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const providerAave = contracts && contracts.ProviderAave;
   const providerCompound = contracts && contracts.ProviderCompound;
-  // const providerDYDX = contracts && contracts["ProviderDYDX"];
+  const providerDYDX = contracts && contracts.ProviderDYDX;
 
   // const rates = useRates(contracts);
 
@@ -355,7 +355,9 @@ function InitBorrow({ contracts, provider, address }) {
                     ? 'Aave'
                     : activeProvider === providerCompound.address
                     ? 'Compound'
-                    : 'dYdX'}
+                    : activeProvider === providerDYDX.address
+                    ? 'dYdX'
+                    : 'Iron Bank'}
                 </span>
                 .
               </Typography>
