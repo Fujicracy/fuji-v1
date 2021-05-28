@@ -2,6 +2,7 @@
 import linkedinIcon from './icons/linkedin.svg';
 
 // App Images
+import fujiLanding from './images/home/fujiLanding.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
@@ -14,6 +15,7 @@ export {
   // Icons
   linkedinIcon,
   // Images
+  fujiLanding,
   partnerDelphi,
   partnerMaven,
   partnerCapital,
