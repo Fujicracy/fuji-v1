@@ -1,18 +1,16 @@
-const fs = require("fs");
-const chalk = require("chalk");
+const fs = require('fs');
+const chalk = require('chalk');
 
-const artifactsDir = "./packages/hardhat/artifacts";
-const sourcesDir = "./packages/hardhat/contracts";
+const artifactsDir = './packages/hardhat/artifacts';
+const sourcesDir = './packages/hardhat/contracts';
 
-const reactAppDir = "./packages/react-app/src/contracts";
-const botsDir = "./packages/bots/contracts";
+const reactAppDir = './packages/react-app/src/contracts';
+const botsDir = './packages/bots/contracts';
 
 function getAddress(contractName) {
   try {
-    return fs
-      .readFileSync(`${artifactsDir}/${contractName}.address`)
-      .toString();
-  } catch(e) {
+    return fs.readFileSync(`${artifactsDir}/${contractName}.address`).toString();
+  } catch (e) {
     return null;
   }
 }
@@ -20,55 +18,47 @@ function getAddress(contractName) {
 function publishContract(contractName, dir) {
   const address = getAddress(contractName);
   if (!address) {
-    console.log(
-      chalk.red("Not found"),
-      chalk.cyan(contractName)
-    );
+    console.log(chalk.red('Not found'), chalk.cyan(contractName));
     return false;
   }
 
   console.log(
-    "Publishing",
+    'Publishing',
     chalk.cyan(contractName),
-    "to",
-    chalk.yellow('"react-app" and "bots" workspaces')
+    'to',
+    chalk.yellow('"react-app" and "bots" workspaces'),
   );
   try {
     let contract;
     if (dir) {
-      contract = fs
-        .readFileSync(`${artifactsDir}/contracts/${dir}/${contractName}.sol/${contractName}.json`);
-    }
-    else {
-      contract = fs
-        .readFileSync(`${artifactsDir}/contracts/${contractName}.sol/${contractName}.json`);
+      contract = fs.readFileSync(
+        `${artifactsDir}/contracts/${dir}/${contractName}.sol/${contractName}.json`,
+      );
+    } else {
+      contract = fs.readFileSync(
+        `${artifactsDir}/contracts/${contractName}.sol/${contractName}.json`,
+      );
     }
     contract = JSON.parse(contract.toString());
 
-    fs.writeFileSync(
-      `${reactAppDir}/${contractName}.address.js`,
-      `module.exports = "${address}";`
-    );
+    fs.writeFileSync(`${reactAppDir}/${contractName}.address.js`, `module.exports = "${address}";`);
     fs.writeFileSync(
       `${reactAppDir}/${contractName}.abi.js`,
-      `module.exports = ${JSON.stringify(contract.abi, null, 2)};`
+      `module.exports = ${JSON.stringify(contract.abi, null, 2)};`,
     );
     fs.writeFileSync(
       `${reactAppDir}/${contractName}.bytecode.js`,
-      `module.exports = "${contract.bytecode}";`
+      `module.exports = "${contract.bytecode}";`,
     );
 
-    fs.writeFileSync(
-      `${botsDir}/${contractName}.address.js`,
-      `module.exports = "${address}";`
-    );
+    fs.writeFileSync(`${botsDir}/${contractName}.address.js`, `module.exports = "${address}";`);
     fs.writeFileSync(
       `${botsDir}/${contractName}.abi.js`,
-      `module.exports = ${JSON.stringify(contract.abi, null, 2)};`
+      `module.exports = ${JSON.stringify(contract.abi, null, 2)};`,
     );
     fs.writeFileSync(
       `${botsDir}/${contractName}.bytecode.js`,
-      `module.exports = "${contract.bytecode}";`
+      `module.exports = "${contract.bytecode}";`,
     );
 
     return true;
@@ -80,9 +70,9 @@ function publishContract(contractName, dir) {
 
 function findMoreSolFiles(path) {
   const list = [];
-  fs.readdirSync(path).forEach((file) => {
-    if (file.indexOf(".sol") >= 0) {
-      const contractName = file.replace(".sol", "");
+  fs.readdirSync(path).forEach(file => {
+    if (file.indexOf('.sol') >= 0) {
+      const contractName = file.replace('.sol', '');
       list.push(contractName);
     }
   });
@@ -96,41 +86,40 @@ async function main() {
   }
 
   const finalContractList = [];
-  fs.readdirSync(sourcesDir).forEach((file) => {
-    if (file.indexOf(".sol") >= 0) {
-      const contractName = file.replace(".sol", "");
+  fs.readdirSync(sourcesDir).forEach(file => {
+    if (file.indexOf('.sol') >= 0) {
+      const contractName = file.replace('.sol', '');
       if (publishContract(contractName)) {
         finalContractList.push(contractName);
       }
     }
     // if it's a directory
-    else if (file.indexOf(".") === -1) {
-      findMoreSolFiles(`${sourcesDir}/${file}`)
-        .forEach((contractName) => {
-          if (publishContract(contractName, file)) {
-            finalContractList.push(contractName);
-          }
-        });
+    else if (file.indexOf('.') === -1) {
+      findMoreSolFiles(`${sourcesDir}/${file}`).forEach(contractName => {
+        if (publishContract(contractName, file)) {
+          finalContractList.push(contractName);
+        }
+      });
     }
   });
   console.log(finalContractList);
   fs.writeFileSync(
     `${reactAppDir}/contracts.js`,
-    `module.exports = ${JSON.stringify(finalContractList)};`
+    `module.exports = ${JSON.stringify(finalContractList)};`,
   );
   fs.writeFileSync(
     `${botsDir}/contracts.js`,
-    `module.exports = ${JSON.stringify(finalContractList)};`
+    `module.exports = ${JSON.stringify(finalContractList)};`,
   );
   fs.writeFileSync(
     `./tasks/contracts.js`,
-    `module.exports = ${JSON.stringify(finalContractList)};`
+    `module.exports = ${JSON.stringify(finalContractList)};`,
   );
 }
 
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   });

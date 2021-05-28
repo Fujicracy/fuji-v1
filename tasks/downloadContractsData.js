@@ -1,6 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 
-const contractList = require("./contracts.js");
+const contractList = require('./contracts.js');
 
 // The ID of GCS bucket
 const bucketName = 'fuji-mainnet-eth';
@@ -10,20 +10,22 @@ const storage = new Storage();
 
 async function download(file) {
   try {
-    await storage.bucket(bucketName)
+    await storage
+      .bucket(bucketName)
       .file(`contracts/${file}`)
       .download({
-        destination: `./packages/react-app/src/contracts/${file}`
+        destination: `./packages/react-app/src/contracts/${file}`,
       });
     console.log(`Downloaded ${file} to "react-app/src/contracts"`);
 
-    await storage.bucket(bucketName)
+    await storage
+      .bucket(bucketName)
       .file(`contracts/${file}`)
       .download({
-        destination: `./packages/bots/contracts/${file}`
+        destination: `./packages/bots/contracts/${file}`,
       });
     console.log(`Downloaded ${file}  to "bots/contracts"`);
-  } catch(e) {
+  } catch (e) {
     console.error(e.message);
   }
 }

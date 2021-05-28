@@ -1,6 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 
-const contractList = require("./contracts.js");
+const contractList = require('./contracts.js');
 
 // The ID of GCS bucket
 const bucketName = 'fuji-mainnet-eth';
@@ -10,12 +10,11 @@ const storage = new Storage({ keyFilename: './goog-auth.json' });
 
 async function upload(file) {
   try {
-    await storage.bucket(bucketName)
-      .upload(`./packages/react-app/src/contracts/${file}`, {
-        destination: `contracts/${file}`
-      });
+    await storage.bucket(bucketName).upload(`./packages/react-app/src/contracts/${file}`, {
+      destination: `contracts/${file}`,
+    });
     console.log(`Uploaded ${file} to bucket ${bucketName}`);
-  } catch(e) {
+  } catch (e) {
     console.error(e.message);
   }
 }
@@ -31,4 +30,3 @@ async function uploadContractsData() {
 }
 
 uploadContractsData();
-
