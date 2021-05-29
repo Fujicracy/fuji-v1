@@ -53,6 +53,24 @@ async function checkUserPosition(addr, vault, contracts) {
   };
 }
 
+const longSearchBorrowers = async (vault, events) => {
+  const filterBorrowers = vault.filters.Borrow();
+  const events = await vault.queryFilter(filterBorrowers);
+  const borrowers = events
+    .map(e => e.args.userAddrs)
+    .reduce((acc, userAddr) => (acc.includes(userAddr) ? acc : [...acc, userAddr]), []);
+  return borrowers;
+};
+
+const connectRedis = async () => {
+  const redis = require('redis');
+  const client = redis.createClient();
+
+  client.on('error', function (error) {
+    console.error(error);
+  });
+};
+
 async function checkForLiquidations() {
   const contracts = await loadContracts(signer);
 
@@ -64,11 +82,11 @@ async function checkForLiquidations() {
     const { borrowAsset } = await vault.vAssets();
     const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
 
-    const filterBorrowers = vault.filters.Borrow();
-    const events = await vault.queryFilter(filterBorrowers);
-    const borrowers = events
-      .map(e => e.args.userAddrs)
-      .reduce((acc, userAddr) => (acc.includes(userAddr) ? acc : [...acc, userAddr]), []);
+    let borrowers;
+    if (process.env.REDIS) {
+    } else {
+      borrowers = await longSearchBorrowers(vault, events);
+    }
 
     const positions = [];
     const stats = {
