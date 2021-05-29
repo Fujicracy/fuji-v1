@@ -81,18 +81,17 @@ function Infos() {
       <Container className={classes.container}>
         <Grid container className={classes.section}>
           <Grid item md={12} className={classes.item}>
-            <Typography className={classes.title}>Our Vision</Typography>
+            <Typography className={classes.title}>Vision</Typography>
             <Typography variant="subtitle1" className={classes.text}>
-              While FujiDAO is currently undergoing with initial updates and improvements by the
-              core team, our long-term vision tend towards a real Decentralized Autonomous
-              Organization, involving his community through governance mechanisms. Lorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Sed metus magna.
+              We started FujiDAO&apos;s borrowing agregator as a hackathon project and its alpha
+              version is now live on mainnet. Our goal is to develop around it a community that will
+              evolve towards a fully decentrelized autonoumous organisation.
             </Typography>
           </Grid>
 
           <Grid container className={classes.item}>
             <Grid item xs={12}>
-              <Typography className={classes.title}>Core Team</Typography>
+              <Typography className={classes.title}>Team</Typography>
             </Grid>
 
             <Grid item xs={4}>
@@ -101,7 +100,7 @@ function Infos() {
               <Typography className={classes.subtitle}>Daigaro Cota</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">Contracts Dev&nbsp;</Typography>
+                <Typography variant="h6">Technology&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/daigaro-cota/"
                   target="_blank"
@@ -121,7 +120,7 @@ function Infos() {
               <Typography className={classes.subtitle}>Boyan Barakov</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">.sol hiker&nbsp;</Typography>
+                <Typography variant="h6">Product&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/boyan-barakov-3b91891a/"
                   target="_blank"
@@ -142,7 +141,7 @@ function Infos() {
               <Typography className={classes.subtitle}>Edgar Moreau</Typography>
 
               <div className={classes.meta}>
-                <Typography variant="h6">DeFi Magician&nbsp;</Typography>
+                <Typography variant="h6">Magic&nbsp;</Typography>
                 <a
                   href="https://www.linkedin.com/in/edgar-moreau-1b074b133/"
                   target="_blank"
