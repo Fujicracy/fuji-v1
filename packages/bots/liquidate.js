@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 require('dotenv').config();
 
 const chalk = require('chalk');
@@ -53,7 +54,7 @@ async function checkUserPosition(addr, vault, contracts) {
   };
 }
 
-const longSearchBorrowers = async (vault, events) => {
+const longSearchBorrowers = async vault => {
   const filterBorrowers = vault.filters.Borrow();
   const events = await vault.queryFilter(filterBorrowers);
   const borrowers = events
@@ -64,11 +65,13 @@ const longSearchBorrowers = async (vault, events) => {
 
 const connectRedis = async () => {
   const redis = require('redis');
-  const client = redis.createClient();
+  const client = redis.createClient({ port: 6379 });
 
   client.on('error', function (error) {
     console.error(error);
   });
+
+  return client;
 };
 
 async function checkForLiquidations() {
@@ -84,8 +87,9 @@ async function checkForLiquidations() {
 
     let borrowers;
     if (process.env.REDIS) {
+      const client = connectRedis();
     } else {
-      borrowers = await longSearchBorrowers(vault, events);
+      borrowers = await longSearchBorrowers(vault);
     }
 
     const positions = [];
@@ -120,6 +124,7 @@ async function checkForLiquidations() {
 }
 
 function main() {
+  console.log(process.env);
   console.log('Start checking for liquidations...');
   checkForLiquidations();
   setInterval(checkForLiquidations, 60000);
