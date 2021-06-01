@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '../../hooks';
+import { useAuth } from 'hooks';
 
 function Header() {
   const [logout, setLogout] = useState(false);
