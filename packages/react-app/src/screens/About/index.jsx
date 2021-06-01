@@ -85,7 +85,7 @@ function Infos() {
             <Typography variant="subtitle1" className={classes.text}>
               We started FujiDAO&apos;s borrowing agregator as a hackathon project and its alpha
               version is now live on mainnet. Our goal is to develop around it a community that will
-              evolve towards a fully decentrelized autonoumous organisation.
+              evolve towards a fully decentralized autonoumous organisation.
             </Typography>
           </Grid>
 
