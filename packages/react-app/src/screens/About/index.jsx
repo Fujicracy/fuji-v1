@@ -83,9 +83,9 @@ function Infos() {
           <Grid item md={12} className={classes.item}>
             <Typography className={classes.title}>Vision</Typography>
             <Typography variant="subtitle1" className={classes.text}>
-              We started FujiDAO&apos;s borrowing agregator as a hackathon project and its alpha
+              We started FujiDAO&apos;s borrowing aggregator as a hackathon project and its alpha
               version is now live on mainnet. Our goal is to develop around it a community that will
-              evolve towards a fully decentralized autonoumous organisation.
+              evolve towards a fully decentralized autonomous organisation.
             </Typography>
           </Grid>
 
