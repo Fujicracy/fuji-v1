@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import Header from '../../components/Header';
-import {
-  useContractLoader,
-  useExternalContractLoader,
-  useContractReader,
-  useAuth,
-} from '../../hooks';
-import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from '../../constants';
-import { getCollateralId } from '../../helpers';
+import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from 'constants/providers';
+import { Loader, Header } from 'components';
+import { useContractLoader, useExternalContractLoader, useContractReader, useAuth } from 'hooks';
+import { getCollateralId } from 'helpers';
+
+import Error from '../Error';
 
 import MyPositions from './MyPositions';
 import ManagePosition from './ManagePosition';
 import InitBorrow from './InitBorrow';
 import Simulation from './Simulation';
-import Error from '../Error';
-import Loader from '../../components/Loader';
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
