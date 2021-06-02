@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
-import { Link } from 'react-router-dom';
+import { APP_URL } from '../../constants';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';
@@ -24,9 +24,9 @@ function Home() {
           >
             Learn
           </a>
-          <Link to="/dashboard" className="main-action">
+          <a href={`${APP_URL}dashboard`} className="main-action">
             App
-          </Link>
+          </a>
         </div>
       </div>
     </animated.div>
