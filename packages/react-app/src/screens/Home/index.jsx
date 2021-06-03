@@ -24,7 +24,7 @@ function Home() {
           >
             Learn
           </a>
-          <a href={`${APP_URL}dashboard`} className="main-action">
+          <a href={`${APP_URL}/dashboard`} className="main-action">
             App
           </a>
         </div>
