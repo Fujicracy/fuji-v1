@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import { themeGet, maxWidth } from 'styled-system';
+import { maxWidth } from 'styled-system';
 import { mapToTheme } from 'styled-map';
 
 const Button = styled(Box).attrs({
@@ -60,6 +61,7 @@ Button.defaultProps = {
 
 Button.propTypes = {
   centered: PropTypes.bool,
+  minWidth: PropTypes.number,
   shadow: PropTypes.bool,
 };
 
