@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import { maxWidth } from 'styled-system';
+import { maxWidth, fontSize, space } from 'styled-system';
 import { mapToTheme } from 'styled-map';
 
 const Button = styled(Box).attrs({
   as: 'button',
   type: 'button',
   px: 4,
+  fontSize: 4,
 })`
   height: 40px;
   border-radius: 4px;
@@ -17,14 +18,19 @@ const Button = styled(Box).attrs({
   outline: none;
   box-shadow: none;
   display: inline-block;
-  border: none;
-  font-weight: normal;
+  font-weight: bold;
   z-index: 0;
   color: ${mapToTheme('buttons.color')};
-  background: ${mapToTheme('buttons.bg')};
+  border: ${props => (props.outline ? mapToTheme('buttons.border') : 'none')};
+  background: ${props => (props.outline ? 'none' : mapToTheme('buttons.bg'))};
   transition: all ${themeGet('transitionTime')} ease;
-  box-shadow: ${mapToTheme('buttons.shadow')};
+  box-shadow: ${props => !props.outline && mapToTheme('buttons.shadow')};
   cursor: pointer;
+  ${props =>
+    props.block &&
+    css`
+      width: 100%;
+    `}
 
   svg {
     position: absolute;
@@ -43,14 +49,15 @@ const Button = styled(Box).attrs({
   }
 
   &:hover:enabled {
-    background: ${mapToTheme('buttons.hover')};
-    color: ${mapToTheme('buttons.colorHover')};
+    opacity: 0.8;
   }
 
   &:active:enabled {
     background: ${mapToTheme('buttons.hover')};
   }
   ${maxWidth}
+  ${fontSize}
+  ${space}
 `;
 
 Button.defaultProps = {

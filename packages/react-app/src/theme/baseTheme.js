@@ -14,8 +14,8 @@ const baseTheme = {
 
   breakpointNames: BREAKPOINT_NAMES,
 
-  //      0  1  2  3   4   5   6
-  space: [0, 4, 8, 16, 32, 64, 128],
+  //      0  1  2  3   4   5   6,  7
+  space: [0, 4, 8, 16, 24, 32, 64, 128],
 
   //          0   1   2   3   4   5   6   7
   fontSizes: [10, 12, 14, 16, 20, 24, 28, 36],

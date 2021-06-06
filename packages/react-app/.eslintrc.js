@@ -14,11 +14,11 @@ module.exports = {
     ecmaVersion: 11,
   },
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        moduleDirectory: ["node_modules", "src"]
-      }
-    }
+        moduleDirectory: ['node_modules', 'src'],
+      },
+    },
   },
   extends: ['airbnb', 'plugin:prettier/recommended', 'prettier'],
   plugins: ['prettier', 'json', 'react', 'react-hooks'],
@@ -55,6 +55,7 @@ module.exports = {
     ],
     'react/destructuring-assignment': 'off',
     'no-console': 'off',
+    'no-debugger': 'off',
     'no-nested-ternary': 'off',
     'jsx-a11y/accessible-emoji': ['off'],
     'jsx-a11y/label-has-associated-control': ['off'],
