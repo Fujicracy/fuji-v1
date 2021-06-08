@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from 'hooks';
+import { NavLink } from 'react-router-dom';
+import { LANDING_URL } from '../../constants/providers';
+import { useAuth } from '../../hooks';
 
 function Header() {
   const [logout, setLogout] = useState(false);
@@ -8,9 +9,9 @@ function Header() {
 
   return (
     <header>
-      <Link to="/" className="logo">
+      <a href={LANDING_URL} className="logo">
         <img alt="logo" src="/logo-title.svg" />
-      </Link>
+      </a>
 
       <nav>
         <ul>
