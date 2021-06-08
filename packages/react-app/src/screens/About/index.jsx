@@ -10,8 +10,8 @@ import {
   partnerCapital,
   partnerMaven,
   partnerSpartan,
-} from '../../assets/images';
-import Header from '../../components/Header';
+} from 'assets/images';
+import { Header } from 'components';
 
 const useStyles = makeStyles(theme =>
   createStyles({

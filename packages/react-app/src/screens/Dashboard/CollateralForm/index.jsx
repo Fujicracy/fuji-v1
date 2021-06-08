@@ -17,15 +17,10 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {
-  Transactor,
-  GasEstimator,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-} from '../../../helpers';
-import { useBalance, useContractReader, useGasPrice } from '../../../hooks';
-import { ETH_CAP_VALUE } from '../../../constants';
+import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from 'helpers';
+import { useBalance, useContractReader, useGasPrice } from 'hooks';
+import { ETH_CAP_VALUE } from 'constants/providers';
+
 import DeltaPositionRatios from '../DeltaPositionRatios';
 
 const Action = {

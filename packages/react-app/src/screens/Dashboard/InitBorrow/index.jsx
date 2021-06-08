@@ -16,6 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
+import { ETH_CAP_VALUE } from 'constants/providers';
 import {
   Transactor,
   getBorrowId,
@@ -24,7 +25,6 @@ import {
   GasEstimator,
 } from '../../../helpers';
 import { useBalance, useContractReader, useGasPrice } from '../../../hooks';
-import { ETH_CAP_VALUE } from '../../../constants';
 import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
 import ProvidersList from '../../../components/ProvidersList';
 import HowItWorks from '../../../components/HowItWorks';

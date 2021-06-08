@@ -13,6 +13,13 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 11,
   },
+  settings: {
+    "import/resolver": {
+      node: {
+        moduleDirectory: ["node_modules", "src"]
+      }
+    }
+  },
   extends: ['airbnb', 'plugin:prettier/recommended', 'prettier'],
   plugins: ['prettier', 'json', 'react', 'react-hooks'],
   rules: {

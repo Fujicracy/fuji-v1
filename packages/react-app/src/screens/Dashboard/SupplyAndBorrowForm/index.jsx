@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import {
+  TextField,
+  Grid,
+  Avatar,
+  Button,
+  Typography,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CircularProgress,
+} from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from '../../../helpers';
-import { useBalance, useContractReader } from '../../../hooks';
-import { ETH_CAP_VALUE } from '../../../constants';
+import { Transactor, getBorrowId, getCollateralId, getVaultName } from 'helpers';
+import { useBalance, useContractReader } from 'hooks';
+import { ETH_CAP_VALUE } from 'constants/providers';
 
 function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();

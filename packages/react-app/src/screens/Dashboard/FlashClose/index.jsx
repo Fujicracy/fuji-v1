@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { parseUnits } from '@ethersproject/units';
 // import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CircularProgress,
+} from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
-import { DAI_ADDRESS, USDC_ADDRESS } from '../../../constants';
-import { useGasPrice } from '../../../hooks';
-import { Transactor, GasEstimator, getVaultName } from '../../../helpers';
+import { DAI_ADDRESS, USDC_ADDRESS } from 'constants/providers';
+import { useGasPrice } from 'hooks';
+import { Transactor, GasEstimator, getVaultName } from 'helpers';
 
 import './styles.css';
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-
-import { NETWORK, CHAIN_ID } from '../../constants';
-import { useAuth } from '../../hooks';
+import { NETWORK, CHAIN_ID } from 'constants/providers';
+import { useAuth } from 'hooks';
 
 import './styles.css';
 

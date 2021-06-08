@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
-import { APP_URL } from '../../constants';
+import { APP_URL } from '../../constants/providers';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';

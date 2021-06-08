@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LANDING_URL } from '../../constants';
+import { LANDING_URL } from '../../constants/providers';
 import { useAuth } from '../../hooks';
 
 function Header() {

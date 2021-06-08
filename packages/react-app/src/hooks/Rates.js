@@ -1,5 +1,6 @@
+import { DAI_ADDRESS, USDC_ADDRESS } from 'constants/providers';
+
 import useContractReader from './ContractReader';
-import { DAI_ADDRESS, USDC_ADDRESS } from '../constants';
 
 export default function useRates(contracts) {
   const aaveDai = useContractReader(contracts, 'ProviderAave', 'getBorrowRateFor', [DAI_ADDRESS]);
