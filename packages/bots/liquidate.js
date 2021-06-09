@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 require('dotenv').config();
 
+const retry = require('async-retry');
 const chalk = require('chalk');
 const { ethers, Wallet } = require('ethers');
 const {
@@ -24,7 +25,6 @@ if (process.env.INFURA) {
 }
 
 let signer;
-// console.log(provider);
 if (process.env.PRIVATE_KEY) {
   signer = new Wallet(process.env.PRIVATE_KEY, provider);
 } else {
@@ -147,11 +147,36 @@ async function checkForLiquidations() {
   }
 }
 
-function main() {
-  // console.log(process.env);
+function delay(s) {
+  return new Promise(r => setTimeout(r, s * 1000));
+}
+
+async function main() {
   console.log('Start checking for liquidations...');
-  checkForLiquidations();
-  setInterval(checkForLiquidations, 60000);
+
+  const contracts = await loadContracts(signer);
+
+  while (true) {
+    try {
+      await retry(
+        async () => {
+          await checkForLiquidations();
+        },
+        {
+          retries: process.env.RETRIES_COUNT || 2, //default 2 retries
+          minTimeout: (process.env.RETRIES_TIMEOUT || 2) * 1000, // delay between retries in ms, default 2000
+          randomize: false,
+          onRetry: error => {
+            console.log('An error was thrown in the execution loop - retrying', error);
+          },
+        },
+      );
+    } catch (error) {
+      console.log('Unsuccessful retries');
+    }
+    // delay, default 1 minutes
+    await delay(process.env.DELAY || 60);
+  }
 }
 
 main();
