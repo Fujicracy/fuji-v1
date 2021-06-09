@@ -4,6 +4,11 @@ require('dotenv').config();
 const chalk = require('chalk');
 const { ethers, Wallet } = require('ethers');
 const {
+  longSearchBorrowers,
+  shortSearchBorrowers,
+  connectRedis,
+} = require('./utils/liquidateHelpers');
+const {
   loadContracts,
   // getLiquidationProviderIndex,
   USDC_ADDR,
@@ -11,8 +16,15 @@ const {
 
 const { formatEther, formatUnits } = ethers.utils;
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+let provider;
+if (process.env.INFURA) {
+  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
+} else {
+  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+}
+
 let signer;
+// console.log(provider);
 if (process.env.PRIVATE_KEY) {
   signer = new Wallet(process.env.PRIVATE_KEY, provider);
 } else {
@@ -54,41 +66,53 @@ async function checkUserPosition(addr, vault, contracts) {
   };
 }
 
-const longSearchBorrowers = async vault => {
-  const filterBorrowers = vault.filters.Borrow();
-  const events = await vault.queryFilter(filterBorrowers);
-  const borrowers = events
-    .map(e => e.args.userAddrs)
-    .reduce((acc, userAddr) => (acc.includes(userAddr) ? acc : [...acc, userAddr]), []);
-  return borrowers;
-};
-
-const connectRedis = async () => {
-  const redis = require('redis');
-  const client = redis.createClient({ port: 6379 });
-
-  client.on('error', function (error) {
-    console.error(error);
-  });
-
-  return client;
-};
-
 async function checkForLiquidations() {
   const contracts = await loadContracts(signer);
+
+  console.log('contracts');
 
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
-    const { borrowAsset } = await vault.vAssets();
+
+    let borrowAsset;
+    try {
+      const res = await vault.owner();
+      console.log(res);
+      borrowAsset = res.borrowAsset;
+    } catch (err) {
+      console.log(err);
+    }
     const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
 
+    console.log('find borrowers');
     let borrowers;
     if (process.env.REDIS) {
-      const client = connectRedis();
+      console.log('using redis');
+      const client = await connectRedis();
+      borrowers = await client.get('borrowers');
+
+      if (!borrowers) {
+        console.log('no cached borrowers');
+        borrowers = await longSearchBorrowers(vault);
+        await client.set('borrowers', JSON.stringify(borrowers));
+      } else {
+        borrowers = JSON.parse(borrowers);
+        console.log(borrowers);
+        console.log('cached borrowers, fetch only new');
+        const newBorrowers = await shortSearchBorrowers(vault);
+        newBorrowers.forEach(e => {
+          if (!borrowers.includes(e)) {
+            console.log('new borrower:', e);
+            borrowers.push(e);
+          }
+        });
+        await client.set('borrowers', JSON.stringify(borrowers));
+      }
     } else {
+      console.log('not using redis');
       borrowers = await longSearchBorrowers(vault);
     }
 
@@ -124,7 +148,7 @@ async function checkForLiquidations() {
 }
 
 function main() {
-  console.log(process.env);
+  // console.log(process.env);
   console.log('Start checking for liquidations...');
   checkForLiquidations();
   setInterval(checkForLiquidations, 60000);
