@@ -49,7 +49,7 @@ module.exports = {
   networks: {
     localhost: {
       url: "http://localhost:8545",
-      timeout: 80000,
+      timeout: 200000,
       /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
@@ -103,9 +103,11 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   gasReporter: {
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    //coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     currency: "USD",
-    enabled: !!process.env.REPORT_GAS,
+    //enabled: !!process.env.REPORT_GAS,
+    gasPrice: 20,
+    enabled: true
   },
   solidity: {
     compilers: [
@@ -184,7 +186,7 @@ module.exports = {
     ],
   },
   mocha: {
-    timeout: 80000,
+    timeout: 200000,
   },
 };
 
