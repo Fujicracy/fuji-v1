@@ -5,17 +5,17 @@ const retry = require('async-retry');
 const chalk = require('chalk');
 const { ethers, Wallet } = require('ethers');
 const {
-  longSearchBorrowers,
-  shortSearchBorrowers,
+  searchBorrowers,
   connectRedis,
+  pushNew,
+  buildPositions,
+  logStatus,
 } = require('./utils/liquidateHelpers');
 const {
   loadContracts,
   // getLiquidationProviderIndex,
   USDC_ADDR,
 } = require('./utils');
-
-const { formatEther, formatUnits } = ethers.utils;
 
 let provider;
 if (process.env.INFURA) {
@@ -33,22 +33,22 @@ if (process.env.PRIVATE_KEY) {
 
 const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
 
-// async function liquidate(addr, vault, contracts) {
-// console.log(
-// "Position",
-// chalk.cyan(addr),
-// chalk.red("-> proceed to liquidation")
-// );
-// const index = await getLiquidationProviderIndex(vault, contracts);
-// await contracts.Fliquidator.connect(signer)
-// .flashLiquidate(addr, vault.address, index)
-// .catch((e) => {
-// console.log(e);
-/// / const body = JSON.parse(e.body);
-/// / const { message } = body.error;
-/// / console.log(`----> Liquidation failed: ${message}`);
-// });
-// }
+async function liquidateAll(addresses, vault, contracts) {
+  // console.log('Position', chalk.cyan(addr), chalk.red('-> proceed to liquidation'));
+  const index = await getLiquidationProviderIndex(vault, contracts);
+  try {
+    await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
+      addresses,
+      vault.address,
+      index,
+    );
+  } catch (err) {
+    console.log(err);
+    // / / const body = JSON.parse(e.body);
+    // / / const { message } = body.error;
+    // / / console.log(`----> Liquidation failed: ${message}`);
+  }
+}
 
 async function checkUserPosition(addr, vault, contracts) {
   const { borrowID, collateralID } = await vault.vAssets();
@@ -76,15 +76,7 @@ async function checkForLiquidations() {
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
-
-    let borrowAsset;
-    try {
-      const res = await vault.owner();
-      console.log(res);
-      borrowAsset = res.borrowAsset;
-    } catch (err) {
-      console.log(err);
-    }
+    const { borrowAsset } = await vault.vAssets();
     const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
 
     console.log('find borrowers');
@@ -96,54 +88,34 @@ async function checkForLiquidations() {
 
       if (!borrowers) {
         console.log('no cached borrowers');
-        borrowers = await longSearchBorrowers(vault);
+        borrowers = await searchBorrowers(vault);
         await client.set('borrowers', JSON.stringify(borrowers));
       } else {
         borrowers = JSON.parse(borrowers);
         console.log(borrowers);
         console.log('cached borrowers, fetch only new');
-        const newBorrowers = await shortSearchBorrowers(vault);
-        newBorrowers.forEach(e => {
-          if (!borrowers.includes(e)) {
-            console.log('new borrower:', e);
-            borrowers.push(e);
-          }
-        });
+        const newBorrowers = await searchBorrowers(vault, 10);
+        borrowers = pushNew(newBorrowers, borrowers);
+
         await client.set('borrowers', JSON.stringify(borrowers));
       }
     } else {
       console.log('not using redis');
-      borrowers = await longSearchBorrowers(vault);
+      borrowers = await searchBorrowers(vault);
     }
 
-    const positions = [];
-    const stats = {
-      totalDebt: ethers.BigNumber.from(0),
-      totalCollateral: ethers.BigNumber.from(0),
-      totalNeeded: ethers.BigNumber.from(0),
-    };
-    for (let i = 0; i < borrowers.length; i++) {
-      const borrower = borrowers[i];
-      const position = await checkUserPosition(borrower, vault, contracts);
-      stats.totalDebt = stats.totalDebt.add(position.debt);
-      stats.totalCollateral = stats.totalCollateral.add(position.collateral);
-      stats.totalNeeded = stats.totalNeeded.add(position.needed);
+    const [toLiq, positions, stats] = buildPositions(
+      borrowers,
+      vault,
+      contracts,
+      decimals,
+      checkUserPosition,
+    );
+    logStatus(positions, stats, decimals);
 
-      positions.push({
-        Account: borrower,
-        Debt: Number(formatUnits(position.debt, decimals)).toFixed(3),
-        Collateral: Number(formatEther(position.collateral)).toFixed(3),
-        'Needed Collateral': Number(formatEther(position.needed)).toFixed(3),
-        Liquidatable: position.liquidatable ? 'X' : '-',
-      });
+    if (toLiq.length > 0) {
+      await liquidateAll(toLiq, vault, contracts);
     }
-    console.table(positions);
-    console.log('Total outstanding debt positions (exclude only-depositors)');
-    console.table({
-      totalDebt: Number(formatUnits(stats.totalDebt, decimals)).toFixed(3),
-      totalCollateral: Number(formatEther(stats.totalCollateral)).toFixed(3),
-      totalNeeded: Number(formatEther(stats.totalNeeded)).toFixed(3),
-    });
   }
 }
 
@@ -153,8 +125,6 @@ function delay(s) {
 
 async function main() {
   console.log('Start checking for liquidations...');
-
-  const contracts = await loadContracts(signer);
 
   while (true) {
     try {
