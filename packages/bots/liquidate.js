@@ -13,7 +13,7 @@ const {
 } = require('./utils/liquidateHelpers');
 const {
   loadContracts,
-  // getLiquidationProviderIndex,
+  getLiquidationProviderIndex,
   USDC_ADDR,
 } = require('./utils');
 
@@ -104,12 +104,12 @@ async function checkForLiquidations() {
       borrowers = await searchBorrowers(vault);
     }
 
-    const [toLiq, positions, stats] = buildPositions(
+    const [toLiq, positions, stats] = await buildPositions(
       borrowers,
       vault,
       contracts,
-      decimals,
       checkUserPosition,
+      decimals,
     );
     logStatus(positions, stats, decimals);
 
