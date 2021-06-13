@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
 import map from 'lodash/map';
-import filter from 'lodash/filter';
+import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
 import { Grid, Typography } from '@material-ui/core';
@@ -31,8 +31,12 @@ function MyPositions({ contracts, address }) {
 
   const hasPosition = asset => {
     if (asset) {
-      const position = filter(positions, item => item.name === asset);
-      return position.collateralBalance && Number(formatUnits(position.collateralBalance)) > 0;
+      const position = find(positions, item => item.name === asset);
+      return (
+        position &&
+        position.collateralBalance &&
+        Number(formatUnits(position.collateralBalance)) > 0
+      );
     }
 
     for (let i = 0; i < positions.length; i += 1) {

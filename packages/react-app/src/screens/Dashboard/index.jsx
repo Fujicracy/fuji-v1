@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from 'constants/providers';
+import { DAI_ADDRESS, ERC20_ABI, USDC_ADDRESS, USDT_ADDRESS } from 'constants/providers';
 import { Loader, Header } from 'components';
 import { useContractLoader, useExternalContractLoader, useContractReader, useAuth } from 'hooks';
 import { getCollateralId } from 'helpers';
@@ -20,11 +20,13 @@ function Dashboard() {
   const [loader, setLoader] = useState(true);
 
   const contracts = useContractLoader(provider);
-  const DAIContract = useExternalContractLoader(provider, DAI_ADDRESS, DAI_ABI);
-  const USDCContract = useExternalContractLoader(provider, USDC_ADDRESS, USDC_ABI);
+  const DAIContract = useExternalContractLoader(provider, DAI_ADDRESS, ERC20_ABI);
+  const USDCContract = useExternalContractLoader(provider, USDC_ADDRESS, ERC20_ABI);
+  const USDTContract = useExternalContractLoader(provider, USDT_ADDRESS, ERC20_ABI);
   if (contracts) {
     contracts.DAI = DAIContract;
     contracts.USDC = USDCContract;
+    contracts.USDT = USDTContract;
   }
 
   const collateralBalanceDai = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -35,6 +37,11 @@ function Dashboard() {
   const collateralBalanceUsdc = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
     getCollateralId('USDC'),
+  ]);
+
+  const collateralBalanceUsdt = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    getCollateralId('USDT'),
   ]);
 
   useEffect(() => {
@@ -98,9 +105,11 @@ function Dashboard() {
         <>
           <Switch>
             <ProtectedRoute exact path={`${path}`}>
-              {!collateralBalanceDai || !collateralBalanceUsdc ? (
+              {!collateralBalanceDai || !collateralBalanceUsdc || !collateralBalanceUsdt ? (
                 <Loader />
-              ) : collateralBalanceDai.gt(0) || collateralBalanceUsdc.gt(0) ? (
+              ) : collateralBalanceDai.gt(0) ||
+                collateralBalanceUsdc.gt(0) ||
+                collateralBalanceUsdt.gt(0) ? (
                 <Redirect to="/dashboard/my-positions" />
               ) : (
                 <Redirect to="/dashboard/init-borrow" />

@@ -947,6 +947,7 @@ const chainId = process.env.REACT_APP_CHAIN_ID;
 const ETH_CAP_VALUE = 2;
 
 module.exports = {
+  ERC20_ABI: DAI_ABI,
   DAI_ADDRESS: dai[chainId],
   DAI_ABI,
   USDC_ADDRESS: usdc[chainId],
