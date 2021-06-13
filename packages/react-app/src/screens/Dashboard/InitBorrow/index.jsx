@@ -21,13 +21,7 @@ import { ETH_CAP_VALUE } from 'constants/providers';
 import { ASSET_TYPE, ASSETS } from 'constants/assets';
 import { useBalance, useContractReader, useGasPrice } from 'hooks';
 import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } from 'components';
-import {
-  Transactor,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-  GasEstimator,
-} from '../../../helpers';
+import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 
 import './styles.css';
 
@@ -72,7 +66,7 @@ function InitBorrow({ contracts, provider, address }) {
   const ethBalance = unFormattedEthBalance
     ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
     : null;
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const decimals = borrowAsset === ASSET_TYPE.DAI ? 18 : 6;
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -148,13 +142,6 @@ function InitBorrow({ contracts, provider, address }) {
     }
     setLoading(false);
   };
-  // <label>
-  // <input type="radio" name="borrow" value="usdt" disabled={true} />
-  // <div className="fake-radio">
-  // <img alt="usdt" src="/USDT.svg" />
-  // <span className="select-option-name">USDT</span>
-  // </div>
-  // </label>
 
   const handleChangeAsset = asset => () => {
     setBorrowAsset(asset);

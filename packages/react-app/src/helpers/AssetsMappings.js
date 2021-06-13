@@ -1,6 +1,7 @@
 const borrowAssets = {
   DAI: 1,
   USDC: 3,
+  USDT: 3, // TODO: MARKUS - to be changed
 };
 
 export function getBorrowId(borrowAsset) {
@@ -10,6 +11,7 @@ export function getBorrowId(borrowAsset) {
 const collateralsByBorrowAsset = {
   DAI: 0,
   USDC: 2,
+  USDT: 2, // TODO: MARKUS - to be changed
 };
 
 export function getCollateralId(borrowAsset) {
@@ -19,6 +21,7 @@ export function getCollateralId(borrowAsset) {
 const vaultsByBorrowAsset = {
   DAI: 'VaultETHDAI',
   USDC: 'VaultETHUSDC',
+  USDT: 'VaultETHUSDC', // TODO: MARKUS - to be changed
 };
 
 export function getVaultName(borrowAsset) {
