@@ -24,12 +24,13 @@ interface IFliquidator {
     uint256 _flashloanfee
   ) external;
 
-  function executeFlashLiquidation(
-    address _userAddr,
+  function executeFlashBatchLiquidation(
+    address[] calldata _userAddrs,
+    uint256[] calldata _usrsBals,
     address _liquidatorAddr,
     address _vault,
-    uint256 _debtAmount,
-    uint256 _flashloanfee
+    uint256 _amount,
+    uint256 _flashloanFee
   ) external;
 }
 
@@ -73,7 +74,7 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
    * @param info: struct information for flashLoan
    * @param _flashnum: integer identifier of flashloan provider
    */
-  function initiateFlashloan(FlashLoan.Info calldata info, uint8 _flashnum) public isAuthorized {
+  function initiateFlashloan(FlashLoan.Info calldata info, uint8 _flashnum) external isAuthorized {
     if (_flashnum == 0) {
       _initiateAaveFlashLoan(info);
     } else if (_flashnum == 1) {
@@ -137,10 +138,16 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
     if (info.callType == FlashLoan.CallType.Switch) {
       IVault(info.vault).executeSwitch(info.newProvider, info.amount, 2);
     } else if (info.callType == FlashLoan.CallType.Close) {
-      IFliquidator(info.fliquidator).executeFlashClose(info.user, info.vault, info.amount, 2);
+      IFliquidator(info.fliquidator).executeFlashClose(
+        info.userAddrs[0],
+        info.vault,
+        info.amount,
+        2
+      );
     } else {
-      IFliquidator(info.fliquidator).executeFlashLiquidation(
-        info.user,
+      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
+        info.userAddrs,
+        info.userBalances,
         info.userliquidator,
         info.vault,
         info.amount,
@@ -206,14 +213,15 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
       IVault(info.vault).executeSwitch(info.newProvider, amounts[0], premiums[0]);
     } else if (info.callType == FlashLoan.CallType.Close) {
       IFliquidator(info.fliquidator).executeFlashClose(
-        info.user,
+        info.userAddrs[0],
         info.vault,
         amounts[0],
         premiums[0]
       );
     } else {
-      IFliquidator(info.fliquidator).executeFlashLiquidation(
-        info.user,
+      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
+        info.userAddrs,
+        info.userBalances,
         info.userliquidator,
         info.vault,
         amounts[0],
@@ -273,10 +281,11 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
     if (info.callType == FlashLoan.CallType.Switch) {
       IVault(info.vault).executeSwitch(info.newProvider, amount, fee);
     } else if (info.callType == FlashLoan.CallType.Close) {
-      IFliquidator(info.fliquidator).executeFlashClose(info.user, info.vault, amount, fee);
+      IFliquidator(info.fliquidator).executeFlashClose(info.userAddrs[0], info.vault, amount, fee);
     } else {
-      IFliquidator(info.fliquidator).executeFlashLiquidation(
-        info.user,
+      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
+        info.userAddrs,
+        info.userBalances,
         info.userliquidator,
         info.vault,
         amount,

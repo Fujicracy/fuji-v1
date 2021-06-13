@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Container, Logo, Navigation } from './styles';
+import { LANDING_URL } from '../../constants/providers';
 
 function Header() {
   const [logout, setLogout] = useState(false);
@@ -9,7 +10,7 @@ function Header() {
 
   return (
     <Container>
-      <Link to="/" className="logo">
+      <Link to={LANDING_URL} className="logo">
         <Logo alt="logo" src="/logo-title.svg" />
       </Link>
 

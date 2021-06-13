@@ -958,4 +958,6 @@ module.exports = {
   ETH_CAP_VALUE,
   CHAIN_ID: chainId,
   NETWORK: networks[chainId],
+  APP_URL: process.env.REACT_APP_APP_URL,
+  LANDING_URL: process.env.REACT_APP_LANDING_URL,
 };

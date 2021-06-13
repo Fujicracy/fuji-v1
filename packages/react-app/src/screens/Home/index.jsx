@@ -1,14 +1,13 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
-import { useHistory } from 'react-router-dom';
 import { Button } from 'components/UI';
 
+import { APP_URL } from '../../constants/providers';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';
 
 function Home() {
-  const history = useHistory();
   const props = useSpring({
     from: { factor: 1, opacity: 0, background: `url(${fujiLanding}) no-repeat center center` },
     to: { factor: 150, opacity: 1 },
@@ -20,7 +19,7 @@ function Home() {
   };
 
   const handleAppClick = () => {
-    history.push('dashboard');
+    window.open(`${APP_URL}/dashboard`, '_self');
   };
 
   return (
