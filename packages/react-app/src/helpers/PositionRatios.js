@@ -2,7 +2,7 @@ import { formatUnits, formatEther } from '@ethersproject/units';
 
 export default function PositionRatios(position, price) {
   const { debtBalance, collateralBalance, borrowAsset } = position;
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const decimals = borrowAsset === 'DAI' ? 18 : 6; // TODO: MARK - refactor this
 
   const debt = debtBalance ? Number(formatUnits(debtBalance, decimals)) : 0;
   const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : 0;

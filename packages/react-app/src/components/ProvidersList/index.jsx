@@ -7,6 +7,8 @@ import { useContractReader, useRates } from '../../hooks';
 
 import './styles.css';
 
+// TODO: Mark - refactor to support multi chains
+
 function AnimatedCounter({ countTo }) {
   const { number } = useSpring({
     from: { number: 0 },
@@ -28,6 +30,7 @@ function AnimatedCounter({ countTo }) {
 function ProvidersList({ contracts, markets }) {
   const activeProviderDai = useContractReader(contracts, 'VaultETHDAI', 'activeProvider');
   const activeProviderUsdc = useContractReader(contracts, 'VaultETHUSDC', 'activeProvider');
+  const activeProviderUsdt = useContractReader(contracts, 'VaultETHUSDT', 'activeProvider');
 
   const providerAave = contracts && contracts.ProviderAave;
   const providerCompound = contracts && contracts.ProviderCompound;
@@ -127,6 +130,48 @@ function ProvidersList({ contracts, markets }) {
                 <span className="name">Iron Bank</span>
                 <span className="number">
                   <AnimatedCounter countTo={rates.ironbank.usdc} /> %
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {markets && markets.includes('USDT') && (
+          <div className="provider">
+            <div className="title">
+              <img alt="usdt" src="/USDT.png" />
+              <Typography variant="h3">USDT</Typography>
+            </div>
+            <div className="stats">
+              <div className={providerAave?.address === activeProviderUsdt ? 'stat best' : 'stat'}>
+                <span className="name">Aave</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.aave.usdt} /> %
+                </span>
+              </div>
+
+              <div
+                className={providerCompound?.address === activeProviderUsdt ? 'stat best' : 'stat'}
+              >
+                <span className="name">Compound</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.compound.usdt} /> %
+                </span>
+              </div>
+
+              <div className={providerDYDX?.address === activeProviderUsdt ? 'stat best' : 'stat'}>
+                <span className="name">dYdX</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.dydx.usdt} /> %
+                </span>
+              </div>
+
+              <div
+                className={providerIronBank?.address === activeProviderUsdt ? 'stat best' : 'stat'}
+              >
+                <span className="name">Iron Bank</span>
+                <span className="number">
+                  <AnimatedCounter countTo={rates.ironbank.usdt} /> %
                 </span>
               </div>
             </div>

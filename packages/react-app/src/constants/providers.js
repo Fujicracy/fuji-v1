@@ -8,10 +8,10 @@ const usdc = {
 };
 const usdt = {
   // TODO: MARKUS - to be changed
-  1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  31337: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+  31337: '0xdac17f958d2ee523a2206206994597c13d831ec7',
   // "42": "0xe22da380ee6b445bb8273c81944adeb6e8450422", // aave
-  42: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound
+  42: '0xdac17f958d2ee523a2206206994597c13d831ec7', // compound
 };
 const dai = {
   1: '0x6b175474e89094c44da98b954eedeac495271d0f',

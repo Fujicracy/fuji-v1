@@ -43,6 +43,7 @@ function logslider(value) {
 }
 
 function CollaterizationIndicator({ position }) {
+  console.log(position);
   const price = useExchangePrice();
 
   const [more, setMore] = useState(false);
