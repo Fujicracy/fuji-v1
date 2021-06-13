@@ -4,13 +4,13 @@ import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 
 export const Container = styled(Box).attrs({
-  px: 5,
+  px: 4,
 })`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
+  height: 100px;
 
   backdrop-filter: blur(0.25rem);
   -webkit-backdrop-filter: blur(0.25rem);
@@ -32,6 +32,10 @@ export const Navigation = styled.ul`
     margin-left: 2em;
     font-size: 0.875rem;
 
+    &.nav-item {
+      font-size: 1rem;
+    }
+
     a {
       height: 40px;
       line-height: 40px;
@@ -52,7 +56,7 @@ export const Navigation = styled.ul`
 
       &.button-nav {
         display: block;
-        width: 110px;
+        width: 146px;
         text-align: center;
         cursor: pointer;
         line-height: 36px;
