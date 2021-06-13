@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import './styles.css';
 import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import map from 'lodash/map';
+import {
+  TextField,
+  Avatar,
+  Button,
+  Typography,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  CircularProgress,
+  DialogTitle,
+} from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-
 import { ETH_CAP_VALUE } from 'constants/providers';
+import { ASSET_TYPE, ASSETS } from 'constants/assets';
+import { useBalance, useContractReader, useGasPrice } from 'hooks';
+import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } from 'components';
 import {
   Transactor,
   getBorrowId,
@@ -24,11 +28,8 @@ import {
   getVaultName,
   GasEstimator,
 } from '../../../helpers';
-import { useBalance, useContractReader, useGasPrice } from '../../../hooks';
-import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
-import ProvidersList from '../../../components/ProvidersList';
-import HowItWorks from '../../../components/HowItWorks';
-import AlphaWarning from '../../../components/AlphaWarning';
+
+import './styles.css';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -36,7 +37,7 @@ function InitBorrow({ contracts, provider, address }) {
   const gasPrice = useGasPrice();
 
   const [borrowAmount, setBorrowAmount] = useState('1000');
-  const [borrowAsset, setBorrowAsset] = useState('DAI');
+  const [borrowAsset, setBorrowAsset] = useState(ASSET_TYPE.DAI);
   const [collateralAmount, setCollateralAmount] = useState('');
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
@@ -155,6 +156,10 @@ function InitBorrow({ contracts, provider, address }) {
   // </div>
   // </label>
 
+  const handleChangeAsset = asset => () => {
+    setBorrowAsset(asset);
+  };
+
   const dialogContents = {
     success: {
       title: 'Success',
@@ -215,32 +220,21 @@ function InitBorrow({ contracts, provider, address }) {
               <div className="section-title">Borrow</div>
               <div className="select-options">
                 <div className="options-list">
-                  <label>
-                    <input
-                      type="radio"
-                      name="borrow"
-                      value="DAI"
-                      onChange={() => setBorrowAsset('DAI')}
-                      checked={borrowAsset === 'DAI'}
-                    />
-                    <div className="fake-radio">
-                      <img alt="dai" src="/DAI.svg" />
-                      <span className="select-option-name">DAI</span>
-                    </div>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="borrow"
-                      value="USDC"
-                      onChange={() => setBorrowAsset('USDC')}
-                      checked={borrowAsset === 'USDC'}
-                    />
-                    <div className="fake-radio">
-                      <img alt="usdc" src="/USDC.svg" />
-                      <span className="select-option-name">USDC</span>
-                    </div>
-                  </label>
+                  {map(ASSETS, asset => (
+                    <label key={asset.id}>
+                      <input
+                        type="radio"
+                        name="borrow"
+                        value={asset.name}
+                        onChange={handleChangeAsset(asset.name)}
+                        checked={borrowAsset === asset.name}
+                      />
+                      <div className="fake-radio">
+                        <img alt={asset.id} src={asset.icon} />
+                        <span className="select-option-name">{asset.name}</span>
+                      </div>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>

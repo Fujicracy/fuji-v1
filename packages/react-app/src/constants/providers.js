@@ -6,6 +6,12 @@ const usdc = {
   // "42": "0xe22da380ee6b445bb8273c81944adeb6e8450422", // aave
   42: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound
 };
+const usdt = {
+  1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  31337: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  // "42": "0xe22da380ee6b445bb8273c81944adeb6e8450422", // aave
+  42: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound
+};
 const dai = {
   1: '0x6b175474e89094c44da98b954eedeac495271d0f',
   31337: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -944,6 +950,8 @@ module.exports = {
   DAI_ABI,
   USDC_ADDRESS: usdc[chainId],
   USDC_ABI,
+  USDT_ADDRESS: usdt[chainId],
+  USDT_ABI: USDC_ABI,
   CHAINLINK_ABI,
   ETH_CAP_VALUE,
   CHAIN_ID: chainId,
