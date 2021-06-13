@@ -1,16 +1,29 @@
+/* eslint-disable prettier/prettier */
 require('dotenv').config();
 
+const retry = require('async-retry');
 const chalk = require('chalk');
 const { ethers, Wallet } = require('ethers');
+const {
+  searchBorrowers,
+  connectRedis,
+  pushNew,
+  buildPositions,
+  logStatus,
+} = require('./utils/liquidateHelpers');
 const {
   loadContracts,
   // getLiquidationProviderIndex,
   USDC_ADDR,
 } = require('./utils');
 
-const { formatEther, formatUnits } = ethers.utils;
+let provider;
+if (process.env.INFURA) {
+  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
+} else {
+  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
+}
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
 let signer;
 if (process.env.PRIVATE_KEY) {
   signer = new Wallet(process.env.PRIVATE_KEY, provider);
@@ -20,22 +33,22 @@ if (process.env.PRIVATE_KEY) {
 
 const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
 
-// async function liquidate(addr, vault, contracts) {
-// console.log(
-// "Position",
-// chalk.cyan(addr),
-// chalk.red("-> proceed to liquidation")
-// );
-// const index = await getLiquidationProviderIndex(vault, contracts);
-// await contracts.Fliquidator.connect(signer)
-// .flashLiquidate(addr, vault.address, index)
-// .catch((e) => {
-// console.log(e);
-/// / const body = JSON.parse(e.body);
-/// / const { message } = body.error;
-/// / console.log(`----> Liquidation failed: ${message}`);
-// });
-// }
+async function liquidateAll(addresses, vault, contracts) {
+  // console.log('Position', chalk.cyan(addr), chalk.red('-> proceed to liquidation'));
+  const index = await getLiquidationProviderIndex(vault, contracts);
+  try {
+    await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
+      addresses,
+      vault.address,
+      index,
+    );
+  } catch (err) {
+    console.log(err);
+    // / / const body = JSON.parse(e.body);
+    // / / const { message } = body.error;
+    // / / console.log(`----> Liquidation failed: ${message}`);
+  }
+}
 
 async function checkUserPosition(addr, vault, contracts) {
   const { borrowID, collateralID } = await vault.vAssets();
@@ -56,6 +69,8 @@ async function checkUserPosition(addr, vault, contracts) {
 async function checkForLiquidations() {
   const contracts = await loadContracts(signer);
 
+  console.log('contracts');
+
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
@@ -64,47 +79,74 @@ async function checkForLiquidations() {
     const { borrowAsset } = await vault.vAssets();
     const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
 
-    const filterBorrowers = vault.filters.Borrow();
-    const events = await vault.queryFilter(filterBorrowers);
-    const borrowers = events
-      .map(e => e.args.userAddrs)
-      .reduce((acc, userAddr) => (acc.includes(userAddr) ? acc : [...acc, userAddr]), []);
+    console.log('find borrowers');
+    let borrowers;
+    if (process.env.REDIS) {
+      console.log('using redis');
+      const client = await connectRedis();
+      borrowers = await client.get('borrowers');
 
-    const positions = [];
-    const stats = {
-      totalDebt: ethers.BigNumber.from(0),
-      totalCollateral: ethers.BigNumber.from(0),
-      totalNeeded: ethers.BigNumber.from(0),
-    };
-    for (let i = 0; i < borrowers.length; i++) {
-      const borrower = borrowers[i];
-      const position = await checkUserPosition(borrower, vault, contracts);
-      stats.totalDebt = stats.totalDebt.add(position.debt);
-      stats.totalCollateral = stats.totalCollateral.add(position.collateral);
-      stats.totalNeeded = stats.totalNeeded.add(position.needed);
+      if (!borrowers) {
+        console.log('no cached borrowers');
+        borrowers = await searchBorrowers(vault);
+        await client.set('borrowers', JSON.stringify(borrowers));
+      } else {
+        borrowers = JSON.parse(borrowers);
+        console.log(borrowers);
+        console.log('cached borrowers, fetch only new');
+        const newBorrowers = await searchBorrowers(vault, 10);
+        borrowers = pushNew(newBorrowers, borrowers);
 
-      positions.push({
-        Account: borrower,
-        Debt: Number(formatUnits(position.debt, decimals)).toFixed(3),
-        Collateral: Number(formatEther(position.collateral)).toFixed(3),
-        'Needed Collateral': Number(formatEther(position.needed)).toFixed(3),
-        Liquidatable: position.liquidatable ? 'X' : '-',
-      });
+        await client.set('borrowers', JSON.stringify(borrowers));
+      }
+    } else {
+      console.log('not using redis');
+      borrowers = await searchBorrowers(vault);
     }
-    console.table(positions);
-    console.log('Total outstanding debt positions (exclude only-depositors)');
-    console.table({
-      totalDebt: Number(formatUnits(stats.totalDebt, decimals)).toFixed(3),
-      totalCollateral: Number(formatEther(stats.totalCollateral)).toFixed(3),
-      totalNeeded: Number(formatEther(stats.totalNeeded)).toFixed(3),
-    });
+
+    const [toLiq, positions, stats] = buildPositions(
+      borrowers,
+      vault,
+      contracts,
+      decimals,
+      checkUserPosition,
+    );
+    logStatus(positions, stats, decimals);
+
+    if (toLiq.length > 0) {
+      await liquidateAll(toLiq, vault, contracts);
+    }
   }
 }
 
-function main() {
+function delay(s) {
+  return new Promise(r => setTimeout(r, s * 1000));
+}
+
+async function main() {
   console.log('Start checking for liquidations...');
-  checkForLiquidations();
-  setInterval(checkForLiquidations, 60000);
+
+  while (true) {
+    try {
+      await retry(
+        async () => {
+          await checkForLiquidations();
+        },
+        {
+          retries: process.env.RETRIES_COUNT || 2, //default 2 retries
+          minTimeout: (process.env.RETRIES_TIMEOUT || 2) * 1000, // delay between retries in ms, default 2000
+          randomize: false,
+          onRetry: error => {
+            console.log('An error was thrown in the execution loop - retrying', error);
+          },
+        },
+      );
+    } catch (error) {
+      console.log('Unsuccessful retries');
+    }
+    // delay, default 1 minutes
+    await delay(process.env.DELAY || 60);
+  }
 }
 
 main();
