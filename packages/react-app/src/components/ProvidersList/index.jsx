@@ -159,12 +159,12 @@ function ProvidersList({ contracts, markets }) {
                 </span>
               </div>
 
-              <div className={providerDYDX?.address === activeProviderUsdt ? 'stat best' : 'stat'}>
+              {/* <div className={providerDYDX?.address === activeProviderUsdt ? 'stat best' : 'stat'}>
                 <span className="name">dYdX</span>
                 <span className="number">
                   <AnimatedCounter countTo={rates.dydx.usdt} /> %
                 </span>
-              </div>
+              </div> */}
 
               <div
                 className={providerIronBank?.address === activeProviderUsdt ? 'stat best' : 'stat'}

@@ -21,7 +21,7 @@ export default function useRates(contracts) {
 
   const dydxDai = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [DAI_ADDRESS]);
   const dydxUsdc = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [USDC_ADDRESS]);
-  const dydxUsdt = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [USDT_ADDRESS]);
+  // const dydxUsdt = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [USDT_ADDRESS]);
 
   const ironbankDai = useContractReader(contracts, 'ProviderIronBank', 'getBorrowRateFor', [
     DAI_ADDRESS,
@@ -46,7 +46,7 @@ export default function useRates(contracts) {
 
   const minDaiRate = Math.min(aaveDai, compoundDai, dydxDai);
   const minUsdcRate = Math.min(aaveUsdc, compoundUsdc, dydxUsdc);
-  const minUsdtRate = Math.min(aaveUsdt, compoundUsdt, dydxUsdt);
+  const minUsdtRate = Math.min(aaveUsdt, compoundUsdt /* , dydxUsdt */);
 
   return {
     aave: {
@@ -62,7 +62,7 @@ export default function useRates(contracts) {
     dydx: {
       dai: formatRate(dydxDai),
       usdc: formatRate(dydxUsdc),
-      usdt: formatRate(dydxUsdt),
+      // usdt: formatRate(dydxUsdt),
     },
     ironbank: {
       dai: formatRate(ironbankDai),
