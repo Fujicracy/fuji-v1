@@ -101,7 +101,7 @@ function MyPositions({ contracts, address }) {
       </div>
       <div className="right-content">
         <AlphaWarning />
-        <ProvidersList contracts={contracts} markets={['DAI', 'USDC']} />
+        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />
       </div>
     </div>
   );
