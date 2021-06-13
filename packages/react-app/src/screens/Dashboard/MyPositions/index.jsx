@@ -1,15 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { Grid, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useContractReader } from '../../../hooks';
-import { getBorrowId, getCollateralId } from '../../../helpers';
+import { useContractReader } from 'hooks';
+import { getBorrowId, getCollateralId } from 'helpers';
 
-import PositionElement, { PositionActions } from '../../../components/PositionElement';
-import ProvidersList from '../../../components/ProvidersList';
-import AlphaWarning from '../../../components/AlphaWarning';
+import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
 
 import './styles.css';
 
@@ -71,23 +68,17 @@ function MyPositions({ contracts, address }) {
             ) : (
               <div style={{ height: '2.5rem' }} />
             )}
-            {hasDaiPosition ? (
+            {hasDaiPosition && (
               <Grid item className="one-position">
                 <PositionElement actionType={PositionActions.Manage} position={positionDai} />
               </Grid>
-            ) : (
-              ''
             )}
-            {hasUsdcPosition ? (
+            {hasUsdcPosition && (
               <Grid item className="one-position">
                 <PositionElement actionType={PositionActions.Manage} position={positionUsdc} />
               </Grid>
-            ) : (
-              ''
             )}
-            {loadingDaiPosition ? (
-              ''
-            ) : !hasDaiPosition ? (
+            {!loadingDaiPosition && !hasDaiPosition && (
               <Grid
                 item
                 onClick={() => history.push('/dashboard/init-borrow?borrowAsset=DAI')}
@@ -96,12 +87,8 @@ function MyPositions({ contracts, address }) {
                 <AddIcon />
                 Borrow DAI
               </Grid>
-            ) : (
-              ''
             )}
-            {loadingUsdcPosition ? (
-              ''
-            ) : !hasUsdcPosition ? (
+            {!loadingUsdcPosition && !hasUsdcPosition && (
               <Grid
                 item
                 onClick={() => history.push('/dashboard/init-borrow?borrowAsset=USDC')}
@@ -110,8 +97,6 @@ function MyPositions({ contracts, address }) {
                 <AddIcon />
                 Borrow USDC
               </Grid>
-            ) : (
-              ''
             )}
           </div>
         </Grid>
