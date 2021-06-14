@@ -1,8 +1,6 @@
-/* eslint-disable prettier/prettier */
 const { promisify } = require('util');
 const redis = require('redis');
 const { ethers } = require('ethers');
-const { USDC_ADDR } = require('../utils');
 
 const { formatEther, formatUnits } = ethers.utils;
 

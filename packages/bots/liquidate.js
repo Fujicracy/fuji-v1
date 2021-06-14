@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 require('dotenv').config();
 
 const retry = require('async-retry');
@@ -11,11 +10,7 @@ const {
   buildPositions,
   logStatus,
 } = require('./utils/liquidateHelpers');
-const {
-  loadContracts,
-  getLiquidationProviderIndex,
-  USDC_ADDR,
-} = require('./utils');
+const { loadContracts, getLiquidationProviderIndex, USDC_ADDR } = require('./utils');
 
 let provider;
 if (process.env.INFURA) {
@@ -126,6 +121,7 @@ function delay(s) {
 async function main() {
   console.log('Start checking for liquidations...');
 
+  // eslint-disable-next-line
   while (true) {
     try {
       await retry(
@@ -133,7 +129,7 @@ async function main() {
           await checkForLiquidations();
         },
         {
-          retries: process.env.RETRIES_COUNT || 2, //default 2 retries
+          retries: process.env.RETRIES_COUNT || 2, // default 2 retries
           minTimeout: (process.env.RETRIES_TIMEOUT || 2) * 1000, // delay between retries in ms, default 2000
           randomize: false,
           onRetry: error => {
