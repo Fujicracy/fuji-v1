@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { ethers } = require("ethers");
 const { getCollStat } = require("./utils/collateralHelpers");
 const { getBorrStat } = require("./utils/borrowHelpers");
