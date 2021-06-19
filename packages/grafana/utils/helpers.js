@@ -58,26 +58,66 @@ const findBiggestDiff = (nums, minuend) => {
   return oldestIndex;
 };
 
+const findSmallestDiff = (nums, minuend) => {
+  let diff = 0;
+  let oldestIndex = 0;
+  nums.forEach((n, i) => {
+    temp = minuend - n;
+    if (temp < diff) {
+      diff = temp;
+      oldestIndex = i;
+    }
+  });
+
+  return oldestIndex;
+};
+
 const searchEvents = (arr, currentBlock) => {
   const [e1, e2] = arr;
-
-  const largestList = findBiggestDiff([e1.length, e2.length], currentBlock);
-  events = [];
+  const lenList = [e1.length, e2.length];
+  const largestList = findSmallestDiff(lenList, currentBlock);
+  const events = [];
   for (let i = 0; i <= arr[largestList].length; i++) {
-    if (e1[i].blockNumber === currentBlock) {
+    if (e1[i] && e1[i].blockNumber === currentBlock) {
       events.push(e1[i]);
     }
 
-    if (e2[i].blockNumber === currentBlock) {
+    if (e2[i] && e2[i].blockNumber === currentBlock) {
       events.push(e2[i]);
-    }
-
-    if (e2[i].blockNumber > currentBlock && e1[i].blockNumber > currentBlock) {
-      break;
     }
   }
 
   return events;
+};
+
+const createDataPoint = (arr, currentDebt, lastDaiPoint, type) => {
+  if (arr.length < 1) {
+    return lastDaiPoint.debt;
+  }
+
+  let tempDebt = currentDebt;
+
+  arr.forEach((e) => {
+    if (e.event === "Payback") {
+      tempDebt -= parseFloat(
+        ethers.utils.formatUnits(
+          e.args.amount.toString(),
+          type === "USDC" ? 6 : 18
+        )
+      );
+    }
+
+    if (e.event === "Borrow") {
+      tempDebt += parseFloat(
+        ethers.utils.formatUnits(
+          e.args.amount.toString(),
+          type === "USDC" ? 6 : 18
+        )
+      );
+    }
+  });
+
+  return tempDebt;
 };
 
 const blocksPer = (key) => {
@@ -95,15 +135,5 @@ module.exports = {
   findBiggestDiff,
   blocksPer,
   searchEvents,
+  createDataPoint,
 };
-
-// let provider;
-
-// if (process.env.PROJECT_ID) {
-//   provider = new ethers.providers.InfuraProvider(
-//     "homestead",
-//     process.env.PROJECT_ID
-//   );
-// }
-
-// contractDeployBlock(provider);
