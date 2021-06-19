@@ -10,16 +10,6 @@ const ETHDAIABI = require("../abis/VaultETHDAI.abi");
 const ETHUSDCABI = require("../abis/VaultETHUSDC.abi");
 const axios = require("axios");
 
-const organizeReturn = (arr) => {
-  const [f, s] = arr;
-
-  if (f.symbol === "cETH") {
-    return [f, s];
-  } else {
-    return [s, f];
-  }
-};
-
 const contractDeployBlock = async (provider) => {
   const daiStartBlock = (await provider.getTransaction(ETHDAICreateTX))
     .blockNumber;
@@ -44,96 +34,87 @@ const contractDeployBlock = async (provider) => {
   return [daiInfo, usdcInfo, currentBlock];
 };
 
-const findBiggestDiff = (nums, minuend) => {
-  let diff = 0;
-  let oldestIndex = 0;
-  nums.forEach((n, i) => {
-    temp = minuend - n;
-    if (temp > diff) {
-      diff = temp;
-      oldestIndex = i;
-    }
-  });
+const queryEvents = async (provider) => {
+  const [daiDeployData, usdcDeployData, currentBlock] =
+    await contractDeployBlock(provider);
+  const daiVault = new ethers.Contract(ETHDAI, ETHDAIABI, provider);
+  const usdcVault = new ethers.Contract(ETHUSDC, ETHUSDCABI, provider);
 
-  return oldestIndex;
-};
+  const evtDaiBorrow = await daiVault.filters.Borrow();
 
-const findSmallestDiff = (nums, minuend) => {
-  let diff = 0;
-  let oldestIndex = 0;
-  nums.forEach((n, i) => {
-    temp = minuend - n;
-    if (temp < diff) {
-      diff = temp;
-      oldestIndex = i;
-    }
-  });
+  const daiBorrowEvents = await daiVault.queryFilter(
+    evtDaiBorrow,
+    daiDeployData.startBlock
+  );
 
-  return oldestIndex;
-};
+  const evtDaiPayback = await daiVault.filters.Payback();
 
-const searchEvents = (arr, currentBlock) => {
-  const [e1, e2] = arr;
-  const lenList = [e1.length, e2.length];
-  const largestList = findSmallestDiff(lenList, currentBlock);
-  const events = [];
-  for (let i = 0; i <= arr[largestList].length; i++) {
-    if (e1[i] && e1[i].blockNumber === currentBlock) {
-      events.push(e1[i]);
-    }
+  const daiPaybackEvents = await daiVault.queryFilter(
+    evtDaiPayback,
+    daiDeployData.startBlock
+  );
 
-    if (e2[i] && e2[i].blockNumber === currentBlock) {
-      events.push(e2[i]);
-    }
-  }
+  const evtEthDaiSupply = await daiVault.filters.Deposit();
 
-  return events;
-};
+  const ethDaiSupplyEvents = await daiVault.queryFilter(
+    evtEthDaiSupply,
+    daiDeployData.startBlock
+  );
 
-const createDataPoint = (arr, currentDebt, lastDaiPoint, type) => {
-  if (arr.length < 1) {
-    return lastDaiPoint.debt;
-  }
+  const evtEthDaiWithdraw = await daiVault.filters.Withdraw();
 
-  let tempDebt = currentDebt;
+  const ethDaiWithdrawEvents = await daiVault.queryFilter(
+    evtEthDaiWithdraw,
+    daiDeployData.startBlock
+  );
 
-  arr.forEach((e) => {
-    if (e.event === "Payback") {
-      tempDebt -= parseFloat(
-        ethers.utils.formatUnits(
-          e.args.amount.toString(),
-          type === "USDC" ? 6 : 18
-        )
-      );
-    }
+  const evtUsdcBorrow = await usdcVault.filters.Borrow();
 
-    if (e.event === "Borrow") {
-      tempDebt += parseFloat(
-        ethers.utils.formatUnits(
-          e.args.amount.toString(),
-          type === "USDC" ? 6 : 18
-        )
-      );
-    }
-  });
+  const usdcBorrowEvents = await usdcVault.queryFilter(
+    evtUsdcBorrow,
+    usdcDeployData.startBlock
+  );
 
-  return tempDebt;
-};
+  const evtUsdcPayback = await usdcVault.filters.Payback();
 
-const blocksPer = (key) => {
-  const timeMap = {
-    min: 4.5,
-    hour: 277,
-    day: 6646,
-  };
-  return timeMap[key];
+  const usdcPaybackEvents = await usdcVault.queryFilter(
+    evtUsdcPayback,
+    usdcDeployData.startBlock
+  );
+
+  const evtEthusdcSupply = await usdcVault.filters.Deposit();
+
+  const ethusdcSupplyEvents = await usdcVault.queryFilter(
+    evtEthusdcSupply,
+    usdcDeployData.startBlock
+  );
+
+  const evtEthusdcWithdraw = await usdcVault.filters.Withdraw();
+
+  const ethusdcWithdrawEvents = await usdcVault.queryFilter(
+    evtEthusdcWithdraw,
+    usdcDeployData.startBlock
+  );
+
+  // console.log(ethusdcWithdrawEvents.length);
+  // console.log(ethusdcWithdrawEvents[0].args.amount.toString());
+  // console.log(ethusdcSupplyEvents[0]);
+  // console.log(ethusdcSupplyEvents[0].args.amount.toString());
+  // console.log(ethDaiWithdrawEvents.length);
+  console.log(ethDaiSupplyEvents.length);
+  return [
+    ...ethDaiWithdrawEvents,
+    ...ethDaiSupplyEvents,
+    ...daiBorrowEvents,
+    ...daiPaybackEvents,
+    ...ethusdcWithdrawEvents,
+    ...ethusdcSupplyEvents,
+    ...usdcBorrowEvents,
+    ...usdcPaybackEvents,
+  ];
 };
 
 module.exports = {
-  organizeReturn,
+  queryEvents,
   contractDeployBlock,
-  findBiggestDiff,
-  blocksPer,
-  searchEvents,
-  createDataPoint,
 };

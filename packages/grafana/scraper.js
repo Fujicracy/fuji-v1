@@ -1,35 +1,29 @@
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { getCollStat } = require("./utils/collateralHelpers");
-const { getBorrStat } = require("./utils/borrowHelpers");
+const { getEvents } = require("./utils/fetch");
 
 const main = async () => {
   let provider;
 
-  if (provider.env.PROJECT_ID) {
+  if (process.env.PROJECT_ID) {
     provider = new ethers.providers.InfuraProvider(
       "homestead",
       process.env.PROJECT_ID
     );
   }
 
-  let collStats;
-  let borrStats;
+  let stats;
   if (provider) {
     try {
-      collStats = await getCollStat(provider);
+      stats = await getEvents(provider);
     } catch (err) {
-      console.log("collateral stats crash:");
-      console.log(err);
-    }
-
-    try {
-      borrStats = await getBorrStat(provider);
-    } catch (err) {
-      console.log("borrow stats crash:");
+      console.log("tats crash:");
       console.log(err);
     }
   } else {
     console.log("no provider");
   }
+  return stats;
 };
+
+main();
