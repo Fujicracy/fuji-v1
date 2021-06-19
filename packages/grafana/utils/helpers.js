@@ -111,7 +111,7 @@ const queryEvents = async (provider) => {
     ...ethusdcSupplyEvents,
     ...usdcBorrowEvents,
     ...usdcPaybackEvents,
-  ];
+  ].sort((a, b) => a.blockNumber - b.blockNumber);
 };
 
 module.exports = {

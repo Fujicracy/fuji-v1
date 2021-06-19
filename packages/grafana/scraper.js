@@ -26,4 +26,6 @@ const main = async () => {
   return stats;
 };
 
-main();
+module.exports = {
+  scraper: main,
+};
