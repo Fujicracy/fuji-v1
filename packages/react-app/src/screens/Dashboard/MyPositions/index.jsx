@@ -16,7 +16,6 @@ import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
-
   const positions = map(ASSETS, asset => ({
     debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
       address,
@@ -30,13 +29,13 @@ function MyPositions({ contracts, address }) {
   }));
 
   const hasPosition = asset => {
+    let has = false;
     if (asset) {
       const position = find(positions, item => item.name === asset);
-      return (
+      has =
         position &&
         position.collateralBalance &&
-        Number(formatUnits(position.collateralBalance)) > 0
-      );
+        Number(formatUnits(position.collateralBalance)) > 0;
     }
 
     for (let i = 0; i < positions.length; i += 1) {
@@ -44,11 +43,10 @@ function MyPositions({ contracts, address }) {
         positions[i].collateralBalance &&
         Number(formatUnits(positions[i].collateralBalance)) > 0
       ) {
-        return true;
+        has = true;
       }
     }
-
-    return false;
+    return has;
   };
 
   return (
@@ -70,35 +68,25 @@ function MyPositions({ contracts, address }) {
             ) : (
               <div style={{ height: '2.5rem' }} />
             )}
-            {map(
-              positions,
-              position =>
-                hasPosition(position.borrowAsset) && (
-                  <Grid item className="one-position">
-                    <PositionElement
-                      actionType={PositionActions.Manage}
-                      position={position.borrowAsset}
-                    />
-                  </Grid>
-                ),
-            )}
 
-            {map(
-              positions,
-              position =>
-                !hasPosition(position.borrowAsset) &&
-                position.collateralBalance !== undefined && (
-                  <Grid
-                    item
-                    onClick={() =>
-                      history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
-                    }
-                    className="adding-position"
-                  >
-                    <AddIcon />
-                    Borrow {position.borrowAsset}
-                  </Grid>
-                ),
+            {map(positions, position =>
+              hasPosition(position.borrowAsset) ? (
+                <Grid key={position.borrowAsset} item className="one-position">
+                  <PositionElement actionType={PositionActions.Manage} position={position} />
+                </Grid>
+              ) : (
+                <Grid
+                  key={position.borrowAsset}
+                  item
+                  onClick={() =>
+                    history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
+                  }
+                  className="adding-position"
+                >
+                  <AddIcon />
+                  Borrow {position.borrowAsset}
+                </Grid>
+              ),
             )}
           </div>
         </Grid>
