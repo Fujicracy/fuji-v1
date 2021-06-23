@@ -16,6 +16,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { ASSETS } from 'constants/assets';
 import {
   Transactor,
   GasEstimator,
@@ -45,7 +46,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   const [leftToBorrow, setLeftToBorrow] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const { decimals } = ASSETS.find(asset => asset.name === borrowAsset);
 
   const unFormattedBalance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
   const balance = unFormattedBalance
