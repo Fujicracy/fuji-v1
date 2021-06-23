@@ -9,7 +9,13 @@ export default {
     white: colors.white,
     secondary: colors.secondary,
     disabled: colors.black,
-    default: colors.primary,
+    default: colors.gradients.primary.toRight,
+  },
+  border: {
+    white: colors.white,
+    secondary: colors.secondary,
+    disabled: colors.black,
+    default: `2px solid ${colors.primary}`,
   },
   color: {
     white: colors.secondary,
@@ -26,7 +32,7 @@ export default {
   shadow: {
     white: '0 0 15px 0 rgba(0, 0, 0, 0.1)',
     secondary: '0 0 15px 0 rgba(0, 0, 0, 0.1)',
-    default: '0 0 15px 0 rgba(0, 0, 0, 0.2)',
+    default: `0px 0px 6px ${colors.primary}`,
   },
   shadowActive: {
     white: '0 0 15px 0 rgba(0, 0, 0, 0.05)',

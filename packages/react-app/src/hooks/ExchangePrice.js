@@ -23,7 +23,12 @@ export default function useExchangePrice(asset = 'ETH') {
       priceFeedProxy = '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6';
       break;
 
+    case 'USDT':
+      priceFeedProxy = '0x3E7d1eAB13ad0104d2750B8863b489D65364e32D';
+      break;
+
     default:
+      // ETH
       priceFeedProxy = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
   }
 
@@ -34,6 +39,8 @@ export default function useExchangePrice(asset = 'ETH') {
       if (oracle) {
         try {
           const r = await oracle.latestRoundData();
+          console.log('price', r);
+          console.log('price', formatUnits(r.answer, 8));
           setPrice(parseFloat(formatUnits(r.answer, 8)));
         } catch (e) {
           console.log(e);

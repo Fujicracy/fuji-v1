@@ -31,7 +31,7 @@ export default function useContractLoader(providerOrSigner) {
   useEffect(() => {
     async function loadContracts() {
       if (typeof providerOrSigner !== 'undefined') {
-        const contractList = require('../contracts/contracts.js');
+        const contractList = require('../contracts/contracts');
         // we need to check to see if this providerOrSigner has a signer or not
         let signer;
         let accounts;
