@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const retry = require('async-retry');
 const chalk = require('chalk');
 const { ethers, Wallet } = require('ethers');
 const { loadContracts, getGasPrice, getLiquidationProviderIndex } = require('./utils');
@@ -128,14 +129,37 @@ async function checkForRefinance(contracts) {
   }
 }
 
+function delay(s) {
+  return new Promise(r => setTimeout(r, s * 1000));
+}
+
 async function main() {
   console.log('Start checking for refinancing...');
 
   const contracts = await loadContracts(signer);
-  await checkForRefinance(contracts);
 
-  // run every 15 min
-  setInterval(async () => checkForRefinance(contracts), 15 * 60 * 1000);
+  // eslint-disable-next-line
+  while (true) {
+    try {
+      await retry(
+        async () => {
+          await checkForRefinance(contracts);
+        },
+        {
+          retries: process.env.RETRIES_COUNT || 2, // default 2 retries
+          minTimeout: (process.env.RETRIES_TIMEOUT || 2) * 1000, // delay between retries in ms, default 2000
+          randomize: false,
+          onRetry: error => {
+            console.log('An error was thrown in the execution loop - retrying', error);
+          },
+        },
+      );
+    } catch (error) {
+      console.log('Unsuccessful retries');
+    }
+    // delay, default 15 minutes
+    await delay(process.env.DELAY || 15 * 60);
+  }
 }
 
 main();
