@@ -24,7 +24,7 @@ export default function useExchangePrice(asset = 'ETH') {
       break;
 
     default:
-      priceFeedProxy = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
+      priceFeedProxy = '0x3E7d1eAB13ad0104d2750B8863b489D65364e32D';
   }
 
   const oracle = useExternalContractLoader(provider, priceFeedProxy, CHAINLINK_ABI);
