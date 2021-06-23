@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
 import map from 'lodash/map';
+import orderBy from 'lodash/orderBy';
 import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
@@ -73,24 +74,30 @@ function MyPositions({ contracts, address }) {
               <div style={{ height: '2.5rem' }} />
             )}
 
-            {map(positions, position =>
-              hasPosition(position.borrowAsset) ? (
-                <Grid key={position.borrowAsset} item className="one-position">
-                  <PositionElement actionType={PositionActions.Manage} position={position} />
-                </Grid>
-              ) : (
-                <Grid
-                  key={position.borrowAsset}
-                  item
-                  onClick={() =>
-                    history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
-                  }
-                  className="adding-position"
-                >
-                  <AddIcon />
-                  Borrow {position.borrowAsset}
-                </Grid>
+            {map(
+              orderBy(
+                positions,
+                item => Number(formatUnits(item.collateralBalance || 0, item.decimals)),
+                'desc',
               ),
+              position =>
+                hasPosition(position.borrowAsset) ? (
+                  <Grid key={position.borrowAsset} item className="one-position">
+                    <PositionElement actionType={PositionActions.Manage} position={position} />
+                  </Grid>
+                ) : (
+                  <Grid
+                    key={position.borrowAsset}
+                    item
+                    onClick={() =>
+                      history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
+                    }
+                    className="adding-position"
+                  >
+                    <AddIcon />
+                    Borrow {position.borrowAsset}
+                  </Grid>
+                ),
             )}
           </div>
         </Grid>

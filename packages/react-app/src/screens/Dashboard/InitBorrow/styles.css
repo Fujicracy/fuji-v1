@@ -68,7 +68,7 @@
 
 .borrow-actions .helper {
   background-color: var(--bg64);
-  padding: 0.5rem 0.75rem;
+  padding: 10px;
   border-radius: 0.5rem;
 }
 

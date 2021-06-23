@@ -4,7 +4,9 @@ export default function PositionRatios(position, price) {
   const { debtBalance, collateralBalance } = position;
 
   const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : 0;
-  const collateral = collateralBalance ? Number(formatEther(collateralBalance, 18)) : 0;
+  const collateral = collateralBalance
+    ? Number(formatEther(collateralBalance, position.decimals))
+    : 0;
   // liquidation threshold
   const liqThres = 0.75;
   // collateralization and healthy factor

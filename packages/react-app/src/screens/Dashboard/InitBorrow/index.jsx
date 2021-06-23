@@ -66,7 +66,7 @@ function InitBorrow({ contracts, provider, address }) {
   const ethBalance = unFormattedEthBalance
     ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
     : null;
-  const decimals = borrowAsset === ASSET_TYPE.DAI ? 18 : 6;
+  const { decimals } = ASSETS.find(asset => asset.name === borrowAsset);
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -110,7 +110,7 @@ function InitBorrow({ contracts, provider, address }) {
       !collateralBalance || !collateralAmount
         ? 0
         : collateralBalance.add(parseEther(collateralAmount)),
-    decimals: ASSETS.find(asset => asset.name === borrowAsset).decimals,
+    decimals,
   };
 
   const tx = Transactor(provider);
