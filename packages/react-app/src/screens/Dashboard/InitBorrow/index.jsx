@@ -110,6 +110,7 @@ function InitBorrow({ contracts, provider, address }) {
       !collateralBalance || !collateralAmount
         ? 0
         : collateralBalance.add(parseEther(collateralAmount)),
+    decimals: ASSETS.find(asset => asset.name === borrowAsset).decimals,
   };
 
   const tx = Transactor(provider);

@@ -12,20 +12,20 @@ export const ASSETS = [
     name: ASSET_TYPE.DAI,
     icon: daiIcon.toString(),
     image: daiImage,
-    decimal: 18,
+    decimals: 18,
   },
   {
     id: ASSET_TYPE.USDC.toLowerCase(),
     name: ASSET_TYPE.USDC,
     icon: usdcIcon.toString(),
     image: usdcImage,
-    decimal: 6,
+    decimals: 6,
   },
   {
     id: ASSET_TYPE.USDT.toLowerCase(),
     name: ASSET_TYPE.USDT,
     icon: usdtIcon.toString(),
     image: usdtImage,
-    decimal: 6,
+    decimals: 6,
   },
 ];
