@@ -17,6 +17,9 @@ export default function PositionRatios(position, price) {
   const liqPrice = debt / (collateral * liqThres);
   const ltv = debt / (collateral * price);
   const borrowLimit = Math.min(ltv * factor, 1);
+  // if (price > 0) {
+  //   debugger;
+  // }
 
   return {
     healthFactor: healthFactor || 0,
