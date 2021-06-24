@@ -34,7 +34,7 @@ const contractDeployBlock = async (provider) => {
   return [daiInfo, usdcInfo, currentBlock];
 };
 
-const queryEvents = async (provider) => {
+const queryEvents = async (provider, fromLast) => {
   const [daiDeployData, usdcDeployData, currentBlock] =
     await contractDeployBlock(provider);
   const daiVault = new ethers.Contract(ETHDAI, ETHDAIABI, provider);
@@ -44,56 +44,56 @@ const queryEvents = async (provider) => {
 
   const daiBorrowEvents = await daiVault.queryFilter(
     evtDaiBorrow,
-    daiDeployData.startBlock
+    fromLast ? fromLast : daiDeployData.startBlock
   );
 
   const evtDaiPayback = await daiVault.filters.Payback();
 
   const daiPaybackEvents = await daiVault.queryFilter(
     evtDaiPayback,
-    daiDeployData.startBlock
+    fromLast ? fromLast : daiDeployData.startBlock
   );
 
   const evtEthDaiSupply = await daiVault.filters.Deposit();
 
   const ethDaiSupplyEvents = await daiVault.queryFilter(
     evtEthDaiSupply,
-    daiDeployData.startBlock
+    fromLast ? fromLast : daiDeployData.startBlock
   );
 
   const evtEthDaiWithdraw = await daiVault.filters.Withdraw();
 
   const ethDaiWithdrawEvents = await daiVault.queryFilter(
     evtEthDaiWithdraw,
-    daiDeployData.startBlock
+    fromLast ? fromLast : daiDeployData.startBlock
   );
 
   const evtUsdcBorrow = await usdcVault.filters.Borrow();
 
   const usdcBorrowEvents = await usdcVault.queryFilter(
     evtUsdcBorrow,
-    usdcDeployData.startBlock
+    fromLast ? fromLast : usdcDeployData.startBlock
   );
 
   const evtUsdcPayback = await usdcVault.filters.Payback();
 
   const usdcPaybackEvents = await usdcVault.queryFilter(
     evtUsdcPayback,
-    usdcDeployData.startBlock
+    fromLast ? fromLast : usdcDeployData.startBlock
   );
 
   const evtEthusdcSupply = await usdcVault.filters.Deposit();
 
   const ethusdcSupplyEvents = await usdcVault.queryFilter(
     evtEthusdcSupply,
-    usdcDeployData.startBlock
+    fromLast ? fromLast : usdcDeployData.startBlock
   );
 
   const evtEthusdcWithdraw = await usdcVault.filters.Withdraw();
 
   const ethusdcWithdrawEvents = await usdcVault.queryFilter(
     evtEthusdcWithdraw,
-    usdcDeployData.startBlock
+    fromLast ? fromLast : usdcDeployData.startBlock
   );
 
   // console.log(ethusdcWithdrawEvents.length);

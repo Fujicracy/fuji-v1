@@ -2,7 +2,7 @@ require("dotenv").config();
 const { ethers } = require("ethers");
 const { getEvents } = require("./utils/fetch");
 
-const main = async () => {
+const main = async (fromLast) => {
   let provider;
 
   if (process.env.PROJECT_ID) {
@@ -15,9 +15,9 @@ const main = async () => {
   let stats;
   if (provider) {
     try {
-      stats = await getEvents(provider);
+      stats = await getEvents(provider, fromLast);
     } catch (err) {
-      console.log("tats crash:");
+      console.log("stats crash:");
       console.log(err);
     }
   } else {

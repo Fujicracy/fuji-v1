@@ -3,8 +3,8 @@ const { ethers } = require("ethers");
 const { ETHUSDC, ETHDAI } = require("./addresses");
 const { queryEvents } = require("./helpers");
 
-const getEvents = async (provider) => {
-  const allEvents = await queryEvents(provider);
+const getEvents = async (provider, fromLast) => {
+  const allEvents = await queryEvents(provider, fromLast);
 
   const daiData = [];
   const ethDaiSupply = [];
@@ -14,21 +14,29 @@ const getEvents = async (provider) => {
   let currentEthUsdcSupply = 0;
   let currentDaiDebt = 0;
   let currentUsdcDebt = 0;
+  let tx = null;
+  let currentType = null;
   for (let i = 0; i <= allEvents.length - 1; i++) {
+    const event = allEvents[i].event;
     if (allEvents[i].address === ETHDAI) {
-      if (allEvents[i].event === "Payback") {
+      tx = allEvents[i].transactionHash;
+      if (event === "Payback") {
+        currentType = "DD";
         currentDaiDebt -= parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
-      } else if (allEvents[i].event === "Borrow") {
+      } else if (event === "Borrow") {
+        currentType = "DD";
         currentDaiDebt += parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
-      } else if (allEvents[i].event === "Deposit") {
+      } else if (event === "Deposit") {
+        currentType = "DS";
         currentEthDaiSupply += parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
-      } else if (allEvents[i].event === "Withdraw") {
+      } else if (event === "Withdraw") {
+        currentType = "DS";
         currentEthDaiSupply -= parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
@@ -36,19 +44,24 @@ const getEvents = async (provider) => {
     }
 
     if (allEvents[i].address === ETHUSDC) {
-      if (allEvents[i].event === "Payback") {
+      tx = allEvents[i].transactionHash;
+      if (event === "Payback") {
+        currentType = "UD";
         currentUsdcDebt -= parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 6)
         );
-      } else if (allEvents[i].event === "Borrow") {
+      } else if (event === "Borrow") {
+        currentType = "UD";
         currentUsdcDebt += parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 6)
         );
-      } else if (allEvents[i].event === "Deposit") {
+      } else if (event === "Deposit") {
+        currentType = "US";
         currentEthUsdcSupply += parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
-      } else if (allEvents[i].event === "Withdraw") {
+      } else if (event === "Withdraw") {
+        currentType = "US";
         currentEthUsdcSupply -= parseFloat(
           ethers.utils.formatUnits(allEvents[i].args.amount.toString(), 18)
         );
@@ -57,30 +70,46 @@ const getEvents = async (provider) => {
 
     const timestamp = (await provider.getBlock(allEvents[i].blockNumber))
       .timestamp;
+    const blocknumber = allEvents[i].blockNumber;
+
     const daiPoint = {
-      debt: currentDaiDebt,
-      blockNumber: allEvents[i].blockNumber,
+      vault: "ETHDAI",
+      type: "DEBT",
+      value: currentDaiDebt,
+      blocknumber,
       timestamp,
+      tx: currentType === "DD" ? tx : null,
     };
 
     const daiEthPoint = {
-      supply: currentEthDaiSupply,
-      blockNumber: allEvents[i].blockNumber,
+      vault: "ETHDAI",
+      type: "COLL",
+      value: currentEthDaiSupply,
+      blocknumber,
       timestamp,
+      tx: currentType === "DS" ? tx : null,
     };
 
     const usdcPoint = {
-      debt: currentUsdcDebt,
-      blockNumber: allEvents[i].blockNumber,
+      vault: "ETHUSDC",
+      type: "DEBT",
+      value: currentUsdcDebt,
+      blocknumber,
       timestamp,
+      tx: currentType === "UD" ? tx : null,
     };
 
     const usdcEthPoint = {
-      supply: currentEthUsdcSupply,
-      blockNumber: allEvents[i].blockNumber,
+      vault: "ETHUSDC",
+      type: "COLL",
+      value: currentEthUsdcSupply,
+      blocknumber,
       timestamp,
+      tx: currentType === "US" ? tx : null,
     };
 
+    tx = null;
+    currentType = null;
     daiData.push(daiPoint);
 
     ethDaiSupply.push(daiEthPoint);
@@ -98,12 +127,7 @@ const getEvents = async (provider) => {
 
   console.log(ethUsdcSupply[ethUsdcSupply.length - 1]);
 
-  return {
-    daiDebt: daiData,
-    daiCollat: ethDaiSupply,
-    usdcDebt: usdcData,
-    usdcCollat: ethUsdcSupply,
-  };
+  return [...daiData, ...ethDaiSupply, ...usdcData, ...ethUsdcSupply];
 };
 
 module.exports = {
