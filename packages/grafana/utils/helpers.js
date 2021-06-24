@@ -101,7 +101,10 @@ const queryEvents = async (provider, fromLast) => {
   // console.log(ethusdcSupplyEvents[0]);
   // console.log(ethusdcSupplyEvents[0].args.amount.toString());
   // console.log(ethDaiWithdrawEvents.length);
-  console.log(ethDaiSupplyEvents.length);
+  // console.log(ethDaiSupplyEvents.length);
+  // console.log(ethDaiSupplyEvents.length);
+  // console.log(ethDaiSupplyEvents.length);
+  // console.log(ethDaiSupplyEvents.length);
   return [
     ...ethDaiWithdrawEvents,
     ...ethDaiSupplyEvents,

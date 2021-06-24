@@ -1,20 +1,28 @@
 const { VaultPoint } = require("../../db");
 
-const isUnique = async (blocknumber, tx) => {
-  const query = await Vault.find();
-
-  const notUnique = await query.$where(() => {
-    return this.blocknumber === blocknumber && this.tx === tx;
-  });
-
-  return !notUnique;
+const isUnique = async (blocknumber, type, vault, tx) => {
+  const points = await VaultPoint.find({
+    blocknumber,
+    tx,
+    type,
+    vault,
+  }).exec();
+  if (points.length > 0) {
+    // console.log(points);
+  }
+  //   console.log(points);
+  return points.length === 0;
 };
 
 const addMany = async (arr) => {
-  for (let i = 0; i <= arr.length + 1; i++) {
+  //   console.log(arr);
+  for (let i = 0; i <= arr.length - 1; i++) {
+    // console.log(arr.length);
+    // console.log(i);
     const event = arr[i];
-    if (isUnique(event.blocknumber, event.tx)) {
+    if (await isUnique(event.blocknumber, event.type, event.vault, event.tx)) {
       await VaultPoint.create(event);
+      console.log("unique");
     } else {
       console.log("notunique");
     }

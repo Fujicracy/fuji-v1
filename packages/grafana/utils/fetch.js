@@ -6,6 +6,8 @@ const { queryEvents } = require("./helpers");
 const getEvents = async (provider, fromLast) => {
   const allEvents = await queryEvents(provider, fromLast);
 
+  console.log(allEvents.length);
+
   const daiData = [];
   const ethDaiSupply = [];
   const usdcData = [];
@@ -17,6 +19,7 @@ const getEvents = async (provider, fromLast) => {
   let tx = null;
   let currentType = null;
   for (let i = 0; i <= allEvents.length - 1; i++) {
+    console.log(i);
     const event = allEvents[i].event;
     if (allEvents[i].address === ETHDAI) {
       tx = allEvents[i].transactionHash;
@@ -119,15 +122,17 @@ const getEvents = async (provider, fromLast) => {
     ethUsdcSupply.push(usdcEthPoint);
   }
 
-  console.log(usdcData[usdcData.length - 1]);
+  // console.log(usdcData[usdcData.length - 1]);
 
-  console.log(daiData[daiData.length - 1]);
+  // console.log(daiData[daiData.length - 1]);
 
-  console.log(ethDaiSupply[ethDaiSupply.length - 1]);
+  // console.log(ethDaiSupply[ethDaiSupply.length - 1]);
 
-  console.log(ethUsdcSupply[ethUsdcSupply.length - 1]);
+  // console.log(ethUsdcSupply[ethUsdcSupply.length - 1]);
 
-  return [...daiData, ...ethDaiSupply, ...usdcData, ...ethUsdcSupply];
+  return [...daiData, ...ethDaiSupply, ...usdcData, ...ethUsdcSupply].sort(
+    (a, b) => a.blockNumber - b.blockNumber
+  );
 };
 
 module.exports = {

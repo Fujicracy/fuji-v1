@@ -6,22 +6,28 @@ const VPService = require("./services/VaultPoints");
 const app = express();
 
 app.get("/metrics", async (req, res) => {
-  let daiDebtPoints = await VPRepresenter.many("ETHDAI", "DEBT");
-  let daiCollPoints = await VPRepresenter.many("ETHDAI", "COLL");
-  let usdcDebtPoints = await VPRepresenter.many("ETHUSDC", "DEBT");
-  let usdcCollPoints = await VPRepresenter.many("ETHUSDC", "COLL");
+  const points = await VPRepresenter.many();
+  const lastBlock = points.points[points.points.length - 1].blocknumber;
 
-  console.log(daiDebtPoints);
-  // const latestDaiDebtPoint
-  const newPoints = await scraper();
+  const newPoints = await scraper(lastBlock);
+
+  console.log("addnew");
   await VPService.addMany(newPoints);
+  console.log("addednewifany");
 
-  daiDebtPoints = await VPRepresenter.many("ETHDAI", "DEBT");
-  daiCollPoints = await VPRepresenter.many("ETHDAI", "COLL");
-  usdcDebtPoints = await VPRepresenter.many("ETHUSDC", "DEBT");
-  usdcCollPoints = await VPRepresenter.many("ETHUSDC", "COLL");
+  const daiDebt = (await VPRepresenter.many("ETHDAI", "DEBT")).points;
+  const daiColl = (await VPRepresenter.many("ETHDAI", "COLL")).points;
+  const usdcDebt = (await VPRepresenter.many("ETHUSDC", "DEBT")).points;
+  const usdcColl = (await VPRepresenter.many("ETHDAI", "COLL")).points;
 
-  res.send(daiDebtPoints);
+  const metrics = {
+    daiDebt,
+    daiColl,
+    usdcDebt,
+    usdcColl,
+  };
+
+  res.send(points);
 });
 
 app.listen(4000, () => {
