@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Container, Logo, Navigation } from './styles';
 import { LANDING_URL } from '../../constants/providers';
@@ -10,9 +10,9 @@ function Header() {
 
   return (
     <Container>
-      <Link to={LANDING_URL} className="logo">
+      <a href={LANDING_URL} className="logo">
         <Logo alt="logo" src="/logo-title.svg" />
-      </Link>
+      </a>
 
       {address && (
         <Navigation>

@@ -90,7 +90,7 @@ function App() {
                     Documentation
                   </a>
                 </li>
-                <li>© Fuji DAO 2021</li>
+                <li>© FujiDAO 2021</li>
               </ul>
             </nav>
           </footer>
