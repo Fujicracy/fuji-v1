@@ -17,41 +17,41 @@ import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
-  const positions = map(ASSETS, asset => ({
-    debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-      address,
-      getBorrowId(asset.name), // 5 for usdt and 3 for usdc
-    ]),
-    collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-      address,
-      getCollateralId(asset.name),
-    ]),
-    borrowAsset: asset.name,
-    decimals: asset.decimals,
-  }));
+  const positions = map(Object.keys(ASSETS), key => {
+    const asset = ASSETS[key];
+    return {
+      debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+        address,
+        getBorrowId(asset.name), // 5 for usdt and 3 for usdc
+      ]),
+      collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+        address,
+        getCollateralId(asset.name),
+      ]),
+      borrowAsset: asset.name,
+      decimals: asset.decimals,
+    };
+  });
 
   const hasPosition = asset => {
-    let has = false;
     if (asset) {
       const position = find(positions, item => item.borrowAsset === asset);
-      if (position.collateralBalance !== undefined) {
-        has =
-          position &&
-          position.collateralBalance &&
-          Number(formatUnits(position.collateralBalance, position.decimals)) > 0;
-      }
-    } else {
-      for (let i = 0; i < positions.length; i += 1) {
-        if (
-          positions[i].collateralBalance &&
-          Number(formatUnits(positions[i].collateralBalance, positions[i].decimals)) > 0
-        ) {
-          has = true;
-        }
+      return (
+        position &&
+        position.collateralBalance &&
+        Number(formatUnits(position.collateralBalance, position.decimals)) > 0
+      );
+    }
+    for (let i = 0; i < positions.length; i += 1) {
+      if (
+        positions[i].collateralBalance &&
+        Number(formatUnits(positions[i].collateralBalance, positions[i].decimals)) > 0
+      ) {
+        return true;
       }
     }
 
-    return has;
+    return false;
   };
 
   return (

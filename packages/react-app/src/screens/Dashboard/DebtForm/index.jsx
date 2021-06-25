@@ -46,7 +46,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   const [leftToBorrow, setLeftToBorrow] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const { decimals } = ASSETS.find(asset => asset.name === borrowAsset);
+  const { decimals } = ASSETS[borrowAsset];
 
   const unFormattedBalance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
   const balance = unFormattedBalance

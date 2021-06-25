@@ -65,7 +65,7 @@ function InitBorrow({ contracts, provider, address }) {
   const ethBalance = unFormattedEthBalance
     ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
     : null;
-  const { decimals } = ASSETS.find(asset => asset.name === borrowAsset);
+  const { decimals } = ASSETS[borrowAsset];
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -207,21 +207,24 @@ function InitBorrow({ contracts, provider, address }) {
               <div className="section-title">Borrow</div>
               <div className="select-options">
                 <div className="options-list">
-                  {map(ASSETS, asset => (
-                    <label key={asset.id}>
-                      <input
-                        type="radio"
-                        name="borrow"
-                        value={asset.name}
-                        onChange={handleChangeAsset(asset.name)}
-                        checked={borrowAsset === asset.name}
-                      />
-                      <div className="fake-radio">
-                        <img alt={asset.id} src={asset.icon} />
-                        <span className="select-option-name">{asset.name}</span>
-                      </div>
-                    </label>
-                  ))}
+                  {map(Object.keys(ASSETS), key => {
+                    const asset = ASSETS[key];
+                    return (
+                      <label key={key}>
+                        <input
+                          type="radio"
+                          name="borrow"
+                          value={asset.name}
+                          onChange={handleChangeAsset(asset.name)}
+                          checked={borrowAsset === asset.name}
+                        />
+                        <div className="fake-radio">
+                          <img alt={asset.id} src={asset.icon} />
+                          <span className="select-option-name">{asset.name}</span>
+                        </div>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             </div>
