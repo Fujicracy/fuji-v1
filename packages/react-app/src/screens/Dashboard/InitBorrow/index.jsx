@@ -4,11 +4,8 @@ import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject
 import { useForm } from 'react-hook-form';
 import map from 'lodash/map';
 import {
-  TextField,
-  Avatar,
   Button,
   Typography,
-  InputAdornment,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,6 +21,8 @@ import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } fro
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 
 import './styles.css';
+
+import { TextInput } from '../../../components/UI';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -226,106 +225,68 @@ function InitBorrow({ contracts, provider, address }) {
                 </div>
               </div>
             </div>
+
             <div className="borrow-inputs">
-              <div className="borrow-amount-input">
-                <div className="subtitle">Amount to borrow</div>
-                <div className="fake-input">
-                  <TextField
-                    className="input-container"
-                    fullWidth
-                    placeholder={borrowAmount}
-                    autoComplete="off"
-                    id="borrowAmount"
-                    name="borrowAmount"
-                    type="number"
-                    step="any"
-                    variant="outlined"
-                    value={borrowAmount}
-                    onChange={({ target }) => setBorrowAmount(target.value)}
-                    inputRef={register({ required: true, min: 0 })}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Typography variant="body1" className="input-infos">
-                            {borrowAsset}
-                          </Typography>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </div>
-                {errors?.borrowAmount && (
-                  <Typography className="error-input-msg" variant="body2">
-                    Please, type the amount you like to borrow
-                  </Typography>
-                )}
-              </div>
-              <div className="collateral-input">
-                <div className="subtitle">
-                  Collateral
-                  <span className="complementary-infos">
-                    <span>
-                      Your balance: {ethBalance ? Number(ethBalance).toFixed(3) : '...'} Ξ
-                    </span>
-                  </span>
-                </div>
-                <div className="fake-input">
-                  <TextField
-                    className="input-container"
-                    required
-                    fullWidth
-                    autoComplete="off"
-                    name="collateralAmount"
-                    type="number"
-                    step="any"
-                    id="collateralAmount"
-                    variant="outlined"
-                    placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
-                    onChange={({ target }) => setCollateralAmount(target.value)}
-                    inputRef={register({
-                      required: { value: true, message: 'required-amount' },
-                      min: { value: neededCollateral, message: 'insufficient-collateral' },
-                      max: { value: ethBalance, message: 'insufficient-balance' },
-                    })}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Avatar alt="ETH" src="/ETH.png" className="icon" />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Typography variant="body1" className="input-infos">
-                            ETH
-                          </Typography>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </div>
-                {errors?.collateralAmount?.message === 'required-amount' && (
-                  <Typography className="error-input-msg" variant="body2">
-                    Please, type the amount you want to provide as collateral
-                  </Typography>
-                )}
-                {errors?.collateralAmount?.message === 'insufficient-collateral' && (
-                  <Typography className="error-input-msg" variant="body2">
-                    Please, provide at least{' '}
-                    <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
-                    collateral!
-                  </Typography>
-                )}
-                {errors?.collateralAmount?.message === 'insufficient-balance' && (
-                  <Typography className="error-input-msg" variant="body2">
-                    Insufficient ETH balance
-                  </Typography>
-                )}
-              </div>
+              <TextInput
+                className="fake-input"
+                fullWidth
+                placeholder={borrowAmount}
+                autoComplete="off"
+                id="borrowAmount"
+                name="borrowAmount"
+                type="number"
+                step="any"
+                variant="outlined"
+                value={borrowAmount}
+                onChange={({ target }) => setBorrowAmount(target.value)}
+                inputRef={register({ required: true, min: 0 })}
+                startAdornmentImage={`/${borrowAsset}.png`}
+                endAdornment={{ text: 353.69, type: 'currency' }}
+                subTitle="Amount to borrow"
+                description={errors?.borrowAmount ?? 'Please, type the amount you like to borrow'}
+              />
+
+              <TextInput
+                required
+                fullWidth
+                autoComplete="off"
+                name="collateralAmount"
+                type="number"
+                step="any"
+                id="collateralAmount"
+                placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
+                onChange={({ target }) => setCollateralAmount(target.value)}
+                inputRef={register({
+                  required: { value: true, message: 'required-amount' },
+                  min: { value: neededCollateral, message: 'insufficient-collateral' },
+                  max: { value: ethBalance, message: 'insufficient-balance' },
+                })}
+                startAdornmentImage="/ETH.png"
+                endAdornment={{ text: 400.69, type: 'currency' }}
+                subTitle="Collateral"
+                subTitleInfo={`Your balance: ${
+                  ethBalance ? Number(ethBalance).toFixed(3) : '...'
+                } Ξ`}
+                errorComponent={
+                  errors?.collateralAmount?.message === 'required-amount' ? (
+                    <Typography className="error-input-msg" variant="body2">
+                      Please, type the amount you want to provide as collateral
+                    </Typography>
+                  ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
+                    <Typography className="error-input-msg" variant="body2">
+                      Please, provide at least{' '}
+                      <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
+                      collateral!
+                    </Typography>
+                  ) : (
+                    errors?.collateralAmount?.message === 'insufficient-balance' ?? (
+                      <Typography className="error-input-msg" variant="body2">
+                        Insufficient ETH balance
+                      </Typography>
+                    )
+                  )
+                }
+              />
             </div>
             <div className="helper">
               <Typography variant="body2">
