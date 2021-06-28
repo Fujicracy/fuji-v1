@@ -6,7 +6,7 @@ pointSchema = new Schema({
   vault: String,
   type: String,
   value: Number,
-  timestammp: Number,
+  timestamp: { type: Number, required: [true, "need timestamp"] },
   blocknumber: Number,
   tx: String,
 });
