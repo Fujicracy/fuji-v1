@@ -28,10 +28,13 @@ function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const queries = new URLSearchParams(useLocation().search);
   const gasPrice = useGasPrice();
-  const borrowPrice = useExchangePrice();
 
   const [borrowAmount, setBorrowAmount] = useState('1000');
   const [borrowAsset, setBorrowAsset] = useState(ASSET_TYPE.DAI);
+
+  const ethPrice = useExchangePrice();
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
+
   const [collateralAmount, setCollateralAmount] = useState('');
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
@@ -241,7 +244,10 @@ function InitBorrow({ contracts, provider, address }) {
                 onChange={({ target }) => setBorrowAmount(target.value)}
                 inputRef={register({ required: true, min: 0 })}
                 startAdornmentImage={`/${borrowAsset}.png`}
-                endAdornment={{ text: 353.69, type: 'currency' }}
+                endAdornment={{
+                  text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                  type: 'currency',
+                }}
                 subTitle="Amount to borrow"
                 description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
               />
@@ -260,7 +266,7 @@ function InitBorrow({ contracts, provider, address }) {
                 })}
                 startAdornmentImage="/ETH.png"
                 endAdornment={{
-                  text: (collateralAmount * borrowPrice).toFixed(2),
+                  text: (collateralAmount * ethPrice).toFixed(2),
                   type: 'currency',
                 }}
                 subTitle="Collateral"
