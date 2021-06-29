@@ -5,7 +5,34 @@ export const ASSET_TYPE = {
   USDC: 'USDC',
   USDT: 'USDT',
 };
-
+export const PROVIDER_TYPE = {
+  AAVE: 'AAVE',
+  COMPOUND: 'Compound',
+  DYDX: 'DYDX',
+  IRONBANK: 'IronBank',
+};
+export const PROVIDERS = {
+  [PROVIDER_TYPE.AAVE]: {
+    id: 'aave',
+    name: 'ProviderAave',
+    title: 'Aave',
+  },
+  [PROVIDER_TYPE.COMPOUND]: {
+    id: 'compound',
+    name: 'ProviderCompound',
+    title: 'Compound',
+  },
+  [PROVIDER_TYPE.DYDX]: {
+    id: 'dydx',
+    name: 'ProviderDYDX',
+    title: 'DYDX',
+  },
+  [PROVIDER_TYPE.IRONBANK]: {
+    id: 'ironbank',
+    name: 'ProviderIronBank',
+    title: 'IronBank',
+  },
+};
 export const ASSETS = {
   [ASSET_TYPE.DAI]: {
     id: ASSET_TYPE.DAI.toLowerCase(),
@@ -14,7 +41,12 @@ export const ASSETS = {
     image: daiImage,
     decimals: 18,
     vault: 'VaultETHDAI',
-    providers: ['ProviderAave', 'ProviderCompound', 'ProviderDYDX', 'ProviderIronBank'],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.DYDX],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
   },
   [ASSET_TYPE.USDC]: {
     id: ASSET_TYPE.USDC.toLowerCase(),
@@ -23,7 +55,12 @@ export const ASSETS = {
     image: usdcImage,
     decimals: 6,
     vault: 'VaultETHUSDC',
-    providers: ['ProviderAave', 'ProviderCompound', 'ProviderDYDX', 'ProviderIronBank'],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.DYDX],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
   },
   [ASSET_TYPE.USDT]: {
     id: ASSET_TYPE.USDT.toLowerCase(),
@@ -32,6 +69,10 @@ export const ASSETS = {
     image: usdtImage,
     decimals: 6,
     vault: 'VaultETHUSDT',
-    providers: ['ProviderAave', 'ProviderCompound', 'ProviderIronBank'],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
   },
 };
