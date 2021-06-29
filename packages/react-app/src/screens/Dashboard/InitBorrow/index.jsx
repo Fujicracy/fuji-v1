@@ -202,7 +202,7 @@ function InitBorrow({ contracts, provider, address }) {
       <div className="left-content">
         <HowItWorks />
         <div className="dark-block borrow-actions">
-          <form noValidate>
+          <form noValidate autoComplete="off">
             <div className="borrow-options">
               <div className="section-title">Borrow</div>
               <div className="select-options">
@@ -232,7 +232,6 @@ function InitBorrow({ contracts, provider, address }) {
             <div className="borrow-inputs">
               <TextInput
                 placeholder={borrowAmount}
-                autoComplete="off"
                 id="borrowAmount"
                 name="borrowAmount"
                 type="number"
@@ -247,7 +246,6 @@ function InitBorrow({ contracts, provider, address }) {
               />
 
               <TextInput
-                autoComplete="off"
                 name="collateralAmount"
                 type="number"
                 step="any"
