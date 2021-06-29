@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { ASSETS } from 'constants/assets';
 import { useContractReader, useRates } from '../../hooks';
 
-import { Container } from './styles';
+import { SectionTitle, BlackBoxContainer } from '../Blocks';
 import './styles.css';
 
 function AnimatedCounter({ countTo }) {
@@ -59,8 +59,8 @@ const Provider = ({ contracts, market, rates }) => {
 function ProvidersList({ contracts, markets }) {
   const rates = useRates(contracts);
   return (
-    <Container>
-      <div className="section-title">
+    <BlackBoxContainer>
+      <SectionTitle>
         <Typography variant="h3">Borrow APR</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
@@ -68,7 +68,7 @@ function ProvidersList({ contracts, markets }) {
             Live fetching borrow rates from underlying protocols that provide liquidity.
           </span>
         </div>
-      </div>
+      </SectionTitle>
 
       <div className="providers">
         {markets &&
@@ -76,7 +76,7 @@ function ProvidersList({ contracts, markets }) {
             <Provider key={market} contracts={contracts} market={market} rates={rates} />
           ))}
       </div>
-    </Container>
+    </BlackBoxContainer>
   );
 }
 export default ProvidersList;
