@@ -16,7 +16,7 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'constants/providers';
 import { ASSET_TYPE, ASSETS } from 'constants/assets';
-import { useBalance, useContractReader, useGasPrice } from 'hooks';
+import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
 import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } from 'components';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 
@@ -28,6 +28,7 @@ function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const queries = new URLSearchParams(useLocation().search);
   const gasPrice = useGasPrice();
+  const borrowPrice = useExchangePrice();
 
   const [borrowAmount, setBorrowAmount] = useState('1000');
   const [borrowAsset, setBorrowAsset] = useState(ASSET_TYPE.DAI);
@@ -258,7 +259,10 @@ function InitBorrow({ contracts, provider, address }) {
                   max: { value: ethBalance, message: 'insufficient-balance' },
                 })}
                 startAdornmentImage="/ETH.png"
-                endAdornment={{ text: 400.69, type: 'currency' }}
+                endAdornment={{
+                  text: (collateralAmount * borrowPrice).toFixed(2),
+                  type: 'currency',
+                }}
                 subTitle="Collateral"
                 subTitleInfo={`Your balance: ${
                   ethBalance ? Number(ethBalance).toFixed(3) : '...'
