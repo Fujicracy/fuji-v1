@@ -37,10 +37,11 @@ body {
   position: absolute;
   /*padding-top: 40px;*/
   /*padding-bottom: 40px;*/
-  height: calc(100vh - 80px);
+  height: calc(100vh - 200px);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  background-size: contain !important;
 }
 
 .home-content {
@@ -51,7 +52,7 @@ body {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  top: calc(50% + 380px);
+  bottom:-100px;
 }
 
 .home-logo img {
