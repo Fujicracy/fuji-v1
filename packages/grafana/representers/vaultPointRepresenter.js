@@ -3,11 +3,9 @@ const { VaultPoint } = require("../db");
 const getPoints = async (vault, type) => {
   let points;
   if (vault && type) {
-    points = await VaultPoint.find()
-      .$where(() => {
-        return this.vault === vault, this.type === type;
-      })
-      .sort({ blocknumber: "asc" });
+    points = await VaultPoint.find({ vault, type }).sort({
+      blocknumber: "asc",
+    });
   } else {
     points = await VaultPoint.find().sort({ blocknumber: "asc" });
   }

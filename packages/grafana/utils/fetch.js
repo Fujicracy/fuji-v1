@@ -8,6 +8,7 @@ const getEvents = async (provider, fromLast) => {
 
   console.log(allEvents.length);
 
+  const accounts = {};
   const daiData = [];
   const ethDaiSupply = [];
   const usdcData = [];
@@ -19,8 +20,8 @@ const getEvents = async (provider, fromLast) => {
   let tx = null;
   let currentType = null;
   for (let i = 0; i <= allEvents.length - 1; i++) {
-    console.log(i);
     const event = allEvents[i].event;
+    console.log(allEvents[i]);
     if (allEvents[i].address === ETHDAI) {
       tx = allEvents[i].transactionHash;
       if (event === "Payback") {
