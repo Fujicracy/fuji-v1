@@ -15,7 +15,6 @@ const TextField = styled(
   ({
     id,
     name,
-    value,
     placeholder,
     hasError,
     isTouched,
@@ -29,6 +28,7 @@ const TextField = styled(
     subTitleInfo,
     errorComponent,
     inputRef,
+    defaultValue,
   }) => {
     const error = isTouched && hasError;
     return (
@@ -43,8 +43,8 @@ const TextField = styled(
             id={id}
             name={name}
             type={type}
+            defaultValue={defaultValue}
             placeholder={placeholder}
-            value={value}
             onChange={onChange}
             disabled={disabled}
             error={error}

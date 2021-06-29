@@ -25,7 +25,7 @@ import './styles.css';
 import { TextInput } from '../../../components/UI';
 
 function InitBorrow({ contracts, provider, address }) {
-  const { register, errors, handleSubmit } = useForm();
+  const { register, errors, handleSubmit } = useForm({ mode: 'onChange' });
   const queries = new URLSearchParams(useLocation().search);
   const gasPrice = useGasPrice();
 
@@ -240,6 +240,7 @@ function InitBorrow({ contracts, provider, address }) {
                 name="borrowAmount"
                 type="number"
                 step="any"
+                defaultValue={borrowAmount}
                 value={borrowAmount}
                 onChange={({ target }) => setBorrowAmount(target.value)}
                 inputRef={register({ required: true, min: 0 })}
