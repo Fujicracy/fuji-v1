@@ -231,27 +231,22 @@ function InitBorrow({ contracts, provider, address }) {
 
             <div className="borrow-inputs">
               <TextInput
-                className="fake-input"
-                fullWidth
                 placeholder={borrowAmount}
                 autoComplete="off"
                 id="borrowAmount"
                 name="borrowAmount"
                 type="number"
                 step="any"
-                variant="outlined"
                 value={borrowAmount}
                 onChange={({ target }) => setBorrowAmount(target.value)}
                 inputRef={register({ required: true, min: 0 })}
                 startAdornmentImage={`/${borrowAsset}.png`}
                 endAdornment={{ text: 353.69, type: 'currency' }}
                 subTitle="Amount to borrow"
-                description={errors?.borrowAmount ?? 'Please, type the amount you like to borrow'}
+                description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
               />
 
               <TextInput
-                required
-                fullWidth
                 autoComplete="off"
                 name="collateralAmount"
                 type="number"
