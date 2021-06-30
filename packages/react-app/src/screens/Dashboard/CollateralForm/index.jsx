@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { formatEther, parseEther, formatUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import {
-  Avatar,
   Button,
   CircularProgress,
-  TextField,
   Typography,
   Grid,
   InputAdornment,
@@ -23,13 +21,15 @@ import { ETH_CAP_VALUE } from 'constants/providers';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 
+import { TextInput, Label } from '../../../components/UI';
+
 const Action = {
   Supply: 0,
   Withdraw: 1,
 };
 
 function CollateralForm({ borrowAsset, contracts, provider, address }) {
-  const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
+  const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
   const gasPrice = useGasPrice();
 
@@ -243,6 +243,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       >
         <div className="close" onClick={handleClose}>
           <HighlightOffIcon />
+          12
         </div>
         <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
         <DialogContent>{dialogContents[dialog]?.content}</DialogContent>
@@ -277,94 +278,76 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
         </div>
       </Grid>
       <Grid item>
-        <div className="subtitle">
-          <span className="complementary-infos">
-            {action === Action.Supply ? (
-              <>
-                <span>Available to supply:</span>
-                <span>{ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ</span>
-              </>
+        <TextInput
+          step="any"
+          id="collateralAmount"
+          name="amount"
+          type="number"
+          onChange={({ target }) => {
+            return setAmount(target.value);
+          }}
+          onFocus={() => {
+            return setFocus(true);
+          }}
+          onBlur={() => {
+            return clearErrors();
+          }}
+          inputRef={register({
+            required: { value: true, message: 'insufficient-amount' },
+            min: { value: 0, message: 'insufficient-amount' },
+            max: {
+              value: action === Action.Supply ? ethBalance : leftCollateral,
+              message: 'insufficient-balance',
+            },
+          })}
+          subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
+          subTitleInfo={
+            action === Action.Supply
+              ? `${ethBalance ? Number(ethBalance).toFixed(3) : '...'}ETH Ξ`
+              : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ`
+          }
+          startAdornmentImage="/ETH.png"
+          endAdornment={{
+            type: 'component',
+            component: (
+              <InputAdornment position="end">
+                {focus && (
+                  <Button
+                    className="max-button"
+                    onClick={() => {
+                      setAmount(action === Action.Supply ? ethBalance : leftCollateral);
+                      setValue('amount', action === Action.Supply ? ethBalance : leftCollateral, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  >
+                    max
+                  </Button>
+                )}
+                <Label>ETH</Label>
+              </InputAdornment>
+            ),
+          }}
+          errorComponent={
+            errors?.amount?.message === 'insufficient-amount' ? (
+              <Typography className="error-input-msg" variant="body2">
+                Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
+              </Typography>
+            ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
+              <Typography className="error-input-msg" variant="body2">
+                Insufficient ETH balance
+              </Typography>
             ) : (
-              <>
-                <span>Available to withdraw:</span>
-                <span>{leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ</span>
-              </>
-            )}
-          </span>
-        </div>
-        <div className="fake-input">
-          <TextField
-            className="input-container"
-            required
-            fullWidth
-            autoComplete="off"
-            name="amount"
-            type="number"
-            step="any"
-            id="collateralAmount"
-            variant="outlined"
-            onChange={({ target }) => {
-              return setAmount(target.value);
-            }}
-            onFocus={() => {
-              return setFocus(true);
-            }}
-            onBlur={() => {
-              return clearErrors();
-            }}
-            inputRef={register({
-              required: { value: true, message: 'insufficient-amount' },
-              min: { value: 0, message: 'insufficient-amount' },
-              max: {
-                value: action === Action.Supply ? ethBalance : leftCollateral,
-                message: 'insufficient-balance',
-              },
-            })}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  {focus && (
-                    <Button
-                      className="max-button"
-                      onClick={() => {
-                        setAmount(action === Action.Supply ? ethBalance : leftCollateral);
-                        setValue('amount', action === Action.Supply ? ethBalance : leftCollateral, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      max
-                    </Button>
-                  )}
-                  <Typography variant="body1" className="input-infos">
-                    ETH
-                  </Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
-        {errors?.amount?.message === 'insufficient-amount' && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Supply && (
-          <Typography className="error-input-msg" variant="body2">
-            Insufficient ETH balance
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Withdraw && (
-          <Typography className="error-input-msg" variant="body2">
-            You can withdraw max. {leftCollateral} ETH
-          </Typography>
-        )}
+              errors?.amount?.message === 'insufficient-balance' &&
+              action === Action.Withdraw && (
+                <Typography className="error-input-msg" variant="body2">
+                  You can withdraw max. {leftCollateral} ETH
+                </Typography>
+              )
+            )
+          }
+        />
       </Grid>
       <Grid item>
         <Button

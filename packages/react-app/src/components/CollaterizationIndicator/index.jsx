@@ -78,7 +78,7 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer mb={4}>
+    <BlackBoxContainer mt={4}>
       <SectionTitle>
         <Typography variant="h3">Health Factor</Typography>
         <div className="tooltip-info">

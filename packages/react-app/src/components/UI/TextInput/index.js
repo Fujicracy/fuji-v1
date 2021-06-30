@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Box } from 'rebass';
+
 import {
   InputContainer,
   SubTitleContainer,
@@ -22,6 +24,8 @@ const TextField = styled(
     endAdornment,
     type,
     onChange,
+    onFocus,
+    onBlur,
     disabled,
     subTitle,
     description,
@@ -29,10 +33,11 @@ const TextField = styled(
     errorComponent,
     inputRef,
     defaultValue,
+    autoComplete,
   }) => {
     const error = isTouched && hasError;
     return (
-      <>
+      <Box mb={4}>
         <SubTitleContainer>
           <label>{subTitle}</label>
           <SubTitleInfo>{subTitleInfo}</SubTitleInfo>
@@ -46,19 +51,25 @@ const TextField = styled(
             defaultValue={defaultValue}
             placeholder={placeholder}
             onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
             disabled={disabled}
             error={error}
             ref={inputRef}
+            autoComplete={autoComplete || 'off'}
           />
-          {endAdornment.type === 'currency' ? (
-            <AdornmentText>≈${endAdornment.text}</AdornmentText>
-          ) : (
-            <AdornmentText>{endAdornment.text}%</AdornmentText>
-          )}
+          {endAdornment &&
+            (endAdornment?.type === 'currency' ? (
+              <AdornmentText>≈${endAdornment.text}</AdornmentText>
+            ) : endAdornment?.type === 'percent' ? (
+              <AdornmentText>{endAdornment.text}%</AdornmentText>
+            ) : (
+              endAdornment?.type === 'component' && endAdornment.component
+            ))}
         </InputContainer>
         <Description>{description}</Description>
         {errorComponent}
-      </>
+      </Box>
     );
   },
 )``;

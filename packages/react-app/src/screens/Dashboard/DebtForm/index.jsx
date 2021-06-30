@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -27,6 +25,7 @@ import {
 import { useContractReader, useExchangePrice, useGasPrice } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
+import { TextInput, Label } from '../../../components/UI';
 
 const Action = {
   Repay: 0,
@@ -34,7 +33,7 @@ const Action = {
 };
 
 function DebtForm({ borrowAsset, contracts, provider, address }) {
-  const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
+  const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const price = useExchangePrice();
   const tx = Transactor(provider);
   const gasPrice = useGasPrice();
@@ -177,6 +176,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
+    console.log({ amount, decimals });
     setLoading(true);
     if (action === Action.Repay) {
       if (parseUnits(amount, decimals).gt(allowance)) {
@@ -327,95 +327,73 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
         </div>
       </Grid>
       <Grid item>
-        <div className="subtitle">
-          <span className="complementary-infos">
-            {action === Action.Repay ? (
-              <>
-                <span>Available to repay:</span>
-                <span>
-                  {balance ? Number(balance).toFixed(2) : '...'} {borrowAsset} Ξ
-                </span>
-              </>
-            ) : (
-              <>
-                <span>Available to borrow:</span>
-                <span>
-                  {leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} {borrowAsset} Ξ
-                </span>
-              </>
-            )}
-          </span>
-        </div>
-        <div className="fake-input">
-          <TextField
-            className="input-container"
-            required
-            fullWidth
-            autoComplete="off"
-            id="debtAmount"
-            name="amount"
-            type="number"
-            step="any"
-            variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
-            onFocus={() => setFocus(true)}
-            onBlur={() => clearErrors()}
-            inputRef={register({
-              required: { value: true, message: 'insufficient-amount' },
-              min: { value: 0, message: 'insufficient-amount' },
-              max: {
-                value: action === Action.Repay ? balance : leftToBorrow,
-                message: 'insufficient-balance',
-              },
-            })}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  {focus && (
-                    <Button
-                      className="max-button"
-                      onClick={() => {
-                        const debt = formatUnits(debtBalance, decimals);
-                        const maxRepay = Number(debt) > Number(balance) ? balance : debt;
+        <TextInput
+          id="debtAmount"
+          name="amount"
+          type="number"
+          step="any"
+          onChange={({ target }) => setAmount(target.value)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => clearErrors()}
+          inputRef={register({
+            required: { value: true, message: 'insufficient-amount' },
+            min: { value: 0, message: 'insufficient-amount' },
+            max: {
+              value: action === Action.Repay ? balance : leftToBorrow,
+              message: 'insufficient-balance',
+            },
+          })}
+          subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
+          subTitleInfo={
+            action === Action.Repay
+              ? `${balance ? Number(balance).toFixed(2) : '...'} ${borrowAsset} Ξ`
+              : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${borrowAsset} Ξ`
+          }
+          startAdornmentImage={`/${borrowAsset}.png`}
+          endAdornment={{
+            type: 'component',
+            component: (
+              <InputAdornment position="end">
+                {focus && (
+                  <Button
+                    className="max-button"
+                    onClick={() => {
+                      const debt = formatUnits(debtBalance, decimals);
+                      const maxRepay = Number(debt) > Number(balance) ? balance : debt;
 
-                        setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
-                        setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      max
-                    </Button>
-                  )}
-                  <Typography variant="body1" className="input-infos">
-                    {borrowAsset}
-                  </Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
-        {errors?.amount?.message === 'insufficient-amount' && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Repay && (
-          <Typography className="error-input-msg" variant="body2">
-            Insufficient {borrowAsset} balance
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Borrow && (
-          <Typography className="error-input-msg" variant="body2">
-            You can borrow max. {leftToBorrow} {borrowAsset}. Provide more collateral!
-          </Typography>
-        )}
+                      setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
+                      setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  >
+                    max
+                  </Button>
+                )}
+                <Label>{borrowAsset}</Label>
+              </InputAdornment>
+            ),
+          }}
+          errorComponent={
+            errors?.amount?.message === 'insufficient-amount' ? (
+              <Typography className="error-input-msg" variant="body2">
+                Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
+              </Typography>
+            ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
+              <Typography className="error-input-msg" variant="body2">
+                Insufficient {borrowAsset} balance
+              </Typography>
+            ) : (
+              errors?.amount?.message === 'insufficient-balance' &&
+              action === Action.Borrow && (
+                <Typography className="error-input-msg" variant="body2">
+                  You can borrow max. {leftToBorrow} {borrowAsset}. Provide more collateral!
+                </Typography>
+              )
+            )
+          }
+        />
       </Grid>
       <Grid item>
         <Button

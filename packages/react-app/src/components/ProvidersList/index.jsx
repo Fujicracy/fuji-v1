@@ -59,7 +59,7 @@ const Provider = ({ contracts, market, rates }) => {
 function ProvidersList({ contracts, markets }) {
   const rates = useRates(contracts);
   return (
-    <BlackBoxContainer>
+    <BlackBoxContainer mt={4}>
       <SectionTitle>
         <Typography variant="h3">Borrow APR</Typography>
         <div className="tooltip-info">
