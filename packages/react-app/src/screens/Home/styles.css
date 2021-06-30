@@ -35,9 +35,9 @@ body {
 
 .home-container {
   position: absolute;
-  /*padding-top: 40px;*/
+  margin-top: 40px;
   /*padding-bottom: 40px;*/
-  height: calc(100vh - 200px);
+  height: calc(100vh - 180px);
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
