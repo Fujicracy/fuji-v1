@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-pointSchema = new Schema({
+const pointSchema = new Schema({
   vault: String,
   type: String,
   value: Number,
