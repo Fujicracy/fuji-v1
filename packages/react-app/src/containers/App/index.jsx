@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter, Switch, NavLink, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ProvideAuth } from 'hooks';
 import GlobalStyle from 'components/GlobalStyle';
 import themes from 'theme';
+import map from 'lodash/map';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
@@ -11,6 +12,8 @@ import Infos from 'screens/Infos';
 import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
+import { NavUnlisted, NavImageLink, NavTextLink } from 'components/UI';
+import { CONTACTS } from 'constants/contacts';
 
 import { Container } from './styles';
 import './style.css';
@@ -48,37 +51,11 @@ function App() {
             </Route>
           </Switch>
           <footer>
-            <nav className="footer-socials">
-              <ul>
-                <li>
-                  <a
-                    href="https://twitter.com/FujiFinance"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="/twitter_1.svg" alt="twitter" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://discord.com/invite/dnvJeEMeDJ"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="/discord_1.svg" alt="discord" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://t.me/joinchat/U4cKWNCUevKVsrtY"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="/telegram_1.svg" alt="telegram" />
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <NavUnlisted justifyContent="space-between" position="left">
+              {map(Object.keys(CONTACTS), key => (
+                <NavImageLink key={key} contact={CONTACTS[key]} />
+              ))}
+            </NavUnlisted>
 
             <nav className="footer-links">
               <ul>
@@ -93,6 +70,9 @@ function App() {
                 <li>© FujiDAO 2021</li>
               </ul>
             </nav>
+            <NavUnlisted justifyContent="flex-start" position="right">
+              <NavTextLink url="https://docs.fujidao.org">About</NavTextLink>
+            </NavUnlisted>
           </footer>
           <div className="bg-effect" />
           <div className="ohno">
