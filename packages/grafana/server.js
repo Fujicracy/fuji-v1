@@ -1,13 +1,11 @@
 const express = require("express");
 const { scraper } = require("./scraper");
-const { VaultPoint } = require("./db");
 const VPRepresenter = require("./representers/vaultPointRepresenter");
 const VPService = require("./services/VaultPoints");
 const AccountService = require("./services/Accounts");
 const APService = require("./services/AccountPoints");
 var bodyParser = require("body-parser");
 var jsonParser = bodyParser.json();
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
 const app = express();
 
 app.post("/query", jsonParser, async (req, res) => {
