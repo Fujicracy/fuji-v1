@@ -23,7 +23,7 @@ const formatGrafana = (arr, targets) => {
     }
   });
 
-  return response.filter((e) => targets.includes(e.target));
+  return response;
 };
 
 module.exports = { formatGrafana };

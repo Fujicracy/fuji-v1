@@ -94,7 +94,7 @@ const getEvents = async (provider, fromLast) => {
     const blocknumber = allEvents[i].blockNumber;
 
     const accountsPoint = {
-      accounts,
+      accounts: JSON.parse(JSON.stringify(accounts)),
       blocknumber,
       timestamp,
     };

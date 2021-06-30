@@ -14,11 +14,7 @@ const isUnique = async (blocknumber, timestamp) => {
 
 const lastPoint = async () => {
   const last = (
-    await AccountPoint.find({})
-      .select("blocknumber")
-      .sort({ blocknumber: -1 })
-      .limit(1)
-      .exec()
+    await AccountPoint.find({}).sort({ blocknumber: -1 }).limit(1).exec()
   )[0];
   return last;
 };
@@ -32,33 +28,36 @@ const combineBalance = (oldBalance, newBalance) => {
 };
 
 const combinePoint = (oldPoint, newPoint) => {
-  Object.entries(newPoint).forEach(([key, value]) => {
-    if (oldPoint[key]) {
-      oldPoint[key] = combineBalance(oldPoint[key], value);
+  const obj = {};
+  Object.entries(newPoint.accounts).forEach(([key, value]) => {
+    if (oldPoint.get(key)) {
+      obj[key] = combineBalance(oldPoint.get(key), value);
     } else {
-      oldPoint[key] = value;
+      obj[key] = value;
     }
   });
-  return oldPoint;
+  return obj;
 };
 
 const addMany = async (arr) => {
   //   console.log(arr);
   const lastP = await lastPoint();
-  let runningP = lastP;
+  // console.log(lastP);
+  let rollingP;
+  // console.log(arr);
   for (let i = 0; i <= arr.length - 1; i++) {
     // console.log(arr.length);
     // console.log(i);
     const point = arr[i];
     if (await isUnique(point.blocknumber, point.timestamp)) {
       if (lastP) {
-        runningP = combinePoint(runningP, point);
+        rollingP = combinePoint(lastP, point);
       } else {
-        runningP = point;
+        rollingP = point;
       }
       const { blocknumber, timestamp } = point;
       await AccountPoint.create({
-        accountsStatus: runningP.accounts,
+        accountsStatus: rollingP.accounts,
         timestamp,
         blocknumber,
       });

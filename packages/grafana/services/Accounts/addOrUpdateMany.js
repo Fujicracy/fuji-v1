@@ -25,10 +25,6 @@ const test = {
 };
 
 const combineBalance = (oldBalance, newBalance) => {
-  console.log(oldBalance);
-  console.log(newBalance);
-  console.log(oldBalance.get("ETHDAI"));
-  console.log(newBalance.ETHDAI);
   const obj = {
     ETHDAI: oldBalance.get("ETHDAI"),
     ETHUSDC: oldBalance.get("ETHUSDC"),
@@ -42,8 +38,6 @@ const combineBalance = (oldBalance, newBalance) => {
 
 const update = async (address, vaultBalances) => {
   const acc = (await Account.find({ address }))[0];
-  console.log(acc);
-  console.log(address);
   const newBalances = combineBalance(acc.vaultBalances, vaultBalances);
   await Account.update({ address }, { vaultBalances: newBalances });
 };
@@ -57,13 +51,13 @@ const addOrUpdateMany = async (obj) => {
     const [address, vaultBalances] = arr[i];
     if (await isUnique(address)) {
       await Account.create({ address, vaultBalances });
-      console.log("unique");
+      // console.log("unique");
     } else {
       if (isDiff(vaultBalances)) {
         await update(address, vaultBalances);
-        console.log("updated");
+        // console.log("updated");
       } else {
-        console.log("not unique");
+        // console.log("not unique");
       }
     }
   }

@@ -14,11 +14,15 @@ app.post("/query", jsonParser, async (req, res) => {
   const targets = req.body.targets[0].data.only;
   const lastBlock = await VPService.lastBlock();
   const [newPoints, accountPoints, accounts] = await scraper(lastBlock);
-  // await VPService.addMany(newPoints);
+  await VPService.addMany(newPoints);
   await APService.addMany(accountPoints);
   await AccountService.addOrUpdateMany(accounts);
   const points = (await VPRepresenter.many()).points;
-  const metrics = VPService.formatGrafana(points, targets);
+  const data1 = VPService.formatGrafana(points, targets);
+  const data2 = await APService.formatGrafana();
+  const metrics = [...data1, ...data2].filter((e) =>
+    targets.includes(e.target)
+  );
   res.send(metrics);
 });
 

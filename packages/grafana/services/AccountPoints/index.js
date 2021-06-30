@@ -1,3 +1,4 @@
 const { addMany } = require("./addMany");
+const { formatGrafana } = require("./formatGrafana");
 
-module.exports = { addMany };
+module.exports = { addMany, formatGrafana };
