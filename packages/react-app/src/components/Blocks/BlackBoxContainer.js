@@ -13,7 +13,8 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   border-radius: 1rem;
   padding: 2rem;
   margin-top: 2rem;
-  z-index: 20;
+  z-index: ${props => (props.zIndex ? props.zIndex : '10')};
+  position: relative;
 
   ${size}
   ${background}
