@@ -275,18 +275,18 @@ function InitBorrow({ contracts, provider, address }) {
                   ethBalance ? Number(ethBalance).toFixed(3) : '...'
                 } Ξ`}
                 errorComponent={
-                  errors?.collateralAmount?.message === 'required-amount' ? (
+                  Number(collateralAmount === 0) ? (
                     <Typography className="error-input-msg" variant="body2">
                       Please, type the amount you want to provide as collateral
                     </Typography>
-                  ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
+                  ) : Number(collateralAmount < neededCollateral) ? (
                     <Typography className="error-input-msg" variant="body2">
                       Please, provide at least{' '}
                       <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
                       collateral!
                     </Typography>
                   ) : (
-                    errors?.collateralAmount?.message === 'insufficient-balance' ?? (
+                    Number(collateralAmount) > Number(ethBalance) && (
                       <Typography className="error-input-msg" variant="body2">
                         Insufficient ETH balance
                       </Typography>

@@ -243,7 +243,6 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       >
         <div className="close" onClick={handleClose}>
           <HighlightOffIcon />
-          12
         </div>
         <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
         <DialogContent>{dialogContents[dialog]?.content}</DialogContent>
@@ -303,7 +302,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
           subTitleInfo={
             action === Action.Supply
-              ? `${ethBalance ? Number(ethBalance).toFixed(3) : '...'}ETH Ξ`
+              ? `${ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ`
               : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ`
           }
           startAdornmentImage="/ETH.png"
