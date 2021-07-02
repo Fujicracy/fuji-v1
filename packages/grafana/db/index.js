@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/fuji");
-const VaultPoint = require("./models/VaultPoint");
-const AccountPoint = require("./models/AccountPoint");
-const Account = require("./models/Account");
+const EventPoint = require("./models/EventPoint");
 
 // TODO
 // const { MongoClient } = require("mongodb");
@@ -18,4 +16,4 @@ const Account = require("./models/Account");
 //   client.close();
 // });
 
-module.exports = { VaultPoint, AccountPoint, Account };
+module.exports = { EventPoint };
