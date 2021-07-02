@@ -12,16 +12,14 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   display: flex;
   justify-content: space-between;
   align-content: center;
-  left: ${props => props.position === 'left' && '0px'};
-  right: ${props => props.position === 'right' && '0px'};
-  margin-left: ${props => props.position === 'left' && '320px'};
-  margin-right: ${props => props.position === 'right' && '32px'};
+  left: ${props => props.position === 'left' && '32px'};
+  right: ${props => props.position === 'right' && '32px'};
 `;
 
 export const NavImageLink = styled.a.attrs(props => ({
   href: props.contact.url || '',
-  target: '_blank',
-  rel: 'noopener noreferrer',
+  target: props.target || '_blank',
+  rel: props.rel || 'noopener noreferrer',
 }))`
   background: ${props => `url(${props.contact.image}) no-repeat top center`};
   height: 20px;
@@ -38,10 +36,11 @@ export const NavImageLink = styled.a.attrs(props => ({
 
 export const NavTextLink = styled.a.attrs(props => ({
   href: props.url || '',
-  target: '_blank',
-  rel: 'noopener noreferrer',
+  target: props.target || '_blank',
+  rel: props.rel || 'noopener noreferrer',
 }))`
-  margin-right: 16px;
+  margin-right: 10px;
+  font-size: 12px;
 
   &:link,
   &:visited {
