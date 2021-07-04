@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Box } from 'rebass';
 
 import {
@@ -13,29 +11,27 @@ import {
   StyledInput,
 } from './styles';
 
-const TextField = styled(
-  ({
-    id,
-    name,
-    placeholder,
-    hasError,
-    isTouched,
-    startAdornmentImage,
-    endAdornment,
-    type,
-    onChange,
-    onFocus,
-    onBlur,
-    disabled,
-    subTitle,
-    description,
-    subTitleInfo,
-    errorComponent,
-    inputRef,
-    defaultValue,
-    autoComplete,
-  }) => {
-    const error = isTouched && hasError;
+const TextField = React.forwardRef(
+  (
+    {
+      name,
+      placeholder,
+      startAdornmentImage,
+      endAdornment,
+      type,
+      onChange,
+      onFocus,
+      onBlur,
+      disabled,
+      subTitle,
+      description,
+      subTitleInfo,
+      errorComponent,
+      defaultValue,
+      autoComplete,
+    },
+    ref,
+  ) => {
     return (
       <Box mb={4}>
         <SubTitleContainer>
@@ -45,7 +41,6 @@ const TextField = styled(
         <InputContainer>
           <AdornmentAvatar src={startAdornmentImage} alt={startAdornmentImage} />
           <StyledInput
-            id={id}
             name={name}
             type={type}
             defaultValue={defaultValue}
@@ -54,8 +49,7 @@ const TextField = styled(
             onFocus={onFocus}
             onBlur={onBlur}
             disabled={disabled}
-            error={error}
-            ref={inputRef}
+            ref={ref}
             autoComplete={autoComplete || 'off'}
           />
           {endAdornment &&
@@ -72,20 +66,6 @@ const TextField = styled(
       </Box>
     );
   },
-)``;
-
-TextField.propTypes = {
-  disabled: PropTypes.bool,
-  error: PropTypes.string,
-  hintText: PropTypes.string,
-  id: PropTypes.string,
-  inputRef: PropTypes.func,
-  placeholder: PropTypes.string,
-  type: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-};
-
-TextField.displayName = 'TextField';
+);
 
 export default TextField;

@@ -25,7 +25,7 @@ import './styles.css';
 import { TextInput } from '../../../components/UI';
 
 function InitBorrow({ contracts, provider, address }) {
-  const { register, errors, handleSubmit } = useForm({ mode: 'onChange' });
+  const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const queries = new URLSearchParams(useLocation().search);
   const gasPrice = useGasPrice();
 
@@ -242,8 +242,11 @@ function InitBorrow({ contracts, provider, address }) {
                 step="any"
                 defaultValue={borrowAmount}
                 value={borrowAmount}
-                onChange={({ target }) => setBorrowAmount(target.value)}
-                inputRef={register({ required: true, min: 0 })}
+                onChange={({ target }) => {
+                  setBorrowAmount(target.value);
+                  clearErrors();
+                }}
+                ref={register({ required: true, min: 0 })}
                 startAdornmentImage={`/${borrowAsset}.png`}
                 endAdornment={{
                   text: (borrowAmount * borrowAssetPrice).toFixed(2),
@@ -254,13 +257,13 @@ function InitBorrow({ contracts, provider, address }) {
               />
 
               <TextInput
+                id="collateralAmount"
                 name="collateralAmount"
                 type="number"
                 step="any"
-                id="collateralAmount"
                 placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
                 onChange={({ target }) => setCollateralAmount(target.value)}
-                inputRef={register({
+                ref={register({
                   required: { value: true, message: 'required-amount' },
                   min: { value: neededCollateral, message: 'insufficient-collateral' },
                   max: { value: ethBalance, message: 'insufficient-balance' },
@@ -275,18 +278,18 @@ function InitBorrow({ contracts, provider, address }) {
                   ethBalance ? Number(ethBalance).toFixed(3) : '...'
                 } Ξ`}
                 errorComponent={
-                  Number(collateralAmount === 0) ? (
+                  errors?.collateralAmount?.message === 'required-amount' ? (
                     <Typography className="error-input-msg" variant="body2">
                       Please, type the amount you want to provide as collateral
                     </Typography>
-                  ) : Number(collateralAmount < neededCollateral) ? (
+                  ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
                     <Typography className="error-input-msg" variant="body2">
                       Please, provide at least{' '}
                       <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
                       collateral!
                     </Typography>
                   ) : (
-                    Number(collateralAmount) > Number(ethBalance) && (
+                    errors?.collateralAmount?.message === 'insufficient-balance' && (
                       <Typography className="error-input-msg" variant="body2">
                         Insufficient ETH balance
                       </Typography>

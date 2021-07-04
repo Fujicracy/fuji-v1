@@ -291,7 +291,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
           onBlur={() => {
             return clearErrors();
           }}
-          inputRef={register({
+          ref={register({
             required: { value: true, message: 'insufficient-amount' },
             min: { value: 0, message: 'insufficient-amount' },
             max: {
