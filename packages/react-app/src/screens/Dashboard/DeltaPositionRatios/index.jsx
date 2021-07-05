@@ -28,7 +28,7 @@ function DeltaPositionRatios({
       borrowAsset,
       collateralBalance: currentCollateral,
       debtBalance: currentDebt,
-      decimals: ASSETS.find(asset => asset.name === borrowAsset).decimals,
+      decimals: ASSETS[borrowAsset].decimals,
     };
     const {
       healthFactor: oldHf,

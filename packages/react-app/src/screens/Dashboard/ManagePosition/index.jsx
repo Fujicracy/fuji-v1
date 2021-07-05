@@ -36,7 +36,7 @@ function ManagePosition({ contracts, provider, address }) {
       getCollateralId(borrowAsset),
     ]),
     borrowAsset,
-    decimals: ASSETS.find(asset => asset.name === borrowAsset).decimals,
+    decimals: ASSETS[borrowAsset].decimals,
   };
   // const decimals = borrowAsset === "USDC" ? 6 : 18;
 
