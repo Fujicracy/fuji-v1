@@ -60,7 +60,7 @@ function ProvidersList({ contracts, markets }) {
   const rates = useRates(contracts);
   return (
     <BlackBoxContainer mt={4} zIndex={1}>
-      <SectionTitle>
+      <SectionTitle mb={4}>
         <Typography variant="h3">Borrow APR</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />

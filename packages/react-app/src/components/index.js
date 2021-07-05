@@ -6,7 +6,9 @@ import Loader from './Loader';
 import PositionElement, { PositionActions } from './PositionElement';
 import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
+import AssetList from './AssetList';
 
+export * from './Blocks';
 export {
   AlphaWarning,
   CollaterizationIndicator,
@@ -17,4 +19,5 @@ export {
   PositionElement,
   ProtocolStats,
   ProvidersList,
+  AssetList,
 };

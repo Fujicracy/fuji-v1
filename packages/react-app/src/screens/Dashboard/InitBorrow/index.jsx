@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-import map from 'lodash/map';
+// import map from 'lodash/map';
 import {
   Button,
   Typography,
@@ -15,9 +15,15 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'constants/providers';
-import { ASSET_TYPE, ASSETS } from 'constants/assets';
+import { ASSETS, ASSET_NAME, ASSET_TYPE } from 'constants/assets';
 import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
-import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } from 'components';
+import {
+  CollaterizationIndicator,
+  ProvidersList,
+  HowItWorks,
+  AlphaWarning,
+  AssetList,
+} from 'components';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 
 import './styles.css';
@@ -30,11 +36,12 @@ function InitBorrow({ contracts, provider, address }) {
   const gasPrice = useGasPrice();
 
   const [borrowAmount, setBorrowAmount] = useState('1000');
-  const [borrowAsset, setBorrowAsset] = useState(ASSET_TYPE.DAI);
+  const [borrowAsset, setBorrowAsset] = useState(ASSET_NAME.DAI);
 
   const ethPrice = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset);
 
+  const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
@@ -92,7 +99,8 @@ function InitBorrow({ contracts, provider, address }) {
     collateralBalance:
       !collateralBalance || !collateralAmount
         ? 0
-        : collateralBalance.add(parseEther(collateralAmount)),
+        : // : collateralBalance.add(parseEther(collateralAmount)),
+          collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
     decimals,
   };
 
@@ -127,8 +135,12 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeAsset = asset => () => {
+  const handleChangeBorrowAsset = asset => () => {
     setBorrowAsset(asset);
+  };
+
+  const handleChangeCollateralAsset = asset => () => {
+    setCollateralAsset(asset);
   };
 
   const dialogContents = {
@@ -162,6 +174,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
+  console.log({ borrowAsset: ASSETS[borrowAsset], collateralAsset: ASSETS[collateralAsset] });
   return (
     <div className="container initial-step">
       <Dialog
@@ -187,55 +200,31 @@ function InitBorrow({ contracts, provider, address }) {
         <HowItWorks />
         <div className="dark-block borrow-actions">
           <form noValidate autoComplete="off">
-            <div className="borrow-options">
-              <div className="section-title">Borrow</div>
-              <div className="select-options">
-                <div className="options-list">
-                  {map(Object.keys(ASSETS), key => {
-                    const asset = ASSETS[key];
-                    return (
-                      <label key={key}>
-                        <input
-                          type="radio"
-                          name="borrow"
-                          value={asset.name}
-                          onChange={handleChangeAsset(asset.name)}
-                          checked={borrowAsset === asset.name}
-                        />
-                        <div className="fake-radio">
-                          <img alt={asset.id} src={asset.icon} />
-                          <span className="select-option-name">{asset.name}</span>
-                        </div>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            <AssetList handleChange={handleChangeBorrowAsset} mode={ASSET_TYPE.BORROW} />
+            <TextInput
+              placeholder={borrowAmount}
+              id="borrowAmount"
+              name="borrowAmount"
+              type="number"
+              step="any"
+              defaultValue={borrowAmount}
+              value={borrowAmount}
+              onChange={({ target }) => {
+                setBorrowAmount(target.value);
+                clearErrors();
+              }}
+              ref={register({ required: true, min: 0 })}
+              startAdornmentImage={ASSETS[borrowAsset].icon}
+              endAdornment={{
+                text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                type: 'currency',
+              }}
+              subTitle="Amount to borrow"
+              description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
+            />
 
+            <AssetList handleChange={handleChangeCollateralAsset} mode={ASSET_TYPE.COLLATERAL} />
             <div className="borrow-inputs">
-              <TextInput
-                placeholder={borrowAmount}
-                id="borrowAmount"
-                name="borrowAmount"
-                type="number"
-                step="any"
-                defaultValue={borrowAmount}
-                value={borrowAmount}
-                onChange={({ target }) => {
-                  setBorrowAmount(target.value);
-                  clearErrors();
-                }}
-                ref={register({ required: true, min: 0 })}
-                startAdornmentImage={`/${borrowAsset}.png`}
-                endAdornment={{
-                  text: (borrowAmount * borrowAssetPrice).toFixed(2),
-                  type: 'currency',
-                }}
-                subTitle="Amount to borrow"
-                description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
-              />
-
               <TextInput
                 id="collateralAmount"
                 name="collateralAmount"
@@ -248,7 +237,7 @@ function InitBorrow({ contracts, provider, address }) {
                   min: { value: neededCollateral, message: 'insufficient-collateral' },
                   max: { value: ethBalance, message: 'insufficient-balance' },
                 })}
-                startAdornmentImage="/ETH.png"
+                startAdornmentImage={ASSETS[collateralAsset].icon}
                 endAdornment={{
                   text: (collateralAmount * ethPrice).toFixed(2),
                   type: 'currency',
