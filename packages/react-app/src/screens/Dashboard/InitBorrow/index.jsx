@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 // import map from 'lodash/map';
 import {
@@ -38,11 +38,13 @@ function InitBorrow({ contracts, provider, address }) {
   const [borrowAmount, setBorrowAmount] = useState('1000');
   const [borrowAsset, setBorrowAsset] = useState(ASSET_NAME.DAI);
 
-  const ethPrice = useExchangePrice();
-  const borrowAssetPrice = useExchangePrice(borrowAsset);
-
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
+
+  const ethPrice = useExchangePrice();
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
+  // const collateralAssetPrice = useExchangePrice(collateralAsset);
+
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +56,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const unFormattedEthBalance = useBalance(provider, address);
   const ethBalance = unFormattedEthBalance
-    ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
+    ? Number(formatUnits(unFormattedEthBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
     : null;
   const { decimals } = ASSETS[borrowAsset];
 
@@ -75,7 +77,7 @@ function InitBorrow({ contracts, provider, address }) {
     [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
   const neededCollateral = unFormattedNeededCollateral
-    ? Number(formatEther(unFormattedNeededCollateral))
+    ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
     : null;
 
   const queryBorrowAmount = queries.get('borrowAmount');
@@ -114,15 +116,19 @@ function InitBorrow({ contracts, provider, address }) {
 
     setLoading(true);
     const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'depositAndBorrow', [
-      parseEther(collateralAmount),
+      parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
       parseUnits(borrowAmount, decimals),
-      { value: parseEther(collateralAmount), gasPrice },
+      { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals), gasPrice },
     ]);
     const res = await tx(
       contracts[getVaultName(borrowAsset)].depositAndBorrow(
-        parseEther(collateralAmount),
+        parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
         parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice, gasLimit },
+        {
+          value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
+          gasPrice,
+          gasLimit,
+        },
       ),
     );
 
