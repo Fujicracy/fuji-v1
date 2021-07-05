@@ -114,7 +114,7 @@ function FlashClose({ borrowAsset, contracts, provider }) {
             <Button
               onClick={() => onFlashClose()}
               className="main-button"
-              disabled
+              disabled={loading}
               startIcon={
                 loading ? (
                   <CircularProgress
@@ -130,7 +130,7 @@ function FlashClose({ borrowAsset, contracts, provider }) {
                 )
               }
             >
-              {loading ? 'Repaying...' : 'Coming soon'}
+              {loading ? 'Repaying...' : 'Repay'}
             </Button>
           )}
         </DialogActions>

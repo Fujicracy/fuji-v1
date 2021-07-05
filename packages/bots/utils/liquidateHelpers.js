@@ -4,6 +4,21 @@ const { ethers } = require('ethers');
 
 const { formatEther, formatUnits } = ethers.utils;
 
+const contractDeployBlock = async provider => {
+  // const ETHDAICreateTX = '0x297ba28fe4e08efa9cf280063997b1a56b6243eb64df4baf9559610a6744b384';
+  // const ETHUSDCCreateTX = '0xff5ba53aa7be41b6fa2bd7d1bb468c4f37b34e48f99a537fcd6a1105c8cb25c5';
+  // const daiStartBlock = (await provider.getTransaction(ETHDAICreateTX)).blockNumber;
+  // const usdcStartBlock = (await provider.getTransaction(ETHUSDCCreateTX)).blockNumber;
+  const currentBlock = await provider.getBlockNumber();
+  return {
+    // daivault
+    '0x6E16394cBF840fc599FA3d9e5D1E90949c32a4F5': 12386446,
+    // usdcvault
+    '0xd0dc4Cc10fCf3fEe2bF5310c0E4e097b60F097D3': 12418746,
+    currentBlock,
+  };
+};
+
 const connectRedis = async () => {
   const client = redis.createClient({ port: 6379 });
 
@@ -22,9 +37,16 @@ const connectRedis = async () => {
   return methods;
 };
 
-const searchBorrowers = async (vault, searchLength) => {
+const searchBorrowers = async (provider, vault, searchLength) => {
+  const info = await contractDeployBlock(provider);
+  const currentBlock = info.currentBlock;
+  const startBlock = info[vault.address];
+  console.log(startBlock);
   const filterBorrowers = vault.filters.Borrow();
-  const events = await vault.queryFilter(filterBorrowers, searchLength);
+  const events = await vault.queryFilter(
+    filterBorrowers,
+    searchLength ? currentBlock - searchLength : startBlock,
+  );
   const borrowers = events
     .map(e => e.args.userAddrs)
     .reduce((acc, userAddr) => (acc.includes(userAddr) ? acc : [...acc, userAddr]), []);

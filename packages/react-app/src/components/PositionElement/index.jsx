@@ -37,9 +37,7 @@ function PositionElement({ position, actionType }) {
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
-
-  const debt = debtBalance ? Number(formatUnits(debtBalance, decimals)) : null;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : null;
   const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : null;
 
   useEffect(() => {

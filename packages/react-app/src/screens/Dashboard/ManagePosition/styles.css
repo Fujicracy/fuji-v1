@@ -58,7 +58,7 @@
 
 .manage-content {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: space-between;
 }
 
@@ -122,8 +122,9 @@
 
 .toggle-button .button .knobs:before {
   content: '';
-  top: 0.125rem;
-  left: 0.125rem;
+  top: 0;
+  left: 0;
+  height:100%;
   border-radius: 0.375rem;
   background-color: var(--text32);
 }
@@ -160,7 +161,7 @@
 }
 
 .toggle-button .button .checkbox:checked + .knobs:before {
-  left: calc(50% - 0.125rem);
+  left: calc(50%);
   background-color: var(--text32);
 }
 

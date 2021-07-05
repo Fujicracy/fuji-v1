@@ -38,8 +38,8 @@
 }
 
 .position-details button {
-  width: 38%;
-  margin-left: 62%;
+  width: 110px;
+  margin-left: 58%;
   height: 2rem;
   font-weight: 300;
   color: var(--text64);

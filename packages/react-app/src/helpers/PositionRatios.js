@@ -1,11 +1,12 @@
 import { formatUnits, formatEther } from '@ethersproject/units';
 
 export default function PositionRatios(position, price) {
-  const { debtBalance, collateralBalance, borrowAsset } = position;
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const { debtBalance, collateralBalance } = position;
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, decimals)) : 0;
-  const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : 0;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : 0;
+  const collateral = collateralBalance
+    ? Number(formatEther(collateralBalance, position.decimals))
+    : 0;
   // liquidation threshold
   const liqThres = 0.75;
   // collateralization and healthy factor
@@ -16,6 +17,9 @@ export default function PositionRatios(position, price) {
   const liqPrice = debt / (collateral * liqThres);
   const ltv = debt / (collateral * price);
   const borrowLimit = Math.min(ltv * factor, 1);
+  // if (price > 0) {
+  //   debugger;
+  // }
 
   return {
     healthFactor: healthFactor || 0,

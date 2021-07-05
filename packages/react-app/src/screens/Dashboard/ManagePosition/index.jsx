@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+import { ASSETS } from 'constants/assets';
 import { useContractReader } from '../../../hooks';
 
 import { getBorrowId, getCollateralId } from '../../../helpers';
@@ -25,16 +26,18 @@ function ManagePosition({ contracts, provider, address }) {
 
   const borrowAsset = queries && queries.get('borrowAsset') ? queries.get('borrowAsset') : 'DAI';
 
-  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getBorrowId(borrowAsset),
-  ]);
-  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getCollateralId(borrowAsset),
-  ]);
-
-  const position = { collateralBalance, debtBalance, borrowAsset };
+  const position = {
+    debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+      address,
+      getBorrowId(borrowAsset),
+    ]),
+    collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+      address,
+      getCollateralId(borrowAsset),
+    ]),
+    borrowAsset,
+    decimals: ASSETS[borrowAsset].decimals,
+  };
   // const decimals = borrowAsset === "USDC" ? 6 : 18;
 
   return (

@@ -1,56 +1,58 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
+import map from 'lodash/map';
+import orderBy from 'lodash/orderBy';
+import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { Grid, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useContractReader } from '../../../hooks';
-import { getBorrowId, getCollateralId } from '../../../helpers';
+import { useContractReader } from 'hooks';
+import { ASSETS } from 'constants/assets';
+import { getBorrowId, getCollateralId } from 'helpers';
 
-import PositionElement, { PositionActions } from '../../../components/PositionElement';
-import ProvidersList from '../../../components/ProvidersList';
-import AlphaWarning from '../../../components/AlphaWarning';
+import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
 
 import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
+  const positions = map(Object.keys(ASSETS), key => {
+    const asset = ASSETS[key];
+    return {
+      debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+        address,
+        getBorrowId(asset.name), // 5 for usdt and 3 for usdc
+      ]),
+      collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+        address,
+        getCollateralId(asset.name),
+      ]),
+      borrowAsset: asset.name,
+      decimals: asset.decimals,
+    };
+  });
 
-  const debtBalanceDai = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getBorrowId('DAI'),
-  ]);
-  const collateralBalanceDai = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getCollateralId('DAI'),
-  ]);
+  const hasPosition = asset => {
+    if (asset) {
+      const position = find(positions, item => item.borrowAsset === asset);
+      return (
+        position &&
+        position.collateralBalance &&
+        Number(formatUnits(position.collateralBalance, position.decimals)) > 0
+      );
+    }
+    for (let i = 0; i < positions.length; i += 1) {
+      if (
+        positions[i].collateralBalance &&
+        Number(formatUnits(positions[i].collateralBalance, positions[i].decimals)) > 0
+      ) {
+        return true;
+      }
+    }
 
-  const positionDai = {
-    collateralBalance: collateralBalanceDai,
-    debtBalance: debtBalanceDai,
-    borrowAsset: 'DAI',
+    return false;
   };
-  const loadingDaiPosition = positionDai.collateralBalance === undefined;
-  const hasDaiPosition =
-    positionDai.collateralBalance && Number(formatUnits(positionDai.collateralBalance)) > 0;
-
-  const debtBalanceUsdc = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getBorrowId('USDC'),
-  ]);
-  const collateralBalanceUsdc = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getCollateralId('USDC'),
-  ]);
-
-  const positionUsdc = {
-    collateralBalance: collateralBalanceUsdc,
-    debtBalance: debtBalanceUsdc,
-    borrowAsset: 'USDC',
-  };
-  const loadingUsdcPosition = positionUsdc.collateralBalance === undefined;
-  const hasUsdcPosition =
-    positionUsdc.collateralBalance && Number(formatUnits(positionUsdc.collateralBalance)) > 0;
 
   return (
     <div className="container">
@@ -58,7 +60,7 @@ function MyPositions({ contracts, address }) {
         <Grid container direction="column" justify="center" className="positions">
           <Typography variant="h3">My positions</Typography>
           <div className="position-board">
-            {hasUsdcPosition || hasDaiPosition ? (
+            {hasPosition() ? (
               <Grid item className="legend">
                 <span className="empty-tab" />
                 <div className="legend-elements">
@@ -71,54 +73,38 @@ function MyPositions({ contracts, address }) {
             ) : (
               <div style={{ height: '2.5rem' }} />
             )}
-            {hasDaiPosition ? (
-              <Grid item className="one-position">
-                <PositionElement actionType={PositionActions.Manage} position={positionDai} />
-              </Grid>
-            ) : (
-              ''
-            )}
-            {hasUsdcPosition ? (
-              <Grid item className="one-position">
-                <PositionElement actionType={PositionActions.Manage} position={positionUsdc} />
-              </Grid>
-            ) : (
-              ''
-            )}
-            {loadingDaiPosition ? (
-              ''
-            ) : !hasDaiPosition ? (
-              <Grid
-                item
-                onClick={() => history.push('/dashboard/init-borrow?borrowAsset=DAI')}
-                className="adding-position"
-              >
-                <AddIcon />
-                Borrow DAI
-              </Grid>
-            ) : (
-              ''
-            )}
-            {loadingUsdcPosition ? (
-              ''
-            ) : !hasUsdcPosition ? (
-              <Grid
-                item
-                onClick={() => history.push('/dashboard/init-borrow?borrowAsset=USDC')}
-                className="adding-position"
-              >
-                <AddIcon />
-                Borrow USDC
-              </Grid>
-            ) : (
-              ''
+
+            {map(
+              orderBy(
+                positions,
+                item => Number(formatUnits(item.collateralBalance || 0, item.decimals)),
+                'desc',
+              ),
+              position =>
+                hasPosition(position.borrowAsset) ? (
+                  <Grid key={position.borrowAsset} item className="one-position">
+                    <PositionElement actionType={PositionActions.Manage} position={position} />
+                  </Grid>
+                ) : (
+                  <Grid
+                    key={position.borrowAsset}
+                    item
+                    onClick={() =>
+                      history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
+                    }
+                    className="adding-position"
+                  >
+                    <AddIcon />
+                    Borrow {position.borrowAsset}
+                  </Grid>
+                ),
             )}
           </div>
         </Grid>
       </div>
       <div className="right-content">
         <AlphaWarning />
-        <ProvidersList contracts={contracts} markets={['DAI', 'USDC']} />
+        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />
       </div>
     </div>
   );
