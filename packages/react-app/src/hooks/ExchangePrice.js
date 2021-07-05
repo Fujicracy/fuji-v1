@@ -39,8 +39,6 @@ export default function useExchangePrice(asset = 'ETH') {
       if (oracle) {
         try {
           const r = await oracle.latestRoundData();
-          console.log('price', r);
-          console.log('price', formatUnits(r.answer, 8));
           setPrice(parseFloat(formatUnits(r.answer, 8)));
         } catch (e) {
           console.log(e);

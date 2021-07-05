@@ -45,26 +45,6 @@ function InitBorrow({ contracts, provider, address }) {
   const providerCompound = contracts && contracts.ProviderCompound;
   const providerDYDX = contracts && contracts.ProviderDYDX;
 
-  // const rates = useRates(contracts);
-
-  // const calcSavedAmount = (amount) => {
-  // if (!amount || amount === 0 || !providerAave)
-  // return '...';
-
-  // let rate;
-  // if (activeProvider === providerAave.address) {
-  // rate = rates.aave[borrowAsset.toLowerCase()];
-  // } else if (activeProvider === providerCompound.address) {
-  // rate = rates.compound[borrowAsset.toLowerCase()];
-  // } else {
-  // rate = rates.dydx[borrowAsset.toLowerCase()];
-  // }
-
-  // const interest = Number(amount) * Math.exp(rate / 100) - Number(amount);
-
-  // return (0.1 * interest).toFixed(1);
-  // }
-
   const unFormattedEthBalance = useBalance(provider, address);
   const ethBalance = unFormattedEthBalance
     ? Number(formatEther(unFormattedEthBalance)).toFixed(6)

@@ -25,7 +25,7 @@ export const PROVIDERS = {
   [PROVIDER_TYPE.DYDX]: {
     id: 'dydx',
     name: 'ProviderDYDX',
-    title: 'DyDx',
+    title: 'dYdX',
   },
   [PROVIDER_TYPE.IRONBANK]: {
     id: 'ironbank',
