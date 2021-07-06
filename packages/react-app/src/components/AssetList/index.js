@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ASSET_TYPE, ASSET_NAME, ASSETS } from 'constants/assets';
+import { ASSET_TYPE, ASSET_NAME, ASSETS } from 'consts/assets';
 import { filter, map } from 'lodash';
 
 import { SectionTitle } from '../Blocks';

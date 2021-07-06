@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-// import map from 'lodash/map';
 import {
   Button,
   Typography,
@@ -14,8 +13,8 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from 'constants/providers';
-import { ASSETS, ASSET_NAME, ASSET_TYPE } from 'constants/assets';
+import { ETH_CAP_VALUE } from 'consts/providers';
+import { ASSETS, ASSET_NAME, ASSET_TYPE } from 'consts/assets';
 import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
 import {
   CollaterizationIndicator,

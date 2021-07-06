@@ -8,8 +8,7 @@ import { formatUnits } from '@ethersproject/units';
 import { Grid, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
-import { VAULTS } from 'constants/vaults';
-// import { getBorrowId, getCollateralId } from 'helpers';
+import { VAULTS } from 'consts/vaults';
 
 import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
 
@@ -23,16 +22,12 @@ function MyPositions({ contracts, address }) {
       vaultAddress: key,
       debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
         address,
-        // getBorrowId(vault.borrowAsset.name), // 5 for usdt and 3 for usdc
         vault.borrowId,
       ]),
       collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
         address,
-        // getCollateralId(vault.borrowAsset.name),
         vault.collateralId,
       ]),
-      // borrowAsset: vault.borrowAsset.name,
-      // decimals: vault.borrowAsset.decimals,
       borrowAsset: vault.borrowAsset,
       collateralAsset: vault.collateralAsset,
     };

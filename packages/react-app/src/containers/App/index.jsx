@@ -13,7 +13,7 @@ import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
 import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
-import { CONTACTS } from 'constants/contacts';
+import { CONTACTS } from 'consts/contacts';
 
 import { Container } from './styles';
 import './style.css';

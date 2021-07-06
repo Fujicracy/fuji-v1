@@ -3,7 +3,7 @@ import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
 import { find } from 'lodash';
-import { VAULTS } from 'constants/vaults';
+import { VAULTS } from 'consts/vaults';
 import { useContractReader, useRates } from '../../hooks';
 
 import { SectionTitle, BlackBoxContainer } from '../Blocks';

@@ -19,7 +19,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from 'helpers';
 import { useBalance, useContractReader } from 'hooks';
-import { ETH_CAP_VALUE } from 'constants/providers';
+import { ETH_CAP_VALUE } from 'consts/providers';
 
 function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();

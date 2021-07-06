@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { formatUnits, formatEther } from '@ethersproject/units';
+import { formatUnits } from '@ethersproject/units';
 import Button from '@material-ui/core/Button';
 
 import { useExchangePrice } from '../../hooks';
@@ -29,7 +29,7 @@ function logslider(value) {
 }
 
 function PositionElement({ position, actionType }) {
-  const { debtBalance, collateralBalance, borrowAsset } = position;
+  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
   const history = useHistory();
   const price = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset.name);
@@ -38,7 +38,9 @@ function PositionElement({ position, actionType }) {
   const [healthRatio, setHealthRatio] = useState(0);
 
   const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : null;
-  const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : null;
+  const collateral = collateralBalance
+    ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
+    : null;
 
   useEffect(() => {
     const ratios = PositionRatios(position, price);
@@ -52,10 +54,12 @@ function PositionElement({ position, actionType }) {
     <div className="position-element">
       <div className="position-about">
         <div className="elmtXelmt">
-          <img alt="eth" className="behind" src="/ETH.png" />
+          <img alt={borrowAsset.name} className="behind" src={collateralAsset.icon} />
           <img className="front" alt={borrowAsset.name} src={borrowAsset.icon} />
         </div>
-        <span className="elmt-name">ETH/{borrowAsset.name}</span>
+        <span className="elmt-name">
+          {collateralAsset.name}/{borrowAsset.name}
+        </span>
       </div>
 
       <div className="position-numbers">
@@ -93,7 +97,7 @@ function PositionElement({ position, actionType }) {
           <Button
             className="position-btn"
             onClick={() => {
-              return history.push(`/dashboard/position?borrowAssetName=${borrowAsset.name}`);
+              return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
             }}
           >
             Manage
