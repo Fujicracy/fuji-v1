@@ -32,7 +32,7 @@ function PositionElement({ position, actionType }) {
   const { debtBalance, collateralBalance, borrowAsset } = position;
   const history = useHistory();
   const price = useExchangePrice();
-  const borrowAssetPrice = useExchangePrice(borrowAsset);
+  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
 
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
@@ -53,9 +53,9 @@ function PositionElement({ position, actionType }) {
       <div className="position-about">
         <div className="elmtXelmt">
           <img alt="eth" className="behind" src="/ETH.png" />
-          <img className="front" alt={borrowAsset} src={`/${borrowAsset}.png`} />
+          <img className="front" alt={borrowAsset.name} src={borrowAsset.icon} />
         </div>
-        <span className="elmt-name">ETH/{borrowAsset}</span>
+        <span className="elmt-name">ETH/{borrowAsset.name}</span>
       </div>
 
       <div className="position-numbers">
@@ -71,7 +71,7 @@ function PositionElement({ position, actionType }) {
 
         <div className="borrow-number" data-element="Debt">
           <span className="number">
-            <img alt={borrowAsset} src={`/${borrowAsset}.png`} />
+            <img alt={borrowAsset.name} src={borrowAsset.icon} />
             <span>{debt ? debt.toFixed(2) : '...'}</span>
           </span>
           <span className="additional-infos">
@@ -93,7 +93,7 @@ function PositionElement({ position, actionType }) {
           <Button
             className="position-btn"
             onClick={() => {
-              return history.push(`/dashboard/position?borrowAsset=${borrowAsset}`);
+              return history.push(`/dashboard/position?borrowAssetName=${borrowAsset.name}`);
             }}
           >
             Manage

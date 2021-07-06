@@ -47,7 +47,6 @@ function InitBorrow({ contracts, provider, address }) {
   const ethPrice = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset);
   // const collateralAssetPrice = useExchangePrice(collateralAsset);
-
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -169,7 +168,6 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ borrowAsset: ASSETS[borrowAsset], collateralAsset: ASSETS[collateralAsset] });
   return (
     <div className="container initial-step">
       <Dialog

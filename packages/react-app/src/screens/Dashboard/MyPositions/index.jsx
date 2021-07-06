@@ -33,24 +33,24 @@ function MyPositions({ contracts, address }) {
       ]),
       // borrowAsset: vault.borrowAsset.name,
       // decimals: vault.borrowAsset.decimals,
-      debtAsset: vault.borrowAsset,
+      borrowAsset: vault.borrowAsset,
       collateralAsset: vault.collateralAsset,
     };
   });
 
   const hasPosition = asset => {
     if (asset) {
-      const position = find(positions, item => item.borrowAsset === asset);
+      const position = find(positions, item => item.borrowAsset.name === asset);
       return (
         position &&
         position.collateralBalance &&
-        Number(formatUnits(position.collateralBalance, position.debtAsset.decimals)) > 0
+        Number(formatUnits(position.collateralBalance, position.borrowAsset.decimals)) > 0
       );
     }
     for (let i = 0; i < positions.length; i += 1) {
       if (
         positions[i].collateralBalance &&
-        Number(formatUnits(positions[i].collateralBalance, positions[i].debtAsset.decimals)) > 0
+        Number(formatUnits(positions[i].collateralBalance, positions[i].borrowAsset.decimals)) > 0
       ) {
         return true;
       }
@@ -58,7 +58,6 @@ function MyPositions({ contracts, address }) {
 
     return false;
   };
-
   return (
     <div className="container">
       <div className="left-content">
@@ -82,25 +81,27 @@ function MyPositions({ contracts, address }) {
             {map(
               orderBy(
                 positions,
-                item => Number(formatUnits(item.collateralBalance || 0, item.debtAsset.decimals)),
+                item => Number(formatUnits(item.collateralBalance || 0, item.borrowAsset.decimals)),
                 'desc',
               ),
               position =>
-                hasPosition(position.debtAsset.name) ? (
-                  <Grid key={position.debtAsset.name} item className="one-position">
+                hasPosition(position.borrowAsset.name) ? (
+                  <Grid key={position.borrowAsset.name} item className="one-position">
                     <PositionElement actionType={PositionActions.Manage} position={position} />
                   </Grid>
                 ) : (
                   <Grid
-                    key={position.debtAsset.name}
+                    key={position.borrowAsset.name}
                     item
                     onClick={() =>
-                      history.push(`/dashboard/init-borrow?borrowAsset=${position.debtAsset.name}`)
+                      history.push(
+                        `/dashboard/init-borrow?borrowAsset=${position.borrowAsset.name}`,
+                      )
                     }
                     className="adding-position"
                   >
                     <AddIcon />
-                    Borrow {position.debtAsset.name}
+                    Borrow {position.borrowAsset.name}
                   </Grid>
                 ),
             )}

@@ -18,7 +18,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from 'helpers';
 import { useBalance, useContractReader, useGasPrice } from 'hooks';
 import { ETH_CAP_VALUE } from 'constants/providers';
-
+import { ASSETS } from 'constants/assets';
 import DeltaPositionRatios from '../DeltaPositionRatios';
 
 import { TextInput, Label } from '../../../components/UI';
@@ -28,7 +28,13 @@ const Action = {
   Withdraw: 1,
 };
 
-function CollateralForm({ borrowAsset, contracts, provider, address }) {
+function CollateralForm({
+  borrowAsset,
+  contracts,
+  provider,
+  address,
+  collateralAssetName = 'ETH',
+}) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
   const gasPrice = useGasPrice();
@@ -305,7 +311,7 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
               ? `${ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ`
               : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ`
           }
-          startAdornmentImage="/ETH.png"
+          startAdornmentImage={ASSETS[collateralAssetName].icon} // "/ETH.png"
           endAdornment={{
             type: 'component',
             component: (

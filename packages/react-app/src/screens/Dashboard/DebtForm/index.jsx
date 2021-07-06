@@ -53,8 +53,14 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
     : null;
   const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
     address,
-    contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
+    // contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
+    ASSETS[borrowAsset].address,
   ]);
+  console.log({
+    allowance,
+    con: contracts,
+    contracts: contracts[getVaultName(borrowAsset)].address,
+  });
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -176,7 +182,6 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    console.log({ amount, decimals });
     setLoading(true);
     if (action === Action.Repay) {
       if (parseUnits(amount, decimals).gt(allowance)) {
@@ -349,7 +354,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
               ? `${balance ? Number(balance).toFixed(2) : '...'} ${borrowAsset} Ξ`
               : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${borrowAsset} Ξ`
           }
-          startAdornmentImage={`/${borrowAsset}.png`}
+          startAdornmentImage={ASSETS[borrowAsset].icon}
           endAdornment={{
             type: 'component',
             component: (
