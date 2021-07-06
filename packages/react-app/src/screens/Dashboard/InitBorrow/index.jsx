@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
@@ -33,10 +33,13 @@ import { TextInput } from '../../../components/UI';
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const queries = new URLSearchParams(useLocation().search);
+  const queryBorrowAsset = queries.get('borrowAsset');
+  const queryBorrowAmount = queries.get('borrowAmount');
+
   const gasPrice = useGasPrice();
 
-  const [borrowAmount, setBorrowAmount] = useState('1000');
-  const [borrowAsset, setBorrowAsset] = useState(ASSET_NAME.DAI);
+  const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
+  const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
 
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
@@ -79,20 +82,6 @@ function InitBorrow({ contracts, provider, address }) {
   const neededCollateral = unFormattedNeededCollateral
     ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
     : null;
-
-  const queryBorrowAmount = queries.get('borrowAmount');
-  useEffect(() => {
-    if (queryBorrowAmount) {
-      setBorrowAmount(queryBorrowAmount);
-    }
-  }, [queryBorrowAmount, setBorrowAmount]);
-
-  const queryBorrowAsset = queries.get('borrowAsset');
-  useEffect(() => {
-    if (queryBorrowAsset) {
-      setBorrowAsset(queryBorrowAsset);
-    }
-  }, [queryBorrowAsset, setBorrowAsset]);
 
   const position = {
     borrowAsset,
@@ -206,7 +195,11 @@ function InitBorrow({ contracts, provider, address }) {
         <HowItWorks />
         <div className="dark-block borrow-actions">
           <form noValidate autoComplete="off">
-            <AssetList handleChange={handleChangeBorrowAsset} mode={ASSET_TYPE.BORROW} />
+            <AssetList
+              handleChange={handleChangeBorrowAsset}
+              mode={ASSET_TYPE.BORROW}
+              defaultAsset={borrowAsset}
+            />
             <TextInput
               placeholder={borrowAmount}
               id="borrowAmount"

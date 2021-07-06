@@ -4,10 +4,9 @@ import { filter, map } from 'lodash';
 
 import { SectionTitle } from '../Blocks';
 
-const AssetList = ({ handleChange, mode = ASSET_TYPE.BORROW }) => {
-  const [selectedAsset, setSelectedAsset] = useState(ASSET_NAME.DAI);
+const AssetList = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) => {
+  const [selectedAsset, setSelectedAsset] = useState(ASSET_NAME[defaultAsset]);
   const assets = filter(ASSETS, asset => asset.type === mode);
-
   return (
     <div className="borrow-options">
       <SectionTitle mb={3} fontSize={3}>

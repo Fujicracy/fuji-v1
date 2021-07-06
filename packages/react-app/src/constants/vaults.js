@@ -58,6 +58,7 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.DYDX],
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
+    name: 'VaultETHDAI',
   },
   [VALUTS_ADDRESS.VaultETHUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
@@ -70,6 +71,7 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.DYDX],
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
+    name: 'VaultETHUSDC',
   },
   [VALUTS_ADDRESS.VaultETHUSDT]: {
     borrowAsset: ASSETS[ASSET_NAME.USDT],
@@ -81,5 +83,6 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
+    name: 'VaultETHUSDT',
   },
 };

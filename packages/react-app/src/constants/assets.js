@@ -1,6 +1,6 @@
 import {
-  btcIcon,
-  btcImage,
+  // btcIcon,
+  // btcImage,
   daiIcon,
   usdcIcon,
   usdtIcon,
@@ -24,34 +24,6 @@ export const ASSET_TYPE = {
   COLLATERAL: 1, // collateral asset
   BOTH: 2, // both
 };
-export const PROVIDER_TYPE = {
-  AAVE: 'AAVE',
-  COMPOUND: 'Compound',
-  DYDX: 'DYDX',
-  IRONBANK: 'IronBank',
-};
-export const PROVIDERS = {
-  [PROVIDER_TYPE.AAVE]: {
-    id: 'aave',
-    name: 'ProviderAave',
-    title: 'Aave',
-  },
-  [PROVIDER_TYPE.COMPOUND]: {
-    id: 'compound',
-    name: 'ProviderCompound',
-    title: 'Compound',
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'dYdX',
-  },
-  [PROVIDER_TYPE.IRONBANK]: {
-    id: 'ironbank',
-    name: 'ProviderIronBank',
-    title: 'IronBank',
-  },
-};
 export const ASSETS = {
   [ASSET_NAME.DAI]: {
     id: ASSET_NAME.DAI.toLowerCase(),
@@ -59,13 +31,7 @@ export const ASSETS = {
     icon: daiIcon.toString(),
     image: daiImage,
     decimals: 18,
-    type: ASSET_TYPE.BORROW,
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
+    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
   },
   [ASSET_NAME.USDC]: {
     id: ASSET_NAME.USDC.toLowerCase(),
@@ -73,13 +39,7 @@ export const ASSETS = {
     icon: usdcIcon.toString(),
     image: usdcImage,
     decimals: 6,
-    type: ASSET_TYPE.BORROW,
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
+    address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   },
   [ASSET_NAME.USDT]: {
     id: ASSET_NAME.USDT.toLowerCase(),
@@ -87,12 +47,7 @@ export const ASSETS = {
     icon: usdtIcon.toString(),
     image: usdtImage,
     decimals: 6,
-    type: ASSET_TYPE.BORROW,
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
+    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
   },
   [ASSET_NAME.ETH]: {
     id: ASSET_NAME.ETH.toLowerCase(),
@@ -100,24 +55,14 @@ export const ASSETS = {
     icon: ethIcon.toString(),
     image: ethImage,
     decimals: 18,
-    type: ASSET_TYPE.COLLATERAL,
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
+    address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   },
-  [ASSET_NAME.BTC]: {
-    id: ASSET_NAME.BTC.toLowerCase(),
-    name: ASSET_NAME.BTC,
-    icon: btcIcon.toString(),
-    image: btcImage,
-    decimals: 18,
-    type: ASSET_TYPE.COLLATERAL,
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
-  },
+  // [ASSET_NAME.BTC]: {
+  //   id: ASSET_TYPE.BTC.toLowerCase(),
+  //   name: ASSET_TYPE.BTC,
+  //   icon: btcIcon.toString(),
+  //   image: btcImage,
+  //   decimals: 18,
+  //   address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+  // },
 };

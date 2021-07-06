@@ -2,8 +2,8 @@ import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
-
-import { ASSETS } from 'constants/assets';
+import { find } from 'lodash';
+import { VAULTS } from 'constants/vaults';
 import { useContractReader, useRates } from '../../hooks';
 
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
@@ -28,26 +28,26 @@ function AnimatedCounter({ countTo }) {
 }
 
 const Provider = ({ contracts, market, rates }) => {
-  const asset = ASSETS[market];
-  const activeProvider = useContractReader(contracts, asset.vault, 'activeProvider');
+  const vault = find(VAULTS, v => v.borrowAsset.name === market);
 
+  const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   return (
     <div className="provider">
       <div className="title">
-        <img alt={asset.name} src={asset.image} />
-        <Typography variant="h3">{asset.name}</Typography>
+        <img alt={vault.borrowAsset.name} src={vault.borrowAsset.image} />
+        <Typography variant="h3">{vault.borrowAsset.name}</Typography>
       </div>
       <div className="stats">
-        {asset.providers.map(provider => (
+        {vault.providers.map(provider => (
           <div
-            key={`${asset.id}-${provider.id}`}
+            key={`${vault.name}-${provider.id}`}
             className={
               contracts?.[provider.name]?.address === activeProvider ? 'stat best' : 'stat'
             }
           >
             <span className="name">{provider.title}</span>
             <span className="number">
-              <AnimatedCounter countTo={rates?.[provider.id]?.[asset.id]} /> %
+              <AnimatedCounter countTo={rates?.[provider.id]?.[vault.borrowAsset.id]} /> %
             </span>
           </div>
         ))}
