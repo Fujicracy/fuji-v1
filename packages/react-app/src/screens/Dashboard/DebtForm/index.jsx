@@ -39,24 +39,19 @@ function DebtForm({ position, contracts, provider, address }) {
   const [leftToBorrow, setLeftToBorrow] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const { decimals } = position.borrowAsset;
   const vault = VAULTS[position.vaultAddress];
+  const { decimals } = vault.borrowAsset;
 
-  const unFormattedBalance = useContractReader(contracts, position.borrowAsset.name, 'balanceOf', [
+  const unFormattedBalance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [
     address,
   ]);
   const balance = unFormattedBalance
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
-  const allowance = useContractReader(contracts, position.borrowAsset.name, 'allowance', [
+  const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
     address,
     contracts ? contracts[vault.name].address : '0x', // TODO ask boyan
   ]);
-  console.log({
-    allowance,
-    con: contracts,
-    contracts: contracts[vault.name].address,
-  });
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -197,7 +192,8 @@ function DebtForm({ position, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
-          borrowAsset={vault.borrowAsset.name}
+          borrowAsset={vault.borrowAsset}
+          collateralAsset={vault.collateralAsset}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newCollateral={collateralBalance}

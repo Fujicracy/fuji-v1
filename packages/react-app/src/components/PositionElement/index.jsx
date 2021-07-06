@@ -30,6 +30,7 @@ function logslider(value) {
 
 function PositionElement({ position, actionType }) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
+
   const history = useHistory();
   const price = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset.name);
@@ -37,7 +38,7 @@ function PositionElement({ position, actionType }) {
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : null;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : null;
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : null;

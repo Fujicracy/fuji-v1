@@ -9,7 +9,7 @@ const AssetList = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) => 
   const assets = filter(ASSETS, asset => asset.type === mode);
   return (
     <div className="borrow-options">
-      <SectionTitle mb={3} fontSize={3}>
+      <SectionTitle fontSize={3}>
         {mode === ASSET_TYPE.BORROW ? 'Borrow' : 'Collateral'}
       </SectionTitle>
       <div className="select-options">

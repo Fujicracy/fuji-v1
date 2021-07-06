@@ -82,7 +82,8 @@ function InitBorrow({ contracts, provider, address }) {
     : null;
 
   const position = {
-    borrowAsset,
+    borrowAsset: ASSETS[borrowAsset],
+    collateralAsset: ASSETS[ASSET_NAME.ETH],
     debtBalance:
       !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
     collateralBalance:
