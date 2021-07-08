@@ -10,6 +10,7 @@ import {
   usdtImage,
   ethImage,
 } from 'assets/images';
+import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 export const ASSET_NAME = {
   DAI: 'DAI',
@@ -32,6 +33,12 @@ export const ASSETS = {
     image: daiImage,
     decimals: 18,
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    providersAsBorrowAsset: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.DYDX],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
   },
   [ASSET_NAME.USDC]: {
     id: ASSET_NAME.USDC.toLowerCase(),

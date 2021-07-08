@@ -946,6 +946,35 @@ const chainId = process.env.REACT_APP_CHAIN_ID;
 
 const ETH_CAP_VALUE = 2;
 
+const PROVIDER_TYPE = {
+  AAVE: 'AAVE',
+  COMPOUND: 'Compound',
+  DYDX: 'DYDX',
+  IRONBANK: 'IronBank',
+};
+const PROVIDERS = {
+  [PROVIDER_TYPE.AAVE]: {
+    id: 'aave',
+    name: 'ProviderAave',
+    title: 'Aave',
+  },
+  [PROVIDER_TYPE.COMPOUND]: {
+    id: 'compound',
+    name: 'ProviderCompound',
+    title: 'Compound',
+  },
+  [PROVIDER_TYPE.DYDX]: {
+    id: 'dydx',
+    name: 'ProviderDYDX',
+    title: 'DyDx',
+  },
+  [PROVIDER_TYPE.IRONBANK]: {
+    id: 'ironbank',
+    name: 'ProviderIronBank',
+    title: 'IronBank',
+  },
+};
+
 module.exports = {
   ERC20_ABI: DAI_ABI,
   DAI_ADDRESS: dai[chainId],
@@ -960,4 +989,7 @@ module.exports = {
   NETWORK: networks[chainId],
   APP_URL: process.env.REACT_APP_APP_URL,
   LANDING_URL: process.env.REACT_APP_LANDING_URL,
+
+  PROVIDER_TYPE,
+  PROVIDERS,
 };
