@@ -2,13 +2,7 @@ const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { createFixtureLoader } = require("ethereum-waffle");
 
-const {
-  fixture,
-  evmSnapshot,
-  evmRevert,
-  advanceblocks,
-  TREASURY_ADDR,
-} = require("./utils-alpha.js");
+const { fixture, evmSnapshot, evmRevert, advanceblocks, TREASURY_ADDR } = require("./utils-alpha");
 
 // use(solidity);
 
@@ -207,7 +201,7 @@ describe("Alpha", () => {
         .depositAndBorrow(depositAmount, borrowAmount, { value: depositAmount });
 
       // Do small deposits to updateState in Compound contracts in long time periods
-      for (let i = 1; i < 11; i++) {
+      for (let i = 1; i < 5; i++) {
         await thevault.connect(users[i]).deposit(smallDeposits, { value: smallDeposits });
         await advanceblocks(50);
       }

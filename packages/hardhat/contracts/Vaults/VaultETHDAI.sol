@@ -7,17 +7,36 @@ import { IVault } from "./IVault.sol";
 import { VaultBase } from "./VaultBase.sol";
 import { IFujiAdmin } from "../IFujiAdmin.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {
-  AggregatorV3Interface
-} from "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IFujiERC1155 } from "../FujiERC1155/IFujiERC1155.sol";
 import { IProvider } from "../Providers/IProvider.sol";
 import { IAlphaWhiteList } from "../IAlphaWhiteList.sol";
 import { Errors } from "../Libraries/Errors.sol";
 
+import "hardhat/console.sol"; //test line
+
 interface IVaultHarvester {
   function collectRewards(uint256 _farmProtocolNum) external returns (address claimedToken);
+}
+
+interface IComptroller {
+  function claimComp(address holder) external;
+}
+
+interface IAaveLiquidityMining {
+  function claimRewards(
+    address[] calldata assets,
+    uint256 amount,
+    address to
+  ) external returns (uint256);
+
+  function getUserUnclaimedRewards(address _user) external view returns (uint256);
+
+  function getRewardsBalance(address[] calldata assets, address user)
+    external
+    view
+    returns (uint256);
 }
 
 contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
@@ -41,6 +60,11 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   IFujiAdmin private _fujiAdmin;
   address public override fujiERC1155;
   AggregatorV3Interface public oracle;
+
+  address[] public aaveClaimAddrs;
+  IAaveLiquidityMining private _aaVeLM =
+    IAaveLiquidityMining(0xd784927Ff2f95ba542BfC824c8a8a98F3495f6b5);
+  IComptroller private _comppTLR = IComptroller(0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B);
 
   modifier isAuthorized() {
     require(
@@ -66,6 +90,14 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     // 1.269
     collatF.a = 80;
     collatF.b = 63;
+
+    aaveClaimAddrs.push(address(0x030bA81f1c18d280636F32af80b9AAd02Cf0854e)); // aWETH
+    aaveClaimAddrs.push(address(0xF63B34710400CAd3e044cFfDcAb00a0f32E33eCf)); // variableDebtWETH
+    aaveClaimAddrs.push(address(0x6C3c78838c761c6Ac7bE9F59fe808ea2A6E4379d)); // variableDebtDAI
+    aaveClaimAddrs.push(address(0x619beb58998eD2278e08620f97007e1116D5D25b)); // variableDebtUSDC
+    aaveClaimAddrs.push(address(0x531842cEbbdD378f8ee36D171d6cC9C4fcf475Ec)); // variableDebtUSDT
+    aaveClaimAddrs.push(address(0x9ff58f4fFB29fA2266Ab25e75e2A8b3503311656)); // awBTC
+    aaveClaimAddrs.push(address(0x9c39809Dec7F95F5e0713634a4D0701329B3b4d2)); // variableDebtwBTC
   }
 
   receive() external payable {}
@@ -134,21 +166,23 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
       updateF1155Balances();
 
       // Get User Collateral in this Vault
-      uint256 providedCollateral =
-        IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.collateralID);
+      uint256 providedCollateral = IFujiERC1155(fujiERC1155).balanceOf(
+        msg.sender,
+        vAssets.collateralID
+      );
 
       // Check User has collateral
       require(providedCollateral > 0, Errors.VL_INVALID_COLLATERAL);
 
       // Get Required Collateral with Factors to maintain debt position healthy
-      uint256 neededCollateral =
-        getNeededCollateralFor(
-          IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID),
-          true
-        );
+      uint256 neededCollateral = getNeededCollateralFor(
+        IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID),
+        true
+      );
 
-      uint256 amountToWithdraw =
-        _withdrawAmount < 0 ? providedCollateral.sub(neededCollateral) : uint256(_withdrawAmount);
+      uint256 amountToWithdraw = _withdrawAmount < 0
+        ? providedCollateral.sub(neededCollateral)
+        : uint256(_withdrawAmount);
 
       // Check Withdrawal amount, and that it will not fall undercollaterized.
       require(
@@ -181,15 +215,16 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   function borrow(uint256 _borrowAmount) public override nonReentrant {
     updateF1155Balances();
 
-    uint256 providedCollateral =
-      IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.collateralID);
+    uint256 providedCollateral = IFujiERC1155(fujiERC1155).balanceOf(
+      msg.sender,
+      vAssets.collateralID
+    );
 
     // Get Required Collateral with Factors to maintain debt position healthy
-    uint256 neededCollateral =
-      getNeededCollateralFor(
-        _borrowAmount.add(IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID)),
-        true
-      );
+    uint256 neededCollateral = getNeededCollateralFor(
+      _borrowAmount.add(IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID)),
+      true
+    );
 
     // Check Provided Collateral is not Zero, and greater than needed to maintain healthy position
     require(
@@ -265,17 +300,18 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     uint256 _fee
   ) external override onlyFlash whenNotPaused {
     // Compute Ratio of transfer before payback
-    uint256 ratio =
-      _flashLoanAmount.mul(1e18).div(
-        IProvider(activeProvider).getBorrowBalance(vAssets.borrowAsset)
-      );
+    uint256 ratio = _flashLoanAmount.mul(1e18).div(
+      IProvider(activeProvider).getBorrowBalance(vAssets.borrowAsset)
+    );
 
     // Payback current provider
     _payback(_flashLoanAmount, activeProvider);
 
     // Withdraw collateral proportional ratio from current provider
-    uint256 collateraltoMove =
-      IProvider(activeProvider).getDepositBalance(vAssets.collateralAsset).mul(ratio).div(1e18);
+    uint256 collateraltoMove = IProvider(activeProvider)
+    .getDepositBalance(vAssets.collateralAsset)
+    .mul(ratio)
+    .div(1e18);
 
     _withdraw(collateraltoMove, activeProvider);
 
@@ -465,10 +501,31 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
    * @param _farmProtocolNum: number per VaultHarvester Contract for specific farm
    */
   function harvestRewards(uint256 _farmProtocolNum) external onlyOwner {
-    address tokenReturned =
-      IVaultHarvester(_fujiAdmin.getVaultHarvester()).collectRewards(_farmProtocolNum);
-    uint256 tokenBal = IERC20(tokenReturned).balanceOf(address(this));
-    require(tokenReturned != address(0) && tokenBal > 0, Errors.VL_HARVESTING_FAILED);
-    IERC20(tokenReturned).uniTransfer(payable(_fujiAdmin.getTreasury()), tokenBal);
+    address claimedToken;
+
+    if (_farmProtocolNum == 0) {
+      _comppTLR.claimComp(address(this));
+      claimedToken = 0xc00e94Cb662C3520282E6f5717214004A7f26888;
+    } else if (_farmProtocolNum == 1) {
+      uint256 unclaimedrewards = _aaVeLM.getUserUnclaimedRewards(address(this));
+      console.log("value unclaimedrewards", unclaimedrewards);
+      _aaVeLM.claimRewards(aaveClaimAddrs, unclaimedrewards, address(this));
+      /*
+      bytes memory data = abi.encodeWithSignature(
+        "claimRewards(address[],uint256,address)",
+        aaveClaimAddrs,
+        unclaimedrewards,
+        address(this)
+      );
+      _execute(address(_aaVeLM), data);
+      */
+      claimedToken = 0x4da27a545c0c5B758a6BA100e3a049001de870f5;
+      // uint256 number = _aaVeLM.claimRewards(aaveClaimAddrs, unclaimedrewards, msg.sender);
+    } else {
+      claimedToken = 0x0000000000000000000000000000000000000000;
+    }
+    uint256 claimedTokenBal = IERC20(claimedToken).balanceOf(address(this));
+    require(claimedToken != address(0) && claimedTokenBal > 0, Errors.VL_HARVESTING_FAILED);
+    IERC20(claimedToken).uniTransfer(payable(_fujiAdmin.getTreasury()), claimedTokenBal);
   }
 }
