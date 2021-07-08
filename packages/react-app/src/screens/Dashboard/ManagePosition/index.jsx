@@ -1,10 +1,9 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
-import { ASSETS } from 'constants/assets';
+import { VAULTS } from 'consts/vaults';
 import { useContractReader } from '../../../hooks';
 
-import { getBorrowId, getCollateralId } from '../../../helpers';
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
 import CollateralForm from '../CollateralForm';
@@ -21,24 +20,23 @@ function ManagePosition({ contracts, provider, address }) {
 
   // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
-  // const [borrowAmount, setBorrowAmount] = useState(0);
-  // const [collateralAmount, setCollateralAmount] = useState('');
 
-  const borrowAsset = queries && queries.get('borrowAsset') ? queries.get('borrowAsset') : 'DAI';
-
+  const borrowAsset = queries?.get('borrowAssetName') || 'DAI';
+  const vaultAddress = queries?.get('vaultAddress').toLowerCase() || '0x';
+  const vault = VAULTS[vaultAddress];
   const position = {
+    vaultAddress,
     debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
       address,
-      getBorrowId(borrowAsset),
+      vault.borrowId,
     ]),
     collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
       address,
-      getCollateralId(borrowAsset),
+      vault.collateralId,
     ]),
-    borrowAsset,
-    decimals: ASSETS[borrowAsset].decimals,
+    borrowAsset: vault.borrowAsset,
+    collateralAsset: vault.collateralAsset,
   };
-  // const decimals = borrowAsset === "USDC" ? 6 : 18;
 
   return (
     <div className="container">
@@ -81,10 +79,10 @@ function ManagePosition({ contracts, provider, address }) {
                     <div className="col-50">
                       {actionsType === 'single' ? (
                         <CollateralForm
-                          borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       ) : (
                         <SupplyAndBorrowForm
@@ -98,10 +96,10 @@ function ManagePosition({ contracts, provider, address }) {
                     <div className="col-50">
                       {actionsType === 'single' ? (
                         <DebtForm
-                          borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       ) : (
                         <RepayAndWithdrawForm

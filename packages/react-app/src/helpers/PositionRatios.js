@@ -1,11 +1,11 @@
-import { formatUnits, formatEther } from '@ethersproject/units';
+import { formatUnits } from '@ethersproject/units';
 
 export default function PositionRatios(position, price) {
-  const { debtBalance, collateralBalance } = position;
+  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : 0;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
   const collateral = collateralBalance
-    ? Number(formatEther(collateralBalance, position.decimals))
+    ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;
   // liquidation threshold
   const liqThres = 0.75;

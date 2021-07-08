@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Container, Logo, Navigation } from './styles';
-import { LANDING_URL } from '../../constants/providers';
+import { LANDING_URL } from '../../consts/providers';
 
 function Header() {
   const [logout, setLogout] = useState(false);

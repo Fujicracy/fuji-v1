@@ -3,7 +3,7 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 // import { Token, WETH, Fetcher, Route } from "@uniswap/sdk";
 // import { usePoller } from "eth-hooks";
 import { formatUnits } from '@ethersproject/units';
-import { CHAINLINK_ABI } from 'constants/providers';
+import { CHAINLINK_ABI } from 'consts/providers';
 import useExternalContractLoader from './ExternalContractLoader';
 
 const provider = new JsonRpcProvider(

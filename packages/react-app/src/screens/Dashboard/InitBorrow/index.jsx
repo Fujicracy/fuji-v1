@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { formatEther, parseEther, formatUnits, parseUnits } from '@ethersproject/units';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
-import map from 'lodash/map';
 import {
   Button,
   Typography,
@@ -14,10 +13,16 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from 'constants/providers';
-import { ASSET_TYPE, ASSETS } from 'constants/assets';
+import { ETH_CAP_VALUE } from 'consts/providers';
+import { ASSETS, ASSET_NAME, ASSET_TYPE } from 'consts/assets';
 import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
-import { CollaterizationIndicator, ProvidersList, HowItWorks, AlphaWarning } from 'components';
+import {
+  CollaterizationIndicator,
+  ProvidersList,
+  HowItWorks,
+  AlphaWarning,
+  AssetList,
+} from 'components';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 
 import './styles.css';
@@ -27,15 +32,21 @@ import { TextInput } from '../../../components/UI';
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const queries = new URLSearchParams(useLocation().search);
+  const queryBorrowAsset = queries.get('borrowAsset');
+  const queryBorrowAmount = queries.get('borrowAmount');
+
   const gasPrice = useGasPrice();
 
-  const [borrowAmount, setBorrowAmount] = useState('1000');
-  const [borrowAsset, setBorrowAsset] = useState(ASSET_TYPE.DAI);
+  const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
+  const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
+
+  // const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
+  const collateralAsset = ASSET_NAME.ETH;
+  const [collateralAmount, setCollateralAmount] = useState('');
 
   const ethPrice = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset);
-
-  const [collateralAmount, setCollateralAmount] = useState('');
+  // const collateralAssetPrice = useExchangePrice(collateralAsset);
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +58,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const unFormattedEthBalance = useBalance(provider, address);
   const ethBalance = unFormattedEthBalance
-    ? Number(formatEther(unFormattedEthBalance)).toFixed(6)
+    ? Number(formatUnits(unFormattedEthBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
     : null;
   const { decimals } = ASSETS[borrowAsset];
 
@@ -68,31 +79,19 @@ function InitBorrow({ contracts, provider, address }) {
     [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
   const neededCollateral = unFormattedNeededCollateral
-    ? Number(formatEther(unFormattedNeededCollateral))
+    ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
     : null;
 
-  const queryBorrowAmount = queries.get('borrowAmount');
-  useEffect(() => {
-    if (queryBorrowAmount) {
-      setBorrowAmount(queryBorrowAmount);
-    }
-  }, [queryBorrowAmount, setBorrowAmount]);
-
-  const queryBorrowAsset = queries.get('borrowAsset');
-  useEffect(() => {
-    if (queryBorrowAsset) {
-      setBorrowAsset(queryBorrowAsset);
-    }
-  }, [queryBorrowAsset, setBorrowAsset]);
-
   const position = {
-    borrowAsset,
+    borrowAsset: ASSETS[borrowAsset],
+    collateralAsset: ASSETS[ASSET_NAME.ETH],
     debtBalance:
       !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
     collateralBalance:
       !collateralBalance || !collateralAmount
         ? 0
-        : collateralBalance.add(parseEther(collateralAmount)),
+        : // : collateralBalance.add(parseEther(collateralAmount)),
+          collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
     decimals,
   };
 
@@ -106,15 +105,19 @@ function InitBorrow({ contracts, provider, address }) {
 
     setLoading(true);
     const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'depositAndBorrow', [
-      parseEther(collateralAmount),
+      parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
       parseUnits(borrowAmount, decimals),
-      { value: parseEther(collateralAmount), gasPrice },
+      { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals), gasPrice },
     ]);
     const res = await tx(
       contracts[getVaultName(borrowAsset)].depositAndBorrow(
-        parseEther(collateralAmount),
+        parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
         parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice, gasLimit },
+        {
+          value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
+          gasPrice,
+          gasLimit,
+        },
       ),
     );
 
@@ -127,9 +130,13 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeAsset = asset => () => {
+  const handleChangeBorrowAsset = asset => () => {
     setBorrowAsset(asset);
   };
+
+  // const handleChangeCollateralAsset = asset => () => {
+  //   setCollateralAsset(asset);
+  // };
 
   const dialogContents = {
     success: {
@@ -187,55 +194,35 @@ function InitBorrow({ contracts, provider, address }) {
         <HowItWorks />
         <div className="dark-block borrow-actions">
           <form noValidate autoComplete="off">
-            <div className="borrow-options">
-              <div className="section-title">Borrow</div>
-              <div className="select-options">
-                <div className="options-list">
-                  {map(Object.keys(ASSETS), key => {
-                    const asset = ASSETS[key];
-                    return (
-                      <label key={key}>
-                        <input
-                          type="radio"
-                          name="borrow"
-                          value={asset.name}
-                          onChange={handleChangeAsset(asset.name)}
-                          checked={borrowAsset === asset.name}
-                        />
-                        <div className="fake-radio">
-                          <img alt={asset.id} src={asset.icon} />
-                          <span className="select-option-name">{asset.name}</span>
-                        </div>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            <AssetList
+              handleChange={handleChangeBorrowAsset}
+              mode={ASSET_TYPE.BORROW}
+              defaultAsset={borrowAsset}
+            />
+            <TextInput
+              placeholder={borrowAmount}
+              id="borrowAmount"
+              name="borrowAmount"
+              type="number"
+              step="any"
+              defaultValue={borrowAmount}
+              value={borrowAmount}
+              onChange={({ target }) => {
+                setBorrowAmount(target.value);
+                clearErrors();
+              }}
+              ref={register({ required: true, min: 0 })}
+              startAdornmentImage={ASSETS[borrowAsset].image}
+              endAdornment={{
+                text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                type: 'currency',
+              }}
+              subTitle="Amount to borrow"
+              description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
+            />
 
+            {/* <AssetList handleChange={handleChangeCollateralAsset} mode={ASSET_TYPE.COLLATERAL} /> */}
             <div className="borrow-inputs">
-              <TextInput
-                placeholder={borrowAmount}
-                id="borrowAmount"
-                name="borrowAmount"
-                type="number"
-                step="any"
-                defaultValue={borrowAmount}
-                value={borrowAmount}
-                onChange={({ target }) => {
-                  setBorrowAmount(target.value);
-                  clearErrors();
-                }}
-                ref={register({ required: true, min: 0 })}
-                startAdornmentImage={`/${borrowAsset}.png`}
-                endAdornment={{
-                  text: (borrowAmount * borrowAssetPrice).toFixed(2),
-                  type: 'currency',
-                }}
-                subTitle="Amount to borrow"
-                description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
-              />
-
               <TextInput
                 id="collateralAmount"
                 name="collateralAmount"
@@ -248,7 +235,7 @@ function InitBorrow({ contracts, provider, address }) {
                   min: { value: neededCollateral, message: 'insufficient-collateral' },
                   max: { value: ethBalance, message: 'insufficient-balance' },
                 })}
-                startAdornmentImage="/ETH.png"
+                startAdornmentImage={ASSETS[collateralAsset].image}
                 endAdornment={{
                   text: (collateralAmount * ethPrice).toFixed(2),
                   type: 'currency',
