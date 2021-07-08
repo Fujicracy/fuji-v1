@@ -27,7 +27,7 @@ const VaultSelect = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) =
                 checked={selectedAsset === asset.name}
               />
               <div className="fake-radio">
-                <img alt={asset.id} src={asset.icon} style={{ width: '26px', height: '26px' }} />
+                <img alt={asset.id} src={asset.image} style={{ width: '26px', height: '26px' }} />
                 <span className="select-option-name">{asset.name}</span>
               </div>
             </label>

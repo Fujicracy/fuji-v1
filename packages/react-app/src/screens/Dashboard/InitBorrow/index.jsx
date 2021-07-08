@@ -212,7 +212,7 @@ function InitBorrow({ contracts, provider, address }) {
                 clearErrors();
               }}
               ref={register({ required: true, min: 0 })}
-              startAdornmentImage={ASSETS[borrowAsset].icon}
+              startAdornmentImage={ASSETS[borrowAsset].image}
               endAdornment={{
                 text: (borrowAmount * borrowAssetPrice).toFixed(2),
                 type: 'currency',
@@ -235,7 +235,7 @@ function InitBorrow({ contracts, provider, address }) {
                   min: { value: neededCollateral, message: 'insufficient-collateral' },
                   max: { value: ethBalance, message: 'insufficient-balance' },
                 })}
-                startAdornmentImage={ASSETS[collateralAsset].icon}
+                startAdornmentImage={ASSETS[collateralAsset].image}
                 endAdornment={{
                   text: (collateralAmount * ethPrice).toFixed(2),
                   type: 'currency',
