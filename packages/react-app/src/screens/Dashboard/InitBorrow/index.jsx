@@ -40,7 +40,8 @@ function InitBorrow({ contracts, provider, address }) {
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
 
-  const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
+  // const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
+  const collateralAsset = ASSET_NAME.ETH;
   const [collateralAmount, setCollateralAmount] = useState('');
 
   const ethPrice = useExchangePrice();
@@ -133,9 +134,9 @@ function InitBorrow({ contracts, provider, address }) {
     setBorrowAsset(asset);
   };
 
-  const handleChangeCollateralAsset = asset => () => {
-    setCollateralAsset(asset);
-  };
+  // const handleChangeCollateralAsset = asset => () => {
+  //   setCollateralAsset(asset);
+  // };
 
   const dialogContents = {
     success: {
@@ -220,7 +221,7 @@ function InitBorrow({ contracts, provider, address }) {
               description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
             />
 
-            <AssetList handleChange={handleChangeCollateralAsset} mode={ASSET_TYPE.COLLATERAL} />
+            {/* <AssetList handleChange={handleChangeCollateralAsset} mode={ASSET_TYPE.COLLATERAL} /> */}
             <div className="borrow-inputs">
               <TextInput
                 id="collateralAmount"

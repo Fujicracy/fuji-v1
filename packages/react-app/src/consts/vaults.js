@@ -41,9 +41,9 @@ export const PROVIDERS = {
 };
 
 const VALUTS_ADDRESS = {
-  VaultETHDAI: '0x6e16394cbf840fc599fa3d9e5d1e90949c32a4f5',
-  VaultETHUSDC: '0xd0dc4cc10fcf3fee2bf5310c0e4e097b60f097d3',
-  VaultETHUSDT: '0xca26d96b45111a130af78d69e1db283975547d67',
+  VaultETHDAI: '0x6e16394cbf840fc599fa3d9e5d1e90949c32a4f5'.toLowerCase(),
+  VaultETHUSDC: '0xd0dc4cc10fcf3fee2bf5310c0e4e097b60f097d3'.toLowerCase(),
+  VaultETHUSDT: '0xca26d96b45111a130af78d69e1db283975547d67'.toLowerCase(),
 };
 
 export const VAULTS = {

@@ -23,7 +23,7 @@ function ManagePosition({ contracts, provider, address }) {
 
   const borrowAsset = queries?.get('borrowAssetName') || 'DAI';
   const vaultAddress = queries?.get('vaultAddress') || '0x';
-  const vault = VAULTS[vaultAddress];
+  const vault = VAULTS[vaultAddress.toLowerCase()];
   const position = {
     vaultAddress,
     debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [

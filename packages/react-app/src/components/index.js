@@ -6,7 +6,7 @@ import Loader from './Loader';
 import PositionElement, { PositionActions } from './PositionElement';
 import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
-import AssetList from './AssetList';
+import AssetList from './VaultSelect';
 
 export * from './Blocks';
 export {

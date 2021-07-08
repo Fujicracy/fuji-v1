@@ -55,7 +55,7 @@ function PositionElement({ position, actionType }) {
     <div className="position-element">
       <div className="position-about">
         <div className="elmtXelmt">
-          <img alt={borrowAsset.name} className="behind" src={collateralAsset.icon} />
+          <img alt={collateralAsset.name} className="behind" src={collateralAsset.icon} />
           <img className="front" alt={borrowAsset.name} src={borrowAsset.icon} />
         </div>
         <span className="elmt-name">
@@ -66,7 +66,7 @@ function PositionElement({ position, actionType }) {
       <div className="position-numbers">
         <div className="collateral-number" data-element="Collateral">
           <span className="number">
-            <img alt="eth" src="/ETH.png" />
+            <img alt={collateralAsset.name} src={collateralAsset.icon} />
             <span>{collateral ? collateral.toFixed(2) : '...'}</span>
           </span>
           <span className="additional-infos">

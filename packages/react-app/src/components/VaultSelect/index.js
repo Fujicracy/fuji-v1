@@ -4,7 +4,7 @@ import { filter, map } from 'lodash';
 
 import { SectionTitle } from '../Blocks';
 
-const AssetList = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) => {
+const VaultSelect = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) => {
   const [selectedAsset, setSelectedAsset] = useState(ASSET_NAME[defaultAsset]);
   const assets = filter(ASSETS, asset => asset.type === mode);
   return (
@@ -38,4 +38,4 @@ const AssetList = ({ handleChange, defaultAsset, mode = ASSET_TYPE.BORROW }) => 
   );
 };
 
-export default AssetList;
+export default VaultSelect;
