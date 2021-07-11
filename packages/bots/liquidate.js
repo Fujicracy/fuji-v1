@@ -83,20 +83,20 @@ async function checkForLiquidations() {
 
       if (!borrowers) {
         console.log('no cached borrowers');
-        borrowers = await searchBorrowers(vault);
+        borrowers = await searchBorrowers(provider, vault);
         await client.set('borrowers', JSON.stringify(borrowers));
       } else {
         borrowers = JSON.parse(borrowers);
         console.log(borrowers);
         console.log('cached borrowers, fetch only new');
-        const newBorrowers = await searchBorrowers(vault, 10);
+        const newBorrowers = await searchBorrowers(provider, vault, 10);
         borrowers = pushNew(newBorrowers, borrowers);
 
         await client.set('borrowers', JSON.stringify(borrowers));
       }
     } else {
       console.log('not using redis');
-      borrowers = await searchBorrowers(vault);
+      borrowers = await searchBorrowers(provider, vault);
     }
 
     const [toLiq, positions, stats] = await buildPositions(

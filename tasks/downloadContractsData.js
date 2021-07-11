@@ -1,6 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 
-const contractList = require('./contracts.js');
+const contractList = require('./contracts');
 
 // The ID of GCS bucket
 const bucketName = 'fuji-mainnet-eth';

@@ -9,6 +9,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
+import { SectionTitle, BlackBoxContainer } from '../Blocks';
 
 import './styles.css';
 
@@ -77,8 +78,8 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <div className="dark-block collateralization-block">
-      <div className="section-title">
+    <BlackBoxContainer mt={4}>
+      <SectionTitle>
         <Typography variant="h3">Health Factor</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
@@ -89,7 +90,7 @@ function CollaterizationIndicator({ position }) {
             <span className="bold">Keep it above 1 to avoid liquidation.</span>
           </span>
         </div>
-      </div>
+      </SectionTitle>
 
       <div className="ratio">
         <div className="svg-chart">
@@ -159,7 +160,7 @@ function CollaterizationIndicator({ position }) {
           Show {more ? 'less' : 'more'}
         </Button>
       </div>
-    </div>
+    </BlackBoxContainer>
   );
 }
 
