@@ -36,7 +36,6 @@ const DropDown = ({ options, defaultOption }) => {
 
   useEffect(() => {
     if (selectedOption === null && defaultOption?.title && Number(defaultOption?.rate || 0) !== 0) {
-      console.log({ defaultOption, selectedOption });
       setSelectedOption(defaultOption);
     }
 
