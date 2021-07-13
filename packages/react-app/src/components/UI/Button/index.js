@@ -2,17 +2,19 @@ import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import { maxWidth, fontSize, space } from 'styled-system';
+import { maxWidth, fontSize, space, typography } from 'styled-system';
 import { mapToTheme } from 'styled-map';
 
 const Button = styled(Box).attrs({
   as: 'button',
   type: 'button',
   px: 4,
-  fontSize: 4,
+  maxWidth,
+  space,
+  typography,
 })`
   height: 40px;
-  border-radius: 4px;
+  border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '4px')};
   position: relative;
   user-select: none;
   outline: none;
@@ -55,9 +57,8 @@ const Button = styled(Box).attrs({
   &:active:enabled {
     background: ${mapToTheme('buttons.hover')};
   }
-  ${maxWidth}
+
   ${fontSize}
-  ${space}
 `;
 
 Button.defaultProps = {
