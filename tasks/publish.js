@@ -1,8 +1,8 @@
 const fs = require('fs');
 const chalk = require('chalk');
 
-const artifactsDir = './packages/hardhat/artifacts';
-const sourcesDir = './packages/hardhat/contracts';
+const artifactsDir = './packages/hardhat-old/artifacts';
+const sourcesDir = './packages/hardhat-old/contracts';
 
 const reactAppDir = './packages/react-app/src/contracts';
 const botsDir = './packages/bots/contracts';
