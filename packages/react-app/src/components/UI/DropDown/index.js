@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { plusIcon, closeIcon } from 'assets/images';
 import { Image } from 'rebass';
 import { useSpring, animated, config } from 'react-spring';
@@ -32,8 +32,16 @@ function AnimatedCounter({ countTo }) {
 
 const DropDown = ({ options, defaultOption }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(defaultOption);
+  const [selectedOption, setSelectedOption] = useState(null);
 
+  useEffect(() => {
+    if (selectedOption === null && defaultOption?.title && Number(defaultOption?.rate || 0) !== 0) {
+      console.log({ defaultOption, selectedOption });
+      setSelectedOption(defaultOption);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultOption]);
   const toggling = () => setIsOpen(!isOpen);
 
   const onOptionClicked = value => () => {
@@ -41,27 +49,26 @@ const DropDown = ({ options, defaultOption }) => {
     setIsOpen(false);
   };
 
-  const curOption = selectedOption || defaultOption;
   const filteredOptions = options.filter(option => option.title !== selectedOption?.title);
   return (
     <DropDownContainer>
       <DropDownHeader isOpened={isOpen} onClick={toggling}>
-        <TextBox width={4 / 7}>{curOption?.title}</TextBox>
+        <TextBox width={4 / 7}>{selectedOption?.title}</TextBox>
         <TextBox
           width={2 / 7}
           display="flex"
           alignItems="center"
           justifyContent="flex-end"
-          color={(selectedOption?.title === defaultOption?.title || !selectedOption) && '#42FF00'}
+          color={selectedOption?.title === defaultOption?.title && '#42FF00'}
         >
-          <AnimatedCounter countTo={curOption?.rate} /> %
+          <AnimatedCounter countTo={selectedOption?.rate} /> %
         </TextBox>
         <TextBox width={1 / 7} display="flex" alignItems="center" justifyContent="flex-end">
           <Image src={isOpen ? closeIcon : plusIcon} width={17} height={17} />
         </TextBox>
       </DropDownHeader>
       <Collapse in={isOpen}>
-        <DropDownListContainer open={isOpen}>
+        <DropDownListContainer open={isOpen} length={filteredOptions?.length}>
           <DropDownList>
             {filteredOptions?.map(option => (
               <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
