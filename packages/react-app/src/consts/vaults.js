@@ -1,4 +1,5 @@
 import { ASSETS, ASSET_NAME } from './assets';
+import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 const COLLATERAL_IDS = {
   [ASSET_NAME.DAI]: 0,
@@ -10,34 +11,6 @@ const BORROW_IDS = {
   [ASSET_NAME.DAI]: 1,
   [ASSET_NAME.USDC]: 3,
   [ASSET_NAME.USDT]: 5,
-};
-export const PROVIDER_TYPE = {
-  AAVE: 'AAVE',
-  COMPOUND: 'Compound',
-  DYDX: 'DYDX',
-  IRONBANK: 'IronBank',
-};
-export const PROVIDERS = {
-  [PROVIDER_TYPE.AAVE]: {
-    id: 'aave',
-    name: 'ProviderAave',
-    title: 'Aave',
-  },
-  [PROVIDER_TYPE.COMPOUND]: {
-    id: 'compound',
-    name: 'ProviderCompound',
-    title: 'Compound',
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'DyDx',
-  },
-  [PROVIDER_TYPE.IRONBANK]: {
-    id: 'ironbank',
-    name: 'ProviderIronBank',
-    title: 'IronBank',
-  },
 };
 
 const VALUTS_ADDRESS = {

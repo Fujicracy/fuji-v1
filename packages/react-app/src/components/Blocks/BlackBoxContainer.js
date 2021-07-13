@@ -11,7 +11,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   backdrop-filter: blur(0.375rem);
   -webkit-backdrop-filter: blur(0.375rem);
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 2rem 1rem 2rem 1rem;
   margin-top: 2rem;
   z-index: ${props => (props.zIndex ? props.zIndex : '10')};
   position: relative;
