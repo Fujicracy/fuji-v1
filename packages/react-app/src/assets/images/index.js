@@ -30,6 +30,12 @@ import twitterImage from './images/home/twitter.svg';
 import discordRedImage from './images/home/discord_red.svg';
 import telegramRedImage from './images/home/telegram_red.svg';
 import twitterRedImage from './images/home/twitter_red.svg';
+import flaskIcon from './images/flask.svg';
+
+// Network Icons
+import ethNetworkIcon from './icons/networks/ETH.svg';
+import maticNetworkIcon from './icons/networks/MATIC.svg';
+import bscNetworkIcon from './icons/networks/BSC.svg';
 
 export {
   // Icons
@@ -41,6 +47,7 @@ export {
   linkedinIcon,
   plusIcon,
   closeIcon,
+  flaskIcon,
   // Images
   daiImage,
   usdcImage,
@@ -62,4 +69,8 @@ export {
   discordRedImage,
   telegramRedImage,
   twitterRedImage,
+  // Networks
+  ethNetworkIcon,
+  bscNetworkIcon,
+  maticNetworkIcon,
 };
