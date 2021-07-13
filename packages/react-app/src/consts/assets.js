@@ -20,11 +20,6 @@ export const ASSET_NAME = {
   BTC: 'BTC',
 };
 
-export const ASSET_TYPE = {
-  BORROW: 0, // borrow asset
-  COLLATERAL: 1, // collateral asset
-  BOTH: 2, // both
-};
 export const ASSETS = {
   [ASSET_NAME.DAI]: {
     id: ASSET_NAME.DAI.toLowerCase(),
@@ -64,12 +59,4 @@ export const ASSETS = {
     decimals: 18,
     address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   },
-  // [ASSET_NAME.BTC]: {
-  //   id: ASSET_TYPE.BTC.toLowerCase(),
-  //   name: ASSET_TYPE.BTC,
-  //   icon: btcIcon.toString(),
-  //   image: btcImage,
-  //   decimals: 18,
-  //   address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-  // },
 };
