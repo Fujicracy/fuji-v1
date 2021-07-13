@@ -32,7 +32,7 @@ function AnimatedCounter({ countTo }) {
 
 const DropDown = ({ options, defaultOption }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(defaultOption);
 
   const toggling = () => setIsOpen(!isOpen);
 
@@ -42,6 +42,7 @@ const DropDown = ({ options, defaultOption }) => {
   };
 
   const curOption = selectedOption || defaultOption;
+  const filteredOptions = options.filter(option => option.title !== selectedOption?.title);
   return (
     <DropDownContainer>
       <DropDownHeader isOpened={isOpen} onClick={toggling}>
@@ -62,7 +63,7 @@ const DropDown = ({ options, defaultOption }) => {
       <Collapse in={isOpen}>
         <DropDownListContainer open={isOpen}>
           <DropDownList>
-            {options?.map(option => (
+            {filteredOptions?.map(option => (
               <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
                 <TextBox width={4 / 7} cursor="pointer">
                   {option.title}
