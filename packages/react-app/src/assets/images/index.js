@@ -6,6 +6,7 @@ import ethIcon from './icons/tokens/ETH.svg';
 import btcIcon from './icons/tokens/BTC.svg';
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
+import closeIcon from './icons/close.svg';
 
 // App Images
 import daiImage from './icons/tokens/DAI.png';
@@ -39,6 +40,7 @@ export {
   btcIcon,
   linkedinIcon,
   plusIcon,
+  closeIcon,
   // Images
   daiImage,
   usdcImage,

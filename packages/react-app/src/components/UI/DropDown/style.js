@@ -14,7 +14,7 @@ export const DropDownHeader = styled('div')`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px 10px 0px 10px;
+  padding: 0px 5px 0px 10px;
   color: #f5f5f5;
 
   border-top-left-radius: 6px;
@@ -57,7 +57,7 @@ export const DropDownList = styled('ul')`
   color: #3faffa;
   font-size: 1.3rem;
   font-weight: 500;
-  height: 100px;
+  height: 120px;
   &:first-child {
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { plusIcon } from 'assets/images';
+import { plusIcon, closeIcon } from 'assets/images';
 import { Image } from 'rebass';
 import { useSpring, animated, config } from 'react-spring';
 import Collapse from '@material-ui/core/Collapse';
@@ -56,7 +56,7 @@ const DropDown = ({ options, defaultOption }) => {
           <AnimatedCounter countTo={curOption?.rate} /> %
         </TextBox>
         <TextBox width={1 / 7} display="flex" alignItems="center" justifyContent="flex-end">
-          <Image src={plusIcon} />
+          <Image src={isOpen ? closeIcon : plusIcon} width={17} height={17} />
         </TextBox>
       </DropDownHeader>
       <Collapse in={isOpen}>
@@ -64,15 +64,14 @@ const DropDown = ({ options, defaultOption }) => {
           <DropDownList>
             {options?.map(option => (
               <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
-                <TextBox width={5 / 7} cursor="pointer">
+                <TextBox width={4 / 7} cursor="pointer">
                   {option.title}
                 </TextBox>
                 <TextBox
-                  width={2 / 7}
+                  width={3 / 7}
                   display="flex"
                   alignItems="center"
                   justifyContent="flex-end"
-                  color={option.title === defaultOption?.title && '#42FF00'}
                 >{`${option.rate} %`}</TextBox>
               </ListItem>
             ))}
