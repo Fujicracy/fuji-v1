@@ -3,5 +3,21 @@ import TextInput from './TextInput';
 import Label from './Label';
 import DropDown from './DropDown';
 import { NavUnlisted, NavImageLink, NavTextLink } from './NavLinks';
+import StyledModal from './Modal';
+import CheckBox from './CheckBox';
+import CustomList from './CustomList';
+import AnimatedCounter from './AnimatedCounter';
 
-export { Button, TextInput, NavUnlisted, NavImageLink, NavTextLink, Label, DropDown };
+export {
+  Button,
+  TextInput,
+  NavUnlisted,
+  NavImageLink,
+  NavTextLink,
+  Label,
+  DropDown,
+  StyledModal,
+  CheckBox,
+  CustomList,
+  AnimatedCounter,
+};
