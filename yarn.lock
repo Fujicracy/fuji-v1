@@ -1239,6 +1239,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@cto.af/textdecoder@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@cto.af/textdecoder/-/textdecoder-0.0.0.tgz#e1e8d84c936c30a0f4619971f19ca41941af9fdc"
+  integrity sha512-sJpx3F5xcVV/9jNYJQtvimo4Vfld/nD3ph+ZWtQzZ03Zo8rJC7QKQTRcIGS13Rcz80DwFNthCWMrd58vpY4ZAQ==
+
 "@emotion/cache@^10.0.27":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
@@ -2454,10 +2459,36 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@openzeppelin/contracts-upgradeable@3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-3.4.1.tgz#38dfdfa86fda0a088c6fcdebe6870cfaf897b471"
+  integrity sha512-wBGlUzEkOxcj/ghtcF2yKc8ZYh+PTUtm1mK38zoENulJ6aplij7eH8quo3lMugfzPJy+V6V5qI8QhdQmCn7hkQ==
+
 "@openzeppelin/contracts@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.4.1.tgz#03c891fec7f93be0ae44ed74e57a122a38732ce7"
   integrity sha512-cUriqMauq1ylzP2TxePNdPqkwI7Le3Annh4K9rrpvKfSBB/bdW+Iu1ihBaTIABTAAJ85LmKL5SSPPL9ry8d1gQ==
+
+"@openzeppelin/hardhat-upgrades@^1.8.2":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.9.0.tgz#68d9d5b5876809f49ae445973614ea9624474872"
+  integrity sha512-ND1sqm8dpTY6CZLdaC5IgtUo6zvlVgSeqadrWRbr/N7J2Bs2JsINWA2G+r4IeunzbcOJFB7GHTs/RkFR6hNLmA==
+  dependencies:
+    "@openzeppelin/upgrades-core" "^1.8.0"
+
+"@openzeppelin/upgrades-core@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.8.0.tgz#b2d6f747e3a4c3e37a18d1b13f45b7617dde2260"
+  integrity sha512-hO/SqUusFzD8mxrtDllShTE0eeWXsBkrR8zjjr8C8j+/gzvWQnd9HkNGTh7bpf8giUGzkERDuOOpFdSI1R3yvQ==
+  dependencies:
+    bn.js "^5.1.2"
+    cbor "^7.0.0"
+    chalk "^4.1.0"
+    compare-versions "^3.6.0"
+    debug "^4.1.1"
+    ethereumjs-util "^7.0.3"
+    proper-lockfile "^4.1.1"
+    solidity-ast "^0.4.15"
 
 "@pedrouid/environment@^1.0.1":
   version "1.0.1"
@@ -6154,6 +6185,14 @@ cbor@^5.0.2, cbor@^5.1.0:
     bignumber.js "^9.0.1"
     nofilter "^1.0.4"
 
+cbor@^7.0.0:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/cbor/-/cbor-7.0.5.tgz#ed54cdbc19fa7352bb328d00a5393aa7ce45a10f"
+  integrity sha512-0aaAPgW92lLmypb9iCd22k7tSD1FbF6dps8VQzmIBKY6ych2gO09b2vo/SbaLTmezJuB8Kh88Rvpl/Uq52mNZg==
+  dependencies:
+    "@cto.af/textdecoder" "^0.0.0"
+    nofilter "^2.0.3"
+
 center-align@^0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/center-align/-/center-align-0.1.3.tgz#aa0d32629b6ee972200411cbd4461c907bc2b7ad"
@@ -6639,6 +6678,11 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
+
+compare-versions@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.6.0.tgz#1a5689913685e5a87637b8d3ffca75514ec41d62"
+  integrity sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==
 
 component-emitter@^1.2.1:
   version "1.3.0"
@@ -9076,6 +9120,18 @@ ethereumjs-util@^5.0.0, ethereumjs-util@^5.0.1, ethereumjs-util@^5.1.1, ethereum
     safe-buffer "^5.1.1"
 
 ethereumjs-util@^7.0.10, ethereumjs-util@^7.0.2, ethereumjs-util@^7.0.7:
+  version "7.0.10"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-7.0.10.tgz#5fb7b69fa1fda0acc59634cf39d6b0291180fc1f"
+  integrity sha512-c/xThw6A+EAnej5Xk5kOzFzyoSnw0WX0tSlZ6pAsfGVvQj3TItaDg9b1+Fz1RJXA+y2YksKwQnuzgt1eY6LKzw==
+  dependencies:
+    "@types/bn.js" "^5.1.0"
+    bn.js "^5.1.2"
+    create-hash "^1.1.2"
+    ethereum-cryptography "^0.1.3"
+    ethjs-util "0.1.6"
+    rlp "^2.2.4"
+
+ethereumjs-util@^7.0.3:
   version "7.0.10"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-7.0.10.tgz#5fb7b69fa1fda0acc59634cf39d6b0291180fc1f"
   integrity sha512-c/xThw6A+EAnej5Xk5kOzFzyoSnw0WX0tSlZ6pAsfGVvQj3TItaDg9b1+Fz1RJXA+y2YksKwQnuzgt1eY6LKzw==
@@ -14187,6 +14243,13 @@ nofilter@^1.0.4:
   resolved "https://registry.yarnpkg.com/nofilter/-/nofilter-1.0.4.tgz#78d6f4b6a613e7ced8b015cec534625f7667006e"
   integrity sha512-N8lidFp+fCz+TD51+haYdbDGrcBWwuHX40F5+z0qkUjMJ5Tp+rdSuAkMJ9N9eoolDlEVTf6u5icM+cNKkKW2mA==
 
+nofilter@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/nofilter/-/nofilter-2.0.3.tgz#f5460f3cb33147005883e3f5d4476239501fa187"
+  integrity sha512-FbuXC+lK+GU2+63D1kC1ETiZo+Z7SIi7B+mxKTCH1byrh6WFvfBCN/wpherFz0a0bjGd7EKTst/cz0yLeNngug==
+  dependencies:
+    "@cto.af/textdecoder" "^0.0.0"
+
 normalize-package-data@^2.3.2, normalize-package-data@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.5.0.tgz#e66db1838b200c1dfc233225d12cb36520e234a8"
@@ -15915,6 +15978,15 @@ prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+proper-lockfile@^4.1.1:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-4.1.2.tgz#c8b9de2af6b2f1601067f98e01ac66baa223141f"
+  integrity sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==
+  dependencies:
+    graceful-fs "^4.2.4"
+    retry "^0.12.0"
+    signal-exit "^3.0.2"
 
 protocol-buffers-schema@^3.3.1:
   version "3.5.1"
@@ -17820,6 +17892,11 @@ solhint@^3.3.4:
     semver "^6.3.0"
   optionalDependencies:
     prettier "^1.14.3"
+
+solidity-ast@^0.4.15:
+  version "0.4.26"
+  resolved "https://registry.yarnpkg.com/solidity-ast/-/solidity-ast-0.4.26.tgz#6e644bdb897c245dd07695a63ffa95edfe02c11f"
+  integrity sha512-UR9Ip3QoiEvNON5lOA28JNEzKT+1fLFA4xpIbZSEl4CEnYr/a4Pj0qMJh0652UQ51pKplI/nncZsDOMzdHdCcg==
 
 solidity-comments-extractor@^0.0.7:
   version "0.0.7"

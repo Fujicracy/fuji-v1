@@ -1,25 +1,36 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.6.12 <0.8.0;
+pragma solidity >=0.4.25 <0.8.0;
 pragma experimental ABIEncoderV2;
 
-import { IVault } from "./IVault.sol";
-import { VaultBase } from "./VaultBase.sol";
-import { IFujiAdmin } from "../IFujiAdmin.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IFujiERC1155 } from "../FujiERC1155/IFujiERC1155.sol";
-import { IProvider } from "../Providers/IProvider.sol";
-import { IAlphaWhiteList } from "../IAlphaWhiteList.sol";
-import { Errors } from "../Libraries/Errors.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
+
+import "./IVault.sol";
+import "./VaultBaseUpgradeable.sol";
+import "../IFujiAdmin.sol";
+import "../FujiERC1155/IFujiERC1155.sol";
+import "../Providers/IProvider.sol";
+import "../IAlphaWhiteList.sol";
+import "../Libraries/Errors.sol";
+import "../Libraries/LibUniversalERC20.sol";
+
+interface IERC20Extended {
+  function symbol() external view returns (string memory);
+
+  function decimals() external view returns (uint8);
+}
 
 interface IVaultHarvester {
   function collectRewards(uint256 _farmProtocolNum) external returns (address claimedToken);
 }
 
-contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
-  uint256 internal constant _BASE = 1e18;
+contract FujiVault is IVault, VaultBaseUpgradeable, ReentrancyGuardUpgradeable {
+  using SafeERC20 for IERC20;
+
+  address public constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
   struct Factor {
     uint64 a;
@@ -40,6 +51,9 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   address public override fujiERC1155;
   AggregatorV3Interface public oracle;
 
+  string public name;
+  uint256 internal _borrowAssetBase;
+
   modifier isAuthorized() {
     require(
       msg.sender == owner() || msg.sender == _fujiAdmin.getController(),
@@ -53,9 +67,39 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     _;
   }
 
-  constructor() public {
-    vAssets.collateralAsset = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE); // ETH
-    vAssets.borrowAsset = address(0x6B175474E89094C44Da98b954EedeAC495271d0F); // DAI
+  function initialize(
+    address _fujiadmin,
+    address _oracle,
+    address _collateralAsset,
+    address _borrowAsset
+  ) external initializer {
+    __Ownable_init();
+    __Pausable_init();
+    __ReentrancyGuard_init();
+
+    _fujiAdmin = IFujiAdmin(_fujiadmin);
+    oracle = AggregatorV3Interface(_oracle);
+    vAssets.collateralAsset = _collateralAsset;
+    vAssets.borrowAsset = _borrowAsset;
+
+    string memory collateralSymbol;
+    string memory borrowSymbol;
+
+    if (_collateralAsset == ETH) {
+      collateralSymbol = "ETH";
+    } else {
+      collateralSymbol = IERC20Extended(_collateralAsset).symbol();
+    }
+
+    if (_borrowAsset == ETH) {
+      borrowSymbol = "ETH";
+      _borrowAssetBase = 10**18;
+    } else {
+      borrowSymbol = IERC20Extended(_borrowAsset).symbol();
+      _borrowAssetBase = (10**uint256(IERC20Extended(_borrowAsset).decimals()));
+    }
+
+    name = string(abi.encodePacked("Vault", collateralSymbol, borrowSymbol));
 
     // 1.05
     safetyF.a = 21;
@@ -97,18 +141,16 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
    * Emits a {Deposit} event.
    */
   function deposit(uint256 _collateralAmount) public payable override {
-    require(msg.value == _collateralAmount && _collateralAmount != 0, Errors.VL_AMOUNT_ERROR);
-
-    // Alpha Whitelist Routine
-    require(
-      IAlphaWhiteList(_fujiAdmin.getaWhiteList()).whiteListRoutine(
+    if (vAssets.collateralAsset == ETH) {
+      require(msg.value == _collateralAmount && _collateralAmount != 0, Errors.VL_AMOUNT_ERROR);
+    } else {
+      require(_collateralAmount != 0, Errors.VL_AMOUNT_ERROR);
+      IERC20(vAssets.collateralAsset).safeTransferFrom(
         msg.sender,
-        vAssets.collateralID,
-        _collateralAmount,
-        fujiERC1155
-      ),
-      Errors.SP_ALPHA_WHITELIST
-    );
+        address(this),
+        _collateralAmount
+      );
+    }
 
     // Delegate Call Deposit to current provider
     _deposit(_collateralAmount, address(activeProvider));
@@ -163,13 +205,13 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
       _withdraw(amountToWithdraw, address(activeProvider));
 
       // Transer Assets to User
-      IERC20(vAssets.collateralAsset).uniTransfer(msg.sender, amountToWithdraw);
+      IERC20(vAssets.collateralAsset).univTransfer(msg.sender, amountToWithdraw);
 
       emit Withdraw(msg.sender, vAssets.collateralAsset, amountToWithdraw);
     } else {
       // Logic used when called by Fliquidator
       _withdraw(uint256(_withdrawAmount), address(activeProvider));
-      IERC20(vAssets.collateralAsset).uniTransfer(msg.sender, uint256(_withdrawAmount));
+      IERC20(vAssets.collateralAsset).univTransfer(msg.sender, uint256(_withdrawAmount));
     }
   }
 
@@ -205,7 +247,7 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     _borrow(_borrowAmount, address(activeProvider));
 
     // Transer Assets to User
-    IERC20(vAssets.borrowAsset).uniTransfer(msg.sender, _borrowAmount);
+    IERC20(vAssets.borrowAsset).univTransfer(msg.sender, _borrowAmount);
 
     emit Borrow(msg.sender, vAssets.borrowAsset, _borrowAmount);
   }
@@ -230,14 +272,21 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
       // If passed argument amount is negative do MAX
       uint256 amountToPayback = _repayAmount < 0 ? userDebtBalance : uint256(_repayAmount);
 
-      // Check User Allowance
-      require(
-        IERC20(vAssets.borrowAsset).allowance(msg.sender, address(this)) >= amountToPayback,
-        Errors.VL_MISSING_ERC20_ALLOWANCE
-      );
+      if (vAssets.borrowAsset == ETH) {
+        require(msg.value >= amountToPayback, Errors.VL_AMOUNT_ERROR);
+        if (msg.value > amountToPayback) {
+          IERC20(vAssets.borrowAsset).univTransfer(msg.sender, msg.value.sub(amountToPayback));
+        }
+      } else {
+        // Check User Allowance
+        require(
+          IERC20(vAssets.borrowAsset).allowance(msg.sender, address(this)) >= amountToPayback,
+          Errors.VL_MISSING_ERC20_ALLOWANCE
+        );
 
-      // Transfer Asset from User to Vault
-      IERC20(vAssets.borrowAsset).transferFrom(msg.sender, address(this), amountToPayback);
+        // Transfer Asset from User to Vault
+        IERC20(vAssets.borrowAsset).transferFrom(msg.sender, address(this), amountToPayback);
+      }
 
       // Delegate Call Payback to current provider
       _payback(amountToPayback, address(activeProvider));
@@ -288,12 +337,20 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     _borrow(_flashLoanAmount.add(_fee), _newProvider);
 
     // return borrowed amount to Flasher
-    IERC20(vAssets.borrowAsset).uniTransfer(msg.sender, _flashLoanAmount.add(_fee));
+    IERC20(vAssets.borrowAsset).univTransfer(msg.sender, _flashLoanAmount.add(_fee));
 
     emit Switch(address(this), activeProvider, _newProvider, _flashLoanAmount, collateraltoMove);
   }
 
   // Setter, change state functions
+
+  /**
+   * @dev Sets the fujiAdmin Address
+   * @param _newFujiAdmin: FujiAdmin Contract Address
+   */
+  function setFujiAdmin(address _newFujiAdmin) external onlyOwner {
+    _fujiAdmin = IFujiAdmin(_newFujiAdmin);
+  }
 
   /**
    * @dev Sets a new active provider for the Vault
@@ -307,14 +364,6 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   }
 
   // Administrative functions
-
-  /**
-   * @dev Sets the fujiAdmin Address
-   * @param _newFujiAdmin: FujiAdmin Contract Address
-   */
-  function setFujiAdmin(address _newFujiAdmin) external onlyOwner {
-    _fujiAdmin = IFujiAdmin(_newFujiAdmin);
-  }
 
   /**
    * @dev Sets a fujiERC1155 Collateral and Debt Asset manager for this vault and initializes it.
@@ -381,12 +430,10 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     // take into account all balances across providers
     uint256 length = providers.length;
     for (uint256 i = 0; i < length; i++) {
-      borrowBals = borrowBals.add(IProvider(providers[i]).getBorrowBalance(vAssets.borrowAsset));
-    }
-    for (uint256 i = 0; i < length; i++) {
       depositBals = depositBals.add(
         IProvider(providers[i]).getDepositBalance(vAssets.collateralAsset)
       );
+      borrowBals = borrowBals.add(IProvider(providers[i]).getBorrowBalance(vAssets.borrowAsset));
     }
 
     IFujiERC1155(fujiERC1155).updateState(vAssets.borrowID, borrowBals);
@@ -437,7 +484,7 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
   {
     // Get price of USD in ETH (wei)
     (, int256 latestPrice, , , ) = oracle.latestRoundData();
-    uint256 minimumReq = (_amount.mul(uint256(latestPrice))).div(_BASE);
+    uint256 minimumReq = (_amount.mul(uint256(latestPrice))).div(_borrowAssetBase);
 
     if (_withFactors) {
       return minimumReq.mul(collatF.a).mul(safetyF.a).div(collatF.b).div(safetyF.b);
@@ -472,6 +519,6 @@ contract VaultETHDAI is IVault, VaultBase, ReentrancyGuard {
     );
     uint256 tokenBal = IERC20(tokenReturned).balanceOf(address(this));
     require(tokenReturned != address(0) && tokenBal > 0, Errors.VL_HARVESTING_FAILED);
-    IERC20(tokenReturned).uniTransfer(payable(_fujiAdmin.getTreasury()), tokenBal);
+    IERC20(tokenReturned).univTransfer(payable(_fujiAdmin.getTreasury()), tokenBal);
   }
 }

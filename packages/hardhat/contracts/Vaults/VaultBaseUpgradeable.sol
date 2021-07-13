@@ -2,15 +2,16 @@
 
 pragma solidity >=0.6.12;
 
-import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { Pausable } from "@openzeppelin/contracts/utils/Pausable.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { UniERC20 } from "../Libraries/LibUniERC20.sol";
+import "@openzeppelin/contracts-upgradeable/math/SafeMathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract VaultControl is Ownable, Pausable {
-  using SafeMath for uint256;
-  using UniERC20 for IERC20;
+import "../Libraries/LibUniversalERC20.sol";
+
+contract VaultControlUpgradeable is OwnableUpgradeable, PausableUpgradeable {
+  using SafeMathUpgradeable for uint256;
+  using LibUniversalERC20 for IERC20;
 
   //Asset Struct
   struct VaultAssets {
@@ -36,11 +37,11 @@ contract VaultControl is Ownable, Pausable {
    * @dev Emergency Call to stop all basic money flow functions.
    */
   function unpause() public onlyOwner {
-    _pause();
+    _unpause();
   }
 }
 
-contract VaultBase is VaultControl {
+contract VaultBaseUpgradeable is VaultControlUpgradeable {
   // Internal functions
 
   /**
