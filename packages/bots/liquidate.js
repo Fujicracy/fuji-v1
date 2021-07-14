@@ -2,7 +2,14 @@ require('dotenv').config();
 
 const retry = require('async-retry');
 const chalk = require('chalk');
-const { ethers, Wallet } = require('ethers');
+const { ethers, Wallet, BigNumber } = require('ethers');
+const {
+  loadContracts,
+  getGasPrice,
+  getETHPrice,
+  getLiquidationProviderIndex,
+  USDC_ADDR,
+} = require('./utils');
 const {
   searchBorrowers,
   connectRedis,
@@ -10,7 +17,6 @@ const {
   buildPositions,
   logStatus,
 } = require('./utils/liquidateHelpers');
-const { loadContracts, getLiquidationProviderIndex, USDC_ADDR } = require('./utils');
 
 let provider;
 if (process.env.INFURA) {
@@ -26,45 +32,106 @@ if (process.env.PRIVATE_KEY) {
   throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
 }
 
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
+const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
 
-async function liquidateAll(addresses, vault, contracts) {
-  // console.log('Position', chalk.cyan(addr), chalk.red('-> proceed to liquidation'));
+const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
+  let totalDebt = BigNumber.from(0);
+
+  for (let i = 0; i < positions.length; i += 1) {
+    totalDebt = totalDebt.add(positions[i].debt);
+  }
+
+  const formatUnits = ethers.utils.formatUnits;
+
+  let bonus = totalDebt.mul(BigNumber.from(43)).div(BigNumber.from(1000));
+  bonus = formatUnits(bonus.toString(), decimals);
+
+  let cost = formatUnits(gasLimit.mul(BigNumber.from(gasPrice)).toString());
+  cost *= ethPrice;
+
+  console.log('Estimated bonus (USD): ', chalk.blue(bonus));
+  console.log('Estimated cost (USD): ', chalk.red(cost));
+
+  return cost * 1.5 < bonus;
+};
+
+const liquidateAll = async (toLiq, vault, decimals, contracts) => {
+  const positions = toLiq.filter(p => p.solvent);
+  if (positions.length === 0) {
+    console.log('---> All liquidatable positions are unsolvent.');
+    return;
+  }
+
   const index = await getLiquidationProviderIndex(vault, contracts);
+  const gasPrice = await getGasPrice();
+  const ethPrice = await getETHPrice();
+
+  let gasLimit = await contracts.Fliquidator.estimateGas.flashBatchLiquidate(
+    positions.map(p => p.account),
+    vault.address,
+    index,
+    { gasPrice },
+  );
+
+  if (!isViable(positions, gasPrice, gasLimit, ethPrice, decimals)) {
+    console.log(chalk.red('!!! Cost of liquidations exceeds bonus'));
+    return;
+  }
+  console.log(chalk.green('---> Proceed to liquidations'));
+
+  // increase by 10% to prevent outOfGas tx failing
+  gasLimit = gasLimit.add(gasLimit.div(ethers.BigNumber.from('10')));
+
   try {
-    await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
-      addresses,
+    const res = await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
+      positions.map(p => p.account),
       vault.address,
       index,
+      { gasPrice, gasLimit },
     );
+    if (res && res.hash) {
+      console.log(`TX submited: ${res.hash}`);
+      const receipt = await res.wait();
+      if (receipt && receipt.events) {
+        const events = receipt.events.filter(e => e.event === 'FlashLiquidate');
+        console.log('Liquidated: ', chalk.blue(events.length), ' positions.');
+      }
+    }
   } catch (err) {
     console.log(err);
-    // / / const body = JSON.parse(e.body);
-    // / / const { message } = body.error;
-    // / / console.log(`----> Liquidation failed: ${message}`);
   }
-}
+};
 
-async function checkUserPosition(addr, vault, contracts) {
-  const { borrowID, collateralID } = await vault.vAssets();
+const getBorrowers = async vault => {
+  console.log('---> find borrowers');
 
-  const collateralBalance = await contracts.FujiERC1155.balanceOf(addr, collateralID);
-  const borrowBalance = await contracts.FujiERC1155.balanceOf(addr, borrowID);
+  let borrowers;
+  if (process.env.REDIS) {
+    console.log('---> using redis');
+    const client = await connectRedis();
+    borrowers = await client.get('borrowers');
 
-  const neededCollateral = await vault.getNeededCollateralFor(borrowBalance, 'true');
+    if (!borrowers) {
+      console.log('---> no cached borrowers');
+      borrowers = await searchBorrowers(provider, vault);
+      await client.set('borrowers', JSON.stringify(borrowers));
+    } else {
+      borrowers = JSON.parse(borrowers);
+      console.log('---> cached borrowers, fetch only new');
+      const newBorrowers = await searchBorrowers(provider, vault, 10);
+      borrowers = pushNew(newBorrowers, borrowers);
 
-  return {
-    debt: borrowBalance,
-    collateral: collateralBalance,
-    needed: neededCollateral,
-    liquidatable: collateralBalance.lt(neededCollateral),
-  };
-}
+      await client.set('borrowers', JSON.stringify(borrowers));
+    }
+  } else {
+    console.log('---> not using redis');
+    borrowers = await searchBorrowers(provider, vault);
+  }
+  return borrowers;
+};
 
-async function checkForLiquidations() {
+const checkForLiquidations = async () => {
   const contracts = await loadContracts(signer);
-
-  console.log('contracts');
 
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
@@ -74,51 +141,24 @@ async function checkForLiquidations() {
     const { borrowAsset } = await vault.vAssets();
     const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
 
-    console.log('find borrowers');
-    let borrowers;
-    if (process.env.REDIS) {
-      console.log('using redis');
-      const client = await connectRedis();
-      borrowers = await client.get('borrowers');
+    const borrowers = await getBorrowers(vault);
+    const [toLiq, stats] = await buildPositions(borrowers, vault, decimals, contracts.FujiERC1155);
 
-      if (!borrowers) {
-        console.log('no cached borrowers');
-        borrowers = await searchBorrowers(provider, vault);
-        await client.set('borrowers', JSON.stringify(borrowers));
-      } else {
-        borrowers = JSON.parse(borrowers);
-        console.log(borrowers);
-        console.log('cached borrowers, fetch only new');
-        const newBorrowers = await searchBorrowers(provider, vault, 10);
-        borrowers = pushNew(newBorrowers, borrowers);
-
-        await client.set('borrowers', JSON.stringify(borrowers));
-      }
-    } else {
-      console.log('not using redis');
-      borrowers = await searchBorrowers(provider, vault);
-    }
-
-    const [toLiq, positions, stats] = await buildPositions(
-      borrowers,
-      vault,
-      contracts,
-      checkUserPosition,
-      decimals,
-    );
-    logStatus(positions, stats, decimals);
+    logStatus(toLiq, stats, decimals);
 
     if (toLiq.length > 0) {
-      await liquidateAll(toLiq, vault, contracts);
+      await liquidateAll(toLiq, vault, decimals, contracts);
     }
+
+    console.log('\n===============\n');
   }
-}
+};
 
-function delay(s) {
+const delay = s => {
   return new Promise(r => setTimeout(r, s * 1000));
-}
+};
 
-async function main() {
+const main = async () => {
   console.log('Start checking for liquidations...');
 
   // eslint-disable-next-line
@@ -143,6 +183,6 @@ async function main() {
     // delay, default 1 minutes
     await delay(process.env.DELAY || 60);
   }
-}
+};
 
 main();
