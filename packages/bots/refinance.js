@@ -13,7 +13,7 @@ if (process.env.PRIVATE_KEY) {
   throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
 }
 
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
+const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
 
 function getProviderName(providerAddr, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
