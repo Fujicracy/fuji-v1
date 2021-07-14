@@ -14,23 +14,23 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'consts/providers';
-import { ASSETS, ASSET_NAME, ASSET_TYPE } from 'consts/assets';
+import { ASSETS, ASSET_NAME } from 'consts/assets';
 import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
 import {
   CollaterizationIndicator,
   ProvidersList,
   HowItWorks,
-  AlphaWarning,
-  AssetList,
+  DisclaimerPopup,
+  SelectVault,
 } from 'components';
+import { CustomList, TextInput } from 'components/UI';
+import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
-
 import './styles.css';
-
-import { TextInput } from '../../../components/UI';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
+  const [checkedClaim, setCheckedClaim] = useState(false);
   const queries = new URLSearchParams(useLocation().search);
   const queryBorrowAsset = queries.get('borrowAsset');
   const queryBorrowAmount = queries.get('borrowAmount');
@@ -39,6 +39,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
+  const [network, setNetwork] = useState(NETWORK_NAME.ETH);
 
   // const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const collateralAsset = ASSET_NAME.ETH;
@@ -130,8 +131,9 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeBorrowAsset = asset => () => {
-    setBorrowAsset(asset);
+  const handleChangeNetwork = option => () => {
+    setNetwork(option);
+    setBorrowAsset(option); // TODO change when borrow and collateral dropdown is ready
   };
 
   // const handleChangeCollateralAsset = asset => () => {
@@ -169,6 +171,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
+  console.log({ network });
   return (
     <div className="container initial-step">
       <Dialog
@@ -190,15 +193,22 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
+
       <div className="left-content">
+        <CustomList
+          title="Networks"
+          handleChange={handleChangeNetwork}
+          options={NETWORKS}
+          defaultOption={NETWORKS.ETH}
+        />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} isDropDown={false} />
+      </div>
+
+      <div className="center-content">
         <HowItWorks />
         <div className="dark-block borrow-actions">
+          <SelectVault />
           <form noValidate autoComplete="off">
-            <AssetList
-              handleChange={handleChangeBorrowAsset}
-              mode={ASSET_TYPE.BORROW}
-              defaultAsset={borrowAsset}
-            />
             <TextInput
               placeholder={borrowAmount}
               id="borrowAmount"
@@ -221,7 +231,6 @@ function InitBorrow({ contracts, provider, address }) {
               description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
             />
 
-            {/* <AssetList handleChange={handleChangeCollateralAsset} mode={ASSET_TYPE.COLLATERAL} /> */}
             <div className="borrow-inputs">
               <TextInput
                 id="collateralAmount"
@@ -308,13 +317,11 @@ function InitBorrow({ contracts, provider, address }) {
           </form>
         </div>
       </div>
+
       <div className="right-content">
-        <div style={{ marginBottom: '2rem' }}>
-          <AlphaWarning />
-        </div>
         <CollaterizationIndicator position={position} />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
       </div>
+      <DisclaimerPopup isOpen={!checkedClaim} onSubmit={setCheckedClaim} />
     </div>
   );
 }
