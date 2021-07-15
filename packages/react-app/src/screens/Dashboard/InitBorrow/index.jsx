@@ -40,10 +40,9 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
-  const [network, setNetwork] = useState(NETWORK_NAME.ETH);
+  const [network, setNetwork] = useState(NETWORKS[NETWORK_NAME.ETH]);
 
-  // const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
-  const collateralAsset = ASSET_NAME.ETH;
+  const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
 
   const ethPrice = useExchangePrice();
@@ -132,14 +131,14 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeNetwork = option => () => {
+  const handleChangeNetwork = option => {
     setNetwork(option);
-    setBorrowAsset(option); // TODO change when borrow and collateral dropdown is ready
   };
 
-  // const handleChangeCollateralAsset = asset => () => {
-  //   setCollateralAsset(asset);
-  // };
+  const handleChangeVault = vault => {
+    setBorrowAsset(vault.borrowAsset.name);
+    setCollateralAsset(vault.collateralAsset.name);
+  };
 
   const dialogContents = {
     success: {
@@ -172,7 +171,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network, cookie: !!Cookies.get('confirm_disclaim') });
+  console.log({ network, borrowAsset, collateralAsset });
   return (
     <div className="container initial-step">
       <Dialog
@@ -208,7 +207,7 @@ function InitBorrow({ contracts, provider, address }) {
       <div className="center-content">
         <HowItWorks />
         <div className="dark-block borrow-actions">
-          <SelectVault />
+          <SelectVault onChangeVault={handleChangeVault} />
           <form noValidate autoComplete="off">
             <TextInput
               placeholder={borrowAmount}
