@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
+import Cookies from 'js-cookie';
 import {
   Button,
   Typography,
@@ -171,7 +172,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network });
+  console.log({ network, cookie: !!Cookies.get('confirm_disclaim') });
   return (
     <div className="container initial-step">
       <Dialog
@@ -321,7 +322,9 @@ function InitBorrow({ contracts, provider, address }) {
       <div className="right-content">
         <CollaterizationIndicator position={position} />
       </div>
-      <DisclaimerPopup isOpen={!checkedClaim} onSubmit={setCheckedClaim} />
+      {!!Cookies.get('confirm_disclaim') === false && (
+        <DisclaimerPopup isOpen={!checkedClaim} onSubmit={setCheckedClaim} />
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Image, Flex } from 'rebass';
+import Cookies from 'js-cookie';
 import { flaskIcon } from 'assets/images';
 import { StyledModal, Label, Button, CheckBox } from '../UI';
 import { ContentContainer } from './style';
@@ -11,6 +12,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
   function toggleModal() {
     setOpacity(0);
     onSubmit(checked);
+    Cookies.set('confirm_disclaim', checked);
   }
 
   function afterOpen() {
