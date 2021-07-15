@@ -5,7 +5,6 @@ import { SectionTitle, BlackBoxContainer } from 'components/Blocks';
 
 const CustomList = ({ title, handleChange, options, defaultOption }) => {
   const [selectedOption, setSelectedOption] = useState(defaultOption);
-  console.log({ options, defaultOption, selectedOption });
   return (
     <BlackBoxContainer zIndex={1}>
       <div className="borrow-options">
@@ -22,7 +21,7 @@ const CustomList = ({ title, handleChange, options, defaultOption }) => {
                   value={option.name}
                   onChange={() => {
                     setSelectedOption(option);
-                    handleChange(option.name);
+                    handleChange(option);
                   }}
                   checked={selectedOption.name === option.name}
                 />
