@@ -2,7 +2,7 @@ import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import { Button } from 'components/UI';
 
-import { APP_URL } from '../../constants/providers';
+import { APP_URL } from '../../consts/providers';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';

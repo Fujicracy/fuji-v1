@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { formatUnits, formatEther } from '@ethersproject/units';
+import { formatUnits } from '@ethersproject/units';
 import Button from '@material-ui/core/Button';
 
 import { useExchangePrice } from '../../hooks';
@@ -29,16 +29,19 @@ function logslider(value) {
 }
 
 function PositionElement({ position, actionType }) {
-  const { debtBalance, collateralBalance, borrowAsset } = position;
+  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
+
   const history = useHistory();
   const price = useExchangePrice();
-  const borrowAssetPrice = useExchangePrice(borrowAsset);
+  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
 
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, position.decimals)) : null;
-  const collateral = collateralBalance ? Number(formatEther(collateralBalance)) : null;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : null;
+  const collateral = collateralBalance
+    ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
+    : null;
 
   useEffect(() => {
     const ratios = PositionRatios(position, price);
@@ -52,16 +55,18 @@ function PositionElement({ position, actionType }) {
     <div className="position-element">
       <div className="position-about">
         <div className="elmtXelmt">
-          <img alt="eth" className="behind" src="/ETH.png" />
-          <img className="front" alt={borrowAsset} src={`/${borrowAsset}.png`} />
+          <img alt={collateralAsset.name} className="behind" src={collateralAsset.image} />
+          <img className="front" alt={borrowAsset.name} src={borrowAsset.image} />
         </div>
-        <span className="elmt-name">ETH/{borrowAsset}</span>
+        <span className="elmt-name">
+          {collateralAsset.name}/{borrowAsset.name}
+        </span>
       </div>
 
       <div className="position-numbers">
         <div className="collateral-number" data-element="Collateral">
           <span className="number">
-            <img alt="eth" src="/ETH.png" />
+            <img alt={collateralAsset.name} src={collateralAsset.image} />
             <span>{collateral ? collateral.toFixed(2) : '...'}</span>
           </span>
           <span className="additional-infos">
@@ -71,7 +76,7 @@ function PositionElement({ position, actionType }) {
 
         <div className="borrow-number" data-element="Debt">
           <span className="number">
-            <img alt={borrowAsset} src={`/${borrowAsset}.png`} />
+            <img alt={borrowAsset.name} src={borrowAsset.image} />
             <span>{debt ? debt.toFixed(2) : '...'}</span>
           </span>
           <span className="additional-infos">
@@ -93,7 +98,7 @@ function PositionElement({ position, actionType }) {
           <Button
             className="position-btn"
             onClick={() => {
-              return history.push(`/dashboard/position?borrowAsset=${borrowAsset}`);
+              return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
             }}
           >
             Manage

@@ -8,8 +8,7 @@ import { formatUnits } from '@ethersproject/units';
 import { Grid, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
-import { ASSETS } from 'constants/assets';
-import { getBorrowId, getCollateralId } from 'helpers';
+import { VAULTS } from 'consts/vaults';
 
 import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
 
@@ -17,35 +16,36 @@ import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
-  const positions = map(Object.keys(ASSETS), key => {
-    const asset = ASSETS[key];
+  const positions = map(Object.keys(VAULTS), key => {
+    const vault = VAULTS[key];
     return {
+      vaultAddress: key,
       debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
         address,
-        getBorrowId(asset.name), // 5 for usdt and 3 for usdc
+        vault.borrowId,
       ]),
       collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
         address,
-        getCollateralId(asset.name),
+        vault.collateralId,
       ]),
-      borrowAsset: asset.name,
-      decimals: asset.decimals,
+      borrowAsset: vault.borrowAsset,
+      collateralAsset: vault.collateralAsset,
     };
   });
 
   const hasPosition = asset => {
     if (asset) {
-      const position = find(positions, item => item.borrowAsset === asset);
+      const position = find(positions, item => item.borrowAsset.name === asset);
       return (
         position &&
         position.collateralBalance &&
-        Number(formatUnits(position.collateralBalance, position.decimals)) > 0
+        Number(formatUnits(position.collateralBalance, position.borrowAsset.decimals)) > 0
       );
     }
     for (let i = 0; i < positions.length; i += 1) {
       if (
         positions[i].collateralBalance &&
-        Number(formatUnits(positions[i].collateralBalance, positions[i].decimals)) > 0
+        Number(formatUnits(positions[i].collateralBalance, positions[i].borrowAsset.decimals)) > 0
       ) {
         return true;
       }
@@ -53,7 +53,6 @@ function MyPositions({ contracts, address }) {
 
     return false;
   };
-
   return (
     <div className="container">
       <div className="left-content">
@@ -77,25 +76,27 @@ function MyPositions({ contracts, address }) {
             {map(
               orderBy(
                 positions,
-                item => Number(formatUnits(item.collateralBalance || 0, item.decimals)),
+                item => Number(formatUnits(item.collateralBalance || 0, item.borrowAsset.decimals)),
                 'desc',
               ),
               position =>
-                hasPosition(position.borrowAsset) ? (
-                  <Grid key={position.borrowAsset} item className="one-position">
+                hasPosition(position.borrowAsset.name) ? (
+                  <Grid key={position.borrowAsset.name} item className="one-position">
                     <PositionElement actionType={PositionActions.Manage} position={position} />
                   </Grid>
                 ) : (
                   <Grid
-                    key={position.borrowAsset}
+                    key={position.borrowAsset.name}
                     item
                     onClick={() =>
-                      history.push(`/dashboard/init-borrow?borrowAsset=${position.borrowAsset}`)
+                      history.push(
+                        `/dashboard/init-borrow?borrowAsset=${position.borrowAsset.name}`,
+                      )
                     }
                     className="adding-position"
                   >
                     <AddIcon />
-                    Borrow {position.borrowAsset}
+                    Borrow {position.borrowAsset.name}
                   </Grid>
                 ),
             )}
@@ -104,7 +105,8 @@ function MyPositions({ contracts, address }) {
       </div>
       <div className="right-content">
         <AlphaWarning />
-        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />
+        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />{' '}
+        {/* TODO align-center in small width */}
       </div>
     </div>
   );
