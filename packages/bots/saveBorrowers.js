@@ -23,7 +23,7 @@ if (process.env.PRIVATE_KEY) {
   throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
 }
 
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
+const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
 
 const searchBorrowers = async (vault, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
@@ -33,9 +33,11 @@ const searchBorrowers = async (vault, searchLength) => {
 
   for (let i = 0; i < events.length; i += 1) {
     const e = events[i];
+    const block = await e.getBlock();
     borrowers.push({
       vault: vault.address,
       blockNumber: e.blockNumber,
+      timestamp: block.timestamp,
       userAddr: e.args.userAddrs,
     });
   }
@@ -56,7 +58,7 @@ const saveFile = borrowers => {
   const csvWriter = createCsvWriter({
     path: 'fuji-borrowers.csv',
     header: [
-      { id: 'blockNumber', title: 'Block Number' },
+      { id: 'timestamp', title: 'Timestamp' },
       { id: 'userAddr', title: 'User Address' },
       { id: 'vault', title: 'Vault Address' },
     ],
