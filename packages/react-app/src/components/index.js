@@ -7,7 +7,7 @@ import PositionElement, { PositionActions } from './PositionElement';
 import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
 import DisclaimerPopup from './DisclaimerPopup';
-import SelectVault from './VaultDropDown';
+import SelectVault from './SelectVault';
 
 export * from './Blocks';
 export {
