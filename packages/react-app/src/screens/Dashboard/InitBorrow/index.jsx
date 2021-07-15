@@ -201,7 +201,12 @@ function InitBorrow({ contracts, provider, address }) {
           options={NETWORKS}
           defaultOption={NETWORKS.ETH}
         />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} isDropDown={false} />
+        <ProvidersList
+          contracts={contracts}
+          markets={[borrowAsset]}
+          title="Borrow APR"
+          isDropDown={false}
+        />
       </div>
 
       <div className="center-content">
