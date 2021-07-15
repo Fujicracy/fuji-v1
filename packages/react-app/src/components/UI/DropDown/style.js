@@ -29,7 +29,6 @@ export const DropDownHeader = styled('div')`
 // `;
 export const DropDownListContainer = styled('div')`
   overflow-y: auto;
-  height: ${props => (props.length ? props.length * 40 : 120)}px;
   &::-webkit-scrollbar {
     background-color: rgba(255, 255, 255, 0.05);
     width: 24px;
@@ -57,7 +56,6 @@ export const DropDownList = styled('ul')`
   color: #3faffa;
   font-size: 1.3rem;
   font-weight: 500;
-  height: auto;
 
   &:first-child {
     border-bottom-right-radius: 6px;

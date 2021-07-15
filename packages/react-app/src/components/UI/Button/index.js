@@ -9,8 +9,6 @@ const Button = styled(Box).attrs({
   as: 'button',
   type: 'button',
   px: 4,
-  maxWidth,
-  space,
   typography,
 })`
   height: 40px;
@@ -59,6 +57,8 @@ const Button = styled(Box).attrs({
   }
 
   ${fontSize}
+  ${space}
+  ${maxWidth}
 `;
 
 Button.defaultProps = {
