@@ -8,7 +8,7 @@ import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
 import dropdownIcon from './icons/dropdown.svg';
-
+import comingSoonIcon from './icons/comingSoon.svg';
 // App Images
 import daiImage from './icons/tokens/DAI.png';
 import usdcImage from './icons/tokens/USDC.png';
@@ -50,6 +50,7 @@ export {
   closeIcon,
   flaskIcon,
   dropdownIcon,
+  comingSoonIcon,
   // Images
   daiImage,
   usdcImage,
