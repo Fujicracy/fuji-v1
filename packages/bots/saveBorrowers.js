@@ -34,14 +34,11 @@ const searchBorrowers = async (vault, searchLength) => {
   for (let i = 0; i < events.length; i += 1) {
     const e = events[i];
     const block = await e.getBlock();
-    const tx = await e.getTransactionReceipt();
     borrowers.push({
       vault: vault.address,
-      txhash: tx.transactionHash,
       blockNumber: e.blockNumber,
       timestamp: block.timestamp,
       userAddr: e.args.userAddrs,
-      amount: e.args.amount,
     });
   }
 
@@ -62,10 +59,8 @@ const saveFile = borrowers => {
     path: 'fuji-borrowers.csv',
     header: [
       { id: 'timestamp', title: 'Timestamp' },
-      { id: 'txhash', title: 'TxHash' },
       { id: 'userAddr', title: 'User Address' },
       { id: 'vault', title: 'Vault Address' },
-      { id: 'amount', title: 'Amount' },
     ],
   });
   csvWriter
