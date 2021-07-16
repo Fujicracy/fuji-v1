@@ -1,4 +1,4 @@
-// Script that fetches borrowers from all vaults,
+// Script that fetches repayers from all vaults,
 // sorts and filters by unique user addresses
 // and creates a csv file
 
@@ -25,17 +25,17 @@ if (process.env.PRIVATE_KEY) {
 
 const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
 
-const searchBorrowers = async (vault, searchLength) => {
-  const filterBorrowers = vault.filters.Borrow();
-  const events = await vault.queryFilter(filterBorrowers, searchLength);
+const searchRepayers = async (vault, searchLength) => {
+  const filterRepayers = vault.filters.Payback();
+  const events = await vault.queryFilter(filterRepayers, searchLength);
 
-  const borrowers = [];
+  const repayers = [];
 
   for (let i = 0; i < events.length; i += 1) {
     const e = events[i];
     const block = await e.getBlock();
     const tx = await e.getTransactionReceipt();
-    borrowers.push({
+    repayers.push({
       vault: vault.address,
       txhash: tx.transactionHash,
       blockNumber: e.blockNumber,
@@ -45,21 +45,21 @@ const searchBorrowers = async (vault, searchLength) => {
     });
   }
 
-  return borrowers;
+  return repayers;
 };
 
-const filterAndSort = borrowers => {
-  return borrowers
+const filterAndSort = repayers => {
+  return repayers
     .sort((a, b) => Number(a.blockNumber) - Number(b.blockNumber))
-    .reduce((acc, borrower) => {
-      if (!acc.find(({ userAddr }) => borrower.userAddr === userAddr)) return [...acc, borrower];
+    .reduce((acc, repayer) => {
+      if (!acc.find(({ userAddr }) => repayer.userAddr === userAddr)) return [...acc, repayer];
       return acc;
     }, []);
 };
 
-const saveFile = borrowers => {
+const saveFile = (transactors, name) => {
   const csvWriter = createCsvWriter({
-    path: 'fuji-borrowers.csv',
+    path: `fuji-${name}.csv`,
     header: [
       { id: 'timestamp', title: 'Timestamp' },
       { id: 'txhash', title: 'TxHash' },
@@ -69,28 +69,28 @@ const saveFile = borrowers => {
     ],
   });
   csvWriter
-    .writeRecords(borrowers)
-    .then(() => console.log(`Successfully saved ${borrowers.length} borrowers`));
+    .writeRecords(transactors)
+    .then(() => console.log(`Successfully saved ${(transactors.length, name)}`));
 };
 
-const getBorrowers = async () => {
+const getRepayers = async () => {
   const contracts = await loadContracts(signer);
 
   console.log('contracts');
-  let borrowers = [];
+  let repayers = [];
 
   for (let v = 0; v < vaultsList.length; v++) {
-    const vaultName = vaultsList[v];
-    console.log('Searching BORROW positions in', chalk.blue(vaultName));
+    let vaultName = vaultsList[v];
+    console.log('Searching PAYBACK positions in', chalk.blue(vaultName));
 
-    const vault = contracts[vaultName];
+    let vault = contracts[vaultName];
 
-    const found = await searchBorrowers(vault);
-    borrowers.push(...found);
+    let found = await searchRepayers(vault);
+    repayers.push(...found);
   }
 
-  borrowers = filterAndSort(borrowers);
-  saveFile(borrowers);
+  repayers = filterAndSort(repayers, 'repayer');
+  saveFile(repayers, 'repayers');
 };
 
-getBorrowers();
+getRepayers();
