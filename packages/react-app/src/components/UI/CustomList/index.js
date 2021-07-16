@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { map } from 'lodash';
+import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+import { comingSoonIcon } from 'assets/images';
 
-import { SectionTitle, BlackBoxContainer } from 'components/Blocks';
-
-const CustomList = ({ title, handleChange, options, defaultOption }) => {
+const CustomList = ({ title, handleChange, options, defaultOption, hasBlackContainer = true }) => {
   const [selectedOption, setSelectedOption] = useState(defaultOption);
+
   return (
-    <BlackBoxContainer zIndex={1}>
+    <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
       <div className="borrow-options">
         <SectionTitle fontSize={2} mb={4}>
           {title}
@@ -24,14 +25,25 @@ const CustomList = ({ title, handleChange, options, defaultOption }) => {
                     handleChange(option);
                   }}
                   checked={selectedOption.name === option.name}
+                  disabled={option.isComingSoon}
                 />
                 <div className="fake-radio">
                   <img
                     alt={option.id}
                     src={option.icon}
                     style={{ width: '26px', height: '26px' }}
+                    disabled={option.isComingSoon}
                   />
-                  <span className="select-option-name">{option.name}</span>
+                  <span className="select-option-name" disabled={option.isComingSoon}>
+                    {option.name}
+                  </span>
+                  {option.isComingSoon && (
+                    <img
+                      alt="Soon"
+                      src={comingSoonIcon}
+                      style={{ opacity: 1, filter: 'grayscale(0%)' }}
+                    />
+                  )}
                 </div>
               </label>
             ))}
