@@ -104,10 +104,16 @@ const Provider = ({ contracts, market, rates, isDropDown = true }) => {
   );
 };
 
-function ProvidersList({ contracts, markets, title = 'Providers', isDropDown = true }) {
+function ProvidersList({
+  contracts,
+  markets,
+  title = 'Providers',
+  isDropDown = true,
+  hasBlackContainer = true,
+}) {
   const rates = useRates(contracts);
   return (
-    <BlackBoxContainer mt={4} zIndex={1}>
+    <BlackBoxContainer mt={4} zIndex={1} hasBlackContainer={hasBlackContainer}>
       <SectionTitle mb={3}>
         <Typography variant="h3">{title}</Typography>
         <div className="tooltip-info">

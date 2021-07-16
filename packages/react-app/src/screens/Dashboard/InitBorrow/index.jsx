@@ -23,6 +23,7 @@ import {
   HowItWorks,
   DisclaimerPopup,
   SelectVault,
+  BlackBoxContainer,
 } from 'components';
 import { CustomList, TextInput } from 'components/UI';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
@@ -195,22 +196,26 @@ function InitBorrow({ contracts, provider, address }) {
       </Dialog>
 
       <div className="left-content">
-        <CustomList
-          title="Networks"
-          handleChange={handleChangeNetwork}
-          options={NETWORKS}
-          defaultOption={NETWORKS.ETH}
-        />
-        <ProvidersList
-          contracts={contracts}
-          markets={[borrowAsset]}
-          title="Borrow APR"
-          isDropDown={false}
-        />
+        <HowItWorks />
+        <BlackBoxContainer>
+          <CustomList
+            title="Networks"
+            handleChange={handleChangeNetwork}
+            options={NETWORKS}
+            defaultOption={NETWORKS.ETH}
+            hasBlackContainer={false}
+          />
+          <ProvidersList
+            contracts={contracts}
+            markets={[borrowAsset]}
+            title="Borrow APR"
+            isDropDown
+            hasBlackContainer={false}
+          />
+        </BlackBoxContainer>
       </div>
 
       <div className="center-content">
-        <HowItWorks />
         <div className="dark-block borrow-actions">
           <SelectVault onChangeVault={handleChangeVault} />
           <form noValidate autoComplete="off">
@@ -226,14 +231,22 @@ function InitBorrow({ contracts, provider, address }) {
                 setBorrowAmount(target.value);
                 clearErrors();
               }}
-              ref={register({ required: true, min: 0 })}
+              ref={register({
+                required: { value: true, message: 'required-amount' },
+                min: { value: 1, message: 'insufficient-borrow' },
+              })}
               startAdornmentImage={ASSETS[borrowAsset].image}
               endAdornment={{
                 text: (borrowAmount * borrowAssetPrice).toFixed(2),
                 type: 'currency',
               }}
               subTitle="Amount to borrow"
-              description={errors?.borrowAmount && 'Please, type the amount you like to borrow'}
+              description={
+                errors?.borrowAmount?.message === 'required-amount'
+                  ? 'Please, type the amount you like to borrow'
+                  : errors?.borrowAmount?.message === 'insufficient-borrow' &&
+                    'Please, type the amount at least 1'
+              }
             />
 
             <div className="borrow-inputs">
