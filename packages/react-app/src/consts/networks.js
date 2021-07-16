@@ -3,7 +3,6 @@ import {
   // btcImage,
   ethNetworkIcon,
   bscNetworkIcon,
-  maticNetworkIcon,
 } from 'assets/images';
 
 export const NETWORK_NAME = {
@@ -17,15 +16,17 @@ export const NETWORKS = {
     id: NETWORK_NAME.ETH.toLowerCase(),
     name: NETWORK_NAME.ETH,
     icon: ethNetworkIcon.toString(),
+    isComingSoon: false,
   },
   [NETWORK_NAME.MATIC]: {
     id: NETWORK_NAME.MATIC.toLowerCase(),
     name: NETWORK_NAME.MATIC,
     icon: bscNetworkIcon.toString(),
+    isComingSoon: true,
   },
-  [NETWORK_NAME.BSC]: {
-    id: NETWORK_NAME.BSC.toLowerCase(),
-    name: NETWORK_NAME.BSC,
-    icon: maticNetworkIcon.toString(),
-  },
+  // [NETWORK_NAME.BSC]: {
+  //   id: NETWORK_NAME.BSC.toLowerCase(),
+  //   name: NETWORK_NAME.BSC,
+  //   icon: maticNetworkIcon.toString(),
+  // },
 };
