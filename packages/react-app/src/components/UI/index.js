@@ -2,10 +2,9 @@ import Button from './Button';
 import TextInput from './TextInput';
 import Label from './Label';
 import DropDown from './DropDown';
-import { NavUnlisted, NavImageLink, NavTextLink } from './NavLinks';
+import { NavUnlisted, NavImageLink, NavTextLink } from '../NavLinks';
 import StyledModal from './Modal';
 import CheckBox from './CheckBox';
-import CustomList from './CustomList';
 import AnimatedCounter from './AnimatedCounter';
 
 export {
@@ -18,6 +17,5 @@ export {
   DropDown,
   StyledModal,
   CheckBox,
-  CustomList,
   AnimatedCounter,
 };

@@ -8,6 +8,7 @@ import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
 import DisclaimerPopup from './DisclaimerPopup';
 import SelectVault from './SelectVault';
+import SelectNetwork from './SelectNetwork';
 
 export * from './Blocks';
 export {
@@ -22,4 +23,5 @@ export {
   ProvidersList,
   DisclaimerPopup,
   SelectVault,
+  SelectNetwork,
 };
