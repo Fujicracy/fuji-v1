@@ -321,7 +321,7 @@ function CollateralForm({ position, contracts, provider, address }) {
                   vault.collateralAsset.name
                 } Ξ`
           }
-          startAdornmentImage={vault.collateralAsset.image}
+          startAdornmentImage={vault.collateralAsset.icon}
           endAdornment={{
             type: 'component',
             component: (

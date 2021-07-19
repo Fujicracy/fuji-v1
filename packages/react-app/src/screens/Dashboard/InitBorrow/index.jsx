@@ -24,8 +24,9 @@ import {
   DisclaimerPopup,
   SelectVault,
   BlackBoxContainer,
+  SelectNetwork,
 } from 'components';
-import { CustomList, TextInput } from 'components/UI';
+import { TextInput } from 'components/UI';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 import './styles.css';
@@ -172,7 +173,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network, borrowAsset, collateralAsset });
+  console.log({ network, errors: errors?.borrowAmount?.message });
   return (
     <div className="container initial-step">
       <Dialog
@@ -198,13 +199,14 @@ function InitBorrow({ contracts, provider, address }) {
       <div className="left-content">
         <HowItWorks />
         <BlackBoxContainer>
-          <CustomList
+          <SelectNetwork
             title="Networks"
             handleChange={handleChangeNetwork}
             options={NETWORKS}
             defaultOption={NETWORKS.ETH}
             hasBlackContainer={false}
           />
+
           <ProvidersList
             contracts={contracts}
             markets={[borrowAsset]}
@@ -235,7 +237,7 @@ function InitBorrow({ contracts, provider, address }) {
                 required: { value: true, message: 'required-amount' },
                 min: { value: 1, message: 'insufficient-borrow' },
               })}
-              startAdornmentImage={ASSETS[borrowAsset].image}
+              startAdornmentImage={ASSETS[borrowAsset].icon}
               endAdornment={{
                 text: (borrowAmount * borrowAssetPrice).toFixed(2),
                 type: 'currency',
@@ -262,7 +264,7 @@ function InitBorrow({ contracts, provider, address }) {
                   min: { value: neededCollateral, message: 'insufficient-collateral' },
                   max: { value: ethBalance, message: 'insufficient-balance' },
                 })}
-                startAdornmentImage={ASSETS[collateralAsset].image}
+                startAdornmentImage={ASSETS[collateralAsset].icon}
                 endAdornment={{
                   text: (collateralAmount * ethPrice).toFixed(2),
                   type: 'currency',

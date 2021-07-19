@@ -58,7 +58,7 @@ const Provider = ({ contracts, market, rates, isDropDown = true }) => {
             <AssetContainer>
               <Image
                 alt={vault.borrowAsset.name}
-                src={vault.borrowAsset.image}
+                src={vault.borrowAsset.icon}
                 width="32px"
                 height="32px"
               />
@@ -76,7 +76,7 @@ const Provider = ({ contracts, market, rates, isDropDown = true }) => {
           <AssetContainer hasBottomBorder>
             <Image
               alt={vault.borrowAsset.name}
-              src={vault.borrowAsset.image}
+              src={vault.borrowAsset.icon}
               width="32px"
               height="32px"
             />
@@ -114,7 +114,7 @@ function ProvidersList({
   const rates = useRates(contracts);
   return (
     <BlackBoxContainer mt={4} zIndex={1} hasBlackContainer={hasBlackContainer}>
-      <SectionTitle mb={3}>
+      <SectionTitle mb={1}>
         <Typography variant="h3">{title}</Typography>
         <div className="tooltip-info">
           <InfoOutlinedIcon />
