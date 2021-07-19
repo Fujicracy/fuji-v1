@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
-import { Box } from 'rebass';
 
 export const DropDownContainer = styled('div')`
   width: 100%;
@@ -66,17 +65,19 @@ export const DropDownList = styled('ul')`
 export const ListItem = styled('li')`
   list-style: none;
   height: 40px;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
   padding: 0px 10px 0px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: ${themeGet('colors.text32')};
   &:hover {
     color: #f5f5f5;
+    background-color: rgba(255, 255, 255, 0.1);
   }
-`;
-
-export const TextBox = styled(Box)`
+  &:last-child {
+    border-bottom: none;
+  }
   cursor: pointer;
 `;
