@@ -198,7 +198,7 @@ function InitBorrow({ contracts, provider, address }) {
 
       <div className="left-content">
         <HowItWorks />
-        <BlackBoxContainer>
+        <BlackBoxContainer mb={4}>
           <SelectNetwork
             title="Networks"
             handleChange={handleChangeNetwork}

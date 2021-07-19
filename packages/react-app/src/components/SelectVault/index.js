@@ -34,7 +34,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
       </SectionTitle>
       <Box mb={4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
-          <Box width={2 / 5} display="flex" alignItems="center">
+          <Box width={4 / 10} display="flex" alignItems="center">
             <Box
               width={2 / 3}
               display="flex"
@@ -58,19 +58,19 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
           </Box>
 
           <Box
-            width={3 / 5}
+            width={6 / 10}
             display="flex"
             alignItems="center"
             ml={3}
             justifyContent="space-around"
           >
-            <Box width={3 / 4} display="flex" alignItems="center">
+            <Box width={4 / 5} display="flex" alignItems="center">
               <Image src={selectedVault.collateralAsset.icon} width={26} height={26} />
               <Box ml={1}>{`${selectedVault.collateralAsset.name} collateral`}</Box>
             </Box>
 
             <Box
-              width={1 / 4}
+              width={1 / 5}
               display="flex"
               alignItems="center"
               flexDirection="row"

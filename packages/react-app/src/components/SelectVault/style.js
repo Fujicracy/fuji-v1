@@ -6,14 +6,14 @@ export const DropDownContainer = styled('div')`
 `;
 
 export const DropDownHeader = styled('div')`
-  height: 40px;
+  height: 56px;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
+  font-size: 18px;
   margin: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px 10px 0px 10px;
+  padding: 0px 16px 0px 16px;
   color: #f5f5f5;
 
   border-top-left-radius: 6px;
@@ -64,12 +64,12 @@ export const DropDownList = styled('ul')`
 
 export const ListItem = styled('li')`
   list-style: none;
-  height: 40px;
-  font-size: 14px;
+  height: 56px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  padding: 0px 10px 0px 10px;
+  padding: 0px 16px 0px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: ${themeGet('colors.text32')};
   &:hover {
