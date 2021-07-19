@@ -31,7 +31,7 @@ const getContractsList = () => {
     });
 };
 
-async function loadContracts(providerOrSigner) {
+const loadContracts = async providerOrSigner => {
   let newContracts;
 
   try {
@@ -59,18 +59,24 @@ async function loadContracts(providerOrSigner) {
   }
 
   return newContracts;
-}
+};
 
-async function getGasPrice(speed) {
+const getGasPrice = async speed => {
   return axios
     .get('https://ethgasstation.info/json/ethgasAPI.json')
-    .then(response => {
-      return response.data[speed || 'fastest'] * 100000000;
+    .then(({ data }) => {
+      return data[speed || 'fastest'] * 100000000;
     })
     .catch(error => console.log(error));
-}
+};
 
-async function getLiquidationProviderIndex(vault, contracts) {
+const getETHPrice = async () => {
+  return axios
+    .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+    .then(({ data }) => data.ethereum.usd);
+};
+
+const getLiquidationProviderIndex = async (vault, contracts) => {
   const providerIndex = {
     aave: 0,
     dydx: 1,
@@ -86,7 +92,7 @@ async function getLiquidationProviderIndex(vault, contracts) {
     return providerIndex.dydx;
   }
   return providerIndex.cream;
-}
+};
 
 module.exports = {
   DAI_ADDR,
@@ -94,5 +100,6 @@ module.exports = {
   loadContracts,
   loadSingleContract,
   getGasPrice,
+  getETHPrice,
   getLiquidationProviderIndex,
 };
