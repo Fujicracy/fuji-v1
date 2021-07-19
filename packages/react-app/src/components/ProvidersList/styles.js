@@ -13,6 +13,7 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   flex-direction: row;
   justify-content: space-between;
   color: ${themeGet('colors.text64')};
+  cursor: pointer;
 `;
 
 export const AssetContainer = styled(Box).attrs(() => ({
