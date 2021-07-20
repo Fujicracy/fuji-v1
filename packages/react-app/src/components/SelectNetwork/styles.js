@@ -24,7 +24,7 @@ export const NetworkButton = styled(Box)`
       ? 'linear-gradient(180deg, rgba(9, 9, 9, 0.15) 0%, rgba(255, 255, 255, 0.15) 100%)'
       : 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(9, 9, 9, 0.5) 90%)'};
   border-radius: ${props => (props.left ? '10px 0 0 10px' : props.right ? '0 10px 10px 0' : '0')};
-  border: 1px solid rgb(80, 80, 80);
+  border: 1px solid rgb(60, 60, 60);
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: ${props => (props.clicked ? 'white' : 'rgba(255, 255, 255, 0.3)')};
 `;
