@@ -7,6 +7,7 @@ import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
 import dropdownIcon from './icons/dropdown.svg';
+import downIcon from './icons/down.svg';
 import comingSoonIcon from './icons/comingSoon.svg';
 // App Images
 import fujiLanding from './images/home/fujiLanding.svg';
@@ -57,6 +58,7 @@ export {
   closeIcon,
   flaskIcon,
   dropdownIcon,
+  downIcon,
   comingSoonIcon,
   // Images
   fujiLanding,
