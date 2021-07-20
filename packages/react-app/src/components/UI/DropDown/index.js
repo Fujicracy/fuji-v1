@@ -12,7 +12,7 @@ import {
   TextBox,
 } from './style';
 
-const DropDown = ({ options, defaultOption }) => {
+const DropDown = ({ options, defaultOption, isSelectable }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -52,7 +52,10 @@ const DropDown = ({ options, defaultOption }) => {
         <DropDownListContainer open={isOpen} length={filteredOptions?.length}>
           <DropDownList>
             {filteredOptions?.map(option => (
-              <ListItem onClick={onOptionClicked(option)} key={Math.random()}>
+              <ListItem
+                onClick={isSelectable ? onOptionClicked(option) : undefined}
+                key={Math.random()}
+              >
                 <TextBox width={4 / 7} cursor="pointer">
                   {option.title}
                 </TextBox>

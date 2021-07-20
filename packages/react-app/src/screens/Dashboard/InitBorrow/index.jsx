@@ -213,6 +213,7 @@ function InitBorrow({ contracts, provider, address }) {
             title="Borrow APR"
             isDropDown
             hasBlackContainer={false}
+            isSelectable={false}
           />
         </BlackBoxContainer>
       </div>

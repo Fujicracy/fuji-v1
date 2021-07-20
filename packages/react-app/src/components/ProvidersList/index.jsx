@@ -30,7 +30,7 @@ import { ProviderContainer, AssetContainer } from './styles';
 //   );
 // }
 
-const Provider = ({ contracts, market, rates, isDropDown = true }) => {
+const Provider = ({ contracts, market, rates, isDropDown = true, isSelectable }) => {
   const vault = find(VAULTS, v => v.borrowAsset.name === market);
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
@@ -68,7 +68,7 @@ const Provider = ({ contracts, market, rates, isDropDown = true }) => {
             </AssetContainer>
           </Box>
           <Box width={2 / 3} ml={2}>
-            <DropDown options={options} defaultOption={defaultOption} />
+            <DropDown options={options} defaultOption={defaultOption} isSelectable={isSelectable} />
           </Box>
         </>
       ) : (
@@ -110,6 +110,7 @@ function ProvidersList({
   title = 'Providers',
   isDropDown = true,
   hasBlackContainer = true,
+  isSelectable = true,
 }) {
   const rates = useRates(contracts);
   return (
@@ -132,6 +133,7 @@ function ProvidersList({
             market={market}
             rates={rates}
             isDropDown={isDropDown}
+            isSelectable={isSelectable}
           />
         ))}
     </BlackBoxContainer>
