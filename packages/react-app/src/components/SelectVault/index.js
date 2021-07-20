@@ -34,7 +34,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
       </SectionTitle>
       <Box mb={4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
-          <Box width={4 / 10} display="flex" alignItems="center">
+          <Box width={2 / 5} display="flex" alignItems="center">
             <Box
               width={2 / 3}
               display="flex"
@@ -43,34 +43,27 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
               alignItems="center"
             >
               <Image src={selectedVault.borrowAsset.icon} width={26} height={26} />
-              <Box ml={1}>{selectedVault.borrowAsset.name}</Box>
+              <Box ml={3}>{selectedVault.borrowAsset.name}</Box>
             </Box>
             <Box
               width={1 / 3}
               display="flex"
               flexDirection="row"
-              justifyContent="center"
+              justifyContent="flex-end"
               alignItems="center"
-              ml={1}
             >
               with
             </Box>
           </Box>
 
-          <Box
-            width={6 / 10}
-            display="flex"
-            alignItems="center"
-            ml={3}
-            justifyContent="space-around"
-          >
-            <Box width={4 / 5} display="flex" alignItems="center">
+          <Box width={3 / 5} display="flex" alignItems="center" ml={3}>
+            <Box width={6 / 7} display="flex" alignItems="center">
               <Image src={selectedVault.collateralAsset.icon} width={26} height={26} />
-              <Box ml={1}>{`${selectedVault.collateralAsset.name} collateral`}</Box>
+              <Box ml={3}>{`${selectedVault.collateralAsset.name} collateral`}</Box>
             </Box>
 
             <Box
-              width={1 / 5}
+              width={1 / 7}
               display="flex"
               alignItems="center"
               flexDirection="row"
@@ -97,7 +90,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                           alignItems="center"
                         >
                           <Image src={VAULTS[key].borrowAsset.icon} width={26} height={26} />
-                          <Box cursor="pointer" ml={1}>
+                          <Box cursor="pointer" ml={3}>
                             {`${VAULTS[key].borrowAsset.name}`}
                           </Box>
                         </Box>
@@ -105,7 +98,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                           width={1 / 3}
                           display="flex"
                           flexDirection="row"
-                          justifyContent="center"
+                          justifyContent="flex-end"
                           alignItems="center"
                           ml={1}
                         >
@@ -115,7 +108,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
 
                       <Box width={3 / 5} display="flex" alignItems="center" ml={3}>
                         <Image src={VAULTS[key].collateralAsset.icon} width={26} height={26} />
-                        <Box cursor="pointer" ml={1}>
+                        <Box cursor="pointer" ml={3}>
                           {`${VAULTS[key].collateralAsset.name} collateral`}
                         </Box>
                       </Box>
