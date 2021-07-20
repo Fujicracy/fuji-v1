@@ -17,10 +17,10 @@ function HowItWorks() {
       </legend>
 
       <Typography variant="body2">
-        With Fuji you reduce your loan expenses by <span className="bold">~10%</span>.<br />
-        The protocol constantly <span className="bold">monitors</span> borrow markets and
-        automatically <span className="bold">refinances</span> its debt positions at the best
-        available rates.
+        Reduce your crypto loan expenses with Fuji engine. The protocol constantly{' '}
+        <span className="bold">scans</span> borrowing markets and automatically{' '}
+        <span className="bold">refinances</span> its debt positions, providing its users with the
+        most efficient APR available.
       </Typography>
     </fieldset>
   );
