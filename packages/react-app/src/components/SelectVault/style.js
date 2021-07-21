@@ -15,6 +15,7 @@ export const DropDownHeader = styled('div')`
   align-items: center;
   padding: 0px 16px 0px 16px;
   color: #f5f5f5;
+  cursor: pointer;
 
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
