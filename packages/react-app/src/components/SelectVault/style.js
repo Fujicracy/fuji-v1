@@ -15,6 +15,7 @@ export const DropDownHeader = styled('div')`
   align-items: center;
   padding: 0px 16px 0px 16px;
   color: #f5f5f5;
+  cursor: pointer;
 
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
@@ -60,6 +61,7 @@ export const DropDownList = styled('ul')`
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
   }
+  cursor: pointer;
 `;
 
 export const ListItem = styled('li')`
@@ -78,6 +80,7 @@ export const ListItem = styled('li')`
   }
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
-  cursor: pointer;
 `;
