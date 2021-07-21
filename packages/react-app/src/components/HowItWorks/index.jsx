@@ -17,10 +17,9 @@ function HowItWorks() {
       </legend>
 
       <Typography variant="body2">
-        With Fuji you reduce your loan expenses by <span className="bold">~10%</span>.<br />
-        The protocol constantly <span className="bold">monitors</span> borrow markets and
-        automatically <span className="bold">refinances</span> its debt positions at the best
-        available rates.
+        With Fuji you reduce your loan expenses by <span className="bold">~10%</span>. The protocol
+        constantly <span className="bold">monitors</span> borrow markets and automatically{' '}
+        <span className="bold">refinances</span> its debt positions at the best available rates.
       </Typography>
     </fieldset>
   );
