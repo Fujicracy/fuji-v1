@@ -56,11 +56,6 @@ export const DropDownList = styled('ul')`
   color: #3faffa;
   font-size: 1.3rem;
   font-weight: 500;
-
-  &:first-child {
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
 `;
 
 export const ListItem = styled('li')`
@@ -74,6 +69,10 @@ export const ListItem = styled('li')`
   color: ${themeGet('colors.text32')};
   &:hover {
     color: #f5f5f5;
+  }
+  &:last-child {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 `;
 
