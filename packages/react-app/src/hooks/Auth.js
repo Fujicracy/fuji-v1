@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from 'bnc-onboard';
-import Web3 from 'web3';
 
 const AuthContext = createContext();
 
@@ -33,22 +32,13 @@ const web3Modal = new Web3Modal({
 function useProvideAuth() {
   const [provider, setProvider] = useState();
   // const address = useUserAddress(provider);
+  const [wallet, setWallet] = useState();
   const [address, setAddress] = useState();
-  let web3;
-  const onboard = Onboard({
-    dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
-    networkId: Number(process.env.REACT_APP_CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: true,
-
-    subscriptions: {
-      wallet: wallet => {
-        web3 = new Web3(wallet.provider);
-      },
-    },
-  });
+  const [onboard, setOnboard] = useState(null);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
+    console.log({ isSelected });
     if (isSelected) {
       const isChecked = await onboard.walletCheck();
       if (isChecked) {
@@ -79,8 +69,51 @@ function useProvideAuth() {
   }, [loadWeb3Modal]);
 
   useEffect(() => {
-    setProvider(web3);
-  }, [web3]);
+    const tmpOnboard = Onboard({
+      dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
+      networkId: Number(process.env.REACT_APP_CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
+      darkMode: true,
+      subscriptions: {
+        wallet: onboardWallet => {
+          if (onboardWallet.provider) {
+            setWallet(onboardWallet);
+            // store the selected wallet name to be retrieved next time the app loads
+
+            const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
+
+            setProvider(ethersProvider);
+
+            window.localStorage.setItem('selectedWallet', onboardWallet.name);
+          } else {
+            setProvider(null);
+            setWallet({});
+          }
+        },
+        address: onboardAddress => {
+          window.localStorage.setItem('selectedAddress', onboardAddress);
+        },
+      },
+    });
+
+    setOnboard(tmpOnboard);
+  }, []);
+
+  useEffect(() => {
+    async function connectWalletAccount() {
+      const previouslySelectedWallet = window.localStorage.getItem('selectedWallet');
+      const previouslySelectedAddress = window.localStorage.getItem('selectedAddress');
+      console.log({ previouslySelectedWallet, previouslySelectedAddress });
+      if (previouslySelectedWallet && previouslySelectedAddress && onboard) {
+        await onboard.walletSelect(previouslySelectedWallet);
+        await onboard.walletCheck(previouslySelectedAddress);
+
+        setWallet(previouslySelectedWallet);
+        setAddress(previouslySelectedAddress);
+      }
+    }
+
+    connectWalletAccount();
+  }, [onboard]);
 
   // Return the user object and auth methods
   return {
@@ -89,6 +122,8 @@ function useProvideAuth() {
     connectAccount,
     loadWeb3Modal,
     logoutOfWeb3Modal,
+    onboard,
+    wallet,
   };
 }
 

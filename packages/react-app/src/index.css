@@ -316,13 +316,11 @@ input[type='number'] {
 .left-content {
   width: 100%;
   height: 100%;
-  z-index: 1;
 }
 
 .center-content {
   width: 100%;
   height: 100%;
-  z-index: 1;
   margin-left: 2.5rem;
 }
 
@@ -580,4 +578,13 @@ input[type='number'] {
 
 .MuiDialogContentText-root {
   color: var(--text);
+}
+
+.bn-onboard-modal {
+  font-family: Roboto;
+  background: black;
+}
+
+.bn-onboard-modal-select-wallets {
+  background: black;
 }

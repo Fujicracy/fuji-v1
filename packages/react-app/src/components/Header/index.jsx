@@ -19,11 +19,11 @@ function Header() {
   const [logout, setLogout] = useState(false);
   const [isOpenWallet, setIsOpenWallet] = useState(false);
 
-  const { address, loadWeb3Modal, logoutOfWeb3Modal } = useAuth();
+  const { address, loadWeb3Modal, onboard, wallet } = useAuth();
 
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
-  console.log({ isOpenWallet });
+  console.log({ onboard, wallet, address });
   return (
     <Container>
       <a href={LANDING_URL} className="logo">
@@ -62,8 +62,8 @@ function Header() {
                 </WalletHeader>
                 {isOpenWallet && (
                   <WalletItemContainer>
-                    <WalletItem>Change Wallet</WalletItem>
-                    <WalletItem>Disconnect</WalletItem>
+                    <WalletItem onClick={() => onboard.walletSelect()}>Change Wallet</WalletItem>
+                    <WalletItem onClick={() => onboard.walletReset()}>Disconnect</WalletItem>
                   </WalletItemContainer>
                 )}
               </Box>
@@ -73,7 +73,7 @@ function Header() {
           <li>
             <a
               href="/"
-              onClick={() => (!address ? loadWeb3Modal() : logoutOfWeb3Modal())}
+              onClick={() => (!address ? loadWeb3Modal() : onboard.walletReset)}
               onMouseEnter={() => setLogout(true)}
               onMouseLeave={() => setLogout(false)}
               className={address ? 'button-nav connected' : 'button-nav'}
