@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Box } from 'rebass';
 import Collapse from '@material-ui/core/Collapse';
 import { VAULTS, VAULTS_ADDRESS } from 'consts';
 import map from 'lodash/map';
 import { SectionTitle } from 'components/Blocks';
-import { dropdownIcon } from 'assets/images';
+import { downArrowIcon, upArrowIcon, barIcon } from 'assets/images';
 import {
   DropDownContainer,
   DropDownHeader,
@@ -15,14 +15,15 @@ import {
 
 const SelectVault = ({ defaultOption, onChangeVault }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedVault, setselectedVault] = useState(
+  const [selectedVault, setSelectedVault] = useState(
     defaultOption || VAULTS[VAULTS_ADDRESS.VaultETHDAI],
   );
 
+  useEffect(() => defaultOption && setSelectedVault(defaultOption), [defaultOption]);
   const toggling = () => setIsOpen(!isOpen);
 
   const onOptionClicked = value => () => {
-    setselectedVault(value);
+    setSelectedVault(value);
     setIsOpen(false);
     onChangeVault(value);
   };
@@ -69,7 +70,8 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
               flexDirection="row"
               justifyContent="flex-end"
             >
-              <Image src={dropdownIcon} width={17} height={17} />
+              <Image src={barIcon} mr={2} />
+              <Image src={isOpen ? upArrowIcon : downArrowIcon} width={17} height={17} />
             </Box>
           </Box>
         </DropDownHeader>
