@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useContext, createContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 // import { useUserAddress } from 'eth-hooks';
-import { Web3Provider } from '@ethersproject/providers';
+// import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -30,10 +30,10 @@ const web3Modal = new Web3Modal({
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const [provider, setProvider] = useState();
+  const [provider, setProvider] = useState(undefined);
   // const address = useUserAddress(provider);
-  const [wallet, setWallet] = useState();
-  const [address, setAddress] = useState();
+  const [wallet, setWallet] = useState('');
+  const [address, setAddress] = useState('');
   const [onboard, setOnboard] = useState(null);
 
   async function connectAccount() {
@@ -50,10 +50,23 @@ function useProvideAuth() {
     }
   }
 
-  const loadWeb3Modal = useCallback(async () => {
-    const newProvider = await web3Modal.connect();
-    setProvider(new Web3Provider(newProvider));
-  }, [setProvider]);
+  // async function disconnectAccount() {
+  //   if (onboard) {
+  //     console.log('disconnecting account');
+  //     setAddress();
+  //     setProvider(undefined);
+  //     setWallet(null);
+
+  //     window.localStorage.removeItem('selectedWallet');
+  //     window.localStorage.removeItem('selectedAddress');
+  //     onboard.walletReset();
+  //   }
+  // }
+
+  // const loadWeb3Modal = useCallback(async () => {
+  //   const newProvider = await web3Modal.connect();
+  //   setProvider(new Web3Provider(newProvider));
+  // }, [setProvider]);
 
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
@@ -62,11 +75,11 @@ function useProvideAuth() {
     }, 1);
   };
 
-  useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      loadWeb3Modal();
-    }
-  }, [loadWeb3Modal]);
+  // useEffect(() => {
+  //   if (web3Modal.cachedProvider) {
+  //     loadWeb3Modal();
+  //   }
+  // }, [loadWeb3Modal]);
 
   useEffect(() => {
     const tmpOnboard = Onboard({
@@ -75,18 +88,19 @@ function useProvideAuth() {
       darkMode: true,
       subscriptions: {
         wallet: onboardWallet => {
+          console.log('Onboard subscription');
           if (onboardWallet.provider) {
             setWallet(onboardWallet);
-            // store the selected wallet name to be retrieved next time the app loads
-
             const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
-
             setProvider(ethersProvider);
-
             window.localStorage.setItem('selectedWallet', onboardWallet.name);
           } else {
-            setProvider(null);
-            setWallet({});
+            setAddress('');
+            setProvider(undefined);
+            setWallet('');
+
+            window.localStorage.removeItem('selectedWallet');
+            window.localStorage.removeItem('selectedAddress');
           }
         },
         address: onboardAddress => {
@@ -120,7 +134,8 @@ function useProvideAuth() {
     address,
     provider,
     connectAccount,
-    loadWeb3Modal,
+    // disconnectAccount,
+    // loadWeb3Modal,
     logoutOfWeb3Modal,
     onboard,
     wallet,

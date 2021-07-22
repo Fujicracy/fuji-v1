@@ -63,7 +63,14 @@ function Header() {
                 {isOpenWallet && (
                   <WalletItemContainer>
                     <WalletItem onClick={() => onboard.walletSelect()}>Change Wallet</WalletItem>
-                    <WalletItem onClick={() => onboard.walletReset()}>Disconnect</WalletItem>
+                    <WalletItem
+                      onClick={() => {
+                        setIsOpenWallet(false);
+                        onboard.walletReset();
+                      }}
+                    >
+                      Disconnect
+                    </WalletItem>
                   </WalletItemContainer>
                 )}
               </Box>
