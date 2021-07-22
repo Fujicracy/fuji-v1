@@ -6,8 +6,10 @@ import btcIcon from './icons/tokens/BTC.svg';
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
-import dropdownIcon from './icons/dropdown.svg';
+import downArrowIcon from './icons/down_arrow.svg';
+import upArrowIcon from './icons/up_arrow.svg';
 import comingSoonIcon from './icons/comingSoon.svg';
+import barIcon from './icons/bar.svg';
 // App Images
 import fujiLanding from './images/home/fujiLanding.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
@@ -56,8 +58,10 @@ export {
   plusIcon,
   closeIcon,
   flaskIcon,
-  dropdownIcon,
   comingSoonIcon,
+  downArrowIcon,
+  upArrowIcon,
+  barIcon,
   // Images
   fujiLanding,
   partnerDelphi,
