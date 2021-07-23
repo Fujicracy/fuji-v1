@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
@@ -27,9 +27,11 @@ import {
   SelectNetwork,
 } from 'components';
 import { TextInput } from 'components/UI';
+import { VAULTS } from 'consts';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 import './styles.css';
+import map from 'lodash/map';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
@@ -43,9 +45,26 @@ function InitBorrow({ contracts, provider, address }) {
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
   const [network, setNetwork] = useState(NETWORKS[NETWORK_NAME.ETH]);
+  const [vault, setVault] = useState();
 
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
+
+  useEffect(() => {
+    if (borrowAsset && collateralAsset) {
+      console.log({ VAULTS });
+      map(Object.keys(VAULTS), key => {
+        if (
+          VAULTS[key].borrowAsset.name === borrowAsset &&
+          VAULTS[key].collateralAsset.name === collateralAsset
+        ) {
+          setVault(VAULTS[key]);
+          console.log('SETTING:', VAULTS[key]);
+        }
+      });
+    }
+    console.log({ borrowAsset, collateralAsset });
+  }, [borrowAsset, collateralAsset]);
 
   const ethPrice = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset);
@@ -87,7 +106,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const position = {
     borrowAsset: ASSETS[borrowAsset],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: ASSETS[collateralAsset],
     debtBalance:
       !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
     collateralBalance:
@@ -137,9 +156,10 @@ function InitBorrow({ contracts, provider, address }) {
     setNetwork(option);
   };
 
-  const handleChangeVault = vault => {
-    setBorrowAsset(vault.borrowAsset.name);
-    setCollateralAsset(vault.collateralAsset.name);
+  const handleChangeVault = v => {
+    setBorrowAsset(v.borrowAsset.name);
+    setCollateralAsset(v.collateralAsset.name);
+    setVault(v);
   };
 
   const dialogContents = {
@@ -220,7 +240,7 @@ function InitBorrow({ contracts, provider, address }) {
 
       <div className="center-content">
         <div className="dark-block borrow-actions">
-          <SelectVault onChangeVault={handleChangeVault} />
+          <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
           <form noValidate autoComplete="off">
             <TextInput
               placeholder={borrowAmount}

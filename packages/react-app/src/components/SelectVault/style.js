@@ -61,6 +61,7 @@ export const DropDownList = styled('ul')`
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
   }
+  cursor: pointer;
 `;
 
 export const ListItem = styled('li')`
@@ -79,6 +80,7 @@ export const ListItem = styled('li')`
   }
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
-  cursor: pointer;
 `;
