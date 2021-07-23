@@ -1,32 +1,33 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
+import { formatUnits } from '@ethersproject/units';
 // import { useUserAddress } from 'eth-hooks';
 // import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import Web3Modal from 'web3modal';
-import WalletConnectProvider from '@walletconnect/web3-provider';
+// import Web3Modal from 'web3modal';
+// import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from 'bnc-onboard';
 
 const AuthContext = createContext();
 
-const web3Modal = new Web3Modal({
-  // network: "mainnet", // optional
-  cacheProvider: true, // optional
-  providerOptions: {
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        infuraId: process.env.REACT_APP_INFURA_ID,
-      },
-    },
-  },
-  theme: {
-    background: 'rgb(0, 0, 0)',
-    main: 'rgb(245, 245, 253)',
-    secondary: 'rgba(245, 245, 253, 0.8)',
-    border: 'rgb(240, 1, 79)',
-    hover: 'rgb(41, 41, 41)',
-  },
-});
+// const web3Modal = new Web3Modal({
+//   // network: "mainnet", // optional
+//   cacheProvider: true, // optional
+//   providerOptions: {
+//     walletconnect: {
+//       package: WalletConnectProvider, // required
+//       options: {
+//         infuraId: process.env.REACT_APP_INFURA_ID,
+//       },
+//     },
+//   },
+//   theme: {
+//     background: 'rgb(0, 0, 0)',
+//     main: 'rgb(245, 245, 253)',
+//     secondary: 'rgba(245, 245, 253, 0.8)',
+//     border: 'rgb(240, 1, 79)',
+//     hover: 'rgb(41, 41, 41)',
+//   },
+// });
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
@@ -35,6 +36,7 @@ function useProvideAuth() {
   const [wallet, setWallet] = useState('');
   const [address, setAddress] = useState('');
   const [onboard, setOnboard] = useState(null);
+  const [balance, setBalance] = useState(0);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -68,12 +70,12 @@ function useProvideAuth() {
   //   setProvider(new Web3Provider(newProvider));
   // }, [setProvider]);
 
-  const logoutOfWeb3Modal = async () => {
-    await web3Modal.clearCachedProvider();
-    setTimeout(() => {
-      window.location.reload();
-    }, 1);
-  };
+  // const logoutOfWeb3Modal = async () => {
+  //   await web3Modal.clearCachedProvider();
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 1);
+  // };
 
   // useEffect(() => {
   //   if (web3Modal.cachedProvider) {
@@ -105,6 +107,10 @@ function useProvideAuth() {
         },
         address: onboardAddress => {
           window.localStorage.setItem('selectedAddress', onboardAddress);
+          setAddress(onboardAddress);
+        },
+        balance: onboardBalance => {
+          setBalance(formatUnits(onboardBalance));
         },
       },
     });
@@ -136,9 +142,10 @@ function useProvideAuth() {
     connectAccount,
     // disconnectAccount,
     // loadWeb3Modal,
-    logoutOfWeb3Modal,
+    // logoutOfWeb3Modal,
     onboard,
     wallet,
+    balance,
   };
 }
 
