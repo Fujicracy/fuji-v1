@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Image, Box } from 'rebass';
-import { downIcon } from 'assets/images';
+import { downArrowIcon, upArrowIcon } from 'assets/images';
 import { Label } from 'components/UI';
 import { LANDING_URL } from '../../consts/providers';
 import {
@@ -16,14 +16,13 @@ import {
 } from './styles';
 
 function Header() {
-  const [logout, setLogout] = useState(false);
+  // const [logout, setLogout] = useState(false);
   const [isOpenWallet, setIsOpenWallet] = useState(false);
 
-  const { address, loadWeb3Modal, onboard, wallet } = useAuth();
-
+  // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
+  const { address, onboard, balance } = useAuth();
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
-  console.log({ onboard, wallet, address });
   return (
     <Container>
       <a href={LANDING_URL} className="logo">
@@ -46,7 +45,7 @@ function Header() {
 
           <li>
             <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWallet(false)}>
-              <Label color="#f5f5f5">123412344.23 ETH</Label>
+              <Label color="#f5f5f5">{`${balance} ETH`}</Label>
               <Box
                 ml={2}
                 sx={{ position: 'relative' }}
@@ -58,7 +57,7 @@ function Header() {
                   isClicked={isOpenWallet}
                 >
                   <Label color="#f5f5f5">{ellipsedAddress}</Label>
-                  <Image src={downIcon} ml={2} />
+                  <Image src={isOpenWallet ? upArrowIcon : downArrowIcon} ml={2} width={11} />
                 </WalletHeader>
                 {isOpenWallet && (
                   <WalletItemContainer>
@@ -77,7 +76,7 @@ function Header() {
             </BallanceContainer>
           </li>
 
-          <li>
+          {/* <li>
             <a
               href="/"
               onClick={() => (!address ? loadWeb3Modal() : onboard.walletReset)}
@@ -87,7 +86,7 @@ function Header() {
             >
               {!address ? 'Connect Wallet' : logout ? 'Disconnect' : ellipsedAddress}
             </a>
-          </li>
+          </li> */}
         </Navigation>
       )}
     </Container>
