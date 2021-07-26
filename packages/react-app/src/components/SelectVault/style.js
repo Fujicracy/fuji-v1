@@ -1,21 +1,21 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
-import { Box } from 'rebass';
 
 export const DropDownContainer = styled('div')`
   width: 100%;
 `;
 
 export const DropDownHeader = styled('div')`
-  height: 40px;
+  height: 56px;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
+  font-size: 16px;
   margin: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px 5px 0px 10px;
+  padding: 0px 16px 0px 16px;
   color: #f5f5f5;
+  cursor: pointer;
 
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
@@ -29,6 +29,7 @@ export const DropDownHeader = styled('div')`
 // `;
 export const DropDownListContainer = styled('div')`
   overflow-y: auto;
+
   &::-webkit-scrollbar {
     background-color: rgba(255, 255, 255, 0.05);
     width: 24px;
@@ -54,28 +55,32 @@ export const DropDownList = styled('ul')`
   border: none;
   box-sizing: border-box;
   color: #3faffa;
-  font-size: 1.3rem;
+  font-size: 16px;
   font-weight: 500;
+  &:first-child {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  cursor: pointer;
 `;
 
 export const ListItem = styled('li')`
   list-style: none;
-  height: 40px;
-  font-size: 12px;
+  height: 56px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  padding: 0px 10px 0px 10px;
+  padding: 0px 16px 0px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: ${themeGet('colors.text32')};
   &:hover {
     color: #f5f5f5;
+    background-color: rgba(255, 255, 255, 0.1);
   }
   &:last-child {
-    border-bottom-right-radius: 6px;
+    border-bottom: none;
     border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
-`;
-
-export const TextBox = styled(Box)`
-  cursor: pointer;
 `;

@@ -346,7 +346,7 @@ function DebtForm({ position, contracts, provider, address }) {
                   vault.borrowAsset.name
                 } Ξ`
           }
-          startAdornmentImage={vault.borrowAsset.image}
+          startAdornmentImage={vault.borrowAsset.icon}
           endAdornment={{
             type: 'component',
             component: (

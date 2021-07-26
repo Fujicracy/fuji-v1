@@ -5,7 +5,8 @@ import { themeGet } from '@styled-system/theme-get';
 const Label = styled.p`
   color: ${props => (props.color ? themeGet(props.color) : themeGet('colors.text64'))};
   font-size: ${props => (props.fontSize ? `${themeGet(props.fontSize)}px` : '14px')};
-  text-align: center;
+  text-align: ${props => (props.textAlign ? props.textAlign : 'center')};
+  font-weight: ${props => (props.fontWeight ? props.fontWeight : '400')};
   ${fontSize}
   ${space}
 `;
