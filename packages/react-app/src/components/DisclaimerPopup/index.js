@@ -17,7 +17,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
 
   function afterOpen() {
     setTimeout(() => {
-      setOpacity(1);
+      setOpacity(0.9);
     }, 100);
   }
 
@@ -58,7 +58,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
           </Flex>
         </ContentContainer>
 
-        <Flex flexDirecion="row" mt={4} pl={4} pr={2}>
+        <Flex flexDirecion="row" mt={3} pl={3} pr={2} pt={2}>
           <Flex width={2 / 3} pr={4}>
             <CheckBox
               checked={checked}
