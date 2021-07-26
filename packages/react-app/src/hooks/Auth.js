@@ -107,10 +107,11 @@ function useProvideAuth() {
         },
         address: onboardAddress => {
           window.localStorage.setItem('selectedAddress', onboardAddress);
-          setAddress(onboardAddress);
+          if (onboardAddress) setAddress(onboardAddress);
+          else setAddress('');
         },
         balance: onboardBalance => {
-          setBalance(formatUnits(onboardBalance));
+          if (onboardBalance) setBalance(formatUnits(onboardBalance));
         },
       },
     });
