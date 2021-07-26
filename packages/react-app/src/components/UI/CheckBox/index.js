@@ -3,7 +3,7 @@ import { Flex } from 'rebass';
 import { CheckboxContainer, HiddenCheckbox, StyledCheckbox, Icon } from './styles';
 
 const CheckBox = ({ className, checked, description, ...props }) => (
-  <Flex flexDirection="row" alignItems="center">
+  <Flex flexDirection="row" alignItems="center" color="white">
     <label>
       <CheckboxContainer className={className}>
         <HiddenCheckbox checked={checked} {...props} />
@@ -15,7 +15,7 @@ const CheckBox = ({ className, checked, description, ...props }) => (
       </CheckboxContainer>
     </label>
 
-    <span style={{ marginLeft: 8 }}>{description}</span>
+    <span style={{ marginLeft: 8, fontSize: 12 }}>{description}</span>
   </Flex>
 );
 
