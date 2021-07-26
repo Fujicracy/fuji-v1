@@ -580,11 +580,11 @@ input[type='number'] {
   color: var(--text);
 }
 
-.bn-onboard-modal {
-  font-family: Roboto;
-  background: black;
+.bn-onboard-custom .bn-onboard-dark-mode {
+  font-family: Poppins;
+  background: rgba(13, 13, 13, 0.9) !important;
 }
 
-.bn-onboard-modal-select-wallets {
-  background: black;
+aside.svelte-rntogh {
+  background: rgba(0, 0, 0, 0.8) !important;
 }
