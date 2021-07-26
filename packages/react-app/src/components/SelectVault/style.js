@@ -8,7 +8,7 @@ export const DropDownContainer = styled('div')`
 export const DropDownHeader = styled('div')`
   height: 56px;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 18px;
+  font-size: 16px;
   margin: 0;
   display: flex;
   flex-direction: row;
@@ -55,7 +55,7 @@ export const DropDownList = styled('ul')`
   border: none;
   box-sizing: border-box;
   color: #3faffa;
-  font-size: 1.3rem;
+  font-size: 16px;
   font-weight: 500;
   &:first-child {
     border-bottom-right-radius: 6px;
@@ -67,7 +67,7 @@ export const DropDownList = styled('ul')`
 export const ListItem = styled('li')`
   list-style: none;
   height: 56px;
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);

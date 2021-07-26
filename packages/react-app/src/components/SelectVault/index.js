@@ -71,7 +71,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
               justifyContent="flex-end"
             >
               <Image src={barIcon} mr={2} />
-              <Image src={isOpen ? upArrowIcon : downArrowIcon} width={17} height={17} />
+              <Image src={isOpen ? upArrowIcon : downArrowIcon} width={13} />
             </Box>
           </Box>
         </DropDownHeader>
