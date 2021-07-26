@@ -4,6 +4,6 @@ import { Box } from 'rebass';
 
 export const ContentContainer = styled(Box)`
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  padding-bottom: 24px;
+  padding: 19px 6px 24px 19px;
   ${size};
 `;

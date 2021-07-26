@@ -9,7 +9,7 @@ export const CheckboxContainer = styled.div`
 export const Icon = styled.svg`
   fill: none;
   stroke: white;
-  stroke-width: 2px;
+  stroke-width: 4px;
 `;
 // Hide checkbox visually but remain accessible to screen readers.
 // Source: https://polished.js.org/docs/#hidevisually
@@ -33,7 +33,8 @@ export const StyledCheckbox = styled.div`
   background: ${props => (props.checked ? 'salmon' : 'papayawhip')}
   border-radius: 3px;
   transition: all 150ms;
-  border: 2px solid ${themeGet('colors.text64')};
+  border: 1px solid ${themeGet('colors.text100')};
+  box-shadow: 0px 0px 3px 0px white;
   box-sizing: border-box;
   ${Icon} {
     visibility: ${props => (props.checked ? 'visible' : 'hidden')}

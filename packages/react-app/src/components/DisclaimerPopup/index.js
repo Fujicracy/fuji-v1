@@ -17,7 +17,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
 
   function afterOpen() {
     setTimeout(() => {
-      setOpacity(1);
+      setOpacity(0.9);
     }, 100);
   }
 
@@ -42,8 +42,11 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
     >
       <Flex flexDirection="column">
         <ContentContainer>
-          <Flex flexDirection="row" m={1} justifyContent="center" alignItems="center">
-            <Image src={flaskIcon} width="60px" height="60px" />
+          <Flex flexDirection="row" alignItems="center">
+            <Flex width={1 / 4}>
+              <Image src={flaskIcon} width="60px" height="60px" />
+            </Flex>
+
             <Flex flexDirection="column" alignItems="flex-start" ml={3}>
               <Label color="colors.text100" fontWeight="700" fontSize={16}>
                 Safety Notice
@@ -55,16 +58,16 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
           </Flex>
         </ContentContainer>
 
-        <Flex flexDirecion="row" mt={4}>
-          <Flex width={2 / 3}>
+        <Flex flexDirecion="row" mt={3} pl={3} pr={2} pt={2}>
+          <Flex width={2 / 3} pr={4}>
             <CheckBox
               checked={checked}
               onChange={handleCheckboxChange}
               description="I acknowledge the risks involved with current release."
             />
           </Flex>
-          <Flex width={1 / 3}>
-            <Button onClick={toggleModal} borderRadius={55} block disabled={!checked}>
+          <Flex width={1 / 3} mr={2} alignItems="center">
+            <Button onClick={toggleModal} borderRadius={55} block disabled={!checked} height={33}>
               Submit
             </Button>
           </Flex>
