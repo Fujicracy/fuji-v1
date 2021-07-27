@@ -134,7 +134,7 @@ export const WalletItemContainer = styled(Box)`
   position: absolute;
   width: max-content;
   left: 50%;
-  transform: translateX(-50px);
+  transform: translateX(-50%);
   border: none;
   box-sizing: border-box;
   color: #3faffa;
@@ -143,7 +143,7 @@ export const WalletItemContainer = styled(Box)`
 export const WalletItem = styled(Box)`
   height: 28px;
   font-weight: 500;
-  font-size: 10px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
