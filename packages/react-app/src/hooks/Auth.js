@@ -88,6 +88,16 @@ function useProvideAuth() {
       dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
       networkId: Number(process.env.REACT_APP_CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
       darkMode: true,
+      walletSelect: {
+        wallets: [
+          { walletName: 'metamask', preferred: true },
+          {
+            walletName: 'walletConnect',
+            infuraKey: process.env.REACT_APP_INFURA_ID,
+            preferred: true,
+          },
+        ],
+      },
       subscriptions: {
         wallet: onboardWallet => {
           console.log('Onboard subscription');
