@@ -111,7 +111,10 @@ function useProvideAuth() {
           else setAddress('');
         },
         balance: onboardBalance => {
-          if (onboardBalance) setBalance(formatUnits(onboardBalance));
+          if (onboardBalance) {
+            const fBalance = parseFloat(formatUnits(onboardBalance));
+            setBalance(fBalance.toFixed(2));
+          }
         },
       },
     });
