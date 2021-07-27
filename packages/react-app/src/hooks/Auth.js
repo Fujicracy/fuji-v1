@@ -40,14 +40,12 @@ function useProvideAuth() {
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
-    console.log({ isSelected });
     if (isSelected) {
       const isChecked = await onboard.walletCheck();
       if (isChecked) {
         const state = onboard.getState();
         setAddress(state.address);
         setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
-        console.log({ state });
       }
     }
   }
@@ -100,7 +98,6 @@ function useProvideAuth() {
       },
       subscriptions: {
         wallet: onboardWallet => {
-          console.log('Onboard subscription');
           if (onboardWallet.provider) {
             setWallet(onboardWallet);
             const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
@@ -136,7 +133,6 @@ function useProvideAuth() {
     async function connectWalletAccount() {
       const previouslySelectedWallet = window.localStorage.getItem('selectedWallet');
       const previouslySelectedAddress = window.localStorage.getItem('selectedAddress');
-      console.log({ previouslySelectedWallet, previouslySelectedAddress });
       if (previouslySelectedWallet && previouslySelectedAddress && onboard) {
         await onboard.walletSelect(previouslySelectedWallet);
         await onboard.walletCheck(previouslySelectedAddress);
