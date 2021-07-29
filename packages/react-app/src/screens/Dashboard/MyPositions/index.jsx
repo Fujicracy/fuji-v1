@@ -104,7 +104,11 @@ function MyPositions({ contracts, address }) {
         </Grid>
       </div>
       <div className="right-content">
-        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />{' '}
+        <ProvidersList
+          contracts={contracts}
+          markets={['DAI', 'USDC', 'USDT']}
+          isSelectable={false}
+        />
         {/* TODO align-center in small width */}
       </div>
     </div>
