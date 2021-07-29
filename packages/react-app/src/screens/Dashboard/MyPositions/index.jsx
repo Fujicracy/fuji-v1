@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
 import { VAULTS } from 'consts/vaults';
 
-import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
+import { PositionElement, PositionActions, ProvidersList } from 'components';
 
 import './styles.css';
 
@@ -104,7 +104,6 @@ function MyPositions({ contracts, address }) {
         </Grid>
       </div>
       <div className="right-content">
-        <AlphaWarning />
         <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />{' '}
         {/* TODO align-center in small width */}
       </div>
