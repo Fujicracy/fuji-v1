@@ -989,7 +989,7 @@ module.exports = {
   NETWORK: networks[chainId],
   APP_URL: process.env.REACT_APP_APP_URL,
   LANDING_URL: process.env.REACT_APP_LANDING_URL,
-
+  INFURA_ID: process.env.REACT_APP_INFURA_ID,
   PROVIDER_TYPE,
   PROVIDERS,
 };

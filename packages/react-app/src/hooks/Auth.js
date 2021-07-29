@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 // import Web3Modal from 'web3modal';
 // import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from 'bnc-onboard';
+import { INFURA_ID, CHAIN_ID, NETWORK, APP_URL } from 'consts/providers';
 
 const AuthContext = createContext();
 
@@ -38,6 +39,9 @@ function useProvideAuth() {
   const [onboard, setOnboard] = useState(null);
   const [balance, setBalance] = useState(0);
 
+  const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
+
+  console.log({ NETWORK, URL: RPC_URL });
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
     if (isSelected) {
@@ -84,14 +88,30 @@ function useProvideAuth() {
   useEffect(() => {
     const tmpOnboard = Onboard({
       dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
-      networkId: Number(process.env.REACT_APP_CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
+      networkId: Number(CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
       darkMode: true,
       walletSelect: {
+        // Metamask, WalletConnect, Ledger, Trezor, Coinbase, Formatic as stated in the card
         wallets: [
           { walletName: 'metamask', preferred: true },
           {
             walletName: 'walletConnect',
-            infuraKey: process.env.REACT_APP_INFURA_ID,
+            infuraKey: INFURA_ID,
+            preferred: true,
+          },
+          { walletName: 'coinbase', preferred: true },
+          {
+            walletName: 'ledger',
+            rpcUrl: RPC_URL,
+          },
+          {
+            walletName: 'trezor',
+            appUrl: APP_URL,
+            rpcUrl: RPC_URL,
+          },
+          {
+            walletName: 'fortmatic',
+            apiKey: process.env.REACT_APP_FORTMATIC_API_KEY,
             preferred: true,
           },
         ],
@@ -127,7 +147,7 @@ function useProvideAuth() {
     });
 
     setOnboard(tmpOnboard);
-  }, []);
+  }, [RPC_URL]);
 
   useEffect(() => {
     async function connectWalletAccount() {
