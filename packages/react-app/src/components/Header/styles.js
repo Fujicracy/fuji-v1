@@ -85,7 +85,7 @@ export const BallanceContainer = styled(Box)`
   align-items: center;
   justify-content: center;
   height: 36px;
-  cursor: pointer;
+  cursor: default;
   padding-left: ${props => (props.leftPadding !== undefined ? props.leftPadding : 16)}px;
   padding-right: ${props => (props.rightPadding !== undefined ? props.rightPadding : 16)}px;
 
@@ -109,7 +109,7 @@ export const WalletHeader = styled(Box)`
   color: #f5f5f5;
   box-sizing: border-box;
   border-radius: 19px;
-
+  cursor: pointer;
   padding-left: ${props => (props.leftPadding !== undefined ? props.leftPadding : 16)}px;
   padding-right: ${props => (props.rightPadding !== undefined ? props.rightPadding : 16)}px;
 
