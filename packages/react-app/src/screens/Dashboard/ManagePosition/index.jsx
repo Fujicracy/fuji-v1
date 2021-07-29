@@ -126,7 +126,7 @@ function ManagePosition({ contracts, provider, address }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator position={position} />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} isSelectable={false} />
       </div>
     </div>
   );

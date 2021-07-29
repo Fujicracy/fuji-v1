@@ -162,7 +162,7 @@ function Simulation({ contracts /* , address */ }) {
       </div>
       <div className="right-content">
         <ProtocolStats />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} isSelectable={false} />
       </div>
     </div>
   );
