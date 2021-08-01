@@ -10,13 +10,15 @@ const dataFiller = (arr) => {
     let i;
     const timeIter = timeDiff / daysBetween;
     let contTime = lastDate.getTime();
-    do {
-      const time = contTime + timeIter;
-      obj.datapoints.push([value, time]);
-      contTime += timeIter;
-      i++;
-    } while (i < daysBetween);
-    obj.datapoints.push([value, currentDate.getTime()]);
+    if (daysBetween > 0) {
+      do {
+        const time = contTime + timeIter;
+        obj.datapoints.push([value, time]);
+        contTime += timeIter;
+        i++;
+      } while (i < daysBetween);
+      obj.datapoints.push([value, currentDate.getTime()]);
+    }
   });
   return arr;
 };
