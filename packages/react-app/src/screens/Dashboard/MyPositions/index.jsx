@@ -57,7 +57,7 @@ function MyPositions({ contracts, address }) {
   return (
     <div className="container">
       <div className="left-content">
-        <Grid container direction="column" justify="center" className="positions">
+        <Grid container direction="column" justifyContent="center" className="positions">
           <Typography variant="h3">My positions</Typography>
           <div className="position-board">
             {hasPosition() ? (
