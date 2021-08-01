@@ -11,7 +11,7 @@
 	"private": true,
 	"engines": {
 		"node": ">=14.17.1",
-		"npm": "6.12.1"
+		"npm": ">=6.12.1"
 	},
 	"scripts": {
 		"lint": "yarn workspaces run lint",
