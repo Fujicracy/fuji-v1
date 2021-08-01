@@ -88,7 +88,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
 function ProvidersList({
   contracts,
   markets,
-  title = 'Providers',
+  title = 'Borrow APR',
   isDropDown = true,
   hasBlackContainer = true,
   isSelectable = true,
