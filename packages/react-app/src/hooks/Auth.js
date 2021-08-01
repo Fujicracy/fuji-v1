@@ -98,20 +98,21 @@ function useProvideAuth() {
             infuraKey: INFURA_ID,
             preferred: true,
           },
-          { walletName: 'coinbase', preferred: true },
+          { walletName: 'coinbase' },
           {
             walletName: 'ledger',
             rpcUrl: RPC_URL,
+            preferred: true,
           },
           {
             walletName: 'trezor',
             appUrl: APP_URL,
             rpcUrl: RPC_URL,
+            preferred: true,
           },
           {
             walletName: 'fortmatic',
             apiKey: process.env.REACT_APP_FORTMATIC_API_KEY,
-            preferred: true,
           },
         ],
       },
