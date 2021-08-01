@@ -975,21 +975,50 @@ const PROVIDERS = {
   },
 };
 
-module.exports = {
-  ERC20_ABI: DAI_ABI,
-  DAI_ADDRESS: dai[chainId],
+const ERC20_ABI = DAI_ABI;
+const DAI_ADDRESS = dai[chainId];
+const USDC_ADDRESS = usdc[chainId];
+const USDT_ADDRESS = usdt[chainId]; // TODO: MARKUS - to be changed
+const USDT_ABI = USDC_ABI; // TODO: MARKUS - to be changed
+const CHAIN_ID = chainId;
+const NETWORK = networks[chainId];
+const APP_URL = process.env.REACT_APP_APP_URL;
+const LANDING_URL = process.env.REACT_APP_LANDING_URL;
+const INFURA_ID = process.env.REACT_APP_INFURA_ID;
+
+// module.exports = {
+//   ERC20_ABI: DAI_ABI,
+//   DAI_ADDRESS: dai[chainId],
+//   DAI_ABI,
+//   USDC_ADDRESS: usdc[chainId],
+//   USDC_ABI,
+//   USDT_ADDRESS: usdt[chainId], // TODO: MARKUS - to be changed
+//   USDT_ABI: USDC_ABI, // TODO: MARKUS - to be changed
+//   CHAINLINK_ABI,
+//   ETH_CAP_VALUE,
+//   CHAIN_ID: chainId,
+//   NETWORK: networks[chainId],
+//   APP_URL: process.env.REACT_APP_APP_URL,
+//   LANDING_URL: process.env.REACT_APP_LANDING_URL,
+//   INFURA_ID: process.env.REACT_APP_INFURA_ID,
+//   PROVIDER_TYPE,
+//   PROVIDERS,
+// };
+export {
+  ERC20_ABI,
+  DAI_ADDRESS,
   DAI_ABI,
-  USDC_ADDRESS: usdc[chainId],
+  USDC_ADDRESS,
   USDC_ABI,
-  USDT_ADDRESS: usdt[chainId], // TODO: MARKUS - to be changed
-  USDT_ABI: USDC_ABI, // TODO: MARKUS - to be changed
+  USDT_ADDRESS, // TODO: MARKUS - to be changed
+  USDT_ABI, // TODO: MARKUS - to be changed
   CHAINLINK_ABI,
   ETH_CAP_VALUE,
-  CHAIN_ID: chainId,
-  NETWORK: networks[chainId],
-  APP_URL: process.env.REACT_APP_APP_URL,
-  LANDING_URL: process.env.REACT_APP_LANDING_URL,
-  INFURA_ID: process.env.REACT_APP_INFURA_ID,
+  CHAIN_ID,
+  NETWORK,
+  APP_URL,
+  LANDING_URL,
+  INFURA_ID,
   PROVIDER_TYPE,
   PROVIDERS,
 };
