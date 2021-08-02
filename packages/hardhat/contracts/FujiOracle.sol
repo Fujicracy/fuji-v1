@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Claimable.sol";
 import "./Interfaces/AggregatorV3Interface.sol";
 
 import "./IFujiOracle.sol";
 import "./Libraries/Errors.sol";
 
-contract FujiOracle is IFujiOracle, Ownable {
+contract FujiOracle is IFujiOracle, Claimable {
   // mapping from asset address to its price feed oracle in USD - decimals: 8
   mapping(address => address) public usdPriceFeeds;
 
