@@ -3,7 +3,6 @@ import { useSpring, animated, config } from 'react-spring';
 import { Button } from 'components/UI';
 import { NavLink } from 'react-router-dom';
 
-// import { APP_URL } from '../../consts/providers';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';
@@ -31,9 +30,9 @@ function Home() {
             Learn
           </Button>
 
-          <Button ml={4} block>
-            <NavLink to="dashboard">App</NavLink>
-          </Button>
+          <NavLink to="/dashboard/init-borrow" activeClassName="current">
+            Borrow
+          </NavLink>
         </div>
       </div>
     </animated.div>

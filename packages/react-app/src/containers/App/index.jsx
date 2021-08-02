@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 import { ProvideAuth } from 'hooks';
@@ -27,7 +27,7 @@ function App() {
       <ModalProvider backgroundComponent={FadingBackground}>
         <Container>
           <GlobalStyle />
-          <HashRouter>
+          <BrowserRouter>
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -73,7 +73,7 @@ function App() {
               <br />
               This website isn&apos;t available (yet) on mobile
             </div>
-          </HashRouter>
+          </BrowserRouter>
         </Container>
       </ModalProvider>
     </ThemeProvider>
