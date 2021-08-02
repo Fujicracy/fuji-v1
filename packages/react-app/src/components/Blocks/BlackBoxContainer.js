@@ -27,11 +27,11 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     padding: 0.5rem 0rem;
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
-    &: first {
-      margin-bottom: 0;
+    &:first-child {
+      padding: 0rem 0rem 0.5rem 0rem;
     }
     &:last-child {
-      padding: 0rem;
+      padding: 0.5rem 0rem 0rem 0rem;
       margin-bottom: 0rem;
       margin-top: 0rem;
       border-bottom: none;
