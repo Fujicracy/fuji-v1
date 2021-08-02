@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import { Button } from 'components/UI';
+import { NavLink } from 'react-router-dom';
 
-import { APP_URL } from '../../consts/providers';
+// import { APP_URL } from '../../consts/providers';
 import { fujiLanding } from '../../assets/images';
 
 import './styles.css';
@@ -18,9 +19,9 @@ function Home() {
     window.open('https://docs.fujidao.org/', '_blank');
   };
 
-  const handleAppClick = () => {
-    window.open(`${APP_URL}/dashboard`, '_self');
-  };
+  // const handleAppClick = () => {
+  //   window.open(`${APP_URL}/dashboard`, '_self');
+  // };
 
   return (
     <animated.div style={props} className="home-container">
@@ -30,8 +31,8 @@ function Home() {
             Learn
           </Button>
 
-          <Button onClick={handleAppClick} ml={4} block>
-            App
+          <Button ml={4} block>
+            <NavLink to="dashboard">App</NavLink>
           </Button>
         </div>
       </div>
