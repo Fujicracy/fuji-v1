@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { plusIcon, closeIcon } from 'assets/images';
-import { Image } from 'rebass';
+import { Image, Box } from 'rebass';
 import Collapse from '@material-ui/core/Collapse';
 import AnimatedCounter from '../AnimatedCounter';
 import {
@@ -9,7 +9,6 @@ import {
   DropDownListContainer,
   DropDownList,
   ListItem,
-  TextBox,
 } from './style';
 
 const DropDown = ({ options, defaultOption, isSelectable }) => {
@@ -34,8 +33,8 @@ const DropDown = ({ options, defaultOption, isSelectable }) => {
   return (
     <DropDownContainer>
       <DropDownHeader isOpened={isOpen} onClick={toggling}>
-        <TextBox width={4 / 7}>{selectedOption?.title}</TextBox>
-        <TextBox
+        <Box width={4 / 7}>{selectedOption?.title}</Box>
+        <Box
           width={2 / 7}
           display="flex"
           alignItems="center"
@@ -43,10 +42,10 @@ const DropDown = ({ options, defaultOption, isSelectable }) => {
           color={selectedOption?.title === defaultOption?.title && '#42FF00'}
         >
           <AnimatedCounter countTo={selectedOption?.rate} /> %
-        </TextBox>
-        <TextBox width={1 / 7} display="flex" alignItems="center" justifyContent="flex-end">
+        </Box>
+        <Box width={1 / 7} display="flex" alignItems="center" justifyContent="flex-end">
           <Image src={isOpen ? closeIcon : plusIcon} width={17} height={17} />
-        </TextBox>
+        </Box>
       </DropDownHeader>
       <Collapse in={isOpen}>
         <DropDownListContainer open={isOpen} length={filteredOptions?.length}>
@@ -56,15 +55,15 @@ const DropDown = ({ options, defaultOption, isSelectable }) => {
                 onClick={isSelectable ? onOptionClicked(option) : undefined}
                 key={Math.random()}
               >
-                <TextBox width={4 / 7} cursor="pointer">
+                <Box width={4 / 7} cursor="pointer">
                   {option.title}
-                </TextBox>
-                <TextBox
+                </Box>
+                <Box
                   width={3 / 7}
                   display="flex"
                   alignItems="center"
                   justifyContent="flex-end"
-                >{`${option.rate} %`}</TextBox>
+                >{`${option.rate} %`}</Box>
               </ListItem>
             ))}
           </DropDownList>

@@ -8,11 +8,11 @@ import { formatUnits } from '@ethersproject/units';
 import { Grid, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
-import { VAULTS } from 'consts/vaults';
 
-import { PositionElement, PositionActions, ProvidersList, AlphaWarning } from 'components';
+import { PositionElement, PositionActions, ProvidersList } from 'components';
 
 import './styles.css';
+import { ASSETS, ASSET_NAME, VAULTS } from 'consts';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
@@ -53,10 +53,11 @@ function MyPositions({ contracts, address }) {
 
     return false;
   };
+
   return (
     <div className="container">
       <div className="left-content">
-        <Grid container direction="column" justify="center" className="positions">
+        <Grid container direction="column" justifyContent="center" className="positions">
           <Typography variant="h3">My positions</Typography>
           <div className="position-board">
             {hasPosition() ? (
@@ -72,7 +73,6 @@ function MyPositions({ contracts, address }) {
             ) : (
               <div style={{ height: '2.5rem' }} />
             )}
-
             {map(
               orderBy(
                 positions,
@@ -80,32 +80,33 @@ function MyPositions({ contracts, address }) {
                 'desc',
               ),
               position =>
-                hasPosition(position.borrowAsset.name) ? (
+                hasPosition(position.borrowAsset.name) && (
                   <Grid key={position.borrowAsset.name} item className="one-position">
                     <PositionElement actionType={PositionActions.Manage} position={position} />
                   </Grid>
-                ) : (
-                  <Grid
-                    key={position.borrowAsset.name}
-                    item
-                    onClick={() =>
-                      history.push(
-                        `/dashboard/init-borrow?borrowAsset=${position.borrowAsset.name}`,
-                      )
-                    }
-                    className="adding-position"
-                  >
-                    <AddIcon />
-                    Borrow {position.borrowAsset.name}
-                  </Grid>
                 ),
             )}
+            <Grid
+              key={ASSETS[ASSET_NAME.DAI].name}
+              item
+              onClick={() =>
+                history.push(`/dashboard/init-borrow?borrowAsset=${ASSETS[ASSET_NAME.DAI].name}`)
+              }
+              className="adding-position"
+            >
+              <AddIcon />
+              Borrow
+            </Grid>
+            ), )
           </div>
         </Grid>
       </div>
       <div className="right-content">
-        <AlphaWarning />
-        <ProvidersList contracts={contracts} markets={['DAI', 'USDC', 'USDT']} />{' '}
+        <ProvidersList
+          contracts={contracts}
+          markets={['DAI', 'USDC', 'USDT']}
+          isSelectable={false}
+        />
         {/* TODO align-center in small width */}
       </div>
     </div>

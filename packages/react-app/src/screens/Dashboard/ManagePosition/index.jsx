@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
-import { VAULTS } from 'consts/vaults';
+import { VAULTS, VAULTS_ADDRESS } from 'consts/vaults';
 import { useContractReader } from '../../../hooks';
 
 import FlashClose from '../FlashClose';
@@ -22,7 +22,8 @@ function ManagePosition({ contracts, provider, address }) {
   const actionsType = 'single';
 
   const borrowAsset = queries?.get('borrowAssetName') || 'DAI';
-  const vaultAddress = queries?.get('vaultAddress').toLowerCase() || '0x';
+  const vaultAddress = queries?.get('vaultAddress')?.toLowerCase() || VAULTS_ADDRESS.VaultETHDAI;
+
   const vault = VAULTS[vaultAddress];
   const position = {
     vaultAddress,
@@ -125,7 +126,7 @@ function ManagePosition({ contracts, provider, address }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator position={position} />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} />
+        <ProvidersList contracts={contracts} markets={[borrowAsset]} isSelectable={false} />
       </div>
     </div>
   );

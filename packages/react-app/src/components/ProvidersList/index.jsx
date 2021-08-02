@@ -5,32 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import { find } from 'lodash';
 import { VAULTS } from 'consts/vaults';
 import { Image, Box, Text, Flex } from 'rebass';
-// import { useSpring, animated, config } from 'react-spring';
 import { useContractReader, useRates } from '../../hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
 import './styles.css';
 import { ProviderContainer, AssetContainer } from './styles';
 
-// function AnimatedCounter({ countTo }) {
-//   const { number } = useSpring({
-//     from: { number: 0 },
-//     number: Number(countTo || 0),
-//     config: config.stiff,
-//   });
-
-//   return (
-//     <animated.span>
-//       {countTo
-//         ? number.to(n => {
-//             return n.toFixed(2);
-//           })
-//         : '...'}
-//     </animated.span>
-//   );
-// }
-
-const Provider = ({ contracts, market, rates, isDropDown = true, isSelectable }) => {
+const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true }) => {
   const vault = find(VAULTS, v => v.borrowAsset.name === market);
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
@@ -107,7 +88,7 @@ const Provider = ({ contracts, market, rates, isDropDown = true, isSelectable })
 function ProvidersList({
   contracts,
   markets,
-  title = 'Providers',
+  title = 'Borrow APR',
   isDropDown = true,
   hasBlackContainer = true,
   isSelectable = true,
