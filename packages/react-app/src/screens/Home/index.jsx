@@ -26,13 +26,18 @@ function Home() {
     <animated.div style={props} className="home-container">
       <div className="home-content">
         <div className="home-cta">
-          <Button onClick={handleLearnClick} block outline>
-            Learn
-          </Button>
-
-          <NavLink to="/dashboard/init-borrow" activeClassName="current">
-            Borrow
-          </NavLink>
+          <div style={{ width: '45%' }}>
+            <Button onClick={handleLearnClick} block outline>
+              Learn
+            </Button>
+          </div>
+          <div style={{ width: '45%' }}>
+            <NavLink to="/dashboard">
+              <Button block color="white">
+                Borrow
+              </Button>
+            </NavLink>
+          </div>
         </div>
       </div>
     </animated.div>
