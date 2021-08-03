@@ -13,14 +13,14 @@ const BORROW_IDS = {
   [ASSET_NAME.USDT]: 5,
 };
 
-const VALUTS_ADDRESS = {
+export const VAULTS_ADDRESS = {
   VaultETHDAI: '0x6e16394cbf840fc599fa3d9e5d1e90949c32a4f5'.toLowerCase(),
   VaultETHUSDC: '0xd0dc4cc10fcf3fee2bf5310c0e4e097b60f097d3'.toLowerCase(),
   VaultETHUSDT: '0xca26d96b45111a130af78d69e1db283975547d67'.toLowerCase(),
 };
 
 export const VAULTS = {
-  [VALUTS_ADDRESS.VaultETHDAI]: {
+  [VAULTS_ADDRESS.VaultETHDAI]: {
     borrowAsset: ASSETS[ASSET_NAME.DAI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[ASSET_NAME.DAI],
@@ -32,8 +32,9 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
     name: 'VaultETHDAI',
+    title: 'ETH-DAI',
   },
-  [VALUTS_ADDRESS.VaultETHUSDC]: {
+  [VAULTS_ADDRESS.VaultETHUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[ASSET_NAME.USDC],
@@ -45,8 +46,9 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
     name: 'VaultETHUSDC',
+    title: 'ETH-USDC',
   },
-  [VALUTS_ADDRESS.VaultETHUSDT]: {
+  [VAULTS_ADDRESS.VaultETHUSDT]: {
     borrowAsset: ASSETS[ASSET_NAME.USDT],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[ASSET_NAME.USDT],
@@ -57,5 +59,6 @@ export const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
     name: 'VaultETHUSDT',
+    title: 'ETH-USDT',
   },
 };

@@ -36,7 +36,13 @@ function Team() {
 
   return (
     <div>
-      <Grid container justify="center" alignItems="center" spacing={3} className={classes.mainArea}>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+        className={classes.mainArea}
+      >
         <Grid item md={2}>
           <Link href="https://twitter.com/BoyanBarakov" target="_blank">
             <Card className={classes.card}>

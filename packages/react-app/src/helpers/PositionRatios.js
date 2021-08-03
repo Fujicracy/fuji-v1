@@ -3,7 +3,8 @@ import { formatUnits } from '@ethersproject/units';
 export default function PositionRatios(position, price) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
+  let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
+  if (debt < 1) debt = 0;
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;

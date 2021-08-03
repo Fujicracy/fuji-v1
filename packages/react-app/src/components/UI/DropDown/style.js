@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
-import { Box } from 'rebass';
 
 export const DropDownContainer = styled('div')`
   width: 100%;
@@ -29,7 +28,6 @@ export const DropDownHeader = styled('div')`
 // `;
 export const DropDownListContainer = styled('div')`
   overflow-y: auto;
-  height: ${props => (props.length ? props.length * 40 : 120)}px;
   &::-webkit-scrollbar {
     background-color: rgba(255, 255, 255, 0.05);
     width: 24px;
@@ -57,12 +55,8 @@ export const DropDownList = styled('ul')`
   color: #3faffa;
   font-size: 1.3rem;
   font-weight: 500;
-  height: auto;
 
-  &:first-child {
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
+  cursor: default;
 `;
 
 export const ListItem = styled('li')`
@@ -77,8 +71,8 @@ export const ListItem = styled('li')`
   &:hover {
     color: #f5f5f5;
   }
-`;
-
-export const TextBox = styled(Box)`
-  cursor: pointer;
+  &:last-child {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
 `;

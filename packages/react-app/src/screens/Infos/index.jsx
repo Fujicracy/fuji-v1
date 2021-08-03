@@ -74,7 +74,7 @@ function Infos() {
         </Grid>
       </Grid>
 
-      <Grid container justify="center" alignItems="center" className={classes.section}>
+      <Grid container justifyContent="center" alignItems="center" className={classes.section}>
         <Grid item md={5} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             Protocol Architecture
@@ -106,7 +106,7 @@ function Infos() {
         </Grid>
       </Grid>
 
-      <Grid container justify="center" alignItems="center" className={classes.section}>
+      <Grid container justifyContent="center" alignItems="center" className={classes.section}>
         <Grid item md={6}>
           <img alt="flashloan" className={classes.demoImg} src="/step2.png" title="Flashloan" />
         </Grid>

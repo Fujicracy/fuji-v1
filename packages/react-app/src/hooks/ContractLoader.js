@@ -27,7 +27,6 @@ const loadContract = async (contractName, signer) => {
 
 export default function useContractLoader(providerOrSigner) {
   const [contracts, setContracts] = useState();
-
   useEffect(() => {
     async function loadContracts() {
       if (typeof providerOrSigner !== 'undefined') {
@@ -56,6 +55,8 @@ export default function useContractLoader(providerOrSigner) {
           }
         }
         setContracts(newContracts);
+      } else {
+        setContracts();
       }
     }
     loadContracts();

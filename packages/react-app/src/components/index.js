@@ -6,7 +6,9 @@ import Loader from './Loader';
 import PositionElement, { PositionActions } from './PositionElement';
 import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
-import AssetList from './VaultSelect';
+import DisclaimerPopup from './DisclaimerPopup';
+import SelectVault from './SelectVault';
+import SelectNetwork from './SelectNetwork';
 
 export * from './Blocks';
 export {
@@ -19,5 +21,7 @@ export {
   PositionElement,
   ProtocolStats,
   ProvidersList,
-  AssetList,
+  DisclaimerPopup,
+  SelectVault,
+  SelectNetwork,
 };

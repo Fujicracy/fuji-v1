@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import App from 'containers/App/index';
 import './index.css';
 
@@ -12,7 +12,7 @@ import './index.css';
 // cache: new InMemoryCache()
 // });
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontFamily: 'inherit',
   },

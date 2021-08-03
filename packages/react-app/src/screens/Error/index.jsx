@@ -11,7 +11,7 @@ function Error() {
   const { errorType } = useParams();
   const location = useLocation();
 
-  const { address, loadWeb3Modal } = useAuth();
+  const { address, connectAccount } = useAuth();
   const { from } = location.state || { from: { pathname: '/dashboard' } };
 
   const [chainId, setChainId] = useState(Number(window.ethereum ? window.ethereum.chainId : null));
@@ -57,7 +57,7 @@ function Error() {
           <Button
             className="main-button"
             onClick={() => {
-              return loadWeb3Modal();
+              return connectAccount();
             }}
           >
             Connect wallet
