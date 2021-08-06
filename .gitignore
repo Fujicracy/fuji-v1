@@ -7,7 +7,6 @@ packages/subgraph
 packages/*/artifacts
 packages/*/cache
 packages/*/*.txt
-packages/react-app/src/contracts
 packages/bots/contracts
 
 docker
