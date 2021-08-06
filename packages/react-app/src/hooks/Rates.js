@@ -1,4 +1,4 @@
-import { DAI_ADDRESS, USDC_ADDRESS, USDT_ADDRESS } from 'consts/providers';
+import { DAI_ADDRESS, USDC_ADDRESS, USDT_ADDRESS } from 'consts/addresses';
 
 import useContractReader from './ContractReader';
 

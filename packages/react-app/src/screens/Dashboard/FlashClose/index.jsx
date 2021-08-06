@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { DAI_ADDRESS, USDC_ADDRESS } from 'consts/providers';
+import { DAI_ADDRESS, USDC_ADDRESS } from 'consts/addresses';
 import { useGasPrice } from 'hooks';
 import { Transactor, GasEstimator, getVaultName } from 'helpers';
 

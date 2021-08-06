@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { DAI_ADDRESS, ERC20_ABI, USDC_ADDRESS, USDT_ADDRESS } from 'consts/providers';
+import { DAI_ADDRESS, ERC20_ABI, USDC_ADDRESS, USDT_ADDRESS } from 'consts/addresses';
 import { Loader, Header } from 'components';
 import { useContractLoader, useExternalContractLoader, useContractReader, useAuth } from 'hooks';
 import { getCollateralId } from 'helpers';

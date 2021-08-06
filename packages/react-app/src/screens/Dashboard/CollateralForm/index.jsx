@@ -17,7 +17,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator } from 'helpers';
 import { useBalance, useContractReader, useGasPrice } from 'hooks';
-import { ETH_CAP_VALUE } from 'consts/providers';
+import { ETH_CAP_VALUE } from 'consts/globals';
 import { VAULTS } from 'consts';
 import DeltaPositionRatios from '../DeltaPositionRatios';
 

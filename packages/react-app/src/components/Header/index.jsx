@@ -4,7 +4,7 @@ import { useAuth } from 'hooks';
 import { Image, Box } from 'rebass';
 import { downArrowIcon, upArrowIcon } from 'assets/images';
 import { Label } from 'components/UI';
-import { LANDING_URL } from '../../consts/providers';
+import { LANDING_URL } from 'consts/globals';
 import {
   Container,
   Logo,

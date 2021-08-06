@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 // import Web3Modal from 'web3modal';
 // import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/providers';
+import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/globals';
 
 const AuthContext = createContext();
 
