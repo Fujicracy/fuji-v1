@@ -11,6 +11,7 @@ This project was bootstraped with [scaffold-eth](https://github.com/austintgriff
 ## QuickStart
 
 ### 1. Install dependancies and run a mainnet fork
+> IMPORTANT! Please set ALCHEMY_ID or INFURA_ID in "./packages/hardhat/.env"
 ```
 cd fuji
 yarn install
