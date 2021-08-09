@@ -4,7 +4,6 @@ import Header from './Header';
 import HowItWorks from './HowItWorks';
 import Loader from './Loader';
 import PositionElement, { PositionActions } from './PositionElement';
-import ProtocolStats from './ProtocolStats';
 import ProvidersList from './ProvidersList';
 import DisclaimerPopup from './DisclaimerPopup';
 import SelectVault from './SelectVault';
@@ -19,7 +18,6 @@ export {
   Loader,
   PositionActions,
   PositionElement,
-  ProtocolStats,
   ProvidersList,
   DisclaimerPopup,
   SelectVault,

@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { ETH_CAP_VALUE } from 'consts/providers';
+import { ETH_CAP_VALUE } from 'consts/globals';
 import { ASSETS, ASSET_NAME } from 'consts/assets';
 import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
 import {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 import { ProvideAuth } from 'hooks';
@@ -16,7 +16,7 @@ import Error from 'screens/Error';
 import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
 
-import { Container, FadingBackground } from './styles';
+import { Container, FadingBackground, NavText } from './styles';
 import './style.css';
 
 function App() {
@@ -60,9 +60,9 @@ function App() {
               </NavUnlisted>
 
               <NavUnlisted justifyContent="flex-start" position="right">
-                <NavTextLink url="/about" target="_self">
-                  About
-                </NavTextLink>
+                <NavLink to="/about">
+                  <NavText>About</NavText>
+                </NavLink>
                 <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
                 <Label fontSize={12}>© FujiDAO 2021</Label>
               </NavUnlisted>

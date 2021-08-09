@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import { formatUnits, parseUnits, parseEther } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import {
+  TextField,
+  DialogTitle,
+  Avatar,
+  Button,
+  Grid,
+  Typography,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  CircularProgress,
+} from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { ASSETS } from 'consts';
+import { ethIcons } from 'assets/images';
 import { Transactor, getVaultName } from '../../../helpers';
 import { useContractReader } from '../../../hooks';
 
@@ -200,7 +205,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
+                  <Avatar alt={borrowAsset} src={ASSETS[borrowAsset].icon} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -236,7 +241,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
+                  <Avatar alt="ETH" src={ethIcons.BLUE} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (

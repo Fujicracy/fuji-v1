@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { DAI_ADDRESS, ERC20_ABI, USDC_ADDRESS, USDT_ADDRESS } from 'consts/providers';
+import { DAI_ADDRESS, ERC20_ABI, USDC_ADDRESS, USDT_ADDRESS } from 'consts/addresses';
 import { Loader, Header } from 'components';
 import { useContractLoader, useExternalContractLoader, useContractReader, useAuth } from 'hooks';
 import { getCollateralId } from 'helpers';
@@ -10,7 +10,6 @@ import Error from '../Error';
 import MyPositions from './MyPositions';
 import ManagePosition from './ManagePosition';
 import InitBorrow from './InitBorrow';
-import Simulation from './Simulation';
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
@@ -70,9 +69,9 @@ function Dashboard() {
               <Redirect to="/dashboard/init-borrow" />
             )}
           </ProtectedRoute>
-          <ProtectedRoute path={`${path}/simulation`}>
+          {/* <ProtectedRoute path={`${path}/simulation`}>
             <Simulation contracts={contracts} address={address} />
-          </ProtectedRoute>
+          </ProtectedRoute> */}
           <ProtectedRoute path={`${path}/init-borrow`}>
             <InitBorrow contracts={contracts} provider={provider} address={address} />
           </ProtectedRoute>

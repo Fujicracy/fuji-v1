@@ -295,7 +295,7 @@ input[type='number'] {
 /* ------------- */
 
 .container {
-  z-index: 1;
+  /* z-index: 1; */
   margin: 0 auto;
   margin-top: 7.75rem;
   min-height: calc(100vh - 13.125rem);

@@ -17,9 +17,12 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
 import { Transactor, getBorrowId, getCollateralId, getVaultName } from 'helpers';
 import { useBalance, useContractReader } from 'hooks';
-import { ETH_CAP_VALUE } from 'consts/providers';
+import { ETH_CAP_VALUE } from 'consts/globals';
+import { ASSETS } from 'consts';
+import { ethIcons } from 'assets/images';
 
 function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
@@ -31,7 +34,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const decimals = ASSETS[borrowAsset].decimals; // borrowAsset === 'USDC' ? 6 : 18;
   const ethBalance = useBalance(provider, address);
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -166,7 +169,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
+                  <Avatar alt="ETH" src={ethIcons.BLUE} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -203,7 +206,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
+                  <Avatar alt={borrowAsset} src={ASSETS[borrowAsset].icon} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
