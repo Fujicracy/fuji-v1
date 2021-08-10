@@ -16,7 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { VAULTS } from 'consts';
 import { Transactor, GasEstimator } from '../../../helpers';
-import { useContractReader, useExchangePrice, useGasPrice } from '../../../hooks';
+import { useContractReader, useExchangePrice } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -30,7 +30,6 @@ function DebtForm({ position, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const price = useExchangePrice();
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Repay);
   const [focus, setFocus] = useState(false);
@@ -78,11 +77,9 @@ function DebtForm({ position, contracts, provider, address }) {
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
       parseUnits(amount, decimals),
-      { gasPrice },
     ]);
     const res = await tx(
       contracts[vault.name].borrow(parseUnits(amount, decimals), {
-        gasPrice,
         gasLimit,
       }),
     );
@@ -113,11 +110,9 @@ function DebtForm({ position, contracts, provider, address }) {
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
       parseUnits(unFormattedAmount, decimals),
-      { gasPrice },
     ]);
     const res = await tx(
       contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
-        gasPrice,
         gasLimit,
       }),
     );
@@ -154,7 +149,6 @@ function DebtForm({ position, contracts, provider, address }) {
       contracts[vault.borrowAsset.name].approve(
         contracts[vault.name].address,
         BigNumber.from(approveAmount),
-        { gasPrice: parseUnits('40', 'gwei') },
       ),
     );
 

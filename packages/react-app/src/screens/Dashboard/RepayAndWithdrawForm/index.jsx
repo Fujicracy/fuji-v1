@@ -53,7 +53,6 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
       contracts[getVaultName(borrowAsset)].paybackAndWithdraw(
         parseUnits(borrowAmount, decimals),
         parseEther(collateralAmount),
-        { gasPrice: parseUnits('40', 'gwei') },
       ),
     );
 
@@ -81,7 +80,6 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
       contracts[borrowAsset].approve(
         contracts[getVaultName(borrowAsset)].address,
         BigNumber.from(approveAmount),
-        { gasPrice: parseUnits('40', 'gwei') },
       ),
     );
 

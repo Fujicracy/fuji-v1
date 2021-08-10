@@ -71,7 +71,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
       contracts[getVaultName(borrowAsset)].depositAndBorrow(
         parseEther(collateralAmount),
         parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice: parseUnits('40', 'gwei') },
+        { value: parseEther(collateralAmount) },
       ),
     );
 

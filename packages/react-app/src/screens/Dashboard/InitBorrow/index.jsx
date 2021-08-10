@@ -16,7 +16,7 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { ASSETS, ASSET_NAME } from 'consts/assets';
-import { useBalance, useContractReader, useGasPrice, useExchangePrice } from 'hooks';
+import { useBalance, useContractReader, useExchangePrice } from 'hooks';
 import {
   CollaterizationIndicator,
   ProvidersList,
@@ -39,8 +39,6 @@ function InitBorrow({ contracts, provider, address }) {
   const queries = new URLSearchParams(useLocation().search);
   const queryBorrowAsset = queries.get('borrowAsset');
   const queryBorrowAmount = queries.get('borrowAmount');
-
-  const gasPrice = useGasPrice();
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
@@ -129,7 +127,7 @@ function InitBorrow({ contracts, provider, address }) {
     const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'depositAndBorrow', [
       parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
       parseUnits(borrowAmount, decimals),
-      { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals), gasPrice },
+      { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals) },
     ]);
     const res = await tx(
       contracts[getVaultName(borrowAsset)].depositAndBorrow(
@@ -137,7 +135,6 @@ function InitBorrow({ contracts, provider, address }) {
         parseUnits(borrowAmount, decimals),
         {
           value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
-          gasPrice,
           gasLimit,
         },
       ),

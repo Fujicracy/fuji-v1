@@ -16,7 +16,7 @@ import {
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator } from 'helpers';
-import { useBalance, useContractReader, useGasPrice } from 'hooks';
+import { useBalance, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { VAULTS } from 'consts';
 import DeltaPositionRatios from '../DeltaPositionRatios';
@@ -31,7 +31,6 @@ const Action = {
 function CollateralForm({ position, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
@@ -80,12 +79,11 @@ function CollateralForm({ position, contracts, provider, address }) {
     const parsedAmount = parseUnits(amount, vault.collateralAsset.decimals);
     const gasLimit = await GasEstimator(contracts[vault.name], 'deposit', [
       parsedAmount,
-      { value: parsedAmount, gasPrice },
+      { value: parsedAmount },
     ]);
     const res = await tx(
       contracts[vault.name].deposit(parsedAmount, {
         value: parsedAmount,
-        gasPrice,
         gasLimit,
       }),
     );
@@ -109,13 +107,11 @@ function CollateralForm({ position, contracts, provider, address }) {
     const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
     const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [
       parseUnits(unformattedAmount, vault.collateralAsset.decimals),
-      { gasPrice },
     ]);
     const res = await tx(
       contracts[vault.name].withdraw(
         parseUnits(unformattedAmount, vault.collateralAsset.decimals),
         {
-          gasPrice,
           gasLimit,
         },
       ),
