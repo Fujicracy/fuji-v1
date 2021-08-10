@@ -10,7 +10,6 @@ import Error from '../Error';
 import MyPositions from './MyPositions';
 import ManagePosition from './ManagePosition';
 import InitBorrow from './InitBorrow';
-import Simulation from './Simulation';
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
@@ -69,9 +68,6 @@ function Dashboard() {
             ) : (
               <Redirect to="/dashboard/init-borrow" />
             )}
-          </ProtectedRoute>
-          <ProtectedRoute path={`${path}/simulation`}>
-            <Simulation contracts={contracts} address={address} />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
             <InitBorrow contracts={contracts} provider={provider} address={address} />
