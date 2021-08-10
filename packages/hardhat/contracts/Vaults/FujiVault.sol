@@ -15,12 +15,7 @@ import "../Providers/IProvider.sol";
 import "../Libraries/Errors.sol";
 import "../Libraries/LibUniversalERC20.sol";
 import "../Interfaces/AggregatorV3Interface.sol";
-
-interface IERC20Extended {
-  function symbol() external view returns (string memory);
-
-  function decimals() external view returns (uint8);
-}
+import "../Interfaces/IERC20Extended.sol";
 
 interface IVaultHarvester {
   function collectRewards(uint256 _farmProtocolNum) external returns (address claimedToken);
@@ -334,7 +329,7 @@ contract FujiVault is IVault, VaultBaseUpgradeable, ReentrancyGuardUpgradeable {
     address _newProvider,
     uint256 _flashLoanAmount,
     uint256 _fee
-  ) external override onlyFlash whenNotPaused {
+  ) external payable override onlyFlash whenNotPaused {
     // Compute Ratio of transfer before payback
     uint256 ratio = (_flashLoanAmount * 1e18) /
       (IProvider(activeProvider).getBorrowBalance(vAssets.borrowAsset));
@@ -412,18 +407,19 @@ contract FujiVault is IVault, VaultBaseUpgradeable, ReentrancyGuardUpgradeable {
   function setFactor(
     uint64 _newFactorA,
     uint64 _newFactorB,
-    bytes calldata _type
+    string calldata _type
   ) external isAuthorized {
-    if (keccak256(_type) == keccak256("collatF")) {
+    bytes32 typeHash = keccak256(abi.encode(_type));
+    if (typeHash == keccak256(abi.encode("collatF"))) {
       collatF.a = _newFactorA;
       collatF.b = _newFactorB;
-    } else if (keccak256(_type) == keccak256("safetyF")) {
+    } else if (typeHash == keccak256(abi.encode("safetyF"))) {
       safetyF.a = _newFactorA;
       safetyF.b = _newFactorB;
-    } else if (keccak256(_type) == keccak256("bonusFlashLiqF")) {
+    } else if (typeHash == keccak256(abi.encode("bonusFlashLiqF"))) {
       bonusFlashLiqF.a = _newFactorA;
       bonusFlashLiqF.b = _newFactorB;
-    } else if (keccak256(_type) == keccak256("bonusLiqF")) {
+    } else if (typeHash == keccak256(abi.encode("bonusLiqF"))) {
       safetyF.a = _newFactorA;
       bonusLiqF.b = _newFactorB;
     }

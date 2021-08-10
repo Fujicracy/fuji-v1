@@ -4,23 +4,26 @@ pragma solidity ^0.8.0;
 import { LibUniversalERC20 } from "../Libraries/LibUniversalERC20.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IProvider } from "./IProvider.sol";
-import { IGenCToken, ICErc20, ICEth, IComptroller } from "./ICompound.sol";
-
-interface IFujiMappings {
-  function addressMapping(address) external view returns (address);
-}
+import { IGenCToken, ICErc20, ICEth, IFuseComptroller } from "./ICompound.sol";
 
 contract HelperFunct {
   function _isETH(address token) internal pure returns (bool) {
     return (token == address(0) || token == address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE));
   }
 
-  function _getMappingAddr() internal pure returns (address) {
-    return 0x6b09443595BFb8F91eA837c7CB4Fe1255782093b;
+  function _getComptrollerAddress() internal pure returns (address) {
+    return 0x814b02C1ebc9164972D888495927fe1697F0Fb4c;
   }
 
-  function _getComptrollerAddress() internal pure returns (address) {
-    return 0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B;
+  function _getCTokenAddr(address _asset) internal view returns (address cTokenAddr) {
+    if (_isETH(_asset)) {
+      // Rari Fuse ETH is 0x0000000000000000000000000000000000000000
+      cTokenAddr = IFuseComptroller(_getComptrollerAddress()).cTokensByUnderlying(
+        0x0000000000000000000000000000000000000000
+      );
+    } else {
+      cTokenAddr = IFuseComptroller(_getComptrollerAddress()).cTokensByUnderlying(_asset);
+    }
   }
 
   //Compound functions
@@ -31,7 +34,7 @@ contract HelperFunct {
    */
   function _enterCollatMarket(address _cTokenAddress) internal {
     // Create a reference to the corresponding network Comptroller
-    IComptroller comptroller = IComptroller(_getComptrollerAddress());
+    IFuseComptroller comptroller = IFuseComptroller(_getComptrollerAddress());
 
     address[] memory cTokenMarkets = new address[](1);
     cTokenMarkets[0] = _cTokenAddress;
@@ -44,13 +47,13 @@ contract HelperFunct {
    */
   function _exitCollatMarket(address _cTokenAddress) internal {
     // Create a reference to the corresponding network Comptroller
-    IComptroller comptroller = IComptroller(_getComptrollerAddress());
+    IFuseComptroller comptroller = IFuseComptroller(_getComptrollerAddress());
 
     comptroller.exitMarket(_cTokenAddress);
   }
 }
 
-contract ProviderCompound is IProvider, HelperFunct {
+contract ProviderFuse6 is IProvider, HelperFunct {
   using LibUniversalERC20 for IERC20;
 
   //Provider Core Functions
@@ -62,7 +65,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    */
   function deposit(address _asset, uint256 _amount) external payable override {
     //Get cToken address from mapping
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     //Enter and/or ensure collateral market is enacted
     _enterCollatMarket(cTokenAddr);
@@ -98,7 +101,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    */
   function withdraw(address _asset, uint256 _amount) external payable override {
     //Get cToken address from mapping
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     // Create a reference to the corresponding cToken contract
     IGenCToken cToken = IGenCToken(cTokenAddr);
@@ -114,7 +117,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    */
   function borrow(address _asset, uint256 _amount) external payable override {
     //Get cToken address from mapping
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     // Create a reference to the corresponding cToken contract
     IGenCToken cToken = IGenCToken(cTokenAddr);
@@ -133,7 +136,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    */
   function payback(address _asset, uint256 _amount) external payable override {
     //Get cToken address from mapping
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     if (_isETH(_asset)) {
       // Create a reference to the corresponding cToken contract
@@ -159,7 +162,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    * @param _asset: token address to query the current borrowing rate.
    */
   function getBorrowRateFor(address _asset) external view override returns (uint256) {
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     //Block Rate transformed for common mantissa for Fuji in ray (1e27), Note: Compound uses base 1e18
     uint256 bRateperBlock = IGenCToken(cTokenAddr).borrowRatePerBlock() * 10**9;
@@ -174,7 +177,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    * @param _asset: token address to query the balance.
    */
   function getBorrowBalance(address _asset) external view override returns (uint256) {
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     return IGenCToken(cTokenAddr).borrowBalanceStored(msg.sender);
   }
@@ -187,7 +190,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    * @param _who address of the account.
    */
   function getBorrowBalanceOf(address _asset, address _who) external override returns (uint256) {
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
 
     return IGenCToken(cTokenAddr).borrowBalanceCurrent(_who);
   }
@@ -197,7 +200,7 @@ contract ProviderCompound is IProvider, HelperFunct {
    * @param _asset: token address to query the balance.
    */
   function getDepositBalance(address _asset) external view override returns (uint256) {
-    address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    address cTokenAddr = _getCTokenAddr(_asset);
     uint256 cTokenBal = IGenCToken(cTokenAddr).balanceOf(msg.sender);
     uint256 exRate = IGenCToken(cTokenAddr).exchangeRateStored();
 

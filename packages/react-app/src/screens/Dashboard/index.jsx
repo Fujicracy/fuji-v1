@@ -69,9 +69,6 @@ function Dashboard() {
               <Redirect to="/dashboard/init-borrow" />
             )}
           </ProtectedRoute>
-          {/* <ProtectedRoute path={`${path}/simulation`}>
-            <Simulation contracts={contracts} address={address} />
-          </ProtectedRoute> */}
           <ProtectedRoute path={`${path}/init-borrow`}>
             <InitBorrow contracts={contracts} provider={provider} address={address} />
           </ProtectedRoute>

@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { LibUniversalERC20 } from "../Libraries/LibUniversalERC20.sol";
 import { IFujiAdmin } from "../IFujiAdmin.sol";
@@ -12,6 +11,7 @@ import { ILendingPool, IFlashLoanReceiver } from "./AaveFlashLoans.sol";
 import { Actions, Account, DyDxFlashloanBase, ICallee, ISoloMargin } from "./DyDxFlashLoans.sol";
 import { ICTokenFlashloan, ICFlashloanReceiver } from "./CreamFlashLoans.sol";
 import { FlashLoan } from "./LibFlashLoan.sol";
+import { Claimable } from "../Claimable.sol";
 import { IVault } from "../Vaults/IVault.sol";
 
 interface IFliquidator {
@@ -20,7 +20,7 @@ interface IFliquidator {
     address _vault,
     uint256 _amount,
     uint256 _flashloanfee
-  ) external;
+  ) external payable;
 
   function executeFlashBatchLiquidation(
     address[] calldata _userAddrs,
@@ -29,17 +29,28 @@ interface IFliquidator {
     address _vault,
     uint256 _amount,
     uint256 _flashloanFee
-  ) external;
+  ) external payable;
 }
 
 interface IFujiMappings {
   function addressMapping(address) external view returns (address);
 }
 
-contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, ICallee, Ownable {
+interface IWETH {
+  //function approve(address, uint256) external;
+
+  function deposit() external payable;
+
+  function withdraw(uint256) external;
+}
+
+contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, ICallee, Claimable {
   using LibUniversalERC20 for IERC20;
 
   IFujiAdmin private _fujiAdmin;
+
+  address private constant _ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+  address private constant _WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
   address private immutable _aaveLendingPool = 0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9;
   address private immutable _dydxSoloMargin = 0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e;
@@ -91,7 +102,7 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
     ISoloMargin solo = ISoloMargin(_dydxSoloMargin);
 
     // Get marketId from token address
-    uint256 marketId = _getMarketIdFromTokenAddress(solo, info.asset);
+    uint256 marketId = _getMarketIdFromTokenAddress(solo, info.asset == _ETH ? _WETH : info.asset);
 
     // 1. Withdraw $
     // 2. Call callFunction(...)
@@ -126,34 +137,20 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
 
     FlashLoan.Info memory info = abi.decode(data, (FlashLoan.Info));
 
-    //Estimate flashloan payback + premium fee of 2 wei,
-    uint256 amountOwing = info.amount + 2;
-
-    // Transfer to Vault the flashloan Amount
-    IERC20(info.asset).univTransfer(payable(info.vault), info.amount);
-
-    if (info.callType == FlashLoan.CallType.Switch) {
-      IVault(info.vault).executeSwitch(info.newProvider, info.amount, 2);
-    } else if (info.callType == FlashLoan.CallType.Close) {
-      IFliquidator(info.fliquidator).executeFlashClose(
-        info.userAddrs[0],
-        info.vault,
-        info.amount,
-        2
-      );
+    uint256 _value;
+    if (info.asset == _ETH) {
+      // Convert WETH to ETH and assign amount to be set as msg.value
+      _convertWethToEth(info.amount);
+      _value = info.amount;
     } else {
-      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
-        info.userAddrs,
-        info.userBalances,
-        info.userliquidator,
-        info.vault,
-        info.amount,
-        2
-      );
+      // Transfer to Vault the flashloan Amount
+      // _value is 0
+      IERC20(info.asset).univTransfer(payable(info.vault), info.amount);
     }
 
-    //Approve DYDXSolo to spend to repay flashloan
-    IERC20(info.asset).approve(_dydxSoloMargin, amountOwing);
+    _executeAction(info, info.amount, 2, _value);
+
+    _approveBeforeRepay(info.asset == _ETH, info.asset, info.amount + 2, _dydxSoloMargin);
   }
 
   // ===================== Aave FlashLoan ===================================
@@ -169,7 +166,7 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
     //Passing arguments to construct Aave flashloan -limited to 1 asset type for now.
     address receiverAddress = address(this);
     address[] memory assets = new address[](1);
-    assets[0] = address(info.asset);
+    assets[0] = address(info.asset == _ETH ? _WETH : info.asset);
     uint256[] memory amounts = new uint256[](1);
     amounts[0] = info.amount;
 
@@ -200,34 +197,21 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
 
     FlashLoan.Info memory info = abi.decode(params, (FlashLoan.Info));
 
-    //Estimate flashloan payback + premium fee,
-    uint256 amountOwing = amounts[0] + premiums[0];
-
-    // Transfer to the vault ERC20
-    IERC20(assets[0]).univTransfer(payable(info.vault), amounts[0]);
-
-    if (info.callType == FlashLoan.CallType.Switch) {
-      IVault(info.vault).executeSwitch(info.newProvider, amounts[0], premiums[0]);
-    } else if (info.callType == FlashLoan.CallType.Close) {
-      IFliquidator(info.fliquidator).executeFlashClose(
-        info.userAddrs[0],
-        info.vault,
-        amounts[0],
-        premiums[0]
-      );
+    uint256 _value;
+    if (info.asset == _ETH) {
+      // Convert WETH to ETH and assign amount to be set as msg.value
+      _convertWethToEth(amounts[0]);
+      _value = info.amount;
     } else {
-      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
-        info.userAddrs,
-        info.userBalances,
-        info.userliquidator,
-        info.vault,
-        amounts[0],
-        premiums[0]
-      );
+      // Transfer to Vault the flashloan Amount
+      // _value is 0
+      IERC20(assets[0]).univTransfer(payable(info.vault), amounts[0]);
     }
 
+    _executeAction(info, amounts[0], premiums[0], _value);
+
     //Approve aaveLP to spend to repay flashloan
-    IERC20(assets[0]).univApprove(payable(_aaveLendingPool), amountOwing);
+    _approveBeforeRepay(info.asset == _ETH, assets[0], amounts[0] + premiums[0], _aaveLendingPool);
 
     return true;
   }
@@ -240,7 +224,10 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
    */
   function _initiateCreamFlashLoan(FlashLoan.Info calldata info) internal {
     // Get crToken Address for Flashloan Call
-    address crToken = _crMappings.addressMapping(info.asset);
+    // from IronBank because ETH on Cream cannot perform a flashloan
+    address crToken = info.asset == _ETH
+      ? 0x41c84c0e2EE0b740Cf0d31F63f3B6F627DC6b393
+      : _crMappings.addressMapping(info.asset);
 
     // Prepara data for flashloan execution
     bytes memory params = abi.encode(info);
@@ -261,36 +248,82 @@ contract Flasher is DyDxFlashloanBase, IFlashLoanReceiver, ICFlashloanReceiver, 
     bytes calldata params
   ) external override {
     // Check Msg. Sender is crToken Lending Contract
-    address crToken = _crMappings.addressMapping(underlying);
+    // from IronBank because ETH on Cream cannot perform a flashloan
+    address crToken = underlying == _WETH
+      ? 0x41c84c0e2EE0b740Cf0d31F63f3B6F627DC6b393
+      : _crMappings.addressMapping(underlying);
 
     require(msg.sender == crToken && address(this) == sender, Errors.VL_NOT_AUTHORIZED);
     require(IERC20(underlying).balanceOf(address(this)) >= amount, Errors.VL_FLASHLOAN_FAILED);
 
     FlashLoan.Info memory info = abi.decode(params, (FlashLoan.Info));
 
-    // Estimate flashloan payback + premium fee,
-    uint256 amountOwing = amount + fee;
-
-    // Transfer to the vault ERC20
-    IERC20(underlying).univTransfer(payable(info.vault), amount);
-
-    // Do task according to CallType
-    if (info.callType == FlashLoan.CallType.Switch) {
-      IVault(info.vault).executeSwitch(info.newProvider, amount, fee);
-    } else if (info.callType == FlashLoan.CallType.Close) {
-      IFliquidator(info.fliquidator).executeFlashClose(info.userAddrs[0], info.vault, amount, fee);
+    uint256 _value;
+    if (info.asset == _ETH) {
+      // Convert WETH to _ETH and assign amount to be set as msg.value
+      _convertWethToEth(amount);
+      _value = amount;
     } else {
-      IFliquidator(info.fliquidator).executeFlashBatchLiquidation(
-        info.userAddrs,
-        info.userBalances,
-        info.userliquidator,
-        info.vault,
-        amount,
-        fee
-      );
+      // Transfer to Vault the flashloan Amount
+      // _value is 0
+      IERC20(underlying).univTransfer(payable(info.vault), amount);
     }
 
+    // Do task according to CallType
+    _executeAction(info, amount, fee, _value);
+
+    if (info.asset == _ETH) _convertEthToWeth(amount + fee);
     // Transfer flashloan + fee back to crToken Lending Contract
-    IERC20(underlying).univTransfer(payable(crToken), amountOwing);
+    IERC20(underlying).univTransfer(payable(crToken), amount + fee);
+  }
+
+  function _executeAction(
+    FlashLoan.Info memory _info,
+    uint256 _amount,
+    uint256 _fee,
+    uint256 _value
+  ) internal {
+    if (_info.callType == FlashLoan.CallType.Switch) {
+      IVault(_info.vault).executeSwitch{ value: _value }(_info.newProvider, _amount, _fee);
+    } else if (_info.callType == FlashLoan.CallType.Close) {
+      IFliquidator(_info.fliquidator).executeFlashClose{ value: _value }(
+        _info.userAddrs[0],
+        _info.vault,
+        _amount,
+        _fee
+      );
+    } else {
+      IFliquidator(_info.fliquidator).executeFlashBatchLiquidation{ value: _value }(
+        _info.userAddrs,
+        _info.userBalances,
+        _info.userliquidator,
+        _info.vault,
+        _amount,
+        _fee
+      );
+    }
+  }
+
+  function _approveBeforeRepay(
+    bool _isETH,
+    address _asset,
+    uint256 _amount,
+    address _spender
+  ) internal {
+    if (_isETH) {
+      _convertEthToWeth(_amount);
+      IERC20(_WETH).univApprove(payable(_spender), _amount);
+    } else {
+      IERC20(_asset).univApprove(payable(_spender), _amount);
+    }
+  }
+
+  function _convertEthToWeth(uint256 _amount) internal {
+    IWETH(_WETH).deposit{ value: _amount }();
+  }
+
+  function _convertWethToEth(uint256 _amount) internal {
+    IWETH token = IWETH(_WETH);
+    token.withdraw(_amount);
   }
 }
