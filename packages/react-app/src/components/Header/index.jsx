@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Image, Box } from 'rebass';
-import { downArrowIcon, upArrowIcon } from 'assets/images';
+import { downArrowIcon, upArrowIcon, logoTitle } from 'assets/images';
 import { Label } from 'components/UI';
-import { LANDING_URL } from '../../consts/providers';
+import { LANDING_URL } from 'consts/globals';
 import {
   Container,
   Logo,
@@ -26,7 +26,7 @@ function Header() {
   return (
     <Container>
       <a href={LANDING_URL} className="logo">
-        <Logo alt="logo" src="/logo-title.svg" />
+        <Logo alt="logo" src={logoTitle} />
       </a>
 
       {address && (

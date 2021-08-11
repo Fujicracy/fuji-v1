@@ -52,7 +52,7 @@ body {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  bottom:-100px;
+  bottom: -100px;
 }
 
 .home-logo img {
@@ -71,10 +71,11 @@ body {
 
 .home-cta {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 }
-
+/* 
 .home-cta a {
   border-radius: 4px;
   height: 40px;
@@ -91,7 +92,7 @@ body {
 
 .home-cta a:hover {
   opacity: 0.8;
-}
+} */
 
 .home-cta .second-action {
   color: white;

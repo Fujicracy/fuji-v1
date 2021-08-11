@@ -6,18 +6,18 @@ import btcIcon from './icons/tokens/BTC.svg';
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
-import downArrowIcon from './icons/down_arrow.svg';
+import downArrowIcon from './icons/down-arrow.svg';
 import upArrowIcon from './icons/up_arrow.svg';
-import comingSoonIcon from './icons/comingSoon.svg';
+import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
 // App Images
 import fujiLanding from './images/home/fujiLanding.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
-import partnerDelphi from './images/partner/delphiDigital.svg';
+import partnerDelphi from './images/partner/delphi-digital.svg';
 import partnerMaven from './images/partner/maven11.svg';
-import partnerCapital from './images/partner/originCapital.svg';
+import partnerCapital from './images/partner/origin-capital.svg';
 import partnerSpartan from './images/partner/spartan.svg';
 
 // Contact Images
@@ -36,6 +36,17 @@ import ethBlueIcon from './icons/tokens/ETH_BLUE.svg';
 
 import maticYellowIcon from './icons/tokens/MATIC.svg';
 import maticGrayIcon from './icons/tokens/MATIC_GRAY.svg';
+
+import logoTitle from './icons/logo-title.svg';
+import notFound from './icons/not-found-404.svg';
+
+import infoStep1 from './images/info/step1.png';
+import infoStep2 from './images/info/step2.png';
+
+export const infoIcons = {
+  step1: infoStep1,
+  step2: infoStep2,
+};
 
 export const ethIcons = {
   GRAY: ethGrayIcon,
@@ -78,5 +89,6 @@ export {
   discordRedImage,
   telegramRedImage,
   twitterRedImage,
-  // Networks
+  logoTitle,
+  notFound,
 };

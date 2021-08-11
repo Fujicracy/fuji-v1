@@ -12,8 +12,7 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { DAI_ADDRESS, USDC_ADDRESS } from 'consts/providers';
-import { useGasPrice } from 'hooks';
+import { DAI_ADDRESS, USDC_ADDRESS } from 'consts/addresses';
 import { Transactor, GasEstimator, getVaultName } from 'helpers';
 
 import './styles.css';
@@ -36,7 +35,6 @@ async function getLiquidationProviderIndex(vaultName, contracts) {
 
 function FlashClose({ borrowAsset, contracts, provider }) {
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [dialog, setDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,14 +51,13 @@ function FlashClose({ borrowAsset, contracts, provider }) {
       parseUnits(amount, decimals),
       contracts[vaultName].address,
       providerIndex,
-      { gasPrice },
     ]);
     const res = await tx(
       contracts.Fliquidator.flashClose(
         parseUnits(amount, decimals),
         contracts[vaultName].address,
         providerIndex,
-        { gasPrice, gasLimit },
+        { gasLimit },
       ),
     );
 
