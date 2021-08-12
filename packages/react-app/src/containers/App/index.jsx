@@ -6,6 +6,7 @@ import { ProvideAuth } from 'hooks';
 import GlobalStyle from 'components/GlobalStyle';
 import themes from 'theme';
 import map from 'lodash/map';
+import { useMediaQuery } from 'react-responsive';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
@@ -21,6 +22,7 @@ import './style.css';
 
 function App() {
   const theme = themes.main;
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,27 +54,29 @@ function App() {
                 <Error />
               </Route>
             </Switch>
-            <footer>
-              <NavUnlisted justifyContent="space-between" position="left">
-                {map(Object.keys(CONTACTS), key => (
-                  <NavImageLink key={key} contact={CONTACTS[key]} />
-                ))}
-              </NavUnlisted>
+            {!isMobile && (
+              <footer>
+                <NavUnlisted justifyContent="space-between" position="left">
+                  {map(Object.keys(CONTACTS), key => (
+                    <NavImageLink key={key} contact={CONTACTS[key]} />
+                  ))}
+                </NavUnlisted>
 
-              <NavUnlisted justifyContent="flex-start" position="right">
-                <NavLink to="/about">
-                  <NavText>About</NavText>
-                </NavLink>
-                <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                <Label fontSize={12}>© FujiDAO 2021</Label>
-              </NavUnlisted>
-            </footer>
+                <NavUnlisted justifyContent="flex-start" position="right">
+                  <NavLink to="/about">
+                    <NavText>About</NavText>
+                  </NavLink>
+                  <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
+                  <Label fontSize={12}>© FujiDAO 2021</Label>
+                </NavUnlisted>
+              </footer>
+            )}
             <div className="bg-effect" />
-            <div className="ohno">
+            {/* <div className="ohno">
               Oh no!
               <br />
               This website isn&apos;t available (yet) on mobile
-            </div>
+            </div> */}
           </HashRouter>
         </Container>
       </ModalProvider>

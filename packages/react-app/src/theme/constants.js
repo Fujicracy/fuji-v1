@@ -3,6 +3,7 @@ export const BREAKPOINT_NAMES = {
   TABLET: 'tablet',
   DESKTOP: 'desktop',
   LARGE: 'large',
+  XLARGE: 'xlarge',
 };
 
 export default {};

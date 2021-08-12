@@ -1,15 +1,27 @@
-import React from 'react';
-import { useSpring, animated, config } from 'react-spring';
+import React, { useState, useEffect } from 'react';
+import { useSpring, config } from 'react-spring';
 import { Button } from 'components/UI';
 import { NavLink } from 'react-router-dom';
-
-import { fujiLanding } from '../../assets/images';
-
-import './styles.css';
+import { Grid } from '@material-ui/core';
+import { useMediaQuery } from 'react-responsive';
+import { fujiLanding, fujiLandingMobile } from '../../assets/images';
+import { HomeContainer, HomeContent, HomeCta } from './styles';
 
 function Home() {
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const [landingImage, setLandingImage] = useState(null);
+
+  useEffect(() => {
+    if (isMobile) setLandingImage(fujiLandingMobile);
+    else setLandingImage(fujiLanding);
+  }, [isMobile]);
+
   const props = useSpring({
-    from: { factor: 1, opacity: 0, background: `url(${fujiLanding}) no-repeat center center` },
+    from: {
+      factor: 1,
+      opacity: 0,
+      background: `url(${landingImage}) no-repeat center center`,
+    },
     to: { factor: 150, opacity: 1 },
     config: { duration: 800, ...config.molasses },
   });
@@ -18,29 +30,25 @@ function Home() {
     window.open('https://docs.fujidao.org/', '_blank');
   };
 
-  // const handleAppClick = () => {
-  //   window.open(`${APP_URL}/dashboard`, '_self');
-  // };
-
   return (
-    <animated.div style={props} className="home-container">
-      <div className="home-content">
-        <div className="home-cta">
-          <div style={{ width: '45%' }}>
+    <HomeContainer style={props}>
+      <HomeContent isMobile={isMobile}>
+        <HomeCta container isMobile={isMobile} spacing={3}>
+          <Grid item xs={12} sm={6} md={6}>
             <Button onClick={handleLearnClick} block outline>
               Learn
             </Button>
-          </div>
-          <div style={{ width: '45%' }}>
+          </Grid>
+          <Grid item xs={12} sm={6} md={6}>
             <NavLink to="/dashboard">
               <Button block color="white">
-                Borrow
+                App
               </Button>
             </NavLink>
-          </div>
-        </div>
-      </div>
-    </animated.div>
+          </Grid>
+        </HomeCta>
+      </HomeContent>
+    </HomeContainer>
   );
 }
 

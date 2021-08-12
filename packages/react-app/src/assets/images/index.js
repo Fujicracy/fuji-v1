@@ -12,6 +12,7 @@ import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
 // App Images
 import fujiLanding from './images/home/fujiLanding.svg';
+import fujiLandingMobile from './images/home/fujiLandingMobile.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
@@ -75,6 +76,7 @@ export {
   barIcon,
   // Images
   fujiLanding,
+  fujiLandingMobile,
   partnerDelphi,
   partnerMaven,
   partnerCapital,
