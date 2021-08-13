@@ -33,7 +33,7 @@ function Home() {
   return (
     <HomeContainer style={props}>
       <HomeContent isMobile={isMobile}>
-        <HomeCta container isMobile={isMobile} spacing={3}>
+        <HomeCta container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
             <Button onClick={handleLearnClick} block outline>
               Learn
