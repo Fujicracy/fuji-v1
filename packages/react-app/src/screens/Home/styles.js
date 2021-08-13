@@ -11,20 +11,21 @@ export const HomeContainer = styled(animated.div)`
   left: 50%;
   transform: translateX(-50%);
   background-size: contain !important;
+
   @media only screen and (max-width: 768px) {
-    width: 330px;
     background: url(${fujiLandingMobile}) no-repeat center center;
+    width: 70%;
   }
   @media only screen and (min-width: 768px) {
-    width: 80%;
     background: url(${fujiLanding}) no-repeat center center;
+    width: 80%;
   }
 `;
 
 export const HomeContent = styled.div`
   color: white;
   font-family: sans-serif;
-  width: 330px;
+  width: ${props => (props.isMobile ? '250px' : '330px')};
   text-align: center;
   position: absolute;
   left: 50%;
