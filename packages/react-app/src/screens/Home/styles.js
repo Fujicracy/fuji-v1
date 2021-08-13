@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { Grid } from '@material-ui/core';
+import { fujiLanding, fujiLandingMobile } from '../../assets/images';
 
 export const HomeContainer = styled(animated.div)`
   position: absolute;
@@ -9,8 +10,15 @@ export const HomeContainer = styled(animated.div)`
   height: calc(100vh - 180px);
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
   background-size: contain !important;
+  @media only screen and (max-width: 768px) {
+    width: 330px;
+    background: url(${fujiLandingMobile}) no-repeat center center;
+  }
+  @media only screen and (min-width: 768px) {
+    width: 80%;
+    background: url(${fujiLanding}) no-repeat center center;
+  }
 `;
 
 export const HomeContent = styled.div`
