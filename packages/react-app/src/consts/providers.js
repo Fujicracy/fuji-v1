@@ -3,6 +3,11 @@ const PROVIDER_TYPE = {
   COMPOUND: 'Compound',
   DYDX: 'DYDX',
   IRONBANK: 'IronBank',
+  FUSE3: 'FusePool3',
+  FUSE6: 'FusePool6',
+  FUSE7: 'FusePool7',
+  FUSE8: 'FusePool8',
+  FUSE18: 'FusePool18',
 };
 
 const PROVIDERS = {
@@ -25,6 +30,31 @@ const PROVIDERS = {
     id: 'ironbank',
     name: 'ProviderIronBank',
     title: 'IronBank',
+  },
+  [PROVIDER_TYPE.FUSE3]: {
+    id: 'fuse3',
+    name: 'ProviderFuse3',
+    title: 'Fuse Pool 3',
+  },
+  [PROVIDER_TYPE.FUSE6]: {
+    id: 'fuse6',
+    name: 'ProviderFuse6',
+    title: 'Fuse Pool 6',
+  },
+  [PROVIDER_TYPE.FUSE7]: {
+    id: 'fuse7',
+    name: 'ProviderFuse7',
+    title: 'Fuse Pool 7',
+  },
+  [PROVIDER_TYPE.FUSE8]: {
+    id: 'fuse8',
+    name: 'ProviderFuse8',
+    title: 'Fuse Pool 8',
+  },
+  [PROVIDER_TYPE.FUSE18]: {
+    id: 'fuse18',
+    name: 'ProviderFuse18',
+    title: 'Fuse Pool 18',
   },
 };
 
