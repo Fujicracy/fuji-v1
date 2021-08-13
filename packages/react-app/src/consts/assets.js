@@ -1,4 +1,4 @@
-import { daiIcon, usdcIcon, usdtIcon, ethIcons } from 'assets/images';
+import { daiIcon, usdcIcon, usdtIcon, feiIcon, ethIcons } from 'assets/images';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 export const ASSET_NAME = {
@@ -7,6 +7,7 @@ export const ASSET_NAME = {
   USDT: 'USDT',
   ETH: 'ETH',
   BTC: 'BTC',
+  FEI: 'FEI',
 };
 
 export const ASSETS = {
@@ -43,5 +44,12 @@ export const ASSETS = {
     icon: ethIcons.BLUE.toString(),
     decimals: 18,
     address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+  },
+  [ASSET_NAME.FEI]: {
+    id: ASSET_NAME.FEI.toLowerCase(),
+    name: ASSET_NAME.FEI,
+    icon: feiIcon.toString(),
+    decimals: 18,
+    address: '0x956f47f50a910163d8bf957cf5846d573E7f87ca',
   },
 };
