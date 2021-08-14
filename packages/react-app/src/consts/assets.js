@@ -50,6 +50,6 @@ export const ASSETS = {
     name: ASSET_NAME.FEI,
     icon: feiIcon.toString(),
     decimals: 18,
-    address: '0x956f47f50a910163d8bf957cf5846d573E7f87ca',
+    address: '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
   },
 };
