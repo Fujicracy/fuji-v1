@@ -3,6 +3,8 @@
 import { Contract } from '@ethersproject/contracts';
 import { useState, useEffect } from 'react';
 import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
+import { ASSETS } from 'consts/assets';
+import { ERC20_ABI } from 'consts/addresses';
 
 const loadContractFrom = (contracts, contractName, signer) => {
   const address = contracts[contractName].address;
@@ -20,8 +22,6 @@ export default function useContractLoader(providerOrSigner) {
   useEffect(() => {
     async function loadContracts() {
       if (typeof providerOrSigner !== 'undefined') {
-        const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
-        const contractList = Object.keys(contractsData);
         // we need to check to see if this providerOrSigner has a signer or not
         let signer;
         let accounts;
@@ -36,12 +36,24 @@ export default function useContractLoader(providerOrSigner) {
         }
 
         const newContracts = {};
+
+        const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+        const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
           try {
             newContracts[contractName] = loadContractFrom(contractsData, contractName, signer);
           } catch (e) {
             console.log(`ERROR: Contract ${contractName} cannot be loaded!`);
+          }
+        }
+        const assetList = Object.keys(ASSETS);
+        for (let i = 0; i < assetList.length; i += 1) {
+          const assetName = assetList[i];
+          try {
+            newContracts[assetName] = new Contract(ASSETS[assetName].address, ERC20_ABI, signer);
+          } catch (e) {
+            console.log(`ERROR: Contract ${assetName} cannot be loaded!`);
           }
         }
         setContracts(newContracts);
