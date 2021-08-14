@@ -2,7 +2,7 @@ import { getVaultAddress } from 'helpers';
 import { ASSETS, ASSET_NAME } from './assets';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
-export const VAULTS_ADDRESS = {
+const VAULTS_ADDRESS = {
   VaultETHDAI: getVaultAddress('VaultETHDAI'),
   VaultETHUSDC: getVaultAddress('VaultETHUSDC'),
   VaultETHUSDT: getVaultAddress('VaultETHUSDT'),
@@ -20,7 +20,7 @@ const BORROW_IDS = {
   [VAULTS_ADDRESS.VaultETHUSDT]: 5,
 };
 
-export const VAULTS = {
+const VAULTS = {
   [VAULTS_ADDRESS.VaultETHDAI]: {
     borrowAsset: ASSETS[ASSET_NAME.DAI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
@@ -63,3 +63,5 @@ export const VAULTS = {
     title: 'ETH-USDT',
   },
 };
+
+export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
