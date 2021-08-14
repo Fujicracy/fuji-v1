@@ -1,3 +1,8 @@
+/* eslint-disable import/no-dynamic-require */
+import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
+
+const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+
 const borrowAssets = {
   DAI: 1,
   USDC: 3,
@@ -26,4 +31,15 @@ const vaultsByBorrowAsset = {
 
 export function getVaultName(borrowAsset) {
   return vaultsByBorrowAsset[borrowAsset];
+}
+
+export function getVaultAddress(name) {
+  let address = '0x';
+  try {
+    address = contractsData[name].address.toLowerCase();
+  } catch (e) {
+    console.error(`ERROR: ${name} not found!`);
+  }
+
+  return address;
 }
