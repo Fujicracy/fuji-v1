@@ -121,7 +121,7 @@ function ManagePosition({ contracts, provider, address }) {
           </div>
         </div>
         <FlashClose
-          borrowAsset={borrowAssetName}
+          position={position}
           contracts={contracts}
           provider={provider}
           address={address}
