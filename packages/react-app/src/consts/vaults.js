@@ -1,11 +1,11 @@
-import { getVaultAddress } from 'helpers';
+import { getContractAddress } from 'helpers';
 import { ASSETS, ASSET_NAME } from './assets';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 const VAULTS_ADDRESS = {
-  VaultETHDAI: getVaultAddress('VaultETHDAI'),
-  VaultETHUSDC: getVaultAddress('VaultETHUSDC'),
-  VaultETHUSDT: getVaultAddress('VaultETHUSDT'),
+  VaultETHDAI: getContractAddress('VaultETHDAI'),
+  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
+  VaultETHUSDT: getContractAddress('VaultETHUSDT'),
 };
 
 const COLLATERAL_IDS = {

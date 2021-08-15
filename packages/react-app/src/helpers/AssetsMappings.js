@@ -33,12 +33,12 @@ export function getVaultName(borrowAsset) {
   return vaultsByBorrowAsset[borrowAsset];
 }
 
-export function getVaultAddress(name) {
+export function getContractAddress(name) {
   let address = '0x';
   try {
     address = contractsData[name].address.toLowerCase();
   } catch (e) {
-    console.error(`ERROR: ${name} not found!`);
+    console.warn(`WARNING: ${name} not found!`);
   }
 
   return address;
