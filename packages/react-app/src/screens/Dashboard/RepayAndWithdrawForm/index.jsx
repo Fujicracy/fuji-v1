@@ -19,38 +19,32 @@ import {
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-import { ASSETS } from 'consts';
+import { VAULTS } from 'consts';
 import { ethIcons } from 'assets/images';
-import { Transactor, getVaultName } from '../../../helpers';
+import { Transactor } from '../../../helpers';
 import { useContractReader } from '../../../hooks';
 
-function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
+function RepayAndWithdrawForm({ position, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
+
+  const vault = VAULTS[position.vaultAddress];
+  const decimals = vault.borrowAsset.decimals;
 
   const [borrowAmount, setBorrowAmount] = useState('');
   const [collateralAmount, setCollateralAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
-
-  // const debtBalance = useContractReader(
-  // contracts,
-  // borrowAsset === "DAI" ? "DebtToken-DAI" : "DebtToken-USDC",
-  // "balanceOf",
-  // [address]
-  // );
-
-  const balance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
-  const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
+  const balance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [address]);
+  const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
     address,
-    contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
+    contracts ? contracts[vault.name].address : '0x',
   ]);
 
   const paybackAndWithdraw = async withApproval => {
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].paybackAndWithdraw(
+      contracts[vault.name].paybackAndWithdraw(
         parseUnits(borrowAmount, decimals),
         parseEther(collateralAmount),
       ),
@@ -77,8 +71,8 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
 
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
-      contracts[borrowAsset].approve(
-        contracts[getVaultName(borrowAsset)].address,
+      contracts[vault.borrowAsset.name].approve(
+        contracts[vault.name].address,
         BigNumber.from(approveAmount),
       ),
     );
@@ -111,7 +105,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} className="main-button">
-            Approve {borrowAmount} {borrowAsset}
+            Approve {borrowAmount} {vault.borrowAsset.name}
           </Button>
           <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
@@ -184,7 +178,7 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
       <Grid item>
         <div className="subtitle">
           <span className="complementary-infos">
-            Balance: {balance ? formatUnits(balance, decimals) : '...'} {borrowAsset} Ξ
+            Balance: {balance ? formatUnits(balance, decimals) : '...'} {vault.borrowAsset.name} Ξ
           </span>
         </div>
         <div className="fake-input">
@@ -203,13 +197,17 @@ function RepayAndWithdrawForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={ASSETS[borrowAsset].icon} className="icon" />
+                  <Avatar
+                    alt={vault.borrowAsset.name}
+                    src={vault.borrowAsset.icon}
+                    className="icon"
+                  />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
                   <Typography variant="body1" className="input-infos">
-                    {borrowAsset}
+                    {vault.borrowAsset.name}
                   </Typography>
                 </InputAdornment>
               ),

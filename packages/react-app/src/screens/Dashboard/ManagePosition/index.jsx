@@ -90,10 +90,10 @@ function ManagePosition({ contracts, provider, address }) {
                         />
                       ) : (
                         <SupplyAndBorrowForm
-                          borrowAsset={borrowAssetName}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       )}
                     </div>
@@ -107,10 +107,10 @@ function ManagePosition({ contracts, provider, address }) {
                         />
                       ) : (
                         <RepayAndWithdrawForm
-                          borrowAsset={borrowAssetName}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       )}
                     </div>
