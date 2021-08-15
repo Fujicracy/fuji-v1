@@ -4,7 +4,7 @@ const NETWORKS = {
   31337: 'Local',
 };
 
-const ETH_CAP_VALUE = 2;
+const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID || 31337;
 const NETWORK = NETWORKS[CHAIN_ID];
