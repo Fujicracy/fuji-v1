@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
@@ -167,7 +167,7 @@ function InitBorrow({ contracts, provider, address }) {
         'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
       actions: () => (
         <DialogActions>
-          <Button href="/dashboard/my-positions" className="main-button">
+          <Button component={Link} to="/dashboard/my-positions" className="main-button">
             Check my positions
           </Button>
         </DialogActions>
