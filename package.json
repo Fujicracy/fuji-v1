@@ -59,8 +59,7 @@
 	},
 	"workspaces": {
 		"packages": [
-			"packages/*",
-			"tasks"
+			"packages/*"
 		],
 		"nohoist": []
 	},
