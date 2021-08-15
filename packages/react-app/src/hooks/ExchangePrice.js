@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { useAuth } from 'hooks';
-import { CHAINLINK_ABI } from 'consts/addresses';
+import { CHAINLINK_ABI } from 'consts/abis';
 import { ASSETS } from 'consts/assets';
 import useExternalContractLoader from './ExternalContractLoader';
 

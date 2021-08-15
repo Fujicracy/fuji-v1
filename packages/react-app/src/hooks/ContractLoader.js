@@ -4,7 +4,7 @@ import { Contract } from '@ethersproject/contracts';
 import { useState, useEffect } from 'react';
 import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
 import { ASSETS } from 'consts/assets';
-import { ERC20_ABI } from 'consts/addresses';
+import { ERC20_ABI } from 'consts/abis';
 
 const loadContractFrom = (contracts, contractName, signer) => {
   const address = contracts[contractName].address;
