@@ -4,12 +4,12 @@ import { Button } from 'components/UI';
 import { NavLink } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { HomeContainer, HomeContent, HomeCta } from './styles';
 
 function Home() {
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS.MOBILE.inNumber });
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const props = useSpring({
     from: {

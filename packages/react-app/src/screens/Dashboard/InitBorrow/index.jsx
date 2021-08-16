@@ -28,7 +28,7 @@ import {
   SelectNetwork,
 } from 'components';
 import { TextInput } from 'components/UI';
-import { VAULTS, BREAKPOINTS } from 'consts';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 import './styles.css';
@@ -49,7 +49,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS.MOBILE.inNumber });
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {

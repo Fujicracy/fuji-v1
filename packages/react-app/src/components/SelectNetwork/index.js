@@ -4,13 +4,13 @@ import { Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import { ethIcons, maticIcons, comingSoonIcon } from 'assets/images';
-import { BREAKPOINTS } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { RadioContainer, NetworkButton } from './styles';
 
 const SelectNetwork = ({ hasBlackContainer = true }) => {
   const [network, setNetwork] = useState('ETH');
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS.MOBILE.inNumber });
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
     <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
