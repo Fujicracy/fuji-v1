@@ -1,13 +1,15 @@
-import { DEPLOYMENT } from 'consts/globals';
+import { DEPLOYMENT, DEPLOYMENT_TYPES } from 'consts/globals';
 import * as core from './vaults-core';
 import * as fuse from './vaults-fuse';
 
-const VAULTS_ADDRESS = DEPLOYMENT === 'core' ? core.VAULTS_ADDRESS : fuse.VAULTS_ADDRESS;
+const BORROW_IDS = DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.BORROW_IDS : fuse.BORROW_IDS;
 
-const BORROW_IDS = DEPLOYMENT === 'core' ? core.BORROW_IDS : fuse.BORROW_IDS;
+const COLLATERAL_IDS =
+  DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.COLLATERAL_IDS : fuse.COLLATERAL_IDS;
 
-const COLLATERAL_IDS = DEPLOYMENT === 'core' ? core.COLLATERAL_IDS : fuse.COLLATERAL_IDS;
+const VAULTS_ADDRESS =
+  DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.VAULTS_ADDRESS : fuse.VAULTS_ADDRESS;
 
-const VAULTS = DEPLOYMENT === 'core' ? core.VAULTS : fuse.VAULTS;
+const VAULTS = DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.VAULTS : fuse.VAULTS;
 
 export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
