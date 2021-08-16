@@ -7,7 +7,6 @@ import { fujiLanding, fujiLandingMobile } from '../../assets/images';
 export const HomeContainer = styled(animated.div)`
   position: absolute;
   margin-top: 40px;
-  /*padding-bottom: 40px;*/
   height: calc(100vh - 180px);
   left: 50%;
   transform: translateX(-50%);

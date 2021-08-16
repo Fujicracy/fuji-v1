@@ -1,3 +1,19 @@
+export const BREAKPOINT_NAMES = {
+  MOBILE: 'mobile',
+  TABLET: 'tablet',
+  DESKTOP: 'desktop',
+  LARGE: 'large',
+  XLARGE: 'xlarge',
+};
+
+export const BREAKPOINTS = {
+  [BREAKPOINT_NAMES.MOBILE]: '600px',
+  [BREAKPOINT_NAMES.TABLET]: '768px',
+  [BREAKPOINT_NAMES.DESKTOP]: '992px',
+  [BREAKPOINT_NAMES.LARGE]: '1200px',
+  [BREAKPOINT_NAMES.XLARGE]: '1400px',
+};
+
 const NETWORKS = {
   1: 'Mainnet',
   42: 'Kovan',

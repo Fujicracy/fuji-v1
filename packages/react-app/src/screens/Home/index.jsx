@@ -9,12 +9,6 @@ import { HomeContainer, HomeContent, HomeCta } from './styles';
 function Home() {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
-  // useEffect(() => {
-  //   console.log(isMobile);
-  //   if (isMobile) setLandingImage(fujiLandingMobile);
-  //   else setLandingImage(fujiLanding);
-  // }, [isMobile]);
-
   const props = useSpring({
     from: {
       factor: 1,
