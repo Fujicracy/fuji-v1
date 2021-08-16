@@ -12,6 +12,7 @@ import {
   DialogContentText,
   CircularProgress,
   DialogTitle,
+  Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'consts/globals';
@@ -32,6 +33,7 @@ import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 import './styles.css';
 import map from 'lodash/map';
+import { useMediaQuery } from 'react-responsive';
 
 function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
@@ -47,6 +49,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -214,24 +217,29 @@ function InitBorrow({ contracts, provider, address }) {
       </Dialog>
 
       <div className="left-content">
-        <HowItWorks />
-        <BlackBoxContainer mb={4}>
-          <SelectNetwork
-            title="Networks"
-            handleChange={handleChangeNetwork}
-            options={NETWORKS}
-            defaultOption={NETWORKS.ETH}
-            hasBlackContainer={false}
-          />
-
-          <ProvidersList
-            contracts={contracts}
-            markets={[borrowAsset]}
-            title="Borrow APR"
-            isDropDown
-            hasBlackContainer={false}
-            isSelectable={false}
-          />
+        {!isMobile && <HowItWorks />}
+        <BlackBoxContainer mb={4} hasBlackContainer={!isMobile}>
+          <Grid container spacing={4}>
+            <Grid item xs={6} sm={12} md={12}>
+              <SelectNetwork
+                title="Networks"
+                handleChange={handleChangeNetwork}
+                options={NETWORKS}
+                defaultOption={NETWORKS.ETH}
+                hasBlackContainer={isMobile}
+              />
+            </Grid>
+            <Grid item xs={6} sm={12} md={12}>
+              <ProvidersList
+                contracts={contracts}
+                markets={[borrowAsset]}
+                title="Borrow APR"
+                isDropDown
+                hasBlackContainer={isMobile}
+                isSelectable={false}
+              />
+            </Grid>
+          </Grid>
         </BlackBoxContainer>
       </div>
 

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { size } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
+import media from 'styled-media-query';
 
 export const Container = styled(Box).attrs({
   px: 4,
@@ -25,58 +26,63 @@ export const Logo = styled.img`
 `;
 
 export const Navigation = styled.ul`
-  display: flex;
-  justify-content: flex-end;
+  ${media.lessThan('medium')`
+    display:none
+  `}
+  ${media.greaterThan('medium')`
+    display: flex;
+    justify-content: flex-end;
 
-  li {
-    margin-left: 2em;
-    font-size: 0.875rem;
+    li {
+      margin-left: 2em;
+      font-size: 0.875rem;
 
-    &.nav-item {
-      font-size: 1rem;
-    }
-
-    a {
-      height: 40px;
-      line-height: 40px;
-      color: ${themeGet('colors.text.primary')};
-      font-weight: 500;
-      transition: all 250ms ease;
-      text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.text.primary')};
-
-      &:hover {
-        color: ${themeGet('colors.primary')};
-        text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.primary')};
+      &.nav-item {
+        font-size: 1rem;
       }
 
-      &.current {
-        color: ${themeGet('colors.primary')};
-        text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.primary')};
-      }
-
-      &.button-nav {
-        display: block;
-        width: 146px;
-        text-align: center;
-        cursor: pointer;
-        line-height: 36px;
-        border: 0.125rem solid ${themeGet('colors.primary')};
-        border-radius: 2rem;
+      a {
+        height: 40px;
+        line-height: 40px;
+        color: ${themeGet('colors.text.primary')};
+        font-weight: 500;
         transition: all 250ms ease;
-
-        &.connected {
-          border-color: ${themeGet('colors.text.link')};
-          color: ${themeGet('colors.text.secondary')};
-          text-shadow: 0rem 0rem 0rem transparent;
-        }
+        text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.text.primary')};
 
         &:hover {
-          color: ${themeGet('colors.text.primary')};
-          border-color: ${themeGet('colors.text.secondary')};
+          color: ${themeGet('colors.primary')};
+          text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.primary')};
+        }
+
+        &.current {
+          color: ${themeGet('colors.primary')};
+          text-shadow: 0rem 0rem 0.125rem ${themeGet('colors.primary')};
+        }
+
+        &.button-nav {
+          display: block;
+          width: 146px;
+          text-align: center;
+          cursor: pointer;
+          line-height: 36px;
+          border: 0.125rem solid ${themeGet('colors.primary')};
+          border-radius: 2rem;
+          transition: all 250ms ease;
+
+          &.connected {
+            border-color: ${themeGet('colors.text.link')};
+            color: ${themeGet('colors.text.secondary')};
+            text-shadow: 0rem 0rem 0rem transparent;
+          }
+
+          &:hover {
+            color: ${themeGet('colors.text.primary')};
+            border-color: ${themeGet('colors.text.secondary')};
+          }
         }
       }
     }
-  }
+  `}
 `;
 
 export const BallanceContainer = styled(Box)`

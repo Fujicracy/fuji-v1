@@ -95,7 +95,7 @@ function ProvidersList({
 }) {
   const rates = useRates(contracts);
   return (
-    <BlackBoxContainer mt={4} zIndex={1} hasBlackContainer={hasBlackContainer}>
+    <BlackBoxContainer zIndex={1} hasBlackContainer={hasBlackContainer}>
       <SectionTitle mb={1}>
         <Typography variant="h3">{title}</Typography>
         <div className="tooltip-info">

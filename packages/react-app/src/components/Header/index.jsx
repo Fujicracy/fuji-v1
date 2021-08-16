@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Image, Box } from 'rebass';
-import { downArrowIcon, upArrowIcon, logoTitle } from 'assets/images';
+import { downArrowIcon, upArrowIcon /* logoTitle */ } from 'assets/images';
 import { Label } from 'components/UI';
-import { LANDING_URL } from 'consts/globals';
+// import { LANDING_URL } from 'consts/globals';
 import {
   Container,
-  Logo,
+  // Logo,
   Navigation,
   BallanceContainer,
   WalletItemContainer,
@@ -25,9 +25,9 @@ function Header() {
 
   return (
     <Container>
-      <a href={LANDING_URL} className="logo">
+      {/* <a href={LANDING_URL} className="logo">
         <Logo alt="logo" src={logoTitle} />
-      </a>
+      </a> */}
 
       {address && (
         <Navigation>

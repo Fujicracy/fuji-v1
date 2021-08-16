@@ -71,7 +71,7 @@ function App() {
                 </NavUnlisted>
               </footer>
             )}
-            <div className="bg-effect" />
+            {!isMobile && <div className="bg-effect" />}
             {/* <div className="ohno">
               Oh no!
               <br />
