@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import Typography from '@material-ui/core/Typography';
 import { find } from 'lodash';
-import { VAULTS } from 'consts/vaults';
+import { VAULTS } from 'consts';
 import { Image, Box, Text, Flex } from 'rebass';
 import { useContractReader, useRates } from '../../hooks';
 import { DropDown } from '../UI';

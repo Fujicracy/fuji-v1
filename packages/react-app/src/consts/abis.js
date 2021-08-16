@@ -1,25 +1,3 @@
-import { CHAIN_ID } from './globals';
-
-const usdc = {
-  1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  31337: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  // "42": "0xe22da380ee6b445bb8273c81944adeb6e8450422", // aave
-  42: '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', // compound
-};
-const usdt = {
-  // TODO: MARKUS - to be changed
-  1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-  31337: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-  // "42": "0xe22da380ee6b445bb8273c81944adeb6e8450422", // aave
-  42: '0xdac17f958d2ee523a2206206994597c13d831ec7', // compound
-};
-const dai = {
-  1: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  31337: '0x6b175474e89094c44da98b954eedeac495271d0f',
-  // "42": "0xff795577d9ac8bd7d90ee22b6c1703490b6512fd", // aave
-  42: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa', // compound
-};
-
 const ERC20_ABI = [
   {
     inputs: [{ internalType: 'uint256', name: 'chainId_', type: 'uint256' }],
@@ -531,14 +509,4 @@ const CHAINLINK_ABI = [
   },
 ];
 
-const DAI_ADDRESS = dai[CHAIN_ID];
-const USDC_ADDRESS = usdc[CHAIN_ID];
-const USDT_ADDRESS = usdt[CHAIN_ID]; // TODO: MARKUS - to be changed
-
-export {
-  DAI_ADDRESS,
-  USDC_ADDRESS,
-  USDT_ADDRESS, // TODO: MARKUS - to be changed
-  ERC20_ABI,
-  CHAINLINK_ABI,
-};
+export { ERC20_ABI, CHAINLINK_ABI };

@@ -1,5 +1,4 @@
-import { daiIcon, usdcIcon, usdtIcon, ethIcons } from 'assets/images';
-import { PROVIDER_TYPE, PROVIDERS } from './providers';
+import { daiIcon, usdcIcon, usdtIcon, feiIcon, ethIcons } from 'assets/images';
 
 export const ASSET_NAME = {
   DAI: 'DAI',
@@ -7,6 +6,7 @@ export const ASSET_NAME = {
   USDT: 'USDT',
   ETH: 'ETH',
   BTC: 'BTC',
+  FEI: 'FEI',
 };
 
 export const ASSETS = {
@@ -16,12 +16,7 @@ export const ASSETS = {
     icon: daiIcon.toString(),
     decimals: 18,
     address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    providersAsBorrowAsset: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
+    oracle: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
   },
   [ASSET_NAME.USDC]: {
     id: ASSET_NAME.USDC.toLowerCase(),
@@ -29,6 +24,7 @@ export const ASSETS = {
     icon: usdcIcon.toString(),
     decimals: 6,
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    oracle: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   },
   [ASSET_NAME.USDT]: {
     id: ASSET_NAME.USDT.toLowerCase(),
@@ -36,6 +32,7 @@ export const ASSETS = {
     icon: usdtIcon.toString(),
     decimals: 6,
     address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+    oracle: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   },
   [ASSET_NAME.ETH]: {
     id: ASSET_NAME.ETH.toLowerCase(),
@@ -43,5 +40,14 @@ export const ASSETS = {
     icon: ethIcons.BLUE.toString(),
     decimals: 18,
     address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+    oracle: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+  },
+  [ASSET_NAME.FEI]: {
+    id: ASSET_NAME.FEI.toLowerCase(),
+    name: ASSET_NAME.FEI,
+    icon: feiIcon.toString(),
+    decimals: 18,
+    address: '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
+    oracle: '0x31e0a88fecB6eC0a411DBe0e9E76391498296EE9',
   },
 };

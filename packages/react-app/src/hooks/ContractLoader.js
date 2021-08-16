@@ -1,23 +1,15 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 import { Contract } from '@ethersproject/contracts';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
+import { ASSETS } from 'consts/assets';
+import { ERC20_ABI } from 'consts/abis';
 
-const loadData = async (contractName, type) => {
-  try {
-    return require(`../contracts/${contractName}.${type}.js`);
-  } catch (e) {
-    console.log(`Fetching ${contractName} "${type}" data...`);
-    const r = await axios(`/contracts-data?name=${contractName}&type=${type}`);
-    return r.data;
-  }
-};
-
-const loadContract = async (contractName, signer) => {
-  const address = await loadData(contractName, 'address');
-  const abi = await loadData(contractName, 'abi');
-  const bytecode = await loadData(contractName, 'bytecode');
+const loadContractFrom = (contracts, contractName, signer) => {
+  const address = contracts[contractName].address;
+  const abi = contracts[contractName].abi;
+  const bytecode = contracts[contractName].bytecode;
 
   const contract = new Contract(address, abi, signer);
   if (bytecode) contract.bytecode = bytecode;
@@ -30,7 +22,6 @@ export default function useContractLoader(providerOrSigner) {
   useEffect(() => {
     async function loadContracts() {
       if (typeof providerOrSigner !== 'undefined') {
-        const contractList = require('../contracts/contracts');
         // we need to check to see if this providerOrSigner has a signer or not
         let signer;
         let accounts;
@@ -45,13 +36,24 @@ export default function useContractLoader(providerOrSigner) {
         }
 
         const newContracts = {};
+
+        const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+        const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
           try {
-            // eslint-disable-next-line no-await-in-loop
-            newContracts[contractName] = await loadContract(contractName, signer);
+            newContracts[contractName] = loadContractFrom(contractsData, contractName, signer);
           } catch (e) {
             console.log(`ERROR: Contract ${contractName} cannot be loaded!`);
+          }
+        }
+        const assetList = Object.keys(ASSETS);
+        for (let i = 0; i < assetList.length; i += 1) {
+          const assetName = assetList[i];
+          try {
+            newContracts[assetName] = new Contract(ASSETS[assetName].address, ERC20_ABI, signer);
+          } catch (e) {
+            console.log(`ERROR: Contract ${assetName} cannot be loaded!`);
           }
         }
         setContracts(newContracts);

@@ -4,11 +4,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
 packages/subgraph
-packages/*/artifacts
+packages/*/artifacts/*
+!packages/*/artifacts/1-*.deploy
 packages/*/cache
 packages/*/*.txt
-packages/react-app/src/contracts
-packages/bots/contracts
+packages/react-app/src/contracts/*
+!packages/react-app/src/contracts/1-*.deployment.json
+packages/bots/contracts/*
+!packages/bots/contracts/1-*.deployment.json
 
 docker
 # docker/**/data

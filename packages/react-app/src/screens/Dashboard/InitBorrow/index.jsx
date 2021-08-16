@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
@@ -15,7 +15,6 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { ETH_CAP_VALUE } from 'consts/globals';
-import { ASSETS, ASSET_NAME } from 'consts/assets';
 import { useBalance, useContractReader, useExchangePrice } from 'hooks';
 import {
   CollaterizationIndicator,
@@ -27,13 +26,16 @@ import {
   SelectNetwork,
 } from 'components';
 import { TextInput } from 'components/UI';
-import { VAULTS } from 'consts';
+import { VAULTS, ASSETS, PROVIDERS } from 'consts';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
-import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
+import { Transactor, GasEstimator } from 'helpers';
 import './styles.css';
 import map from 'lodash/map';
+import find from 'lodash/find';
 
 function InitBorrow({ contracts, provider, address }) {
+  const defaultVault = Object.values(VAULTS)[0];
+
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const [checkedClaim, setCheckedClaim] = useState(false);
   const queries = new URLSearchParams(useLocation().search);
@@ -41,16 +43,15 @@ function InitBorrow({ contracts, provider, address }) {
   const queryBorrowAmount = queries.get('borrowAmount');
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
-  const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || ASSET_NAME.DAI);
+  const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
   const [network, setNetwork] = useState(NETWORKS[NETWORK_NAME.ETH]);
-  const [vault, setVault] = useState();
+  const [vault, setVault] = useState(defaultVault);
 
-  const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
+  const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
-      console.log({ VAULTS });
       map(Object.keys(VAULTS), key => {
         if (
           VAULTS[key].borrowAsset.name === borrowAsset &&
@@ -61,7 +62,6 @@ function InitBorrow({ contracts, provider, address }) {
         }
       });
     }
-    console.log({ borrowAsset, collateralAsset });
   }, [borrowAsset, collateralAsset]);
 
   const ethPrice = useExchangePrice();
@@ -70,11 +70,7 @@ function InitBorrow({ contracts, provider, address }) {
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const activeProvider = useContractReader(contracts, getVaultName(borrowAsset), 'activeProvider');
-
-  const providerAave = contracts && contracts.ProviderAave;
-  const providerCompound = contracts && contracts.ProviderCompound;
-  const providerDYDX = contracts && contracts.ProviderDYDX;
+  const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
 
   const unFormattedEthBalance = useBalance(provider, address);
   const ethBalance = unFormattedEthBalance
@@ -84,17 +80,17 @@ function InitBorrow({ contracts, provider, address }) {
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getCollateralId(borrowAsset),
+    vault.collateralId,
   ]);
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getBorrowId(borrowAsset),
+    vault.borrowId,
   ]);
 
   const unFormattedNeededCollateral = useContractReader(
     contracts,
-    getVaultName(borrowAsset),
+    vault.name,
     'getNeededCollateralFor',
     [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
@@ -124,13 +120,13 @@ function InitBorrow({ contracts, provider, address }) {
     }
 
     setLoading(true);
-    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'depositAndBorrow', [
+    const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
       parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
       parseUnits(borrowAmount, decimals),
       { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals) },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].depositAndBorrow(
+      contracts[vault.name].depositAndBorrow(
         parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
         parseUnits(borrowAmount, decimals),
         {
@@ -159,6 +155,11 @@ function InitBorrow({ contracts, provider, address }) {
     setVault(v);
   };
 
+  const getActiveProviderName = () => {
+    if (!activeProvider) return '...';
+    return find(Object.values(PROVIDERS), p => p.address === activeProvider.toLowerCase())?.title;
+  };
+
   const dialogContents = {
     success: {
       title: 'Success',
@@ -166,7 +167,7 @@ function InitBorrow({ contracts, provider, address }) {
         'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
       actions: () => (
         <DialogActions>
-          <Button href="/dashboard/my-positions" className="main-button">
+          <Button component={Link} to="/dashboard/my-positions" className="main-button">
             Check my positions
           </Button>
         </DialogActions>
@@ -315,18 +316,7 @@ function InitBorrow({ contracts, provider, address }) {
             <div className="helper">
               <Typography variant="body2">
                 The liquidity for this transaction is coming from{' '}
-                <span>
-                  {!activeProvider
-                    ? '...'
-                    : activeProvider === providerAave.address
-                    ? 'Aave'
-                    : activeProvider === providerCompound.address
-                    ? 'Compound'
-                    : activeProvider === providerDYDX.address
-                    ? 'dYdX'
-                    : 'Iron Bank'}
-                </span>
-                .
+                <span>{getActiveProviderName()}</span>.
               </Typography>
             </div>
             <div>

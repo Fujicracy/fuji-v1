@@ -12,7 +12,7 @@ import { useContractReader } from 'hooks';
 import { PositionElement, PositionActions, ProvidersList } from 'components';
 
 import './styles.css';
-import { ASSETS, ASSET_NAME, VAULTS } from 'consts';
+import { VAULTS } from 'consts';
 
 function MyPositions({ contracts, address }) {
   const history = useHistory();
@@ -32,6 +32,8 @@ function MyPositions({ contracts, address }) {
       collateralAsset: vault.collateralAsset,
     };
   });
+
+  const markets = map(Object.values(VAULTS), vault => vault.borrowAsset.name);
 
   const hasPosition = asset => {
     if (asset) {
@@ -87,11 +89,8 @@ function MyPositions({ contracts, address }) {
                 ),
             )}
             <Grid
-              key={ASSETS[ASSET_NAME.DAI].name}
               item
-              onClick={() =>
-                history.push(`/dashboard/init-borrow?borrowAsset=${ASSETS[ASSET_NAME.DAI].name}`)
-              }
+              onClick={() => history.push(`/dashboard/init-borrow`)}
               className="adding-position"
             >
               <AddIcon />
@@ -102,11 +101,7 @@ function MyPositions({ contracts, address }) {
         </Grid>
       </div>
       <div className="right-content">
-        <ProvidersList
-          contracts={contracts}
-          markets={['DAI', 'USDC', 'USDT']}
-          isSelectable={false}
-        />
+        <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
         {/* TODO align-center in small width */}
       </div>
     </div>
