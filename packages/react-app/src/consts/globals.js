@@ -7,11 +7,11 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: '600px',
-  [BREAKPOINT_NAMES.TABLET]: '768px',
-  [BREAKPOINT_NAMES.DESKTOP]: '992px',
-  [BREAKPOINT_NAMES.LARGE]: '1200px',
-  [BREAKPOINT_NAMES.XLARGE]: '1400px',
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '600px', inNumber: 600 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '768px', inNumber: 768 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '992px', inNumber: 992 },
+  [BREAKPOINT_NAMES.LARGE]: { inString: '1200px', inNumber: 1200 },
+  [BREAKPOINT_NAMES.XLARGE]: { inString: '1400px', inNumber: 1400 },
 };
 
 const NETWORKS = {

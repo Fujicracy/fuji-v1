@@ -28,7 +28,7 @@ import {
   SelectNetwork,
 } from 'components';
 import { TextInput } from 'components/UI';
-import { VAULTS } from 'consts';
+import { VAULTS, BREAKPOINTS } from 'consts';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, getBorrowId, getCollateralId, getVaultName, GasEstimator } from 'helpers';
 import './styles.css';
@@ -49,7 +49,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [collateralAsset, setCollateralAsset] = useState(ASSET_NAME.ETH);
   const [collateralAmount, setCollateralAmount] = useState('');
-  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS.MOBILE.inNumber });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -220,7 +220,7 @@ function InitBorrow({ contracts, provider, address }) {
         {!isMobile && <HowItWorks />}
         <BlackBoxContainer mb={4} hasBlackContainer={!isMobile}>
           <Grid container spacing={4}>
-            <Grid item xs={6} sm={12} md={12}>
+            <Grid item xs={8} sm={12} md={12}>
               <SelectNetwork
                 title="Networks"
                 handleChange={handleChangeNetwork}
@@ -229,7 +229,7 @@ function InitBorrow({ contracts, provider, address }) {
                 hasBlackContainer={isMobile}
               />
             </Grid>
-            <Grid item xs={6} sm={12} md={12}>
+            <Grid item xs={4} sm={12} md={12}>
               <ProvidersList
                 contracts={contracts}
                 markets={[borrowAsset]}
