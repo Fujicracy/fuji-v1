@@ -12,11 +12,7 @@ const {
   evmRevert,
   ZERO_ADDR,
 } = require("./utils-alpha");
-const {
-  fixture,
-  ASSETS,
-  VAULTS,
-} = require("./fuse-utils.js");
+const { fixture, ASSETS, VAULTS } = require("./fuse-utils.js");
 
 const fuseAddrs = {
   fuse3Comptroller: "0x6E7fb6c5865e8533D5ED31b6d43fD95f4C411834",
@@ -46,7 +42,7 @@ const {
 
 const [DEPOSIT_ERC20, BORROW_ERC20, DEPOSIT_ETH, BORROW_ETH] = [7000, 4000, 2, 1];
 
-describe("Rari Fuse", function() {
+describe("Rari Fuse", function () {
   let f;
 
   let users;
@@ -56,7 +52,7 @@ describe("Rari Fuse", function() {
   let evmSnapshot1;
   let evmSnapshot2;
 
-  before(async function() {
+  before(async function () {
     users = await ethers.getSigners();
     user1 = users[1];
 
@@ -66,52 +62,58 @@ describe("Rari Fuse", function() {
 
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper.connect(users[x]).swapETHForExactTokens(
-        parseUnits(10000),
-        [ASSETS.WETH.address, ASSETS.DAI.address],
-        users[x].address,
-        block.timestamp + x + 1,
-        { value: parseUnits(10) }
-      );
+      await f.swapper
+        .connect(users[x])
+        .swapETHForExactTokens(
+          parseUnits(10000),
+          [ASSETS.WETH.address, ASSETS.DAI.address],
+          users[x].address,
+          block.timestamp + x + 1,
+          { value: parseUnits(10) }
+        );
     }
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper.connect(users[x]).swapETHForExactTokens(
-        10000e6,
-        [ASSETS.WETH.address, ASSETS.USDC.address],
-        users[x].address,
-        block.timestamp + x + 1,
-        { value: parseUnits(10) }
-      );
+      await f.swapper
+        .connect(users[x])
+        .swapETHForExactTokens(
+          10000e6,
+          [ASSETS.WETH.address, ASSETS.USDC.address],
+          users[x].address,
+          block.timestamp + x + 1,
+          { value: parseUnits(10) }
+        );
     }
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper.connect(users[x]).swapETHForExactTokens(
-        parseUnits(10000),
-        [ASSETS.WETH.address, ASSETS.FEI.address],
-        users[x].address,
-        block.timestamp + x + 1,
-        { value: parseUnits(10) }
-      );
+      await f.swapper
+        .connect(users[x])
+        .swapETHForExactTokens(
+          parseUnits(10000),
+          [ASSETS.WETH.address, ASSETS.FEI.address],
+          users[x].address,
+          block.timestamp + x + 1,
+          { value: parseUnits(10) }
+        );
     }
 
     evmSnapshot1 = await evmSnapshot();
   });
 
-  beforeEach(async function() {
-    if (evmSnapshot2) await evmRevert(evmSnapshot2); 
+  beforeEach(async function () {
+    if (evmSnapshot2) await evmRevert(evmSnapshot2);
 
-      evmSnapshot2 = await evmSnapshot();
+    evmSnapshot2 = await evmSnapshot();
   });
 
-  after(async function() {
+  after(async function () {
     evmRevert(evmSnapshot0);
   });
 
   function testDeposit1(ctrlAddr, vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const vault = vaults[i];
-      it(`deposit ETH as collateral, check ${vault.name} balanace`, async() => {
+      it(`deposit ETH as collateral, check ${vault.name} balanace`, async () => {
         const fuseComptroller = await getContractAt("IFuseComptroller", ctrlAddr);
         const cTokenAddr = await fuseComptroller.cTokensByUnderlying(ZERO_ADDR);
         const cETH = await getContractAt("ICEth", cTokenAddr);
@@ -139,7 +141,7 @@ describe("Rari Fuse", function() {
   function testDeposit2(ctrlAddr, vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`deposit ERC20 -> ${collateral.nameUp} as collateral, check ${name} balanace`, async() => {
+      it(`deposit ERC20 -> ${collateral.nameUp} as collateral, check ${name} balanace`, async () => {
         const fuseComptroller = await getContractAt("IFuseComptroller", ctrlAddr);
 
         const cTokenAddr = await fuseComptroller.cTokensByUnderlying(collateral.address);
@@ -149,9 +151,11 @@ describe("Rari Fuse", function() {
         const negdepositAmount = parseUnits(-DEPOSIT_ERC20, collateral.decimals);
 
         await f[collateral.name].connect(user1).approve(f[name].address, depositAmount);
-        await expect(
-          () => f[name].connect(user1).deposit(depositAmount)
-        ).to.changeTokenBalance(f[collateral.name], user1, negdepositAmount);
+        await expect(() => f[name].connect(user1).deposit(depositAmount)).to.changeTokenBalance(
+          f[collateral.name],
+          user1,
+          negdepositAmount
+        );
 
         let vaultBal = await cToken.balanceOf(f[name].address);
         vaultBal = await formatUnitsOfCurrency(cToken.address, vaultBal);
@@ -169,7 +173,7 @@ describe("Rari Fuse", function() {
   function testBorrow1(vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`borrow ERC20 -> ${debt.nameUp} after depositing ETH as collateral`, async() => {
+      it(`borrow ERC20 -> ${debt.nameUp} after depositing ETH as collateral`, async () => {
         const depositAmount = parseUnits(DEPOSIT_ETH);
         const negdepositAmount = parseUnits(-DEPOSIT_ETH);
         const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
@@ -178,67 +182,81 @@ describe("Rari Fuse", function() {
         await expect(
           await f[name].connect(user1).deposit(depositAmount, { value: depositAmount })
         ).to.changeEtherBalance(user1, negdepositAmount);
-        await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(depositAmount);
+        await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(
+          depositAmount
+        );
 
-        await expect(
-          () => f[name].connect(user1).borrow(borrowAmount)
-        ).to.changeTokenBalance(f[debt.name], user1, borrowAmount);
+        await expect(() => f[name].connect(user1).borrow(borrowAmount)).to.changeTokenBalance(
+          f[debt.name],
+          user1,
+          borrowAmount
+        );
         await expect(await f.f1155.balanceOf(user1.address, borrowID)).to.be.equal(borrowAmount);
       });
     }
   }
 
-    function testBorrow2(vaults) {
-      for (let i = 0; i < vaults.length; i += 1) {
-        const { name, collateral, debt } = vaults[i];
-        it(`borrow ERC20 -> ${debt.nameUp} after depositing ERC20 -> ${collateral.nameUp} as collateral`,
-          async() => {
-            const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
-            const negdepositAmount = parseUnits(-DEPOSIT_ERC20, collateral.decimals);
-            const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
-            const { collateralID, borrowID } = await f[name].vAssets();
+  function testBorrow2(vaults) {
+    for (let i = 0; i < vaults.length; i += 1) {
+      const { name, collateral, debt } = vaults[i];
+      it(`borrow ERC20 -> ${debt.nameUp} after depositing ERC20 -> ${collateral.nameUp} as collateral`, async () => {
+        const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
+        const negdepositAmount = parseUnits(-DEPOSIT_ERC20, collateral.decimals);
+        const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
+        const { collateralID, borrowID } = await f[name].vAssets();
 
-            await f[collateral.name].connect(user1).approve(f[name].address, depositAmount);
-            await expect(
-              () => f[name].connect(user1).deposit(depositAmount)
-            ).to.changeTokenBalance(f[collateral.name], user1, negdepositAmount);
-            await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(depositAmount);
+        await f[collateral.name].connect(user1).approve(f[name].address, depositAmount);
+        await expect(() => f[name].connect(user1).deposit(depositAmount)).to.changeTokenBalance(
+          f[collateral.name],
+          user1,
+          negdepositAmount
+        );
+        await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(
+          depositAmount
+        );
 
-            await expect(
-              () => f[name].connect(user1).borrow(borrowAmount)
-            ).to.changeTokenBalance(f[debt.name], user1, borrowAmount);
-            await expect(await f.f1155.balanceOf(user1.address, borrowID)).to.be.equal(borrowAmount);
-          });
-      }
+        await expect(() => f[name].connect(user1).borrow(borrowAmount)).to.changeTokenBalance(
+          f[debt.name],
+          user1,
+          borrowAmount
+        );
+        await expect(await f.f1155.balanceOf(user1.address, borrowID)).to.be.equal(borrowAmount);
+      });
     }
+  }
 
-    function testBorrow3(vaults) {
-      for (let i = 0; i < vaults.length; i += 1) {
-        const { name, collateral, debt } = vaults[i];
-        it(`borrow ETH after depositing ERC20 -> ${collateral.nameUp} as collateral`, async() => {
-          const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
-          const negdepositAmount = parseUnits(-DEPOSIT_ERC20, collateral.decimals);
-          const borrowAmount = parseUnits(BORROW_ETH);
-          const { collateralID, borrowID } = await f[name].vAssets();
+  function testBorrow3(vaults) {
+    for (let i = 0; i < vaults.length; i += 1) {
+      const { name, collateral, debt } = vaults[i];
+      it(`borrow ETH after depositing ERC20 -> ${collateral.nameUp} as collateral`, async () => {
+        const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
+        const negdepositAmount = parseUnits(-DEPOSIT_ERC20, collateral.decimals);
+        const borrowAmount = parseUnits(BORROW_ETH);
+        const { collateralID, borrowID } = await f[name].vAssets();
 
-          await f[collateral.name].connect(user1).approve(f[name].address, depositAmount);
-          await expect(
-            () => f[name].connect(user1).deposit(depositAmount)
-          ).to.changeTokenBalance(f[collateral.name], user1, negdepositAmount);
-          await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(depositAmount);
+        await f[collateral.name].connect(user1).approve(f[name].address, depositAmount);
+        await expect(() => f[name].connect(user1).deposit(depositAmount)).to.changeTokenBalance(
+          f[collateral.name],
+          user1,
+          negdepositAmount
+        );
+        await expect(await f.f1155.balanceOf(user1.address, collateralID)).to.be.equal(
+          depositAmount
+        );
 
-          await expect(
-            await f[name].connect(user1).borrow(borrowAmount)
-          ).to.changeEtherBalance(user1, borrowAmount);
-          await expect(await f.f1155.balanceOf(user1.address, borrowID)).to.be.equal(borrowAmount);
-        });
-      }
+        await expect(await f[name].connect(user1).borrow(borrowAmount)).to.changeEtherBalance(
+          user1,
+          borrowAmount
+        );
+        await expect(await f.f1155.balanceOf(user1.address, borrowID)).to.be.equal(borrowAmount);
+      });
     }
+  }
 
   function testPaybackAndWithdraw1(vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`payback ERC20 -> ${debt.nameUp} and withdraw ETH`, async function() {
+      it(`payback ERC20 -> ${debt.nameUp} and withdraw ETH`, async function () {
         const depositAmount = parseUnits(DEPOSIT_ETH);
         const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
         const one = parseUnits(1, debt.decimals);
@@ -248,18 +266,18 @@ describe("Rari Fuse", function() {
         await f[name].connect(users[0]).deposit(depositAmount, { value: depositAmount });
 
         for (let x = 1; x < 4; x += 1) {
-          await f[name].connect(users[x]).depositAndBorrow(
-            depositAmount,
-            borrowAmount,
-            { value: depositAmount }
-          );
+          await f[name]
+            .connect(users[x])
+            .depositAndBorrow(depositAmount, borrowAmount, { value: depositAmount });
         }
 
         for (let x = 1; x < 4; x += 1) {
           await f[debt.name].connect(users[x]).approve(f[name].address, borrowAmount);
-          await expect(
-            () => f[name].connect(users[x]).payback(borrowAmount)
-          ).to.changeTokenBalance(f[debt.name], users[x], negborrowAmount);
+          await expect(() => f[name].connect(users[x]).payback(borrowAmount)).to.changeTokenBalance(
+            f[debt.name],
+            users[x],
+            negborrowAmount
+          );
           await expect(await f.f1155.balanceOf(users[x].address, borrowID)).to.be.lt(one);
         }
 
@@ -274,7 +292,7 @@ describe("Rari Fuse", function() {
   function testPaybackAndWithdraw2(vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`payback ERC20 -> ${debt.nameUp} and withdraw ERC20 -> ${collateral.nameUp}`, async() => {
+      it(`payback ERC20 -> ${debt.nameUp} and withdraw ERC20 -> ${collateral.nameUp}`, async () => {
         const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
         const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
         const negborrowAmount = parseUnits(-BORROW_ERC20, debt.decimals);
@@ -285,18 +303,17 @@ describe("Rari Fuse", function() {
 
         for (let x = 1; x < 4; x += 1) {
           await f[collateral.name].connect(users[x]).approve(f[name].address, depositAmount);
-          await f[name].connect(users[x]).depositAndBorrow(
-            depositAmount,
-            borrowAmount
-          );
+          await f[name].connect(users[x]).depositAndBorrow(depositAmount, borrowAmount);
         }
 
         const oneDebt = parseUnits(1, debt.decimals);
         for (let x = 1; x < 4; x += 1) {
           await f[debt.name].connect(users[x]).approve(f[name].address, borrowAmount);
-          await expect(
-            () => f[name].connect(users[x]).payback(borrowAmount)
-          ).to.changeTokenBalance(f[debt.name], users[x], negborrowAmount);
+          await expect(() => f[name].connect(users[x]).payback(borrowAmount)).to.changeTokenBalance(
+            f[debt.name],
+            users[x],
+            negborrowAmount
+          );
           await expect(await f.f1155.balanceOf(users[x].address, borrowID)).to.be.lt(oneDebt);
         }
 
@@ -312,7 +329,7 @@ describe("Rari Fuse", function() {
   function testPaybackAndWithdraw3(vaults) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`payback ETH and withdraw ERC20 -> ${collateral.nameUp}`, async() => {
+      it(`payback ETH and withdraw ERC20 -> ${collateral.nameUp}`, async () => {
         const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
         const borrowAmount = parseUnits(BORROW_ETH);
         const negborrowAmount = parseUnits(-BORROW_ETH);
@@ -323,10 +340,7 @@ describe("Rari Fuse", function() {
 
         for (let x = 1; x < 4; x += 1) {
           await f[collateral.name].connect(users[x]).approve(f[name].address, depositAmount);
-          await f[name].connect(users[x]).depositAndBorrow(
-            depositAmount,
-            borrowAmount
-          );
+          await f[name].connect(users[x]).depositAndBorrow(depositAmount, borrowAmount);
         }
 
         const fractionDebt = parseUnits(1, 16);
@@ -349,15 +363,13 @@ describe("Rari Fuse", function() {
   function testRefinance1(vaults, from, to, flashloanProvider = 1) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`refinance ERC20 -> ${debt.nameUp} debt with ETH as collateral`, async() => {
+      it(`refinance ERC20 -> ${debt.nameUp} debt with ETH as collateral`, async () => {
         const depositAmount = parseUnits(3);
         const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
 
-        await f[name].connect(users[1]).depositAndBorrow(
-          depositAmount,
-          borrowAmount,
-          { value: depositAmount }
-        );
+        await f[name]
+          .connect(users[1])
+          .depositAndBorrow(depositAmount, borrowAmount, { value: depositAmount });
 
         let preVaultDebt = await f[name].borrowBalance(f[from].address);
         preVaultDebt = formatUnitsToNum(preVaultDebt, debt.decimals);
@@ -365,7 +377,8 @@ describe("Rari Fuse", function() {
         let preVaultCollat = await f[name].depositBalance(f[from].address);
         preVaultCollat = formatUnitsToNum(preVaultCollat);
 
-        await f.controller.connect(users[0])
+        await f.controller
+          .connect(users[0])
           .doRefinancing(f[name].address, f[to].address, 1, 1, flashloanProvider);
 
         let postVaultDebt = await f[name].borrowBalance(f[to].address);
@@ -383,15 +396,12 @@ describe("Rari Fuse", function() {
   function testRefinance2(vaults, from, to, flashloanProvider = 1) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`refinance ERC20 -> ${debt.nameUp} debt with ERC20 -> ${collateral.nameUp} as collateral`, async() => {
+      it(`refinance ERC20 -> ${debt.nameUp} debt with ERC20 -> ${collateral.nameUp} as collateral`, async () => {
         const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
         const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
 
         await f[collateral.name].connect(users[1]).approve(f[name].address, depositAmount);
-        await f[name].connect(users[1]).depositAndBorrow(
-          depositAmount,
-          borrowAmount,
-        );
+        await f[name].connect(users[1]).depositAndBorrow(depositAmount, borrowAmount);
 
         let preVaultDebt = await f[name].borrowBalance(f[from].address);
         preVaultDebt = formatUnitsToNum(preVaultDebt, debt.decimals);
@@ -399,7 +409,8 @@ describe("Rari Fuse", function() {
         let preVaultCollat = await f[name].depositBalance(f[from].address);
         preVaultCollat = formatUnitsToNum(preVaultCollat, collateral.decimals);
 
-        await f.controller.connect(users[0])
+        await f.controller
+          .connect(users[0])
           .doRefinancing(f[name].address, f[to].address, 1, 1, flashloanProvider);
 
         let postVaultDebt = await f[name].borrowBalance(f[to].address);
@@ -417,15 +428,12 @@ describe("Rari Fuse", function() {
   function testRefinance3(vaults, from, to, flashloanProvider = 1) {
     for (let i = 0; i < vaults.length; i += 1) {
       const { name, collateral, debt } = vaults[i];
-      it(`refinance ETH debt with ERC20 -> ${collateral.nameUp} as collateral`, async() => {
+      it(`refinance ETH debt with ERC20 -> ${collateral.nameUp} as collateral`, async () => {
         const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
         const borrowAmount = parseUnits(BORROW_ETH);
 
         await f[collateral.name].connect(users[1]).approve(f[name].address, depositAmount);
-        await f[name].connect(users[1]).depositAndBorrow(
-          depositAmount,
-          borrowAmount
-        );
+        await f[name].connect(users[1]).depositAndBorrow(depositAmount, borrowAmount);
 
         let preVaultDebt = await f[name].borrowBalance(f[from].address);
         preVaultDebt = formatUnitsToNum(preVaultDebt);
@@ -433,7 +441,8 @@ describe("Rari Fuse", function() {
         let preVaultCollat = await f[name].depositBalance(f[from].address);
         preVaultCollat = formatUnitsToNum(preVaultCollat, collateral.decimals);
 
-        await f.controller.connect(users[0])
+        await f.controller
+          .connect(users[0])
           .doRefinancing(f[name].address, f[to].address, 1, 1, flashloanProvider);
 
         let postVaultDebt = await f[name].borrowBalance(f[to].address);
@@ -448,8 +457,8 @@ describe("Rari Fuse", function() {
     }
   }
 
-  describe("Pool 3", function() {
-    before(async function() {
+  describe("Pool 3", function () {
+    before(async function () {
       //evmRevert(evmSnapshot1);
 
       for (let i = 0; i < VAULTS.length; i += 1) {
@@ -461,7 +470,7 @@ describe("Rari Fuse", function() {
 
     testDeposit1(fuseAddrs.fuse3Comptroller, [vaultethdai, vaultethusdc]);
     testDeposit2(fuseAddrs.fuse3Comptroller, [vaultdaiusdc, vaultusdcdai]);
-    
+
     testBorrow1([vaultethdai, vaultethusdc]);
     testBorrow2([vaultdaiusdc, vaultusdcdai]);
     testBorrow3([vaultdaieth]);
@@ -475,8 +484,8 @@ describe("Rari Fuse", function() {
     testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
 
-  describe("Pool 6", function() {
-    before(async function() {
+  describe("Pool 6", function () {
+    before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
 
@@ -488,7 +497,12 @@ describe("Rari Fuse", function() {
     });
 
     testDeposit1(fuseAddrs.fuse6Comptroller, [vaultethdai, vaultethusdc, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse6Comptroller, [vaultdaiusdc, vaultusdcdai, vaultdaiusdt, vaultdaieth]);
+    testDeposit2(fuseAddrs.fuse6Comptroller, [
+      vaultdaiusdc,
+      vaultusdcdai,
+      vaultdaiusdt,
+      vaultdaieth,
+    ]);
 
     testBorrow1([vaultethdai, vaultethusdc, vaultethfei]);
     testBorrow2([vaultdaiusdc, vaultusdcdai]);
@@ -506,8 +520,8 @@ describe("Rari Fuse", function() {
     //testRefinance3([vaultdaieth], "fuse6", "fuse18", 1);
   });
 
-  describe("Pool 7", function() {
-    before(async function() {
+  describe("Pool 7", function () {
+    before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
 
@@ -537,8 +551,8 @@ describe("Rari Fuse", function() {
     //testRefinance3([vaultfeieth], "fuse7", "fuse18", 1);
   });
 
-  describe("Pool 8", function() {
-    before(async function() {
+  describe("Pool 8", function () {
+    before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
 
@@ -565,8 +579,8 @@ describe("Rari Fuse", function() {
     testRefinance3([vaultdaieth, vaultfeieth], "fuse8", "fuse18", 1);
   });
 
-  describe("Pool 18", function() {
-    before(async function() {
+  describe("Pool 18", function () {
+    before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
 
@@ -578,7 +592,12 @@ describe("Rari Fuse", function() {
     });
 
     testDeposit1(fuseAddrs.fuse18Comptroller, [vaultethdai, vaultethusdc, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse18Comptroller, [vaultdaiusdc, vaultusdcdai, vaultdaiusdt, vaultdaieth]);
+    testDeposit2(fuseAddrs.fuse18Comptroller, [
+      vaultdaiusdc,
+      vaultusdcdai,
+      vaultdaiusdt,
+      vaultdaieth,
+    ]);
 
     testBorrow1([vaultethdai, vaultethusdc, vaultethfei]);
     testBorrow2([vaultdaiusdc, vaultusdcdai]);
@@ -592,5 +611,4 @@ describe("Rari Fuse", function() {
     testRefinance2([vaultusdcdai], "fuse18", "fuse3", 1);
     testRefinance3([vaultdaieth, vaultfeieth], "fuse18", "fuse8", 2);
   });
-
 });
