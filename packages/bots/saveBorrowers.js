@@ -6,9 +6,9 @@ import chalk from 'chalk';
 import { ethers } from 'ethers';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 import { VAULTS_ADDRESS } from './consts/index.js';
-import { getProvider, loadContracts } from './utils/index.js';
+import { getSigner, loadContracts } from './utils/index.js';
 
-const provider = getProvider();
+const signer = getSigner();
 
 const searchBorrowers = async (vault, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
@@ -54,7 +54,7 @@ const saveFile = borrowers => {
     .then(() => console.log(`Successfully saved ${borrowers.length} borrowers`));
 };
 const getBorrowers = async () => {
-  const contracts = await loadContracts(provider);
+  const contracts = await loadContracts(signer.provider);
 
   let borrowers = [];
 

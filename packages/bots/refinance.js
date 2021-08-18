@@ -4,13 +4,12 @@ import { ethers, BigNumber } from 'ethers';
 import { VAULTS_ADDRESS } from './consts/index.js';
 import {
   loadContracts,
-  getProvider,
   getSigner,
   getFlashloanProvider,
 } from './utils/index.js';
 const { utils } = ethers;
 
-const provider = getProvider();
+const signer = getSigner();
 
 function getProviderName(providerAddr, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
@@ -41,7 +40,6 @@ async function switchProviders(contracts, vault, newProviderAddr) {
   // increase by 10%
   gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
 
-  const signer = getSigner(provider);
   return contracts.Controller.connect(signer).doRefinancing(
     vault.address,
     newProviderAddr,
@@ -61,7 +59,7 @@ async function shouldChange(currentRate, newRate, lastSwitch) {
   // change when difference in APRs is more than 4%
   const APR_THRESHOLD = utils.parseUnits('4', 25);
 
-  const currentBlockNumber = await provider.getBlockNumber();
+  const currentBlockNumber = await signer.provider.getBlockNumber();
   const timeCheck = !lastSwitch
     ? true // first switch
     : // check if last switch was at least 1h ago
@@ -133,7 +131,7 @@ function delay(s) {
 async function main() {
   console.log('Start checking for refinancing...');
 
-  const contracts = await loadContracts(provider);
+  const contracts = await loadContracts(signer.provider);
 
   // eslint-disable-next-line
   while (true) {

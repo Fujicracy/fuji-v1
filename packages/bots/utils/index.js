@@ -4,5 +4,4 @@ export * from './contractAddress.js';
 export * from './liquidateHelpers.js';
 export * from './prices.js';
 export * from './redis.js'
-export * from './provider.js'
 export * from './signer.js'

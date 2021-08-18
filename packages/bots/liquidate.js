@@ -4,7 +4,6 @@ import { ethers, BigNumber } from 'ethers';
 import { ASSETS, VAULTS_ADDRESS } from './consts/index.js';
 import {
   loadContracts,
-  getProvider,
   getSigner,
   getGasPrice,
   getETHPrice,
@@ -17,7 +16,7 @@ import {
 } from './utils/index.js';
 const { utils } = ethers;
 
-const provider = getProvider();
+const signer = getSigner();
 
 const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   let totalDebt = BigNumber.from(0);
@@ -67,7 +66,6 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
   gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
 
   try {
-    const signer = getSigner(provider);
     const res = await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
       positions.map(p => p.account),
       vault.address,
@@ -116,7 +114,7 @@ const getAllBorrowers = async vault => {
 };
 
 const checkForLiquidations = async () => {
-  const contracts = await loadContracts(provider);
+  const contracts = await loadContracts(signer.provider);
 
   const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
