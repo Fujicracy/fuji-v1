@@ -1,19 +1,16 @@
-require('dotenv').config();
+import retry from 'async-retry';
+import chalk from 'chalk';
+import { ethers, BigNumber } from 'ethers';
+import { VAULTS_ADDRESS } from './consts/index.js';
+import {
+  loadContracts,
+  getProvider,
+  getSigner,
+  getFlashloanProvider,
+} from './utils/index.js';
+const { utils } = ethers;
 
-const retry = require('async-retry');
-const chalk = require('chalk');
-const { ethers, Wallet } = require('ethers');
-const { loadContracts, getGasPrice, getLiquidationProviderIndex } = require('./utils');
-
-const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
-let signer;
-if (process.env.PRIVATE_KEY) {
-  signer = new Wallet(process.env.PRIVATE_KEY, provider);
-} else {
-  throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
-}
-
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
+const provider = getProvider();
 
 function getProviderName(providerAddr, contracts) {
   const dydxProviderAddr = contracts.ProviderDYDX.address;
@@ -33,26 +30,25 @@ function getProviderName(providerAddr, contracts) {
 }
 
 async function switchProviders(contracts, vault, newProviderAddr) {
-  const index = await getLiquidationProviderIndex(vault, contracts);
-  const gasPrice = await getGasPrice();
+  const index = await getFlashloanProvider(vault, contracts);
   let gasLimit = await contracts.Controller.estimateGas.doRefinancing(
     vault.address,
     newProviderAddr,
     1,
     1,
     index,
-    { gasPrice },
   );
   // increase by 10%
-  gasLimit = gasLimit.add(gasLimit.div(ethers.BigNumber.from('10')));
+  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
 
+  const signer = getSigner(provider);
   return contracts.Controller.connect(signer).doRefinancing(
     vault.address,
     newProviderAddr,
     1,
     1,
     index,
-    { gasPrice, gasLimit },
+    { gasLimit },
   );
 }
 
@@ -63,7 +59,7 @@ async function shouldChange(currentRate, newRate, lastSwitch) {
   }
   const BLOCKS_IN_HOUR = 269; // approx.
   // change when difference in APRs is more than 4%
-  const APR_THRESHOLD = ethers.utils.parseUnits('4', 25);
+  const APR_THRESHOLD = utils.parseUnits('4', 25);
 
   const currentBlockNumber = await provider.getBlockNumber();
   const timeCheck = !lastSwitch
@@ -123,6 +119,7 @@ async function checkRates(vaultName, contracts) {
 }
 
 async function checkForRefinance(contracts) {
+  const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     await checkRates(vaultName, contracts);
@@ -136,7 +133,7 @@ function delay(s) {
 async function main() {
   console.log('Start checking for refinancing...');
 
-  const contracts = await loadContracts(signer);
+  const contracts = await loadContracts(provider);
 
   // eslint-disable-next-line
   while (true) {
