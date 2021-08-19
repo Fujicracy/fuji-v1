@@ -12,15 +12,14 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   border: ${props => props.hasBlackContainer && `0.1rem solid ${themeGet('colors.text05')}`};
   backdrop-filter: ${props => props.hasBlackContainer && 'blur(0.375rem)'};
   -webkit-backdrop-filter: blur(0.375rem);
-  border-radius: 1rem;
+  border-radius: 16px;
   margin-top: 2rem;
   position: relative;
+  padding: ${props => (props.hasBlackContainer ? '32px' : '0px')};
 
   ${media.lessThan('medium')`
-    padding: ${props => (props.hasBlackContainer ? '16px' : '0px')};
-  `}
-  ${media.greaterThan('medium')`
-    padding: ${props => (props.hasBlackContainer ? '32px' : '0px')};
+    padding: ${props => (props.hasBlackContainer ? '12px' : '0px')};
+    border-radius: 6px;
   `}
 
   ${size}

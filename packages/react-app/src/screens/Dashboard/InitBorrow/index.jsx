@@ -219,7 +219,7 @@ function InitBorrow({ contracts, provider, address }) {
       <div className="left-content">
         {!isMobile && <HowItWorks />}
         <BlackBoxContainer mb={4} hasBlackContainer={!isMobile}>
-          <Grid container spacing={4}>
+          <Grid container spacing={isMobile ? 2 : 4}>
             <Grid item xs={8} sm={12} md={12}>
               <SelectNetwork
                 title="Networks"

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 // import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Typography from '@material-ui/core/Typography';
 import { find } from 'lodash';
 import { VAULTS } from 'consts/vaults';
 import { Image, Box, Text, Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
 import { useContractReader, useRates } from '../../hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
@@ -94,16 +97,20 @@ function ProvidersList({
   isSelectable = true,
 }) {
   const rates = useRates(contracts);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  console.log({ isMobile });
   return (
     <BlackBoxContainer zIndex={1} hasBlackContainer={hasBlackContainer}>
-      <SectionTitle mb={1}>
-        <Typography variant="h3">{title}</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip">
-            Live fetching borrow rates from underlying protocols that provide liquidity.
-          </span>
-        </div>
+      <SectionTitle sx={{ fontSize: isMobile ? 1 : 2 }} mb={1}>
+        {title}
+        {!isMobile && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip">
+              Live fetching borrow rates from underlying protocols that provide liquidity.
+            </span>
+          </div>
+        )}
       </SectionTitle>
 
       {markets &&

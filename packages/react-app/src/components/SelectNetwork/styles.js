@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
+import media from 'styled-media-query';
 
 export const RadioContainer = styled(Box).attrs({
   display: 'flex',
@@ -27,4 +28,8 @@ export const NetworkButton = styled(Box)`
   border: 1px solid rgb(60, 60, 60);
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: ${props => (props.clicked ? 'white' : 'rgba(255, 255, 255, 0.3)')};
+
+  ${media.lessThan('medium')`
+    font-size: 10px;
+  `}
 `;
