@@ -49,7 +49,7 @@ function DebtForm({ position, contracts, provider, address }) {
     : null;
   const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
     address,
-    contracts ? contracts[vault.name].address : '0x', // TODO ask boyan
+    position.vaultAddress,
   ]);
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [

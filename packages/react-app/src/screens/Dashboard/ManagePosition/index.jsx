@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
-import { VAULTS, VAULTS_ADDRESS } from 'consts/vaults';
+import { VAULTS } from 'consts';
 import { useContractReader } from '../../../hooks';
 
 import FlashClose from '../FlashClose';
@@ -16,15 +16,18 @@ import ProvidersList from '../../../components/ProvidersList';
 import './styles.css';
 
 function ManagePosition({ contracts, provider, address }) {
+  const defaultVault = Object.values(VAULTS)[0];
+
   const queries = new URLSearchParams(useLocation().search);
 
   // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
 
-  const borrowAsset = queries?.get('borrowAssetName') || 'DAI';
-  const vaultAddress = queries?.get('vaultAddress')?.toLowerCase() || VAULTS_ADDRESS.VaultETHDAI;
+  const vaultAddress = queries?.get('vaultAddress')?.toLowerCase() || defaultVault?.address;
 
   const vault = VAULTS[vaultAddress];
+  const borrowAssetName = vault?.borrowAsset.name;
+
   const position = {
     vaultAddress,
     debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -87,10 +90,10 @@ function ManagePosition({ contracts, provider, address }) {
                         />
                       ) : (
                         <SupplyAndBorrowForm
-                          borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       )}
                     </div>
@@ -104,10 +107,10 @@ function ManagePosition({ contracts, provider, address }) {
                         />
                       ) : (
                         <RepayAndWithdrawForm
-                          borrowAsset={borrowAsset}
                           contracts={contracts}
                           provider={provider}
                           address={address}
+                          position={position}
                         />
                       )}
                     </div>
@@ -118,7 +121,7 @@ function ManagePosition({ contracts, provider, address }) {
           </div>
         </div>
         <FlashClose
-          borrowAsset={borrowAsset}
+          position={position}
           contracts={contracts}
           provider={provider}
           address={address}
@@ -126,7 +129,7 @@ function ManagePosition({ contracts, provider, address }) {
       </div>
       <div className="right-content">
         <CollaterizationIndicator position={position} />
-        <ProvidersList contracts={contracts} markets={[borrowAsset]} isSelectable={false} />
+        <ProvidersList contracts={contracts} markets={[borrowAssetName]} isSelectable={false} />
       </div>
     </div>
   );

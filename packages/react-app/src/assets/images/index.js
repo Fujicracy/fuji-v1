@@ -3,6 +3,7 @@ import daiIcon from './icons/tokens/DAI.svg';
 import usdcIcon from './icons/tokens/USDC.svg';
 import usdtIcon from './icons/tokens/USDT.svg';
 import btcIcon from './icons/tokens/BTC.svg';
+import feiIcon from './icons/tokens/FEI.svg';
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
@@ -66,6 +67,7 @@ export {
   usdcIcon,
   usdtIcon,
   btcIcon,
+  feiIcon,
   linkedinIcon,
   plusIcon,
   closeIcon,

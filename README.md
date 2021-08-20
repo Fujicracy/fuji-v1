@@ -28,20 +28,20 @@ There are **2 options** to do this:
 cd fuji
 yarn deploy
 ```
-This command will:
-- create `packages/hardhat/artifacts` and populate it with new contracts data: *abis, bytecode and addresses*
+This command:
+- will create `packages/hardhat/artifacts` and will populate it with new contracts data: *abis, bytecode and addresses*
 - will copy this data to other workspaces: in `packages/react-app/src/contracts` and in `packages/bots/contracts`
 
 > This could be useful if you want to test on completely new contracts.
 
-**2.2. Download** abis, bytecode and addresses of already deployed on mainnet contracts.
+**2.2. Sync** abis, bytecode and addresses of already deployed on mainnet contracts.
 ```
 # in another terminal window
 cd fuji
-yarn contracts:download
+yarn sync
 ```
-This command will:
-- will download *abis, bytecode and addresses* to `packages/react-app/src/contracts` and to `packages/bots/contracts`
+This command:
+- will sync *abis, bytecode and addresses* of contracts already deployed on mainnet to `packages/react-app/src/contracts` and to `packages/bots/contracts`
 
 > Doing this way, you'll have the contracts with all the historical data and events, till the moment of the fork (from step 1).
 
@@ -49,7 +49,7 @@ This command will:
 
 3.1. Create `.env` in `packages/react-app` and set the following variables:
 ```
-REACT_APP_INFURA_ID=
+REACT_APP_INFURA_ID=<YOUR-KEY>
 REACT_APP_CHAIN_ID=31337
 ```
 

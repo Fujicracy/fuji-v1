@@ -4,31 +4,18 @@ const fs = require('fs');
 
 const DAI_ADDR = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 const USDC_ADDR = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
+const CHAIN_ID = process.env.CHAIN_ID || 1;
+const DEPLOYMENT = process.env.DEPLOYMENT || 'core';
 
-const loadSingleContract = (contractName, signer) => {
-  const newContract = new Contract(
-    // eslint-disable-next-line
-    require(`./contracts/${contractName}.address.js`),
-    // eslint-disable-next-line
-    require(`./contracts/${contractName}.abi.js`),
-    signer,
-  );
-  try {
-    // eslint-disable-next-line
-    newContract.bytecode = require(`./contracts/${contractName}.bytecode.js`);
-  } catch (e) {
-    console.log(e);
-  }
-  return newContract;
-};
+const loadContractFrom = (contracts, contractName, signer) => {
+  const address = contracts[contractName].address;
+  const abi = contracts[contractName].abi;
+  const bytecode = contracts[contractName].bytecode;
 
-const getContractsList = () => {
-  return fs
-    .readdirSync('./contracts')
-    .filter(file => file.match(/.*\.address\.js$/))
-    .map(file => {
-      return file.split('.')[0];
-    });
+  const contract = new Contract(address, abi, signer);
+  if (bytecode) contract.bytecode = bytecode;
+
+  return contract;
 };
 
 const loadContracts = async providerOrSigner => {
@@ -48,10 +35,11 @@ const loadContracts = async providerOrSigner => {
       signer = providerOrSigner;
     }
 
-    const contractList = getContractsList();
+    const contractsData = require(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+    const contractList = Object.keys(contractsData);
 
     newContracts = contractList.reduce((accumulator, contractName) => {
-      accumulator[contractName] = loadSingleContract(contractName, signer);
+      accumulator[contractName] = loadContractFrom(contractsData, contractName, signer);
       return accumulator;
     }, {});
   } catch (e) {
@@ -98,7 +86,6 @@ module.exports = {
   DAI_ADDR,
   USDC_ADDR,
   loadContracts,
-  loadSingleContract,
   getGasPrice,
   getETHPrice,
   getLiquidationProviderIndex,

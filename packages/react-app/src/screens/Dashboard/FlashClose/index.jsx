@@ -12,28 +12,30 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { DAI_ADDRESS, USDC_ADDRESS } from 'consts/addresses';
-import { Transactor, GasEstimator, getVaultName } from 'helpers';
+import { VAULTS, ASSET_NAME, PROVIDERS } from 'consts';
+import { Transactor, GasEstimator } from 'helpers';
 
 import './styles.css';
 
-async function getLiquidationProviderIndex(vaultName, contracts) {
+async function getLiquidationProviderIndex(vault, contracts) {
   const providerIndex = {
     aave: '0',
     dydx: '1',
     cream: '2',
   };
-  const { borrowAsset } = await contracts[vaultName].vAssets();
-  const activeProvider = await contracts[vaultName].activeProvider();
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
+  const activeProvider = await contracts[vault.name].activeProvider();
+  const dydxProviderAddr = PROVIDERS.DYDX.address;
 
-  if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
+  if (
+    [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
+    activeProvider !== dydxProviderAddr
+  ) {
     return providerIndex.dydx;
   }
   return providerIndex.cream;
 }
 
-function FlashClose({ borrowAsset, contracts, provider }) {
+function FlashClose({ position, contracts, provider }) {
   const tx = Transactor(provider);
 
   const [dialog, setDialog] = useState(false);
@@ -41,21 +43,22 @@ function FlashClose({ borrowAsset, contracts, provider }) {
   const [confirmation, setConfirmation] = useState(false);
   const [amount, setAmount] = useState('');
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const vault = VAULTS[position.vaultAddress];
+
+  const decimals = vault.borrowAsset.decimals;
   const onFlashClose = async () => {
     setLoading(true);
-    const vaultName = getVaultName(borrowAsset);
-    const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
+    const providerIndex = await getLiquidationProviderIndex(vault, contracts);
 
     const gasLimit = await GasEstimator(contracts.Fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
-      contracts[vaultName].address,
+      position.vaultAddress,
       providerIndex,
     ]);
     const res = await tx(
       contracts.Fliquidator.flashClose(
         parseUnits(amount, decimals),
-        contracts[vaultName].address,
+        position.vaultAddress,
         providerIndex,
         { gasLimit },
       ),
@@ -138,7 +141,7 @@ function FlashClose({ borrowAsset, contracts, provider }) {
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip">
-              Repay your debt postion from your collateral by using a flash loan. Fee: 1%
+              Repay your debt position from your collateral by using a flash loan. Fee: 1%
             </span>
           </div>
         </div>

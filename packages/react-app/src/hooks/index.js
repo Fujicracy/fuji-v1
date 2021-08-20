@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 export { default as useContractLoader } from './ContractLoader';
 export { default as useCustomContractLoader } from './CustomContractLoader';
 export { default as useExternalContractLoader } from './ExternalContractLoader';
