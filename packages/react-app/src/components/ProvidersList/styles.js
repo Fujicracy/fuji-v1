@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { themeGet } from '@styled-system/theme-get';
 import { Box, Flex } from 'rebass';
+import media from 'styled-media-query';
 
 export const ProviderContainer = styled(Box).attrs(() => ({
   // bg: themeGet('colors.dark56')(props),
@@ -14,6 +15,11 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   justify-content: space-between;
   color: ${themeGet('colors.text64')};
   cursor: pointer;
+
+  ${media.lessThan('medium')`
+    padding: 0px;
+    height: 40px;
+  `}
 `;
 
 export const AssetContainer = styled(Box).attrs(() => ({

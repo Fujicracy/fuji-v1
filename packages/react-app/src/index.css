@@ -251,6 +251,13 @@ input[type='number'] {
 .main-button {
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   color: var(--text);
+  height: 48px;
+}
+
+@media screen and (max-width: 768px) {
+  .main-button {
+    height: 40px !important;
+  }
 }
 
 .main-button:hover {
@@ -296,22 +303,22 @@ input[type='number'] {
 
 .container {
   /* z-index: 1; */
-  margin: 0px 32px;
+  /* margin: 0px 32px; */
   margin-top: 7.75rem;
   min-height: calc(100vh - 13.125rem);
-  max-width: 65.875rem;
+  /* max-width: 65.875rem; */
   width: calc(100% - 4rem);
   /*padding: 0rem 2rem;*/
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   line-height: 150%;
   padding-bottom: 4rem;
   position: relative;
 }
 
 .initial-step {
-  max-width: 75rem !important;
+  max-width: 90rem !important;
 }
 
 .left-content {
@@ -354,27 +361,6 @@ input[type='number'] {
   width: calc(50% - 1.5rem);
   margin-right: 1.5rem;
   margin-left: 1.5rem;
-}
-
-@media screen and (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    margin-top: 0rem;
-  }
-
-  .center-content {
-    max-width: 100%;
-    margin-left: 0;
-    margin-top: 2.5rem;
-    z-index: 1;
-  }
-
-  .right-content {
-    max-width: 100%;
-    margin-left: 0;
-    margin-top: 2.5rem;
-    z-index: 1;
-  }
 }
 
 /* ------------- */

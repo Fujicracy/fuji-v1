@@ -30,6 +30,6 @@ export const NetworkButton = styled(Box)`
   color: ${props => (props.clicked ? 'white' : 'rgba(255, 255, 255, 0.3)')};
 
   ${media.lessThan('medium')`
-    font-size: 10px;
+    font-size: 12px;
   `}
 `;

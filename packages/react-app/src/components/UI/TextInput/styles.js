@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { mapToTheme } from 'styled-map';
 import { themeGet } from '@styled-system/theme-get';
+import media from 'styled-media-query';
 
 export const InputContainer = styled.div`
-  height: 3.5rem;
+  height: 56px;
   border-radius: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -17,6 +18,10 @@ export const InputContainer = styled.div`
   &:focus-within {
     border: 1px solid ${themeGet('colors.primary')};
   }
+
+  ${media.lessThan('medium')`
+    height: 40px;
+  `}
 `;
 
 export const SubTitleContainer = styled.div`
@@ -45,9 +50,9 @@ export const Description = styled.label`
 `;
 
 export const AdornmentAvatar = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 1rem;
+  width: ${props => (props.width ? props.width : '1.5rem')};
+  height: ${props => (props.width ? props.width : '1.5rem')};
+  margin-right: ${props => (props.marginRight ? props.marginRight : '1rem')};
   src: ${props => props.src};
 `;
 
@@ -63,7 +68,7 @@ export const StyledInput = styled.input`
   justify-content: flex-start;
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: ${props => (props.fontSize ? props.fontSize : '1rem')};
   font-weight: 600;
   border-color: ${props => (props.error ? 'red' : 'black')};
   margin: 0;

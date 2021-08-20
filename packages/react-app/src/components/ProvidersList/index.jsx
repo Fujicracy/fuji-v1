@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 // import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { find } from 'lodash';
-import { VAULTS } from 'consts';
 import { Image, Box, Text, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { useContractReader, useRates } from '../../hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
+import AnimatedCounter from '../UI/AnimatedCounter';
+
 import './styles.css';
 import { ProviderContainer, AssetContainer } from './styles';
 
@@ -19,6 +20,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   useEffect(() => {
     let tmpDefaultOption;
@@ -35,8 +37,20 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   }, [rates, activeProvider, vault.providers, vault.borrowAsset.id, contracts]);
 
   return (
-    <ProviderContainer>
-      {isDropDown ? (
+    <ProviderContainer isMobile={isMobile}>
+      {isMobile ? (
+        <Box
+          width={1 / 1}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          color="#42FF00"
+          fontSize={4}
+          fontWeight="700"
+        >
+          <AnimatedCounter countTo={defaultOption?.rate} /> %
+        </Box>
+      ) : isDropDown ? (
         <>
           <Box width={1 / 3} alignItems="center">
             <AssetContainer>
@@ -98,10 +112,9 @@ function ProvidersList({
 }) {
   const rates = useRates(contracts);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  console.log({ isMobile });
   return (
-    <BlackBoxContainer zIndex={1} hasBlackContainer={hasBlackContainer}>
-      <SectionTitle sx={{ fontSize: isMobile ? 1 : 2 }} mb={1}>
+    <BlackBoxContainer zIndex={1} hasBlackContainer={isMobile ? true : hasBlackContainer}>
+      <SectionTitle fontSize={isMobile ? 1 : 2} mb={3}>
         {title}
         {!isMobile && (
           <div className="tooltip-info">

@@ -11,7 +11,6 @@
   opacity: 0.52;
   box-shadow: 0px -90px 50px rgba(238, 2, 70, 0.08);
   filter: blur(16px);
-  display: none;
 }
 
 .container:not(.home-container) ~ .bg-effect {
@@ -21,11 +20,6 @@
 @media screen and (max-width: 710px) {
   header,
   footer,
-  .container,
-  .bg-effect {
-    display: none;
-  }
-
   .ohno {
     display: flex;
   }

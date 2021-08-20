@@ -18,8 +18,9 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   padding: ${props => (props.hasBlackContainer ? '32px' : '0px')};
 
   ${media.lessThan('medium')`
-    padding: ${props => (props.hasBlackContainer ? '12px' : '0px')};
+    padding: ${props => (props.hasBlackContainer ? '14px' : '0px')};
     border-radius: 6px;
+    border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   `}
 
   ${size}

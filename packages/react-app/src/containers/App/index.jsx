@@ -20,10 +20,12 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Container, FadingBackground, NavText } from './styles';
 import './style.css';
 
-function App() {
+function App(props) {
   const theme = themes.main;
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
+  console.log({ props });
   return (
     <ThemeProvider theme={theme}>
       <ModalProvider backgroundComponent={FadingBackground}>
@@ -71,12 +73,6 @@ function App() {
                 </NavUnlisted>
               </footer>
             )}
-            {!isMobile && <div className="bg-effect" />}
-            {/* <div className="ohno">
-              Oh no!
-              <br />
-              This website isn&apos;t available (yet) on mobile
-            </div> */}
           </HashRouter>
         </Container>
       </ModalProvider>

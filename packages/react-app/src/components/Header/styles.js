@@ -16,6 +16,10 @@ export const Container = styled(Box).attrs({
   backdrop-filter: blur(0.25rem);
   -webkit-backdrop-filter: blur(0.25rem);
   ${size}
+
+  ${media.lessThan('medium')`
+    height:50px;
+  `}
 `;
 
 export const Logo = styled.img`

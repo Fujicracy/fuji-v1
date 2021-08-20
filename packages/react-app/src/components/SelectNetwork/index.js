@@ -15,17 +15,19 @@ const SelectNetwork = ({ hasBlackContainer = true }) => {
   return (
     <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
       <SectionTitle fontSize={isMobile ? 1 : 2} mb={3}>
-        Network
+        Markets
       </SectionTitle>
       <RadioContainer>
         <NetworkButton left clicked={network === 'ETH'} onClick={() => setNetwork('ETH')}>
-          <Image src={ethIcons.GRAY} width={isMobile ? 8 : 12} mr={2} />
-          Ethereum
+          <Image src={ethIcons.GRAY} width={isMobile ? 10 : 12} mr={2} />
+          Base
         </NetworkButton>
         <NetworkButton right clicked={network === 'MATIC'}>
-          <Image src={maticIcons.GRAY} width={isMobile ? 12 : 22} height={20} mr={2} />
-          Matic
-          <Image src={comingSoonIcon} width={isMobile ? 20 : 30} />
+          <Image src={maticIcons.GRAY} width={isMobile ? 14 : 20} height={20} mr={2} />
+          Fuse
+          <div style={{ position: 'absolute', marginLeft: '40px', marginTop: '-15px' }}>
+            <Image src={comingSoonIcon} width={30} />
+          </div>
         </NetworkButton>
       </RadioContainer>
     </BlackBoxContainer>

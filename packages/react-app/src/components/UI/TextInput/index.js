@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import {
   InputContainer,
@@ -32,14 +34,22 @@ const TextField = React.forwardRef(
     },
     ref,
   ) => {
+    const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+
     return (
-      <Box mb={4}>
+      <Box mb={isMobile ? 3 : 4}>
         <SubTitleContainer>
           <label>{subTitle}</label>
           <SubTitleInfo>{subTitleInfo}</SubTitleInfo>
         </SubTitleContainer>
         <InputContainer>
-          <AdornmentAvatar src={startAdornmentImage} alt={startAdornmentImage} />
+          <AdornmentAvatar
+            src={startAdornmentImage}
+            alt={startAdornmentImage}
+            width={isMobile && '20px'}
+            height={isMobile && '20px'}
+            marginRight={isMobile && '8px'}
+          />
           <StyledInput
             name={name}
             type={type}
@@ -51,6 +61,7 @@ const TextField = React.forwardRef(
             disabled={disabled}
             ref={ref}
             autoComplete={autoComplete || 'off'}
+            fontSize={isMobile && '12px'}
           />
           {endAdornment &&
             (endAdornment?.type === 'currency' ? (

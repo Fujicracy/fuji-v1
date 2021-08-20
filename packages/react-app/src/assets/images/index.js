@@ -8,6 +8,7 @@ import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
 import downArrowIcon from './icons/down-arrow.svg';
+import doubleDownArrowIcon from './icons/double-down.svg';
 import upArrowIcon from './icons/up_arrow.svg';
 import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
@@ -74,6 +75,7 @@ export {
   flaskIcon,
   comingSoonIcon,
   downArrowIcon,
+  doubleDownArrowIcon,
   upArrowIcon,
   barIcon,
   // Images
