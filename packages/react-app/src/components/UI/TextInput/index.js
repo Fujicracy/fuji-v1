@@ -46,9 +46,9 @@ const TextField = React.forwardRef(
           <AdornmentAvatar
             src={startAdornmentImage}
             alt={startAdornmentImage}
-            width={isMobile && '20px'}
-            height={isMobile && '20px'}
-            marginRight={isMobile && '8px'}
+            width={isMobile ? '20px' : '24px'}
+            height={isMobile ? '20px' : '24px'}
+            marginRight={isMobile ? '8px' : '16px'}
           />
           <StyledInput
             name={name}
@@ -61,7 +61,7 @@ const TextField = React.forwardRef(
             disabled={disabled}
             ref={ref}
             autoComplete={autoComplete || 'off'}
-            fontSize={isMobile && '12px'}
+            fontSize={isMobile ? '12px' : '14px'}
           />
           {endAdornment &&
             (endAdornment?.type === 'currency' ? (

@@ -13,9 +13,9 @@ import {
   CircularProgress,
   DialogTitle,
   Grid,
-  Box,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { Box } from 'rebass';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useBalance, useContractReader, useExchangePrice } from 'hooks';
 import {
@@ -223,7 +223,7 @@ function InitBorrow({ contracts, provider, address }) {
       <Box maxWidth="90rem" padding="32px">
         <Grid container spacing={isMobile ? 4 : 6}>
           <Grid item xs={12} sm={4} md={4}>
-            <Box paddingLeft={!isMobile && 10}>
+            <Box pl={!isMobile && 10}>
               {!isMobile && <HowItWorks />}
               <BlackBoxContainer hasBlackContainer={!isMobile}>
                 <Grid container spacing={isMobile ? 2 : 4}>
@@ -358,7 +358,7 @@ function InitBorrow({ contracts, provider, address }) {
             </BlackBoxContainer>
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
-            <Box paddingRight={!isMobile && 10}>
+            <Box pr={!isMobile && 10}>
               <CollaterizationIndicator position={position} />
             </Box>
           </Grid>
