@@ -18,7 +18,7 @@ export const ProviderContainer = styled(Box).attrs(() => ({
 
   ${media.lessThan('medium')`
     padding: 0px;
-    height: 40px;
+    height: 32px;
   `}
 `;
 

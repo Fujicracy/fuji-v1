@@ -14,13 +14,13 @@ const SelectNetwork = ({ hasBlackContainer = true }) => {
 
   return (
     <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? 1 : 2} mb={3}>
+      <SectionTitle fontSize={isMobile ? 1 : 2} mb={isMobile ? 2 : 3}>
         Markets
       </SectionTitle>
       <RadioContainer>
         <NetworkButton left clicked={network === 'ETH'} onClick={() => setNetwork('ETH')}>
           <Image src={ethIcons.GRAY} width={isMobile ? 10 : 12} mr={2} />
-          Base
+          Main
         </NetworkButton>
         <NetworkButton right clicked={network === 'MATIC'}>
           <Image src={maticIcons.GRAY} width={isMobile ? 14 : 20} height={20} mr={2} />

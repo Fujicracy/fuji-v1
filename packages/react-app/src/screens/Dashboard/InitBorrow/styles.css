@@ -1,81 +1,16 @@
-.borrow-actions .borrow-options {
-  margin-bottom: 2.5rem;
-}
-
-.borrow-actions .borrow-inputs,
-.borrow-actions .helper {
-  margin-bottom: 1.5rem;
-}
-
-.borrow-options .options-list {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.borrow-options input {
-  opacity: 0;
-  position: absolute;
-  top: 0rem;
-}
-
-.borrow-options label {
-  display: block;
-  position: relative;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  margin-right: 1.5rem;
-}
-
-.borrow-options label:last-child {
-  margin-right: 0rem;
-}
-
-.borrow-options .fake-radio {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  cursor: pointer;
-}
-
-.borrow-options .fake-radio img {
-  filter: grayscale(100%);
-  opacity: 0.32;
-  transition: all 250ms ease;
-}
-
-.borrow-options input:checked + .fake-radio img,
-.borrow-options .fake-radio:hover img {
-  filter: grayscale(0%);
-  opacity: 1;
-}
-
-.borrow-options .fake-radio .select-option-name {
-  color: var(--text32);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-left: 0.5rem;
-  transition: all 250ms ease;
-}
-
-.borrow-options input:checked + .fake-radio .select-option-name,
-.borrow-options .fake-radio:hover .select-option-name {
-  color: var(--text);
-  text-shadow: 0rem 0rem 0.125rem var(--text);
-}
-
-.borrow-actions .helper {
+.helper {
   background-color: var(--bg64);
   padding: 10px;
   border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.borrow-actions .helper span {
+.helper span {
   color: var(--green);
 }
 
-/* ------------- */
-/* Confirmation  */
-/* ------------- */
+@media screen and (max-width: 768px) {
+  .helper {
+    margin-bottom: 8px;
+  }
+}

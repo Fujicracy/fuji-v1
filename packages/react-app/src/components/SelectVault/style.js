@@ -95,5 +95,6 @@ export const ListItem = styled('li')`
 
   ${media.lessThan('medium')`
     font-size: 12px;
+    height: 40px;
   `}
 `;

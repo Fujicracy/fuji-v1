@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks';
 import { Image, Box } from 'rebass';
-import { downArrowIcon, upArrowIcon, logoTitle } from 'assets/images';
+import { useMediaQuery } from 'react-responsive';
+import {
+  downArrowIcon,
+  upArrowIcon,
+  logoTitleIcon,
+  logoIcon,
+  menuCollapseIcon,
+} from 'assets/images';
 import { Label } from 'components/UI';
-import { LANDING_URL } from 'consts/globals';
+import { LANDING_URL, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts/globals';
 import {
   Container,
   Logo,
@@ -22,61 +29,67 @@ function Header() {
   // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
   const { address, onboard, balance } = useAuth();
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
     <Container>
-      <a href={LANDING_URL} className="logo">
-        <Logo alt="logo" src={logoTitle} />
+      <a href={LANDING_URL} style={{ lineHeight: '10px' }}>
+        <Logo
+          alt="logo"
+          src={isMobile ? logoIcon : logoTitleIcon}
+          width={isMobile ? '28px' : '135px'}
+        />
       </a>
 
-      {address && (
-        <Navigation>
-          <li className="nav-item">
-            <NavLink to="/dashboard/init-borrow" activeClassName="current">
-              Borrow
-            </NavLink>
-          </li>
+      {address &&
+        (!isMobile ? (
+          <Navigation>
+            <li className="nav-item">
+              <NavLink to="/dashboard/init-borrow" activeClassName="current">
+                Borrow
+              </NavLink>
+            </li>
 
-          <li className="nav-item">
-            <NavLink to="/dashboard/my-positions" activeClassName="current">
-              My positions
-            </NavLink>
-          </li>
+            <li className="nav-item">
+              <NavLink to="/dashboard/my-positions" activeClassName="current">
+                My positions
+              </NavLink>
+            </li>
 
-          <li>
-            <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWallet(false)}>
-              <Label color="#f5f5f5">{`${balance} ETH`}</Label>
-              <Box
-                ml={2}
-                sx={{ position: 'relative' }}
-                tabIndex="0"
-                onBlur={() => setIsOpenWallet(false)}
-              >
-                <WalletHeader
-                  onClick={() => setIsOpenWallet(!isOpenWallet)}
-                  isClicked={isOpenWallet}
+            <li>
+              <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWallet(false)}>
+                <Label color="#f5f5f5">{`${balance} ETH`}</Label>
+                <Box
+                  ml={2}
+                  sx={{ position: 'relative' }}
+                  tabIndex="0"
+                  onBlur={() => setIsOpenWallet(false)}
                 >
-                  <Label color="#f5f5f5">{ellipsedAddress}</Label>
-                  <Image src={isOpenWallet ? upArrowIcon : downArrowIcon} ml={2} width={11} />
-                </WalletHeader>
-                {isOpenWallet && (
-                  <WalletItemContainer>
-                    <WalletItem onClick={() => onboard.walletSelect()}>Change Wallet</WalletItem>
-                    <WalletItem
-                      onClick={() => {
-                        setIsOpenWallet(false);
-                        onboard.walletReset();
-                      }}
-                    >
-                      Disconnect
-                    </WalletItem>
-                  </WalletItemContainer>
-                )}
-              </Box>
-            </BallanceContainer>
-          </li>
+                  <WalletHeader
+                    onClick={() => setIsOpenWallet(!isOpenWallet)}
+                    isClicked={isOpenWallet}
+                  >
+                    <Label color="#f5f5f5">{ellipsedAddress}</Label>
+                    <Image src={isOpenWallet ? upArrowIcon : downArrowIcon} ml={2} width={11} />
+                  </WalletHeader>
+                  {isOpenWallet && (
+                    <WalletItemContainer>
+                      <WalletItem onClick={() => onboard.walletSelect()}>Change Wallet</WalletItem>
+                      <WalletItem
+                        onClick={() => {
+                          setIsOpenWallet(false);
+                          onboard.walletReset();
+                        }}
+                      >
+                        Disconnect
+                      </WalletItem>
+                    </WalletItemContainer>
+                  )}
+                </Box>
+              </BallanceContainer>
+            </li>
 
-          {/* <li>
+            {/* <li>
             <a
               href="/"
               onClick={() => (!address ? loadWeb3Modal() : onboard.walletReset)}
@@ -87,8 +100,10 @@ function Header() {
               {!address ? 'Connect Wallet' : logout ? 'Disconnect' : ellipsedAddress}
             </a>
           </li> */}
-        </Navigation>
-      )}
+          </Navigation>
+        ) : (
+          <Image src={menuCollapseIcon} width="28px" height="16px" />
+        ))}
     </Container>
   );
 }

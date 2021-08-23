@@ -99,7 +99,7 @@ function CollaterizationIndicator({ position }) {
 
   return (
     <BlackBoxContainer>
-      <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 1 : 2}>
+      <SectionTitle mb={isMobile ? 2 : 4} fontSize={isMobile ? 1 : 2}>
         Health Factor
         {!isMobile && (
           <div className="tooltip-info">
@@ -117,7 +117,7 @@ function CollaterizationIndicator({ position }) {
       {isMobile ? (
         <>
           <Flex justifyContent="center" alignItems="center" color="white">
-            <SectionTitle fontSize={2} mb={2}>
+            <SectionTitle fontSize={1} mb={2}>
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </SectionTitle>
           </Flex>
@@ -126,7 +126,7 @@ function CollaterizationIndicator({ position }) {
             value={healthFactor && healthFactor !== Infinity && logslider(healthFactor.toFixed(2))}
           />
           <Flex justifyContent="center" alignItems="center" color="white" mt={2}>
-            <Image src={doubleDownArrowIcon} width="20px" height="16px" />
+            <Image src={doubleDownArrowIcon} width="10px" />
           </Flex>
         </>
       ) : (

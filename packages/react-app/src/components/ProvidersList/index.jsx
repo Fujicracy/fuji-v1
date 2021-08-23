@@ -114,7 +114,7 @@ function ProvidersList({
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   return (
     <BlackBoxContainer zIndex={1} hasBlackContainer={isMobile ? true : hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? 1 : 2} mb={3}>
+      <SectionTitle fontSize={isMobile ? 1 : 2} mb={isMobile ? 2 : 3}>
         {title}
         {!isMobile && (
           <div className="tooltip-info">

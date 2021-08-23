@@ -31,5 +31,6 @@ export const NetworkButton = styled(Box)`
 
   ${media.lessThan('medium')`
     font-size: 12px;
+    height: 32px;
   `}
 `;

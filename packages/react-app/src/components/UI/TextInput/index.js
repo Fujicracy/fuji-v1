@@ -37,7 +37,7 @@ const TextField = React.forwardRef(
     const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
     return (
-      <Box mb={isMobile ? 3 : 4}>
+      <Box mb={isMobile ? 2 : 4}>
         <SubTitleContainer>
           <label>{subTitle}</label>
           <SubTitleInfo>{subTitleInfo}</SubTitleInfo>

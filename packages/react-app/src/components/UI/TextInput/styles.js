@@ -47,6 +47,10 @@ export const Description = styled.label`
   margin-top: 4px;
   display: block;
   color: white;
+
+  ${media.lessThan('medium')`
+    font-size: 0.5rem;
+  `}
 `;
 
 export const AdornmentAvatar = styled.img`
@@ -60,6 +64,9 @@ export const AdornmentText = styled.label`
   color: ${themeGet('colors.text64')};
   font-size: 0.875rem;
   font-weight: 400;
+  ${media.lessThan('medium')`
+    font-size: 12px;
+  `}
 `;
 
 export const StyledInput = styled.input`

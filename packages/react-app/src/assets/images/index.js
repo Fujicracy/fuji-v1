@@ -40,8 +40,10 @@ import ethBlueIcon from './icons/tokens/ETH_BLUE.svg';
 import maticYellowIcon from './icons/tokens/MATIC.svg';
 import maticGrayIcon from './icons/tokens/MATIC_GRAY.svg';
 
-import logoTitle from './icons/logo-title.svg';
-import notFound from './icons/not-found-404.svg';
+import logoTitleIcon from './icons/logo-title.svg';
+import logoIcon from './icons/logo.svg';
+import menuCollapseIcon from './icons/menu-collapse.svg';
+import notFoundIcon from './icons/not-found-404.svg';
 
 import infoStep1 from './images/info/step1.png';
 import infoStep2 from './images/info/step2.png';
@@ -95,6 +97,8 @@ export {
   discordRedImage,
   telegramRedImage,
   twitterRedImage,
-  logoTitle,
-  notFound,
+  logoTitleIcon,
+  logoIcon,
+  menuCollapseIcon,
+  notFoundIcon,
 };

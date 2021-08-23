@@ -36,7 +36,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
       <SectionTitle fontSize={isMobile ? 1 : 2} mb={2}>
         Borrow
       </SectionTitle>
-      <Box mb={isMobile ? 3 : 4}>
+      <Box mb={isMobile ? 2 : 4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
           <Box width={2 / 5} display="flex" alignItems="center">
             <Box

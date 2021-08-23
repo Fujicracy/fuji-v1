@@ -26,7 +26,7 @@ import {
   SelectVault,
   BlackBoxContainer,
   SelectNetwork,
-  SectionTitle,
+  // SectionTitle,
 } from 'components';
 import { TextInput } from 'components/UI';
 
@@ -220,10 +220,10 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box maxWidth="90rem" padding="32px">
-        <Grid container spacing={isMobile ? 4 : 6}>
+      <Box maxWidth="90rem" padding={isMobile ? '16px 32px' : '32px'}>
+        <Grid container spacing={isMobile ? 2 : 6}>
           <Grid item xs={12} sm={4} md={4}>
-            <Box pl={!isMobile && 10}>
+            <Box ml={isMobile ? '' : '56px'}>
               {!isMobile && <HowItWorks />}
               <BlackBoxContainer hasBlackContainer={!isMobile}>
                 <Grid container spacing={isMobile ? 2 : 4}>
@@ -283,7 +283,6 @@ function InitBorrow({ contracts, provider, address }) {
                         'Please, type the amount at least 1'
                   }
                 />
-
                 <div className="borrow-inputs">
                   <TextInput
                     id="collateralAmount"
@@ -327,10 +326,14 @@ function InitBorrow({ contracts, provider, address }) {
                     }
                   />
                 </div>
-                <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}>
-                  The liquidity for this transaction is coming from{' '}
-                  <span>{getActiveProviderName()}</span>.
-                </SectionTitle>
+                {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
+
+                <div className="helper">
+                  <Typography variant="body2">
+                    The liquidity for this transaction is coming from{' '}
+                    <span>{getActiveProviderName()}</span>.
+                  </Typography>
+                </div>
                 <div>
                   <Button
                     onClick={handleSubmit(onSubmit)}
@@ -358,7 +361,7 @@ function InitBorrow({ contracts, provider, address }) {
             </BlackBoxContainer>
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
-            <Box pr={!isMobile && 10}>
+            <Box mr={isMobile ? '' : '56px'}>
               <CollaterizationIndicator position={position} />
             </Box>
           </Grid>

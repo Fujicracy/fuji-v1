@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { NETWORK, CHAIN_ID } from 'consts/globals';
 import { useAuth } from 'hooks';
 
-import { notFound } from 'assets/images';
+import { notFoundIcon } from 'assets/images';
 
 import './styles.css';
 
@@ -67,7 +67,7 @@ function Error() {
         </>
       ) : (
         <>
-          <img alt="not-found-404" src={notFound} />
+          <img alt="not-found-404" src={notFoundIcon} />
           <h1 className="error-title">
             <span className="brand-color">Are you lost?</span>
             <span className="text-color">&gt; Nothing was found at this URL</span>
