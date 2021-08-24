@@ -2,6 +2,22 @@
 /*     Position     */
 /* ---------------- */
 
+.positions-container {
+  /* z-index: 1; */
+  margin: 0px 32px;
+  margin-top: 7.75rem;
+  min-height: calc(100vh - 13.125rem);
+  max-width: 75rem;
+  width: calc(100% - 4rem);
+  /*padding: 0rem 2rem;*/
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  line-height: 150%;
+  padding-bottom: 4rem;
+  position: relative;
+}
+
 .one-position {
   padding: 1rem;
   background: var(--blocks56);
