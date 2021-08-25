@@ -23,7 +23,9 @@ import './style.css';
 function App() {
   const theme = themes.main;
 
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isMobileOrTablet = useMediaQuery({
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,7 +57,7 @@ function App() {
                 <Error />
               </Route>
             </Switch>
-            {!isMobile && (
+            {!isMobileOrTablet && (
               <footer>
                 <NavUnlisted justifyContent="space-between" position="left">
                   {map(Object.keys(CONTACTS), key => (

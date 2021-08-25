@@ -3,14 +3,10 @@ import { useSpring, config } from 'react-spring';
 import { Button } from 'components/UI';
 import { NavLink } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
-import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { HomeContainer, HomeContent, HomeCta } from './styles';
 
 function Home() {
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-
   const props = useSpring({
     from: {
       factor: 1,
@@ -26,7 +22,7 @@ function Home() {
 
   return (
     <HomeContainer style={props}>
-      <HomeContent isMobile={isMobile}>
+      <HomeContent>
         <HomeCta container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
             <Button onClick={handleLearnClick} block outline>

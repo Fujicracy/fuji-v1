@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { Grid } from '@material-ui/core';
 import media from 'styled-media-query';
-import { fujiLanding, fujiLandingMobile } from '../../assets/images';
+import { fujiLanding, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
 
 export const HomeContainer = styled(animated.div)`
   position: absolute;
@@ -14,23 +14,37 @@ export const HomeContainer = styled(animated.div)`
 
   ${media.lessThan('medium')`
     background: url(${fujiLandingMobile}) no-repeat center center;
-    width: 70%;
+    width: 280px;
   `}
   ${media.greaterThan('medium')`
+    background: url(${fujiLandingTablet}) no-repeat center center;
+    width: 512px;
+  `}
+  ${media.greaterThan('large')`
     background: url(${fujiLanding}) no-repeat center center;
-    width: 80%;
+    width: 990px;
   `}
 `;
 
 export const HomeContent = styled.div`
   color: white;
   font-family: sans-serif;
-  width: ${props => (props.isMobile ? '250px' : '330px')};
   text-align: center;
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  bottom: ${props => (props.isMobile ? '-130px' : '-100px')};
+  ${media.lessThan('medium')`
+    width:250px;
+    bottom:-130px;
+  `}
+  ${media.greaterThan('medium')`
+    width: 380px;
+    bottom:-32px;
+  `}
+  ${media.greaterThan('large')`
+    width:330px;
+    bottom:-70px;
+  `}
 `;
 
 export const HomeCta = styled(Grid)`
