@@ -260,6 +260,12 @@ input[type='number'] {
   }
 }
 
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .main-button {
+    height: 55px !important;
+  }
+}
+
 .main-button:hover {
   background-color: var(--brand);
   opacity: 0.8;
@@ -589,5 +595,11 @@ aside.svelte-rntogh {
     font-size: 10px;
     margin-top: 4px;
     display: block;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .error-input-msg {
+    font-size: 14px;
   }
 }

@@ -56,6 +56,7 @@ function InitBorrow({ contracts, provider, address }) {
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -198,7 +199,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network, errors: errors?.borrowAmount?.message });
+  console.log({ network, errors: errors?.borrowAmount?.message, isTablet });
   return (
     <Container>
       <Dialog
@@ -220,29 +221,29 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box maxWidth="90rem" padding={isMobile ? '16px 32px' : '32px'}>
-        <Grid container spacing={isMobile ? 2 : 6}>
-          <Grid item xs={12} sm={4} md={4}>
-            <Box ml={isMobile ? '' : '56px'}>
-              {!isMobile && <HowItWorks />}
-              <BlackBoxContainer hasBlackContainer={!isMobile}>
+      <Box maxWidth="90rem" padding={isMobile ? '16px 32px' : isTablet ? '40px 128px' : '32px'}>
+        <Grid container spacing={isMobile ? 2 : isTablet ? 3 : 6}>
+          <Grid item xs={12} sm={12} md={4}>
+            <Box ml={isMobile || isTablet ? '' : '56px'}>
+              {!isMobile && !isTablet && <HowItWorks />}
+              <BlackBoxContainer hasBlackContainer={!isMobile && !isTablet}>
                 <Grid container spacing={isMobile ? 2 : 4}>
-                  <Grid item xs={7} sm={12} md={12}>
+                  <Grid item xs={7} sm={7} md={12}>
                     <SelectNetwork
                       title="Networks"
                       handleChange={handleChangeNetwork}
                       options={NETWORKS}
                       defaultOption={NETWORKS.ETH}
-                      hasBlackContainer={isMobile}
+                      hasBlackContainer={isMobile || isTablet}
                     />
                   </Grid>
-                  <Grid item xs={5} sm={12} md={12}>
+                  <Grid item xs={5} sm={5} md={12}>
                     <ProvidersList
                       contracts={contracts}
                       markets={[borrowAsset]}
                       title="Borrow APR"
                       isDropDown
-                      hasBlackContainer={isMobile}
+                      hasBlackContainer={isMobile || isTablet}
                       isSelectable={false}
                     />
                   </Grid>
@@ -250,7 +251,7 @@ function InitBorrow({ contracts, provider, address }) {
               </BlackBoxContainer>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4} md={4}>
+          <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer hasBlackContainer>
               <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
               <form noValidate autoComplete="off">
@@ -329,10 +330,8 @@ function InitBorrow({ contracts, provider, address }) {
                 {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
 
                 <div className="helper">
-                  <Typography variant="body2">
-                    The liquidity for this transaction is coming from{' '}
-                    <span>{getActiveProviderName()}</span>.
-                  </Typography>
+                  The liquidity for this transaction is coming from{' '}
+                  <span>{getActiveProviderName()}</span>.
                 </div>
                 <div>
                   <Button
@@ -360,8 +359,8 @@ function InitBorrow({ contracts, provider, address }) {
               </form>
             </BlackBoxContainer>
           </Grid>
-          <Grid item xs={12} sm={4} md={4}>
-            <Box mr={isMobile ? '' : '56px'}>
+          <Grid item xs={12} sm={12} md={4}>
+            <Box mr={isMobile || isTablet ? '' : '56px'}>
               <CollaterizationIndicator position={position} />
             </Box>
           </Grid>

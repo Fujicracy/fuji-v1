@@ -23,6 +23,12 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   `}
 
+  ${media.between('medium', 'large')`
+    padding: ${props => (props.hasBlackContainer ? '24px' : '0px')};
+    border-radius: 14px;
+    border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
+  `}
+
   ${size}
   ${background}
 

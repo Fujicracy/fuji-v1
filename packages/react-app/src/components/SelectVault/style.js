@@ -27,6 +27,10 @@ export const DropDownHeader = styled('div')`
     font-size: 12px;
     height: 40px;
   `}
+  ${media.between('medium', 'large')`
+    height: 56px;
+    font-size: 18px;
+  `}
 `;
 
 // const breatheAnimation = keyframes`
@@ -96,5 +100,9 @@ export const ListItem = styled('li')`
   ${media.lessThan('medium')`
     font-size: 12px;
     height: 40px;
+  `}
+  ${media.between('medium', 'large')`
+    height: 56px;
+    font-size: 18px;
   `}
 `;

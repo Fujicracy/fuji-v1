@@ -20,6 +20,10 @@ export const ProviderContainer = styled(Box).attrs(() => ({
     padding: 0px;
     height: 32px;
   `}
+  ${media.between('medium', 'large')`
+    padding: 0px;
+    height: 56px;
+  `}
 `;
 
 export const AssetContainer = styled(Box).attrs(() => ({

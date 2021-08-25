@@ -29,20 +29,33 @@ function Header() {
   // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
   const { address, onboard, balance } = useAuth();
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isMobile = useMediaQuery({
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+  });
 
+  const isTablet = useMediaQuery({
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
+  console.log({ isMobile, isTablet });
   return (
     <Container>
       <a href={LANDING_URL} style={{ lineHeight: '10px' }}>
         <Logo
           alt="logo"
-          src={isMobile ? logoIcon : logoTitleIcon}
-          width={isMobile ? '28px' : '135px'}
+          src={isMobile || isTablet ? logoIcon : logoTitleIcon}
+          width={isMobile ? '28px' : isTablet ? '48px' : '135px'}
         />
       </a>
 
       {address &&
-        (!isMobile ? (
+        (isMobile || isTablet ? (
+          <Image
+            src={menuCollapseIcon}
+            width={isMobile ? '28px' : '40px'}
+            height={isMobile ? '16px' : '24px'}
+          />
+        ) : (
           <Navigation>
             <li className="nav-item">
               <NavLink to="/dashboard/init-borrow" activeClassName="current">
@@ -101,8 +114,6 @@ function Header() {
             </a>
           </li> */}
           </Navigation>
-        ) : (
-          <Image src={menuCollapseIcon} width="28px" height="16px" />
         ))}
     </Container>
   );

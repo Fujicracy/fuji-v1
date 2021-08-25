@@ -22,16 +22,24 @@ export const InputContainer = styled.div`
   ${media.lessThan('medium')`
     height: 40px;
   `}
+
+  ${media.between('medium', 'large')`
+    height: 56px;
+  `}
 `;
 
 export const SubTitleContainer = styled.div`
-  font-size: 0.875rem;
+  font-size: 14px;
   margin-bottom: 0.5rem;
   color: white;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${media.between('medium', 'large')`
+    font-size: 18px;
+  `}
 `;
 
 export const SubTitleInfo = styled.span`
@@ -62,10 +70,13 @@ export const AdornmentAvatar = styled.img`
 
 export const AdornmentText = styled.label`
   color: ${themeGet('colors.text64')};
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 400;
   ${media.lessThan('medium')`
     font-size: 12px;
+  `}
+  ${media.between('medium', 'large')`
+    font-size: 16px;
   `}
 `;
 

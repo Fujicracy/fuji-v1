@@ -33,4 +33,9 @@ export const NetworkButton = styled(Box)`
     font-size: 12px;
     height: 32px;
   `}
+
+  ${media.between('medium', 'large')`
+    height: 56px;
+    font-size:15px;
+  `}
 `;

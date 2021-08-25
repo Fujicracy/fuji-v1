@@ -11,10 +11,11 @@ import { RadioContainer, NetworkButton } from './styles';
 const SelectNetwork = ({ hasBlackContainer = true }) => {
   const [network, setNetwork] = useState('ETH');
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   return (
     <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? 1 : 2} mb={isMobile ? 2 : 3}>
+      <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'} mb={isMobile ? 2 : 3}>
         Markets
       </SectionTitle>
       <RadioContainer>

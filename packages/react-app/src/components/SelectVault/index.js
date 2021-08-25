@@ -21,6 +21,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
     defaultOption || VAULTS[VAULTS_ADDRESS.VaultETHDAI],
   );
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   useEffect(() => defaultOption && setSelectedVault(defaultOption), [defaultOption]);
   const toggling = () => setIsOpen(!isOpen);
@@ -33,7 +34,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
 
   return (
     <DropDownContainer>
-      <SectionTitle fontSize={isMobile ? 1 : 2} mb={2}>
+      <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'} mb={2}>
         Borrow
       </SectionTitle>
       <Box mb={isMobile ? 2 : 4}>
@@ -46,7 +47,10 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
               justifyContent="flex-start"
               alignItems="center"
             >
-              <Image src={selectedVault.borrowAsset.icon} width={isMobile ? 20 : 26} />
+              <Image
+                src={selectedVault.borrowAsset.icon}
+                width={isMobile ? 20 : isTablet ? 28 : 26}
+              />
               <Box ml={isMobile ? 2 : 3}>{selectedVault.borrowAsset.name}</Box>
             </Box>
             <Box

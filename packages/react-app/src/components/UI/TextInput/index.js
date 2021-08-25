@@ -35,6 +35,7 @@ const TextField = React.forwardRef(
     ref,
   ) => {
     const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+    const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
     return (
       <Box mb={isMobile ? 2 : 4}>
@@ -46,8 +47,8 @@ const TextField = React.forwardRef(
           <AdornmentAvatar
             src={startAdornmentImage}
             alt={startAdornmentImage}
-            width={isMobile ? '20px' : '24px'}
-            height={isMobile ? '20px' : '24px'}
+            width={isMobile ? '20px' : isTablet ? '28px' : '24px'}
+            height={isMobile ? '20px' : isTablet ? '28px' : '24px'}
             marginRight={isMobile ? '8px' : '16px'}
           />
           <StyledInput
@@ -61,7 +62,7 @@ const TextField = React.forwardRef(
             disabled={disabled}
             ref={ref}
             autoComplete={autoComplete || 'off'}
-            fontSize={isMobile ? '12px' : '14px'}
+            fontSize={isMobile ? '12px' : isTablet ? '18px' : '14px'}
           />
           {endAdornment &&
             (endAdornment?.type === 'currency' ? (

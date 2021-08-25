@@ -18,17 +18,18 @@ import './styles.css';
 
 const BorderLinearProgress = withStyles(() => ({
   root: {
-    height: 10,
+    height: 15,
     borderRadius: 5,
-    border: '1px solid rgba(255, 255, 255, 0.2)',
+
+    border: '2px solid rgba(255, 255, 255, 0.2)',
     background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.1) 6.82%, rgba(0, 0, 0, 0.1) 100%)',
   },
   colorPrimary: {
-    background: 'green',
+    background: 'transparent',
   },
   barColorPrimary: {
-    borderRadius: 5,
-    background: 'linear-gradient(90deg, #50FE34 0%, #3ABB25 100%) !important',
+    background: 'linear-gradient(90deg, var(--brand) 0%, #3ABB25 100%) !important',
+    filter: 'drop-shadow(0rem 0rem 0.75rem var(--brand))',
   },
 }))(LinearProgress);
 
@@ -75,6 +76,7 @@ function CollaterizationIndicator({ position }) {
   const [ltv, setLtv] = useState(0);
   const [liqPrice, setLiqPrice] = useState(0);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   useEffect(() => {
     const ratios = PositionRatios(position, price);
@@ -99,9 +101,9 @@ function CollaterizationIndicator({ position }) {
 
   return (
     <BlackBoxContainer>
-      <SectionTitle mb={isMobile ? 2 : 4} fontSize={isMobile ? 1 : 2}>
+      <SectionTitle mb={isMobile ? 2 : 3} fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'}>
         Health Factor
-        {!isMobile && (
+        {!isMobile && !isTablet && (
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip">
@@ -114,10 +116,10 @@ function CollaterizationIndicator({ position }) {
         )}
       </SectionTitle>
 
-      {isMobile ? (
+      {isMobile || isTablet ? (
         <>
           <Flex justifyContent="center" alignItems="center" color="white">
-            <SectionTitle fontSize={1} mb={2}>
+            <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'} mb={2}>
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </SectionTitle>
           </Flex>
@@ -125,8 +127,8 @@ function CollaterizationIndicator({ position }) {
             variant="determinate"
             value={healthFactor && healthFactor !== Infinity && logslider(healthFactor.toFixed(2))}
           />
-          <Flex justifyContent="center" alignItems="center" color="white" mt={2}>
-            <Image src={doubleDownArrowIcon} width="10px" />
+          <Flex justifyContent="center" alignItems="center" color="white" mt={isMobile ? 2 : 3}>
+            <Image src={doubleDownArrowIcon} width={isMobile ? '10px' : '16px'} />
           </Flex>
         </>
       ) : (

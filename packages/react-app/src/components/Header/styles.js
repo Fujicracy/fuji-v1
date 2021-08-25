@@ -21,6 +21,10 @@ export const Container = styled(Box).attrs({
     height:50px;
     background-color:  rgba(255, 255, 255, 0.05);
   `}
+  ${media.between('medium', 'large')`
+    height:85px;
+    background-color:  rgba(255, 255, 255, 0.05);
+  `}
 `;
 
 export const Logo = styled.img`

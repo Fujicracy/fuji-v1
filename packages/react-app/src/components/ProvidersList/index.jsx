@@ -21,6 +21,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   useEffect(() => {
     let tmpDefaultOption;
@@ -38,14 +39,14 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
 
   return (
     <ProviderContainer isMobile={isMobile}>
-      {isMobile ? (
+      {isMobile || isTablet ? (
         <Box
           width={1 / 1}
           display="flex"
           alignItems="center"
           justifyContent="center"
           color="#42FF00"
-          fontSize={4}
+          fontSize={isMobile ? 4 : 5}
           fontWeight="700"
         >
           <AnimatedCounter countTo={defaultOption?.rate} /> %
@@ -112,11 +113,13 @@ function ProvidersList({
 }) {
   const rates = useRates(contracts);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+
   return (
     <BlackBoxContainer zIndex={1} hasBlackContainer={isMobile ? true : hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? 1 : 2} mb={isMobile ? 2 : 3}>
+      <SectionTitle fontSize={isMobile ? 1 : isTablet ? '18px' : '16px'} mb={isMobile ? 2 : 3}>
         {title}
-        {!isMobile && (
+        {!isMobile && !isTablet && (
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip">

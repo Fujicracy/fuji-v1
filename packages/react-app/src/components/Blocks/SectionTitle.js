@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import { space, fontSize } from 'styled-system';
+import { space } from 'styled-system';
 
 const SectionTitle = styled(Box)`
   line-height: 120%;
@@ -10,7 +10,7 @@ const SectionTitle = styled(Box)`
   align-items: center;
   color: ${themeGet('colors.text100')};
   ${space}
-  ${fontSize}
+  font-size: ${props => (props.fontSize ? props.fontSize : '16px')};
 `;
 
 export default SectionTitle;

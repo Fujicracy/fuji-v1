@@ -4,7 +4,8 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { SunEffect } from './styles';
 
 const BackgroundEffect = () => {
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  return <SunEffect isShow={!isMobile} />;
+  const isDesktop = useMediaQuery({ minWidth: BREAKPOINTS[BREAKPOINT_NAMES.DESKTOP].inNumber });
+  console.log({ isDesktop });
+  return <SunEffect isShow={isDesktop} />;
 };
 export default BackgroundEffect;
