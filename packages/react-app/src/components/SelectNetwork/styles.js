@@ -28,7 +28,7 @@ export const NetworkButton = styled(Box)`
   border: 1px solid rgb(60, 60, 60);
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: ${props => (props.clicked ? 'white' : 'rgba(255, 255, 255, 0.3)')};
-
+  cursor: pointer;
   ${media.lessThan('medium')`
     font-size: 12px;
     height: 32px;

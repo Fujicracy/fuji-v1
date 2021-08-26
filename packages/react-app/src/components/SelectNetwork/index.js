@@ -3,7 +3,7 @@ import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
-import { ethIcons, maticIcons, comingSoonIcon } from 'assets/images';
+import { ethIcons, maticIcons } from 'assets/images';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { RadioContainer, NetworkButton } from './styles';
@@ -23,12 +23,9 @@ const SelectNetwork = ({ hasBlackContainer = true }) => {
           <Image src={ethIcons.GRAY} width={isMobile ? 10 : 12} mr={2} />
           Main
         </NetworkButton>
-        <NetworkButton right clicked={network === 'MATIC'}>
+        <NetworkButton right clicked={network === 'MATIC'} onClick={() => setNetwork('MATIC')}>
           <Image src={maticIcons.GRAY} width={isMobile ? 14 : 20} height={20} mr={2} />
           Fuse
-          <div style={{ position: 'absolute', marginLeft: '40px', marginTop: '-15px' }}>
-            <Image src={comingSoonIcon} width={30} />
-          </div>
         </NetworkButton>
       </RadioContainer>
     </BlackBoxContainer>
