@@ -254,3 +254,28 @@
 .manage-position .position-board {
   margin-top: 80px;
 }
+
+@media screen and (max-width: 768px) {
+  .positions-container {
+    margin-top: 32px;
+  }
+
+  .positions h3 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .positions .position-board {
+    margin-top: 32px;
+  }
+
+  .adding-position {
+    height: 64px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .positions-container {
+    margin-top: 64px;
+  }
+}
