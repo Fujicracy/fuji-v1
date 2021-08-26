@@ -25,7 +25,7 @@ import {
   DisclaimerPopup,
   SelectVault,
   BlackBoxContainer,
-  SelectNetwork,
+  SelectMarket,
   // SectionTitle,
 } from 'components';
 import { TextInput } from 'components/UI';
@@ -229,7 +229,7 @@ function InitBorrow({ contracts, provider, address }) {
               <BlackBoxContainer hasBlackContainer={!isMobile && !isTablet}>
                 <Grid container spacing={isMobile ? 2 : 4}>
                   <Grid item xs={7} sm={7} md={12}>
-                    <SelectNetwork
+                    <SelectMarket
                       title="Networks"
                       handleChange={handleChangeNetwork}
                       options={NETWORKS}

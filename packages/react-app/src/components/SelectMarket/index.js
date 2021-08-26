@@ -6,9 +6,9 @@ import { useMediaQuery } from 'react-responsive';
 import { ethIcons, maticIcons } from 'assets/images';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-import { RadioContainer, NetworkButton } from './styles';
+import { RadioContainer, MarketButton } from './styles';
 
-const SelectNetwork = ({ hasBlackContainer = true }) => {
+const SelectMarket = ({ hasBlackContainer = true }) => {
   const [network, setNetwork] = useState('ETH');
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
@@ -19,17 +19,17 @@ const SelectNetwork = ({ hasBlackContainer = true }) => {
         Markets
       </SectionTitle>
       <RadioContainer>
-        <NetworkButton left clicked={network === 'ETH'} onClick={() => setNetwork('ETH')}>
+        <MarketButton left clicked={network === 'ETH'} onClick={() => setNetwork('ETH')}>
           <Image src={ethIcons.GRAY} width={isMobile ? 10 : 12} mr={2} />
           Main
-        </NetworkButton>
-        <NetworkButton right clicked={network === 'MATIC'} onClick={() => setNetwork('MATIC')}>
+        </MarketButton>
+        <MarketButton right clicked={network === 'MATIC'} onClick={() => setNetwork('MATIC')}>
           <Image src={maticIcons.GRAY} width={isMobile ? 14 : 20} height={20} mr={2} />
           Fuse
-        </NetworkButton>
+        </MarketButton>
       </RadioContainer>
     </BlackBoxContainer>
   );
 };
 
-export default SelectNetwork;
+export default SelectMarket;

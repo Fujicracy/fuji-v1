@@ -10,7 +10,7 @@ export const RadioContainer = styled(Box).attrs({
   background-color: transparent;
 `;
 
-export const NetworkButton = styled(Box)`
+export const MarketButton = styled(Box)`
   width: 100%;
   font-size: 16px;
   display: flex;

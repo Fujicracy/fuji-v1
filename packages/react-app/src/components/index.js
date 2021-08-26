@@ -7,7 +7,7 @@ import PositionElement, { PositionActions } from './PositionElement';
 import ProvidersList from './ProvidersList';
 import DisclaimerPopup from './DisclaimerPopup';
 import SelectVault from './SelectVault';
-import SelectNetwork from './SelectNetwork';
+import SelectMarket from './SelectMarket';
 
 export * from './Blocks';
 export {
@@ -21,5 +21,5 @@ export {
   ProvidersList,
   DisclaimerPopup,
   SelectVault,
-  SelectNetwork,
+  SelectMarket,
 };
