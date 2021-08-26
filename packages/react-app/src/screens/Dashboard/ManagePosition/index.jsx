@@ -50,7 +50,7 @@ function ManagePosition({ contracts, provider, address }) {
   return (
     <Flex flexDirection="row" alignItems="center" justifyContent="center">
       <Grid container className="positions-container" spacing={isMobile ? 2 : 6}>
-        <Grid item md={8} sm={8}>
+        <Grid item md={8} sm={8} xs={12}>
           <div className="positions manage-position">
             <div className="section-title">
               <Link to="my-positions" className="back-to-link">
@@ -85,8 +85,8 @@ function ManagePosition({ contracts, provider, address }) {
                   </div> */}
 
                   <form noValidate>
-                    <div className="manage-content">
-                      <div className="col-50">
+                    <Grid container className="manage-content">
+                      <Grid item md={6} xs={12}>
                         {actionsType === 'single' ? (
                           <CollateralForm
                             contracts={contracts}
@@ -102,8 +102,8 @@ function ManagePosition({ contracts, provider, address }) {
                             position={position}
                           />
                         )}
-                      </div>
-                      <div className="col-50">
+                      </Grid>
+                      <Grid item md={6} xs={12}>
                         {actionsType === 'single' ? (
                           <DebtForm
                             contracts={contracts}
@@ -119,8 +119,8 @@ function ManagePosition({ contracts, provider, address }) {
                             position={position}
                           />
                         )}
-                      </div>
-                    </div>
+                      </Grid>
+                    </Grid>
                   </form>
                 </div>
               </div>
@@ -133,7 +133,7 @@ function ManagePosition({ contracts, provider, address }) {
             address={address}
           />
         </Grid>
-        <Grid item md={4} sm={4}>
+        <Grid item md={4} sm={4} xs={12}>
           <Grid container direction="column" spacing={isMobile ? 2 : 6}>
             <Grid item>
               <CollaterizationIndicator position={position} />

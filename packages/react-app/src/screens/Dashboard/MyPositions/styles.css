@@ -272,6 +272,20 @@
   .adding-position {
     height: 64px;
   }
+
+  .positions .position-about {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 128px;
+  }
+
+  .position-numbers .collateral-number,
+  .position-numbers .borrow-number,
+  .position-numbers .debt-ratio-number {
+    width: 72px;
+    height: 100%;
+  }
 }
 
 @media screen and (min-width: 768px) and (max-width: 992px) {
