@@ -18,6 +18,7 @@ import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
 
   const history = useHistory();
   const positions = map(Object.keys(VAULTS), key => {
@@ -63,7 +64,7 @@ function MyPositions({ contracts, address }) {
   return (
     <Flex flexDirection="row" alignItems="center" justifyContent="center">
       <Grid container className="positions-container" spacing={isMobile ? 2 : 6}>
-        <Grid item md={8} sm={8}>
+        <Grid item md={8} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="center" className="positions">
             <Typography variant="h3">My positions</Typography>
             <div className="position-board">
@@ -105,9 +106,11 @@ function MyPositions({ contracts, address }) {
             </div>
           </Grid>
         </Grid>
-        <Grid item md={4} sm={4}>
-          <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
-        </Grid>
+        {!isMobile && !isTablet && (
+          <Grid item md={4} sm={4}>
+            <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
+          </Grid>
+        )}
       </Grid>
     </Flex>
   );
