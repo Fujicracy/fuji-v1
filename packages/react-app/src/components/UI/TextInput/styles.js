@@ -30,7 +30,7 @@ export const InputContainer = styled.div`
 
 export const SubTitleContainer = styled.div`
   font-size: 14px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 16px;
   color: white;
   font-weight: 500;
   display: flex;

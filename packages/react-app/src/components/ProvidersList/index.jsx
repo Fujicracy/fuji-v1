@@ -21,7 +21,10 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     let tmpDefaultOption;
@@ -44,7 +47,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
           width={1 / 1}
           display="flex"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="flex-start"
           color="#42FF00"
           fontSize={isMobile ? 4 : 5}
           fontWeight="700"
@@ -113,11 +116,18 @@ function ProvidersList({
 }) {
   const rates = useRates(contracts);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   return (
-    <BlackBoxContainer zIndex={1} hasBlackContainer={isMobile ? true : hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? 1 : isTablet ? '18px' : '16px'} mb={isMobile ? 2 : 3}>
+    <BlackBoxContainer
+      zIndex={1}
+      hasBlackContainer={hasBlackContainer}
+      padding={hasBlackContainer && '32px'}
+    >
+      <SectionTitle fontSize={isMobile ? 1 : isTablet ? '18px' : '16px'} mb={isMobile ? 3 : 3}>
         {title}
         {!isMobile && !isTablet && (
           <div className="tooltip-info">

@@ -21,7 +21,10 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
     defaultOption || VAULTS[VAULTS_ADDRESS.VaultETHDAI],
   );
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => defaultOption && setSelectedVault(defaultOption), [defaultOption]);
   const toggling = () => setIsOpen(!isOpen);
@@ -34,10 +37,10 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
 
   return (
     <DropDownContainer>
-      <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'} mb={2}>
+      <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'} mb={3}>
         Borrow
       </SectionTitle>
-      <Box mb={isMobile ? 2 : 4}>
+      <Box mb={isMobile ? 4 : 4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
           <Box width={2 / 5} display="flex" alignItems="center">
             <Box

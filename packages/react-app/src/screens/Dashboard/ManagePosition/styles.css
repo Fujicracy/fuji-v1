@@ -42,6 +42,17 @@
   opacity: 0;
 }
 
+.one-manage-position {
+  padding: 28px;
+  background: var(--blocks56);
+  border: 0.1rem solid var(--text05);
+  backdrop-filter: blur(0.375rem);
+  -webkit-backdrop-filter: blur(0.375rem);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
 .manage-settings {
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -124,9 +135,11 @@
   content: '';
   top: 0;
   left: 0;
-  height: 100%;
+  height: calc(100% - 4px);
+  width: calc(50% - 4px);
   border-radius: 0.375rem;
   background-color: var(--text32);
+  margin:2px;
 }
 
 .toggle-button .button .knobs .toggle-options span {

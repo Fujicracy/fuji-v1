@@ -15,19 +15,25 @@ export const Container = styled(Box).attrs({
 
   backdrop-filter: blur(0.25rem);
   -webkit-backdrop-filter: blur(0.25rem);
+
+  padding: 32px 64px 32px 64px;
+
   ${size}
 
   ${media.lessThan('medium')`
-    height:50px;
+    height:64px;
     background-color:  rgba(255, 255, 255, 0.05);
+    padding: 16px;
   `}
   ${media.between('medium', 'large')`
+    padding: 16px;
     height:85px;
     background-color:  rgba(255, 255, 255, 0.05);
   `}
 `;
 
 export const Logo = styled.img`
+  height: 100%;
   transition: all 250ms ease;
   &:hover {
     opacity: 0.8;

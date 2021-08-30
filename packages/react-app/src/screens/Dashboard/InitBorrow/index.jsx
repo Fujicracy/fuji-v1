@@ -56,7 +56,10 @@ function InitBorrow({ contracts, provider, address }) {
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -221,29 +224,29 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box maxWidth="90rem" padding={isMobile ? '16px 32px' : isTablet ? '40px 128px' : '32px'}>
+      <Box maxWidth="90rem" padding={isMobile ? '28px' : isTablet ? '40px 128px' : '32px'}>
         <Grid container spacing={isMobile ? 2 : isTablet ? 3 : 6}>
           <Grid item xs={12} sm={12} md={4}>
             <Box ml={isMobile || isTablet ? '' : '56px'}>
               {!isMobile && !isTablet && <HowItWorks />}
-              <BlackBoxContainer hasBlackContainer={!isMobile && !isTablet}>
-                <Grid container spacing={isMobile ? 2 : 4}>
-                  <Grid item xs={7} sm={7} md={12}>
+              <BlackBoxContainer hasBlackContainer="true" padding="32px 28px">
+                <Grid container spacing={isMobile ? 4 : 4}>
+                  <Grid item xs={8} sm={7} md={12}>
                     <SelectMarket
                       title="Networks"
                       handleChange={handleChangeNetwork}
                       options={NETWORKS}
                       defaultOption={NETWORKS.ETH}
-                      hasBlackContainer={isMobile || isTablet}
+                      hasBlackContainer={false}
                     />
                   </Grid>
-                  <Grid item xs={5} sm={5} md={12}>
+                  <Grid item xs={4} sm={5} md={12}>
                     <ProvidersList
                       contracts={contracts}
                       markets={[borrowAsset]}
-                      title="Borrow APR"
+                      title="APR"
                       isDropDown
-                      hasBlackContainer={isMobile || isTablet}
+                      hasBlackContainer={false}
                       isSelectable={false}
                     />
                   </Grid>
@@ -252,7 +255,7 @@ function InitBorrow({ contracts, provider, address }) {
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
-            <BlackBoxContainer hasBlackContainer>
+            <BlackBoxContainer hasBlackContainer padding="32px 28px">
               <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
               <form noValidate autoComplete="off">
                 <TextInput

@@ -34,17 +34,17 @@ function Header() {
   });
 
   const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  console.log({ isMobile, isTablet });
   return (
     <Container>
-      <a href={LANDING_URL} style={{ lineHeight: '10px' }}>
+      <a href={LANDING_URL} style={{ lineHeight: '10px', height: '100%' }}>
         <Logo
           alt="logo"
           src={isMobile || isTablet ? logoIcon : logoTitleIcon}
-          width={isMobile ? '28px' : isTablet ? '48px' : '135px'}
+          // width={isMobile ? '28px' : isTablet ? '48px' : '135px'}
         />
       </a>
 

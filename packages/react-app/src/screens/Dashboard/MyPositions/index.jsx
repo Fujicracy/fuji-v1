@@ -5,11 +5,12 @@ import orderBy from 'lodash/orderBy';
 import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
 import { PositionElement, PositionActions, ProvidersList } from 'components';
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -18,7 +19,10 @@ import './styles.css';
 
 function MyPositions({ contracts, address }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   const history = useHistory();
   const positions = map(Object.keys(VAULTS), key => {
@@ -62,21 +66,54 @@ function MyPositions({ contracts, address }) {
   };
 
   return (
-    <Flex flexDirection="row" alignItems="center" justifyContent="center">
-      <Grid container className="positions-container" spacing={isMobile ? 2 : 6}>
+    <Flex flex flexDirection="row" justifyContent="center">
+      <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
         <Grid item md={8} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="center" className="positions">
-            <Typography variant="h3">My positions</Typography>
+            <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
+              {' '}
+              My positions
+            </SectionTitle>
             <div className="position-board">
               {hasPosition() ? (
-                <Grid item className="legend">
-                  <span className="empty-tab" />
-                  <div className="legend-elements">
-                    <span>Collateral</span>
-                    <span>Debt</span>
-                    <span>Health Factor</span>
-                  </div>
-                  <span className="empty-button" />
+                <Grid item>
+                  {/* <span className="empty-tab" /> */}
+                  <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
+                    <Grid container>
+                      <Grid item xs={4}>
+                        {' '}
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Flex width={1 / 1}>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Collateral</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Debt</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="40%"
+                          >
+                            <>Health Factor</>
+                          </SectionTitle>
+                        </Flex>
+                      </Grid>
+                    </Grid>
+                  </BlackBoxContainer>
+                  {/* <span className="empty-button" /> */}
                 </Grid>
               ) : (
                 <div style={{ height: '2.5rem' }} />

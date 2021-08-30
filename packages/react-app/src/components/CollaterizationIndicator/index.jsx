@@ -76,7 +76,10 @@ function CollaterizationIndicator({ position }) {
   const [ltv, setLtv] = useState(0);
   const [liqPrice, setLiqPrice] = useState(0);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     const ratios = PositionRatios(position, price);
@@ -100,7 +103,7 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer>
+    <BlackBoxContainer padding="32px 28px">
       <SectionTitle mb={isMobile ? 2 : 3} fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (

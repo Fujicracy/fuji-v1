@@ -24,7 +24,10 @@ function ManagePosition({ contracts, provider, address }) {
 
   const queries = new URLSearchParams(useLocation().search);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
   // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
 
@@ -49,7 +52,7 @@ function ManagePosition({ contracts, provider, address }) {
 
   return (
     <Flex flexDirection="row" alignItems="center" justifyContent="center">
-      <Grid container className="positions-container" spacing={isMobile ? 2 : 6}>
+      <Grid container className="positions-container" spacing={isMobile ? 4 : 6}>
         <Grid item md={8} sm={8} xs={12}>
           <div className="positions manage-position">
             <div className="section-title">
@@ -62,7 +65,7 @@ function ManagePosition({ contracts, provider, address }) {
             </div>
 
             <div className="position-board">
-              <div className="manage-my-position one-position">
+              <div className="one-manage-position">
                 <PositionElement actionType={PositionActions.None} position={position} />
 
                 <div className="manage-settings">
@@ -85,7 +88,7 @@ function ManagePosition({ contracts, provider, address }) {
                   </div> */}
 
                   <form noValidate>
-                    <Grid container className="manage-content">
+                    <Grid container className="manage-content" spacing={4}>
                       <Grid item md={6} xs={12}>
                         {actionsType === 'single' ? (
                           <CollateralForm
@@ -134,17 +137,19 @@ function ManagePosition({ contracts, provider, address }) {
           />
         </Grid>
         <Grid item md={4} sm={4} xs={12}>
-          <Grid container direction="column" spacing={isMobile ? 2 : 6}>
+          <Grid container direction="column" spacing={isMobile ? 4 : 6}>
             <Grid item>
               <CollaterizationIndicator position={position} />
             </Grid>
-            <Grid item>
-              <ProvidersList
-                contracts={contracts}
-                markets={[borrowAssetName]}
-                isSelectable={false}
-              />
-            </Grid>
+            {!isMobile && !isTablet && (
+              <Grid item>
+                <ProvidersList
+                  contracts={contracts}
+                  markets={[borrowAssetName]}
+                  isSelectable={false}
+                />
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>

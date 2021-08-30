@@ -9,24 +9,20 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   // px: props.hasBlackContainer ? 4 : 0,
   bg: props.hasBlackContainer ? themeGet('colors.dark56')(props) : 'transparent',
 }))`
-  border: ${props => props.hasBlackContainer && `0.1rem solid ${themeGet('colors.text05')}`};
+  border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   backdrop-filter: ${props => props.hasBlackContainer && 'blur(0.375rem)'};
   -webkit-backdrop-filter: blur(0.375rem);
   border-radius: 16px;
   margin-top: 2rem;
   position: relative;
-  padding: ${props => (props.hasBlackContainer ? '32px' : '0px')};
+  padding: ${props => (props.padding ? props.padding : '0px')};
 
   ${media.lessThan('medium')`
-    padding: ${props => (props.hasBlackContainer ? '14px' : '0px')};
     border-radius: 6px;
-    border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   `}
 
   ${media.between('medium', 'large')`
-    padding: ${props => (props.hasBlackContainer ? '24px' : '0px')};
     border-radius: 14px;
-    border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   `}
 
   ${size}
