@@ -11,13 +11,13 @@ const VAULTS = {
     borrowAsset: ASSETS[ASSET_NAME.FEI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHFEI',
-    deployBlockNumber: undefined,
+    deployBlockNumber: 13107920,
   },
   [VAULTS_ADDRESS.VaultETHUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDC',
-    deployBlockNumber: undefined,
+    deployBlockNumber: 13107987,
   },
 };
 
