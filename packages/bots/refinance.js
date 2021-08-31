@@ -1,7 +1,7 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { VAULTS_ADDRESS, PROVIDERS } from './consts/index.js';
+import { VAULTS, VAULTS_ADDRESS, PROVIDERS } from './consts/index.js';
 import { loadContracts, getSigner, getFlashloanProvider } from './utils/index.js';
 
 const { utils } = ethers;
@@ -55,39 +55,39 @@ async function shouldChange(currentRate, newRate, lastSwitch) {
 
 async function checkRates(vaultName, contracts) {
   console.log('Checking', chalk.yellow(`${vaultName} ...`));
-  const vault = contracts[vaultName];
-  const { borrowAsset } = await vault.vAssets();
-  const activeProviderAddr = await vault.activeProvider();
+  const vaultContract = contracts[vaultName];
+  const vault = VAULTS[vaultContract.address.toLowerCase()];
+  const borrowAsset = vault.borrowAsset;
 
+  const activeProviderAddr = await vaultContract.activeProvider();
   const activeProviderName = getProviderName(activeProviderAddr);
 
-  const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset);
+  const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset.address);
 
-  const providers = await vault.getProviders();
+  const providers = vault.providers;
 
   let bestRate = currentRate;
-  let bestProviderIndex;
+  let bestProviderAddr;
   for (let i = 0; i < providers.length; i++) {
-    const providerName = getProviderName(providers[i]);
-    const rate = await contracts[providerName].getBorrowRateFor(borrowAsset);
+    const rate = await contracts[providers[i].name].getBorrowRateFor(borrowAsset.address);
 
     // determine provider with best rate
     if (rate.lt(bestRate)) {
       bestRate = rate;
-      bestProviderIndex = i;
+      bestProviderAddr = providers[i].address;
     }
   }
 
-  const filterSwitches = vault.filters.Switch();
+  const filterSwitches = vaultContract.filters.Switch();
   // Filter all Switch events
-  const events = await vault.queryFilter(filterSwitches);
+  const events = await vaultContract.queryFilter(filterSwitches);
   const lastSwitch = events[events.length - 1];
   const toChange = await shouldChange(currentRate, bestRate, lastSwitch);
 
   if (toChange) {
     console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
 
-    const res = await switchProviders(contracts, vault, providers[bestProviderIndex]);
+    const res = await switchProviders(contracts, vaultContract, bestProviderAddr);
 
     if (res && res.hash) {
       console.log(`TX submited: ${res.hash}`);

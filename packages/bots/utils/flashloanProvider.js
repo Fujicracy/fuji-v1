@@ -1,4 +1,4 @@
-import { ASSETS } from '../consts/index.js';
+import { ASSETS, PROVIDERS, PROVIDER_TYPE } from '../consts/index.js';
 
 export const getFlashloanProvider = async (vault, contracts) => {
   const providerIndex = {
@@ -8,7 +8,7 @@ export const getFlashloanProvider = async (vault, contracts) => {
   };
   const { borrowAsset } = await vault.vAssets();
   const activeProvider = await vault.activeProvider();
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
+  const dydxProviderAddr = PROVIDERS[PROVIDER_TYPE.DYDX].address;
 
   if (
     [ASSETS.DAI.address, ASSETS.USDC.address].includes(borrowAsset) &&
