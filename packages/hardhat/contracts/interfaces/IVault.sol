@@ -30,9 +30,13 @@ interface IVault {
 
   function withdraw(int256 _withdrawAmount) external;
 
+  function withdrawLiq(int256 _withdrawAmount) external;
+
   function borrow(uint256 _borrowAmount) external;
 
   function payback(int256 _repayAmount) external payable;
+
+  function paybackLiq(int256 _repayAmount) external payable;
 
   function executeSwitch(
     address _newProvider,
@@ -53,7 +57,7 @@ interface IVault {
     view
     returns (uint256);
 
-  function getLiquidationBonusFor(uint256 _amount, bool _flash) external view returns (uint256);
+  function getLiquidationBonusFor(uint256 _amount) external view returns (uint256);
 
   function getProviders() external view returns (address[] memory);
 
