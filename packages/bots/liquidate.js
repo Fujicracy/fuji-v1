@@ -124,7 +124,7 @@ const checkForLiquidations = async () => {
 
     const vault = contracts[vaultName];
     const { borrowAsset } = await vault.vAssets();
-    const decimals = Object.values(ASSETS).find(a => a.address === borrowAsset);
+    const decimals = Object.values(ASSETS).find(a => a.address === borrowAsset).decimals;
 
     const borrowers = await getAllBorrowers(vault);
     const [toLiq, stats] = await buildPositions(borrowers, vault, decimals, contracts.FujiERC1155);
