@@ -1,28 +1,16 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { VAULTS_ADDRESS } from './consts/index.js';
+import { VAULTS_ADDRESS, PROVIDERS } from './consts/index.js';
 import { loadContracts, getSigner, getFlashloanProvider } from './utils/index.js';
 
 const { utils } = ethers;
 
 const signer = getSigner();
 
-function getProviderName(providerAddr, contracts) {
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
-  const aaveProviderAddr = contracts.ProviderAave.address;
-  const compoundProviderAddr = contracts.ProviderCompound.address;
-
-  if (providerAddr === dydxProviderAddr) {
-    return 'ProviderDYDX';
-  }
-  if (providerAddr === aaveProviderAddr) {
-    return 'ProviderAave';
-  }
-  if (providerAddr === compoundProviderAddr) {
-    return 'ProviderCompound';
-  }
-  return '';
+function getProviderName(providerAddr) {
+  const provider = Object.values(PROVIDERS).find(p => p.address === providerAddr.toLowerCase());
+  return provider.name;
 }
 
 async function switchProviders(contracts, vault, newProviderAddr) {
@@ -71,7 +59,7 @@ async function checkRates(vaultName, contracts) {
   const { borrowAsset } = await vault.vAssets();
   const activeProviderAddr = await vault.activeProvider();
 
-  const activeProviderName = getProviderName(activeProviderAddr, contracts);
+  const activeProviderName = getProviderName(activeProviderAddr);
 
   const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset);
 
@@ -80,7 +68,7 @@ async function checkRates(vaultName, contracts) {
   let bestRate = currentRate;
   let bestProviderIndex;
   for (let i = 0; i < providers.length; i++) {
-    const providerName = getProviderName(providers[i], contracts);
+    const providerName = getProviderName(providers[i]);
     const rate = await contracts[providerName].getBorrowRateFor(borrowAsset);
 
     // determine provider with best rate
