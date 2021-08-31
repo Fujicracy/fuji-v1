@@ -2,11 +2,8 @@ import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
 import { VAULTS_ADDRESS } from './consts/index.js';
-import {
-  loadContracts,
-  getSigner,
-  getFlashloanProvider,
-} from './utils/index.js';
+import { loadContracts, getSigner, getFlashloanProvider } from './utils/index.js';
+
 const { utils } = ethers;
 
 const signer = getSigner();

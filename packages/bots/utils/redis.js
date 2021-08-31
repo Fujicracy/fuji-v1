@@ -18,4 +18,3 @@ export const connectRedis = async () => {
 
   return methods;
 };
-

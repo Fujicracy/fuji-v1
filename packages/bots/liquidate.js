@@ -14,6 +14,7 @@ import {
   buildPositions,
   logStatus,
 } from './utils/index.js';
+
 const { utils } = ethers;
 
 const signer = getSigner();

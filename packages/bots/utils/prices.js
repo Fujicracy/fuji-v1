@@ -15,7 +15,4 @@ const getETHPrice = async () => {
     .then(({ data }) => data.ethereum.usd);
 };
 
-export {
-  getGasPrice,
-  getETHPrice,
-};
+export { getGasPrice, getETHPrice };

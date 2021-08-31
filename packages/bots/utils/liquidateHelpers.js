@@ -100,9 +100,4 @@ const logStatus = async (positions, stats, decimals) => {
   });
 };
 
-export {
-  getBorrowers,
-  pushNew,
-  logStatus,
-  buildPositions,
-};
+export { getBorrowers, pushNew, logStatus, buildPositions };

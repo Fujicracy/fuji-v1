@@ -3,7 +3,6 @@
 // and creates a csv file
 
 import chalk from 'chalk';
-import { ethers } from 'ethers';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 import { VAULTS_ADDRESS } from './consts/index.js';
 import { getSigner, loadContracts } from './utils/index.js';

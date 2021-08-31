@@ -3,7 +3,6 @@
 // and creates a csv file
 
 import chalk from 'chalk';
-import { ethers } from 'ethers';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 import { VAULTS_ADDRESS } from './consts/index.js';
 import { getSigner, loadContracts } from './utils/index.js';
@@ -65,12 +64,12 @@ const getRepayers = async () => {
 
   const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
-    let vaultName = vaultsList[v];
+    const vaultName = vaultsList[v];
     console.log('Searching PAYBACK positions in', chalk.blue(vaultName));
 
-    let vault = contracts[vaultName];
+    const vault = contracts[vaultName];
 
-    let found = await searchRepayers(vault);
+    const found = await searchRepayers(vault);
     repayers.push(...found);
   }
 

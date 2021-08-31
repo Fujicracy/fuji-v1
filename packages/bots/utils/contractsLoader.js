@@ -31,7 +31,7 @@ export const loadContracts = async providerOrSigner => {
     }
 
     const contractsData = JSON.parse(
-      fs.readFileSync(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`)
+      fs.readFileSync(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`),
     );
     const contractList = Object.keys(contractsData);
 
@@ -45,5 +45,3 @@ export const loadContracts = async providerOrSigner => {
 
   return newContracts;
 };
-
-

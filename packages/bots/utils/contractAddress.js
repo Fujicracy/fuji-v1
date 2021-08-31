@@ -2,7 +2,7 @@ import fs from 'fs';
 import { CHAIN_ID, DEPLOYMENT } from '../consts/globals.js';
 
 const contractsData = JSON.parse(
-  fs.readFileSync(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`)
+  fs.readFileSync(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`),
 );
 
 export function getContractAddress(name) {
@@ -15,4 +15,3 @@ export function getContractAddress(name) {
 
   return address;
 }
-
