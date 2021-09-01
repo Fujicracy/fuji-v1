@@ -247,8 +247,15 @@
 }
 
 @media screen and (max-width: 768px) {
+  .one-position{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+  }
   .positions-container {
-    margin-top: 32px;
+    margin: 40px 28px;
   }
 
   .positions h3 {

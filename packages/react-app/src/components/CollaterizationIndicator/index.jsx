@@ -130,9 +130,6 @@ function CollaterizationIndicator({ position }) {
             variant="determinate"
             value={healthFactor && healthFactor !== Infinity && logslider(healthFactor.toFixed(2))}
           />
-          <Flex justifyContent="center" alignItems="center" color="white" mt={isMobile ? 2 : 3}>
-            <Image src={doubleDownArrowIcon} width={isMobile ? '10px' : '16px'} />
-          </Flex>
         </>
       ) : (
         <>
@@ -159,54 +156,62 @@ function CollaterizationIndicator({ position }) {
             </div>
             <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
           </div>
-          <Collapse in={more}>
-            <div className="position-details">
-              <div className="title">
-                Current Loan-to-Value
-                <div className="tooltip-info">
-                  <InfoOutlinedIcon />
-                  <span className="tooltip">
-                    The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                    <br />
-                    A max. LTV of 75% means the user can borrow up to $75 in the principal currency
-                    for every $100 worth of collateral.
-                    <br />
-                    <span className="bold">With LTV above 75% they risk a liquidation.</span>
-                  </span>
-                </div>
-              </div>
-              <div className="number">
-                {ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %
-              </div>
-            </div>
-            <div className="position-details">
-              <div className="title">LTV liquidation threshold</div>
-              <div className="number">75 %</div>
-            </div>
-            <div className="position-details">
-              <div className="title">Current ETH price</div>
-              <div className="number">$ {price ? price.toFixed(2) : '...'}</div>
-            </div>
-            <div className="position-details">
-              <div className="title">ETH liquidation price</div>
-              <div className="number">
-                $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
-              </div>
-            </div>
-          </Collapse>
-          <div className="position-details">
-            <Button
-              size="small"
-              disableRipple
-              onClick={() => {
-                return setMore(!more);
-              }}
-              endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            >
-              Show {more ? 'less' : 'more'}
-            </Button>
-          </div>
         </>
+      )}
+      <Collapse in={more}>
+        <div className="position-details">
+          <div className="title">
+            Current Loan-to-Value
+            <div className="tooltip-info">
+              <InfoOutlinedIcon />
+              <span className="tooltip">
+                The Maximum Loan-to-Value ratio represents the maximum borrow limit.
+                <br />
+                A max. LTV of 75% means the user can borrow up to $75 in the principal currency for
+                every $100 worth of collateral.
+                <br />
+                <span className="bold">With LTV above 75% they risk a liquidation.</span>
+              </span>
+            </div>
+          </div>
+          <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
+        </div>
+        <div className="position-details">
+          <div className="title">LTV liquidation threshold</div>
+          <div className="number">75 %</div>
+        </div>
+        <div className="position-details">
+          <div className="title">Current ETH price</div>
+          <div className="number">$ {price ? price.toFixed(2) : '...'}</div>
+        </div>
+        <div className="position-details">
+          <div className="title">ETH liquidation price</div>
+          <div className="number">
+            $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
+          </div>
+        </div>
+      </Collapse>
+      {isMobile || isTablet ? (
+        <Flex justifyContent="center" alignItems="center" color="white" mt={isMobile ? 2 : 3}>
+          <Image
+            src={doubleDownArrowIcon}
+            width={isMobile ? '10px' : '16px'}
+            onClick={() => setMore(!more)}
+          />
+        </Flex>
+      ) : (
+        <div className="position-details">
+          <Button
+            size="small"
+            disableRipple
+            onClick={() => {
+              return setMore(!more);
+            }}
+            endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          >
+            Show {more ? 'less' : 'more'}
+          </Button>
+        </div>
       )}
     </BlackBoxContainer>
   );

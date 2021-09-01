@@ -257,6 +257,7 @@ input[type='number'] {
 @media screen and (max-width: 768px) {
   .main-button {
     height: 40px !important;
+    border-radius: 4px;
   }
 }
 

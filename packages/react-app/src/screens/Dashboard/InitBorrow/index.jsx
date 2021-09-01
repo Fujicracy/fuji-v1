@@ -33,11 +33,10 @@ import { TextInput } from 'components/UI';
 import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { NETWORKS, NETWORK_NAME } from 'consts/networks';
 import { Transactor, GasEstimator } from 'helpers';
-import './styles.css';
 import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
-import { Container } from './style';
+import { Container, Helper } from './style';
 
 function InitBorrow({ contracts, provider, address }) {
   const defaultVault = Object.values(VAULTS)[0];
@@ -332,10 +331,10 @@ function InitBorrow({ contracts, provider, address }) {
                 </div>
                 {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
 
-                <div className="helper">
+                <Helper mb={3} mt={-2}>
                   The liquidity for this transaction is coming from{' '}
                   <span>{getActiveProviderName()}</span>.
-                </div>
+                </Helper>
                 <div>
                   <Button
                     onClick={handleSubmit(onSubmit)}

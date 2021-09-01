@@ -17,3 +17,26 @@ export const Container = styled(Box)`
     margin-top: 0px !important;
   `}
 `;
+
+export const Helper = styled(Box)`
+  background-color: var(--bg64);
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 10px;
+  color: white;
+
+  span {
+    color: var(--green);
+  }
+
+  ${media.lessThan('medium')`
+    margin-bottom: 8px;
+    padding: 4px;
+    font-size: 10px;
+  `}
+
+  ${media.greaterThan('medium')`
+    margin-bottom: 12px;
+    font-size: 14px;
+  `}
+`;

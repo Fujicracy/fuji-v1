@@ -115,6 +115,8 @@ function MyPositions({ contracts, address }) {
                   </BlackBoxContainer>
                   {/* <span className="empty-button" /> */}
                 </Grid>
+              ) : isMobile ? (
+                <></>
               ) : (
                 <div style={{ height: '2.5rem' }} />
               )}

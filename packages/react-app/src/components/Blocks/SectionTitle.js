@@ -13,7 +13,9 @@ const SectionTitle = styled(Box)`
   justify-content: ${props => props.justifyContent && props.justifyContent};
   align-items: ${props => props.alignItems && props.alignItems};
   width: ${props => props.width && props.width};
-  // font-weight: ${props => (props.fontBold ? 1000 : 700)};
+  font-weight: ${props => (props.fontWeight ? props.fontWeight : 600)};
+  text-align: ${props => props.textAlign && props.textAlign};
+
   ${space}
   ${width}
 `;

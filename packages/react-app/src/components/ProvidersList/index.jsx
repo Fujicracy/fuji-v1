@@ -49,7 +49,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
           alignItems="center"
           justifyContent="flex-start"
           color="#42FF00"
-          fontSize={isMobile ? 4 : 5}
+          fontSize="28px"
           fontWeight="700"
         >
           <AnimatedCounter countTo={defaultOption?.rate} /> %
@@ -127,7 +127,7 @@ function ProvidersList({
       hasBlackContainer={hasBlackContainer}
       padding={hasBlackContainer && '32px'}
     >
-      <SectionTitle fontSize={isMobile ? 1 : isTablet ? '18px' : '16px'} mb={isMobile ? 3 : 3}>
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'} mb={isMobile ? 3 : 3}>
         {title}
         {!isMobile && !isTablet && (
           <div className="tooltip-info">

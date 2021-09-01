@@ -271,3 +271,24 @@
   left: calc(50% - 0.125rem);
   background-color: var(--brand);
 }
+
+@media screen and (max-width: 768px) {
+  .toggle-button .button {
+    border-radius: 4px;
+  }
+  .toggle-button .knobs {
+    border-radius: 4px;
+  }
+  .toggle-button .toggle-mode {
+    border-radius: 4px;
+  }
+  .toggle-button .button .knobs:before {
+    border-radius: 4px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .main-button {
+    height: 55px !important;
+  }
+}

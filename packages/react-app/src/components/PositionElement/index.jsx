@@ -65,7 +65,9 @@ function PositionElement({ position, actionType }) {
   console.log({ isMobile, isTablet });
 
   const isShowFactor =
-    actionType === PositionActions.Manage || actionType === PositionActions.Liquidate;
+    actionType === PositionActions.Manage ||
+    actionType === PositionActions.Liquidate ||
+    actionType === PositionActions.None;
   return (
     <Grid container>
       <Flex alignItems="center" justifyContent="flex-start" width={1 / 1}>

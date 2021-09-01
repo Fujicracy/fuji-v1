@@ -5,7 +5,7 @@ import media from 'styled-media-query';
 
 export const InputContainer = styled.div`
   height: 56px;
-  border-radius: 0.5rem;
+  border-radius: 8rem;
   display: flex;
   justify-content: space-between;
   border: 1px solid transparent;
@@ -21,10 +21,12 @@ export const InputContainer = styled.div`
 
   ${media.lessThan('medium')`
     height: 40px;
+    border-radius: 4px;
   `}
 
   ${media.between('medium', 'large')`
     height: 56px;
+    border-radius: 4px;
   `}
 `;
 
