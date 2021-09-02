@@ -18,9 +18,6 @@ export const HeaderContainer = styled(Box).attrs({
   justify-content: space-between;
   height: 100px;
 
-  backdrop-filter: blur(0.25rem);
-  -webkit-backdrop-filter: blur(0.25rem);
-
   padding: 32px 64px 32px 64px;
 
   ${size}
@@ -52,9 +49,9 @@ export const MenuBackContainer = styled(Box)`
   height: 100vh;
   top: 64px;
   padding-left: 30%;
-
   background: transparent;
   z-index: 9999;
+  backdrop-filter: blur(0.25rem);
 `;
 
 export const MenuContainer = styled(Box)`
