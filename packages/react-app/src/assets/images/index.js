@@ -8,7 +8,6 @@ import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
 import closeIcon from './icons/close.svg';
 import downArrowIcon from './icons/down-arrow.svg';
-import doubleDownArrowIcon from './icons/double-down.svg';
 import upArrowIcon from './icons/up_arrow.svg';
 import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
@@ -43,7 +42,6 @@ import maticGrayIcon from './icons/tokens/MATIC_GRAY.svg';
 
 import logoTitleIcon from './icons/logo-title.svg';
 import logoIcon from './icons/logo.svg';
-import menuCollapseIcon from './icons/menu-collapse.svg';
 import notFoundIcon from './icons/not-found-404.svg';
 
 import infoStep1 from './images/info/step1.png';
@@ -78,7 +76,6 @@ export {
   flaskIcon,
   comingSoonIcon,
   downArrowIcon,
-  doubleDownArrowIcon,
   upArrowIcon,
   barIcon,
   // Images
@@ -101,6 +98,5 @@ export {
   twitterRedImage,
   logoTitleIcon,
   logoIcon,
-  menuCollapseIcon,
   notFoundIcon,
 };

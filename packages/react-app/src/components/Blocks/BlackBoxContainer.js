@@ -18,7 +18,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   padding: ${props => (props.padding ? props.padding : '0px')};
 
   ${media.lessThan('medium')`
-    border-radius: 6px;
+    border-radius: 14px;
   `}
 
   ${media.between('medium', 'large')`
@@ -36,7 +36,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
     &:first-child {
-      padding: 0rem 0rem 0.5rem 0rem;
+      padding: 0.5rem 0rem;
     }
     &:last-child {
       padding: 0.5rem 0rem 0rem 0rem;

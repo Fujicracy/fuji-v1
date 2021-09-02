@@ -4,7 +4,12 @@ import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import media from 'styled-media-query';
 
-export const Container = styled(Box).attrs({
+export const Container = styled(Box)`
+  position: relative;
+  z-index: 2;
+`;
+
+export const HeaderContainer = styled(Box).attrs({
   px: 4,
 })`
   display: flex;
@@ -39,6 +44,52 @@ export const Logo = styled.img`
     opacity: 0.8;
   }
   ${size}
+`;
+
+export const MenuBackContainer = styled(Box)`
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 64px;
+  padding-left: 30%;
+
+  background: transparent;
+  z-index: 9999;
+`;
+
+export const MenuContainer = styled(Box)`
+  height: 100vh;
+  background: rgb(20, 20, 20);
+  opacity: 0.97;
+  z-index: 9998;
+`;
+
+export const MenuItem = styled(Box)`
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  color: ${props => (props.isSelected ? '#f0014f' : '#f5f5fd')};
+  margin: 16px 0px !important;
+  &:hover {
+    color: #f0014f;
+  }
+`;
+
+export const MenuNavigationContainer = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 64px;
+  height: 64px;
+  width: calc(100% - 56px);
+  left: 28px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  border-radius: 12px 12px 0px 0px;
+  padding: 0px 24px;
 `;
 
 export const Navigation = styled.ul`

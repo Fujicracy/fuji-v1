@@ -223,12 +223,12 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box maxWidth="90rem" padding={isMobile ? '28px' : isTablet ? '40px 128px' : '32px'}>
-        <Grid container spacing={isMobile ? 2 : isTablet ? 3 : 6}>
+      <Box maxWidth="90rem" padding={isMobile ? '32px 28px' : isTablet ? '40px 128px' : '32px'}>
+        <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
           <Grid item xs={12} sm={12} md={4}>
             <Box ml={isMobile || isTablet ? '' : '56px'}>
               {!isMobile && !isTablet && <HowItWorks />}
-              <BlackBoxContainer hasBlackContainer="true" padding="32px 28px">
+              <BlackBoxContainer hasBlackContainer padding="32px 28px">
                 <Grid container spacing={isMobile ? 4 : 4}>
                   <Grid item xs={8} sm={7} md={12}>
                     <SelectMarket

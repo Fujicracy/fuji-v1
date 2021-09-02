@@ -7,7 +7,7 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   pb: 4,
   justifyContent: props.justifyContent,
 }))`
-  position: fixed;
+  position: ${props => (props.navPosition ? props.navPosition : 'fixed')};
   bottom: 0rem;
   display: flex;
   justify-content: space-between;
@@ -24,7 +24,7 @@ export const NavImageLink = styled.a.attrs(props => ({
   background: ${props => `url(${props.contact.image}) no-repeat top center`};
   height: 20px;
   width: 20px;
-  margin-right: 16px;
+  margin: 0px 16px;
   background-size: contain;
   &:hover {
     height: 20px;

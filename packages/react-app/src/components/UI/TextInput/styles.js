@@ -5,7 +5,7 @@ import media from 'styled-media-query';
 
 export const InputContainer = styled.div`
   height: 56px;
-  border-radius: 8rem;
+  border-radius: 0.5rem;
   display: flex;
   justify-content: space-between;
   border: 1px solid transparent;

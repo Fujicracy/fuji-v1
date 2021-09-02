@@ -62,8 +62,6 @@ function PositionElement({ position, actionType }) {
     setHealthRatio(hr);
   }, [price, position]);
 
-  console.log({ isMobile, isTablet });
-
   const isShowFactor =
     actionType === PositionActions.Manage ||
     actionType === PositionActions.Liquidate ||

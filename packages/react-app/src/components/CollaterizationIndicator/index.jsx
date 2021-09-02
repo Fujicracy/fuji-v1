@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { useSpring, animated } from 'react-spring';
-import { Flex, Image } from 'rebass';
+import { Flex } from 'rebass';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, Collapse, LinearProgress } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -8,7 +8,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { doubleDownArrowIcon } from 'assets/images';
 
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
@@ -103,8 +102,8 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer padding="32px 28px">
-      <SectionTitle mb={isMobile ? 2 : 3} fontSize={isMobile ? '14px' : isTablet ? '18px' : '16px'}>
+    <BlackBoxContainer padding="32px 28px 16px">
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
@@ -122,7 +121,7 @@ function CollaterizationIndicator({ position }) {
       {isMobile || isTablet ? (
         <>
           <Flex justifyContent="center" alignItems="center" color="white">
-            <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'} mb={2}>
+            <SectionTitle fontSize={isMobile ? '24px' : isTablet ? '24px' : '16px'} m="16px">
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </SectionTitle>
           </Flex>
@@ -192,12 +191,12 @@ function CollaterizationIndicator({ position }) {
         </div>
       </Collapse>
       {isMobile || isTablet ? (
-        <Flex justifyContent="center" alignItems="center" color="white" mt={isMobile ? 2 : 3}>
-          <Image
-            src={doubleDownArrowIcon}
-            width={isMobile ? '10px' : '16px'}
-            onClick={() => setMore(!more)}
-          />
+        <Flex justifyContent="center" alignItems="center" color="white" m="16px 16px 0px">
+          {more ? (
+            <ExpandLessIcon style={{ fontSize: 28 }} onClick={() => setMore(!more)} />
+          ) : (
+            <ExpandMoreIcon style={{ fontSize: 28 }} onClick={() => setMore(!more)} />
+          )}
         </Flex>
       ) : (
         <div className="position-details">
