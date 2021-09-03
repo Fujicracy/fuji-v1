@@ -16,15 +16,11 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   margin-top: 2rem;
   position: relative;
   padding: ${props => (props.padding ? props.padding : '0px')};
+  border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
+  border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
 
-  ${media.lessThan('medium')`
-    border-radius: 14px;
-  `}
-
-  ${media.between('medium', 'large')`
-    border-radius: 14px;
-  `}
-
+  border-top-left-radius: ${props => props.noTopBorder && '0px'};
+  border-top-right-radius: ${props => props.noTopBorder && '0px'};
   ${size}
   ${background}
 
@@ -36,7 +32,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
     &:first-child {
-      padding: 0.5rem 0rem;
+      padding: 24px 0px 8px;
     }
     &:last-child {
       padding: 0.5rem 0rem 0rem 0rem;
@@ -45,6 +41,25 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
       border-bottom: none;
     }
   }
+
+  ${media.lessThan('medium')`
+    border-radius: 14px;
+    border-top-left-radius: ${props => props.noTopBorder && '0px'};
+    border-top-right-radius: ${props => props.noTopBorder && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
+    .position-details {
+      border-bottom: none;
+    }
+  `}
+
+  ${media.between('medium', 'large')`
+    border-top-left-radius: ${props => props.noTopBorder && '0px'};
+    border-top-right-radius: ${props => props.noTopBorder && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
+    border-radius: 14px;
+  `}
 `;
 
 BlackBoxContainer.defaultProps = {

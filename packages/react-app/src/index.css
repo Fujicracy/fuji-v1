@@ -185,6 +185,7 @@ button:focus {
   --blocks: rgba(25, 25, 25, 0.9);
   --blocks56: rgba(25, 25, 25, 0.56);
   --green: rgba(23, 203, 73, 1);
+  --fujiColor: #F5F5FD;
 }
 
 .light-theme {
@@ -257,7 +258,7 @@ input[type='number'] {
 @media screen and (max-width: 768px) {
   .main-button {
     height: 40px !important;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 }
 

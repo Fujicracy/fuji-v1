@@ -81,7 +81,7 @@ function PositionElement({ position, actionType }) {
                 alt={borrowAsset.name}
                 src={borrowAsset.icon}
                 width={isMobile ? 16 : isTablet ? 24 : 24}
-                ml={isMobile || isTablet ? -2 : -2}
+                ml={isMobile || isTablet ? -1 : -2}
               />
             </Flex>
             {/* <span className="elmt-name">

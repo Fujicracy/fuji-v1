@@ -54,14 +54,14 @@ function ManagePosition({ contracts, provider, address }) {
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
-      <BlackBoxContainer hasBlackContainer={false} padding="28px">
-        <Flex width={1 / 1} margin="40px 0px 16px">
+      <BlackBoxContainer hasBlackContainer={false} padding="32px 28px">
+        <Flex width={1 / 1} margin="0px 0px 16px">
           <Link to="my-positions" className="back-to-link">
             <ArrowBackIosOutlinedIcon style={{ fontSize: 16 }} />
             <SectionTitle marginLeft="8px">Back</SectionTitle>
           </Link>
         </Flex>
-        <Grid container spacing={isMobile ? 4 : 6}>
+        <Grid container spacing={isMobile ? 3 : 6}>
           <Grid item md={8} sm={8} xs={12}>
             <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
               <Grid container>
@@ -99,10 +99,10 @@ function ManagePosition({ contracts, provider, address }) {
               </Grid>
             </BlackBoxContainer>
             {/* <span className="empty-button" /> */}
-            <BlackBoxContainer hasBlackContainer padding="12px 0px 12px 28px">
+            <BlackBoxContainer hasBlackContainer noBottomBorder padding="12px 0px 12px 28px">
               <PositionElement actionType={PositionActions.None} position={position} />
             </BlackBoxContainer>
-            <BlackBoxContainer hasBlackContainer padding="28px">
+            <BlackBoxContainer hasBlackContainer padding="28px" noTopBorder>
               <form noValidate>
                 <Grid container className="manage-content" spacing={4}>
                   <Grid item md={6} xs={12}>

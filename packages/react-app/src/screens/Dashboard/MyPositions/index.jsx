@@ -129,7 +129,16 @@ function MyPositions({ contracts, address }) {
                 ),
                 position =>
                   hasPosition(position.borrowAsset.name) && (
-                    <Grid key={position.borrowAsset.name} item className="one-position">
+                    <Grid
+                      key={position.borrowAsset.name}
+                      item
+                      className="one-position"
+                      onClick={() => {
+                        return history.push(
+                          `/dashboard/position?vaultAddress=${position.vaultAddress}`,
+                        );
+                      }}
+                    >
                       <PositionElement actionType={PositionActions.Manage} position={position} />
                     </Grid>
                   ),

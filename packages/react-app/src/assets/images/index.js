@@ -37,8 +37,9 @@ import ethRedIcon from './icons/tokens/ETH_RED.svg';
 import ethGrayIcon from './icons/tokens/ETH_GRAY.svg';
 import ethBlueIcon from './icons/tokens/ETH_BLUE.svg';
 
-import maticYellowIcon from './icons/tokens/MATIC.svg';
-import maticGrayIcon from './icons/tokens/MATIC_GRAY.svg';
+// Market Icons
+import marketCore from './icons/markets/core.svg';
+import marketFuse from './icons/markets/fuse.svg';
 
 import logoTitleIcon from './icons/logo-title.svg';
 import logoIcon from './icons/logo.svg';
@@ -56,11 +57,6 @@ export const ethIcons = {
   GRAY: ethGrayIcon,
   RED: ethRedIcon,
   BLUE: ethBlueIcon,
-};
-
-export const maticIcons = {
-  GRAY: maticGrayIcon,
-  YELLOW: maticYellowIcon,
 };
 
 export {
@@ -99,4 +95,7 @@ export {
   logoTitleIcon,
   logoIcon,
   notFoundIcon,
+  // Markets
+  marketFuse,
+  marketCore,
 };

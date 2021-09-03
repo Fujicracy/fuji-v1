@@ -45,13 +45,13 @@ function Home() {
       />
       <HomeCta container spacing={3}>
         <Grid item xs={12} sm={6} md={6}>
-          <Button onClick={handleLearnClick} block outline>
+          <Button onClick={handleLearnClick} block outline fontSize="18px">
             Learn
           </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <NavLink to="/dashboard">
-            <Button block color="white">
+            <Button block color="white" fontSize="18px">
               App
             </Button>
           </NavLink>

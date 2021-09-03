@@ -31,7 +31,7 @@ import {
 import { TextInput } from 'components/UI';
 
 import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { NETWORKS, NETWORK_NAME } from 'consts/networks';
+import { MARKETS, MARKET_NAMES } from 'consts/markets';
 import { Transactor, GasEstimator } from 'helpers';
 import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
@@ -49,7 +49,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
-  const [network, setNetwork] = useState(NETWORKS[NETWORK_NAME.ETH]);
+  const [network, setNetwork] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
 
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
@@ -231,13 +231,7 @@ function InitBorrow({ contracts, provider, address }) {
               <BlackBoxContainer hasBlackContainer padding="32px 28px">
                 <Grid container spacing={isMobile ? 4 : 4}>
                   <Grid item xs={8} sm={7} md={12}>
-                    <SelectMarket
-                      title="Networks"
-                      handleChange={handleChangeNetwork}
-                      options={NETWORKS}
-                      defaultOption={NETWORKS.ETH}
-                      hasBlackContainer={false}
-                    />
+                    <SelectMarket handleChange={handleChangeNetwork} hasBlackContainer={false} />
                   </Grid>
                   <Grid item xs={4} sm={5} md={12}>
                     <ProvidersList
@@ -305,7 +299,7 @@ function InitBorrow({ contracts, provider, address }) {
                       type: 'currency',
                     }}
                     subTitle="Collateral"
-                    subTitleInfo={`Your balance: ${
+                    subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
                       ethBalance ? Number(ethBalance).toFixed(3) : '...'
                     } Ξ`}
                     errorComponent={

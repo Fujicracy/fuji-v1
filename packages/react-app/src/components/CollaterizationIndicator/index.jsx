@@ -102,7 +102,7 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer padding="32px 28px 16px">
+    <BlackBoxContainer padding="32px 28px 16px" mt="4px">
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (
@@ -161,17 +161,19 @@ function CollaterizationIndicator({ position }) {
         <div className="position-details">
           <div className="title">
             Current Loan-to-Value
-            <div className="tooltip-info">
-              <InfoOutlinedIcon />
-              <span className="tooltip">
-                The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                <br />
-                A max. LTV of 75% means the user can borrow up to $75 in the principal currency for
-                every $100 worth of collateral.
-                <br />
-                <span className="bold">With LTV above 75% they risk a liquidation.</span>
-              </span>
-            </div>
+            {!isMobile && (
+              <div className="tooltip-info">
+                <InfoOutlinedIcon />
+                <span className="tooltip">
+                  The Maximum Loan-to-Value ratio represents the maximum borrow limit.
+                  <br />
+                  A max. LTV of 75% means the user can borrow up to $75 in the principal currency
+                  for every $100 worth of collateral.
+                  <br />
+                  <span className="bold">With LTV above 75% they risk a liquidation.</span>
+                </span>
+              </div>
+            )}
           </div>
           <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
         </div>
@@ -193,9 +195,15 @@ function CollaterizationIndicator({ position }) {
       {isMobile || isTablet ? (
         <Flex justifyContent="center" alignItems="center" color="white" m="16px 16px 0px">
           {more ? (
-            <ExpandLessIcon style={{ fontSize: 28 }} onClick={() => setMore(!more)} />
+            <ExpandLessIcon
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.5)' }}
+              onClick={() => setMore(!more)}
+            />
           ) : (
-            <ExpandMoreIcon style={{ fontSize: 28 }} onClick={() => setMore(!more)} />
+            <ExpandMoreIcon
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.5)' }}
+              onClick={() => setMore(!more)}
+            />
           )}
         </Flex>
       ) : (

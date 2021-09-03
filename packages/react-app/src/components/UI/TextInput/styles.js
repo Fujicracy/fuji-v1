@@ -38,6 +38,7 @@ export const SubTitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 
   ${media.between('medium', 'large')`
     font-size: 18px;
@@ -48,6 +49,16 @@ export const SubTitleInfo = styled.span`
   display: contents;
   font-size: 0.75rem;
   color: ${themeGet('colors.text64')};
+  ${media.lessThan('medium')`
+    font-size: 10px;
+    line-height: 15px;
+    display: flex;
+    position:absolute;
+    align-items: flex-end;
+    text-align: right;
+    right:0px;
+    margin-top: 24px;
+  `}
 `;
 
 export const Description = styled.label`

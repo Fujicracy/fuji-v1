@@ -27,14 +27,16 @@ export const MarketButton = styled(Box)`
   border-radius: ${props => (props.left ? '10px 0 0 10px' : props.right ? '0 10px 10px 0' : '0')};
   border: 1px solid rgb(60, 60, 60);
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
-  color: ${props => (props.clicked ? 'white' : 'rgba(255, 255, 255, 0.3)')};
+  color: white;
   cursor: pointer;
   ${media.lessThan('medium')`
+    border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
     font-size: 12px;
     height: 32px;
   `}
 
   ${media.between('medium', 'large')`
+    border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
     height: 56px;
     font-size:15px;
   `}
