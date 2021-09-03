@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Flex } from 'rebass';
-import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, Collapse, LinearProgress } from '@material-ui/core';
+import { Typography, Button, Collapse } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -14,23 +13,6 @@ import { PositionRatios } from '../../helpers';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
 
 import './styles.css';
-
-const BorderLinearProgress = withStyles(() => ({
-  root: {
-    height: 15,
-    borderRadius: 5,
-
-    border: '2px solid rgba(255, 255, 255, 0.2)',
-    background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.1) 6.82%, rgba(0, 0, 0, 0.1) 100%)',
-  },
-  colorPrimary: {
-    background: 'transparent',
-  },
-  barColorPrimary: {
-    background: 'linear-gradient(90deg, var(--brand) 0%, #3ABB25 100%) !important',
-    filter: 'drop-shadow(0rem 0rem 0.75rem var(--brand))',
-  },
-}))(LinearProgress);
 
 function hsl(r) {
   const hue = (r / 100) * 120;
@@ -125,10 +107,16 @@ function CollaterizationIndicator({ position }) {
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </SectionTitle>
           </Flex>
-          <BorderLinearProgress
-            variant="determinate"
-            value={healthFactor && healthFactor !== Infinity && logslider(healthFactor.toFixed(2))}
-          />
+          <Flex width={1 / 1}>
+            <svg viewBox="0 0 100 4" className="inner-progress">
+              <animated.path
+                className="progress"
+                stroke={hsl(healthRatio)}
+                style={props}
+                d="M 3 2 l 100 0"
+              />
+            </svg>
+          </Flex>
         </>
       ) : (
         <>

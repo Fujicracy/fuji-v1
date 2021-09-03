@@ -118,6 +118,23 @@
   animation: progress 1s ease-out forwards;
 }
 
+.inner-progress {
+  display: block;
+  width: 100%;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(33, 33, 33) 6.82%, rgb(44,44,44) 100%);
+  border-radius: 16px;
+}
+.progress {
+  height:10px;
+  width: 100%;
+  border: 50% solid red;
+  fill: none;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  animation: progress 1s ease-out forwards;
+}
+
 .inner-chart .circle {
   /*stroke: hsl(1,100%,50%);*/
   /*stroke: var(--text64);*/
