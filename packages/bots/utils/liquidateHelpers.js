@@ -1,47 +1,15 @@
-const { promisify } = require('util');
-const redis = require('redis');
-const { ethers, BigNumber } = require('ethers');
+import { ethers, BigNumber } from 'ethers';
+import { VAULTS } from '../consts/index.js';
+import { getSigner } from './signer.js';
 
 const { formatEther, formatUnits, parseUnits } = ethers.utils;
 
-const contractDeployBlock = async provider => {
-  // const ETHDAICreateTX = '0x297ba28fe4e08efa9cf280063997b1a56b6243eb64df4baf9559610a6744b384';
-  // const ETHUSDCCreateTX = '0xff5ba53aa7be41b6fa2bd7d1bb468c4f37b34e48f99a537fcd6a1105c8cb25c5';
-  // const daiStartBlock = (await provider.getTransaction(ETHDAICreateTX)).blockNumber;
-  // const usdcStartBlock = (await provider.getTransaction(ETHUSDCCreateTX)).blockNumber;
-  const currentBlock = await provider.getBlockNumber();
-  return {
-    // daivault
-    '0x6E16394cBF840fc599FA3d9e5D1E90949c32a4F5': 12386446,
-    // usdcvault
-    '0xd0dc4Cc10fCf3fEe2bF5310c0E4e097b60F097D3': 12418746,
-    currentBlock,
-  };
-};
+const signer = getSigner();
 
-const connectRedis = async () => {
-  const client = redis.createClient({ port: 6379 });
+const getBorrowers = async (vault, searchLength) => {
+  const currentBlock = await signer.provider.getBlockNumber();
 
-  // console.log(client);
-
-  client.on('error', function (error) {
-    console.error(error);
-  });
-
-  const methods = {
-    get: promisify(client.get).bind(client),
-    set: promisify(client.set).bind(client),
-    hmset: promisify(client.hmset).bind(client),
-  };
-
-  return methods;
-};
-
-const searchBorrowers = async (provider, vault, searchLength) => {
-  const info = await contractDeployBlock(provider);
-  const currentBlock = info.currentBlock;
-  const startBlock = info[vault.address];
-  console.log(startBlock);
+  const startBlock = VAULTS[vault.address.toLowerCase()].deployBlockNumber;
   const filterBorrowers = vault.filters.Borrow();
   const events = await vault.queryFilter(
     filterBorrowers,
@@ -132,4 +100,4 @@ const logStatus = async (positions, stats, decimals) => {
   });
 };
 
-module.exports = { searchBorrowers, connectRedis, pushNew, logStatus, buildPositions };
+export { getBorrowers, pushNew, logStatus, buildPositions };
