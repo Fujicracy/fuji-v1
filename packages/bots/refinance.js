@@ -14,7 +14,7 @@ function getProviderName(providerAddr) {
 }
 
 async function switchProviders(contracts, vault, newProviderAddr) {
-  const index = await getFlashloanProvider(vault, contracts);
+  const index = await getFlashloanProvider(vault);
   let gasLimit = await contracts.Controller.connect(signer).estimateGas.doRefinancing(
     vault.address,
     newProviderAddr,

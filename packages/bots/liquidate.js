@@ -47,7 +47,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
     return;
   }
 
-  const index = await getFlashloanProvider(vault, contracts);
+  const index = await getFlashloanProvider(vault);
   const gasPrice = await getGasPrice();
   const ethPrice = await getETHPrice();
 

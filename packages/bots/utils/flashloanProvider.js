@@ -1,6 +1,6 @@
 import { ASSETS, PROVIDERS, PROVIDER_TYPE } from '../consts/index.js';
 
-export const getFlashloanProvider = async (vault, contracts) => {
+export const getFlashloanProvider = async vault => {
   const providerIndex = {
     aave: 0,
     dydx: 1,
