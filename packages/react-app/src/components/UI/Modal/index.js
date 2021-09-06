@@ -1,5 +1,6 @@
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
+import media from 'styled-media-query';
 
 const StyledModal = Modal.styled`
   display: flex;
@@ -12,6 +13,20 @@ const StyledModal = Modal.styled`
   opacity: ${props => props.opacity};
   transition : all 0.3s ease-in-out;
   color: ${themeGet('colors.text64')};
-  `;
+
+  ${media.lessThan('medium')`
+    width: 100%;
+    margin-left: 28px;
+    margin-right: 28px;
+    box-shadow: none;
+    background: rgb(21,21,21);
+    padding: 0px;
+    border-radius: 14px;
+    border: 2px solid rgb(44, 44, 44);
+  `}
+  ${media.greaterThan('medium')`
+    margin: 56px;
+  `}
+`;
 
 export default StyledModal;

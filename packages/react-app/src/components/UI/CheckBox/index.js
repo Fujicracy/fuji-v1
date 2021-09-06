@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex } from 'rebass';
 import { CheckboxContainer, HiddenCheckbox, StyledCheckbox, Icon } from './styles';
 
-const CheckBox = ({ className, checked, description, ...props }) => (
+const CheckBox = ({ className, checked, description, descriptionFontSize, ...props }) => (
   <Flex flexDirection="row" alignItems="center" color="white">
     <label>
       <CheckboxContainer className={className}>
@@ -15,7 +15,7 @@ const CheckBox = ({ className, checked, description, ...props }) => (
       </CheckboxContainer>
     </label>
 
-    <span style={{ marginLeft: 8, fontSize: 12 }}>{description}</span>
+    <span style={{ marginLeft: 8, fontSize: descriptionFontSize }}>{description}</span>
   </Flex>
 );
 

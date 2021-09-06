@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Box } from 'rebass';
 import { BaseModalBackground } from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
+import media from 'styled-media-query';
 
 export const Container = styled(Box)`
   min-height: 100vh;
@@ -11,6 +12,9 @@ export const FadingBackground = styled(BaseModalBackground)`
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   transition: all 0.3s ease-in-out;
+  ${media.lessThan('medium')`
+    background-color: rgba(255, 255, 255, 0.05);
+  `}
 `;
 
 export const NavText = styled.div`
