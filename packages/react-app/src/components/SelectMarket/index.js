@@ -29,7 +29,7 @@ const SelectMarket = ({ hasBlackContainer = true }) => {
 
   return (
     <BlackBoxContainer hasBlackContainer={hasBlackContainer}>
-      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'} mb={isMobile ? 3 : 3}>
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'} mb={isMobile ? 3 : 3}>
         Markets
       </SectionTitle>
       <RadioContainer>

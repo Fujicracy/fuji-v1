@@ -26,6 +26,7 @@ import {
   SelectVault,
   BlackBoxContainer,
   SelectMarket,
+  SectionTitle,
   // SectionTitle,
 } from 'components';
 import { TextInput } from 'components/UI';
@@ -228,12 +229,15 @@ function InitBorrow({ contracts, provider, address }) {
           <Grid item xs={12} sm={12} md={4}>
             <Box ml={isMobile || isTablet ? '' : '56px'}>
               {!isMobile && !isTablet && <HowItWorks />}
-              <BlackBoxContainer hasBlackContainer padding="32px 28px">
-                <Grid container spacing={isMobile ? 4 : 4}>
-                  <Grid item xs={8} sm={7} md={12}>
+              <BlackBoxContainer
+                hasBlackContainer
+                padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px'}
+              >
+                <Grid container spacing={isMobile ? 3 : 4}>
+                  <Grid item xs={8} sm={8} md={12}>
                     <SelectMarket handleChange={handleChangeNetwork} hasBlackContainer={false} />
                   </Grid>
-                  <Grid item xs={4} sm={5} md={12}>
+                  <Grid item xs={4} sm={4} md={12}>
                     <ProvidersList
                       contracts={contracts}
                       markets={[borrowAsset]}
@@ -248,7 +252,10 @@ function InitBorrow({ contracts, provider, address }) {
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
-            <BlackBoxContainer hasBlackContainer padding="32px 28px">
+            <BlackBoxContainer
+              hasBlackContainer
+              padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px'}
+            >
               <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
               <form noValidate autoComplete="off">
                 <TextInput
@@ -325,33 +332,32 @@ function InitBorrow({ contracts, provider, address }) {
                 </div>
                 {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
 
-                <Helper mb={3} mt={-2}>
-                  The liquidity for this transaction is coming from{' '}
-                  <span>{getActiveProviderName()}</span>.
+                <Helper>
+                  Liquidity for this transaction comes from <span>{getActiveProviderName()}</span>.
                 </Helper>
-                <div>
-                  <Button
-                    onClick={handleSubmit(onSubmit)}
-                    className="main-button"
-                    disabled={loading}
-                    startIcon={
-                      loading ? (
-                        <CircularProgress
-                          style={{
-                            width: 25,
-                            height: 25,
-                            marginRight: '10px',
-                            color: 'rgba(0, 0, 0, 0.26)',
-                          }}
-                        />
-                      ) : (
-                        ''
-                      )
-                    }
-                  >
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  className="main-button"
+                  disabled={loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress
+                        style={{
+                          width: 25,
+                          height: 25,
+                          marginRight: '10px',
+                          color: 'rgba(0, 0, 0, 0.26)',
+                        }}
+                      />
+                    ) : (
+                      ''
+                    )
+                  }
+                >
+                  <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '20px'}>
                     Borrow{loading ? 'ing...' : ''}
-                  </Button>
-                </div>
+                  </SectionTitle>
+                </Button>
               </form>
             </BlackBoxContainer>
           </Grid>

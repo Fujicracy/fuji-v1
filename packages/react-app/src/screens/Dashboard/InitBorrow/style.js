@@ -30,13 +30,14 @@ export const Helper = styled(Box)`
   }
 
   ${media.lessThan('medium')`
-    margin-bottom: 8px;
-    padding: 4px;
+    margin-bottom: 16px !important;
+    margin-top: -8px;
     font-size: 10px;
   `}
 
-  ${media.greaterThan('medium')`
-    margin-bottom: 12px;
-    font-size: 14px;
+  ${media.between('medium', 'large')`
+    margin-bottom: 28px !important;
+    font-size: 12px;
+    margin-top: -4px;
   `}
 `;

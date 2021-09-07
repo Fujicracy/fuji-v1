@@ -11,6 +11,7 @@ export const RadioContainer = styled(Box).attrs({
 `;
 
 export const MarketButton = styled(Box)`
+  display: flex;
   width: 100%;
   font-size: 16px;
   display: flex;
@@ -37,7 +38,7 @@ export const MarketButton = styled(Box)`
 
   ${media.between('medium', 'large')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
-    height: 56px;
-    font-size:15px;
+    height: 40px;
+    font-size:16px;
   `}
 `;

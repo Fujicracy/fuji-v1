@@ -85,7 +85,7 @@ function CollaterizationIndicator({ position }) {
 
   return (
     <BlackBoxContainer padding="32px 28px 16px" mt="4px">
-      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}>
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (
           <div className="tooltip-info">

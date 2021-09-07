@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
+import media from 'styled-media-query';
 
 export const NavUnlisted = styled(Box).attrs(props => ({
   pt: 4,
@@ -32,6 +33,10 @@ export const NavImageLink = styled.a.attrs(props => ({
     background: ${props => `url(${props.contact.imageHover}) no-repeat top center`};
     background-size: contain;
   }
+  ${media.between('medium', 'large')`
+    height: 28px;
+    width: 28px;
+  `}
 `;
 
 export const NavTextLink = styled.a.attrs(props => ({

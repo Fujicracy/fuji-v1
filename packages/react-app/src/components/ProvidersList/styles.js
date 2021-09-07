@@ -22,7 +22,7 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   `}
   ${media.between('medium', 'large')`
     padding: 0px;
-    height: 56px;
+    height: 40px;
   `}
 `;
 

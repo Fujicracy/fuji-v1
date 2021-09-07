@@ -41,7 +41,8 @@ export const SubTitleContainer = styled.div`
   position: relative;
 
   ${media.between('medium', 'large')`
-    font-size: 18px;
+    font-size: 20px;
+    margin-bottom: 24px;
   `}
 `;
 
@@ -52,6 +53,16 @@ export const SubTitleInfo = styled.span`
   ${media.lessThan('medium')`
     font-size: 10px;
     line-height: 15px;
+    display: flex;
+    position:absolute;
+    align-items: flex-end;
+    text-align: right;
+    right:0px;
+    margin-top: 24px;
+  `}
+  ${media.between('medium', 'large')`
+    font-size: 12px;
+    line-height: 18px;
     display: flex;
     position:absolute;
     align-items: flex-end;

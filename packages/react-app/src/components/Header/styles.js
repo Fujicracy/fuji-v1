@@ -29,7 +29,7 @@ export const HeaderContainer = styled(Box).attrs({
   `}
   ${media.between('medium', 'large')`
     padding: 16px;
-    height:85px;
+    height: 88px;
     background-color:  rgba(255, 255, 255, 0.05);
   `}
 `;
@@ -52,6 +52,10 @@ export const MenuBackContainer = styled(Box)`
   background: transparent;
   z-index: 9999;
   backdrop-filter: blur(0.25rem);
+  ${media.between('medium', 'large')`
+    top: 88px;
+    padding-left: 50%;
+  `}
 `;
 
 export const MenuContainer = styled(Box)`
@@ -87,6 +91,13 @@ export const MenuNavigationContainer = styled(Box)`
   box-sizing: border-box;
   border-radius: 12px 12px 0px 0px;
   padding: 0px 24px;
+  ${media.between('medium', 'large')`
+    height: 76px;
+    bottom: 76px;
+    padding: 0px 32px;
+    width: calc(100% - 88px);
+    left: 44px;
+  `}
 `;
 
 export const Navigation = styled.ul`
