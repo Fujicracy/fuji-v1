@@ -87,7 +87,11 @@ function PositionElement({ position, actionType }) {
             {/* <span className="elmt-name">
           {collateralAsset.name}/{borrowAsset.name}
         </span> */}
-            <SectionTitle fontSize={isMobile ? '12px' : isTablet ? '18px' : '16px'} ml={2}>
+            <SectionTitle
+              fontWeight="500"
+              fontSize={isMobile ? '12px' : isTablet ? '18px' : '16px'}
+              ml={2}
+            >
               {collateralAsset.name}/{borrowAsset.name}
             </SectionTitle>
           </Flex>
@@ -112,6 +116,7 @@ function PositionElement({ position, actionType }) {
                   width={isMobile ? 16 : isTablet ? 24 : 24}
                 />
                 <SectionTitle
+                  fontWeight="500"
                   fontSize={isMobile ? '10px' : isTablet ? '24px' : '16px'}
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
@@ -143,6 +148,7 @@ function PositionElement({ position, actionType }) {
                   width={isMobile ? 16 : isTablet ? 24 : 24}
                 />
                 <SectionTitle
+                  fontWeight="500"
                   fontSize={isMobile ? '10px' : isTablet ? '24px' : '16px'}
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
@@ -164,7 +170,7 @@ function PositionElement({ position, actionType }) {
                 justifyContent="center"
                 color={hsl(healthRatio)}
                 fontSize={isMobile ? 2 : 4}
-                fontWeight="700"
+                fontWeight="500"
                 sx={{ width: '40%' }}
               >
                 {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}

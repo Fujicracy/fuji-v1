@@ -270,6 +270,7 @@
 
   .adding-position {
     height: 64px;
+    border: 1px dashed var(--fujiColor);
   }
 
   .positions .position-about {

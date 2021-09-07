@@ -57,7 +57,7 @@
 
 @media screen and (max-width: 768px) {
   .flash-close {
-    margin-top: 28px;
+    margin-top: 0px;
     border-radius: 14px;
   }
   .flash-close .description {

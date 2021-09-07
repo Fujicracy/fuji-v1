@@ -54,7 +54,11 @@ function ManagePosition({ contracts, provider, address }) {
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
-      <BlackBoxContainer hasBlackContainer={false} padding="32px 28px">
+      <BlackBoxContainer
+        hasBlackContainer={false}
+        padding="32px 28px"
+        width={!isMobile && '1200px'}
+      >
         <Flex width={1 / 1} margin="0px 0px 16px">
           <Link to="my-positions" className="back-to-link">
             <ArrowBackIosOutlinedIcon style={{ fontSize: 16 }} />
@@ -99,10 +103,15 @@ function ManagePosition({ contracts, provider, address }) {
               </Grid>
             </BlackBoxContainer>
             {/* <span className="empty-button" /> */}
-            <BlackBoxContainer hasBlackContainer noBottomBorder padding="12px 0px 12px 28px">
+            <BlackBoxContainer
+              hasBlackContainer
+              noBottomBorderRadius
+              noBottomBorder
+              padding="12px 0px 12px 28px"
+            >
               <PositionElement actionType={PositionActions.None} position={position} />
             </BlackBoxContainer>
-            <BlackBoxContainer hasBlackContainer padding="28px" noTopBorder>
+            <BlackBoxContainer hasBlackContainer padding="28px" noTopBorderRadius>
               <form noValidate>
                 <Grid container className="manage-content" spacing={4}>
                   <Grid item md={6} xs={12}>
@@ -142,12 +151,14 @@ function ManagePosition({ contracts, provider, address }) {
                 </Grid>
               </form>
             </BlackBoxContainer>
-            <FlashClose
-              position={position}
-              contracts={contracts}
-              provider={provider}
-              address={address}
-            />
+            {!isMobile && (
+              <FlashClose
+                position={position}
+                contracts={contracts}
+                provider={provider}
+                address={address}
+              />
+            )}
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
             <Grid container direction="column" spacing={isMobile ? 4 : 6}>
@@ -165,6 +176,16 @@ function ManagePosition({ contracts, provider, address }) {
               )}
             </Grid>
           </Grid>
+          {isMobile && (
+            <Grid item md={4} sm={4} xs={12}>
+              <FlashClose
+                position={position}
+                contracts={contracts}
+                provider={provider}
+                address={address}
+              />
+            </Grid>
+          )}
         </Grid>
       </BlackBoxContainer>
     </Flex>

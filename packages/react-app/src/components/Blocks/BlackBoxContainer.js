@@ -16,14 +16,14 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   margin-top: 2rem;
   position: relative;
   padding: ${props => (props.padding ? props.padding : '0px')};
-  border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
-  border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
+  border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+  border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
 
-  border-top-left-radius: ${props => props.noTopBorder && '0px'};
-  border-top-right-radius: ${props => props.noTopBorder && '0px'};
-  ${size}
-  ${background}
-
+  border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+  border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+  border-bottom: ${props => props.noBottomBorder && 'none'};
+  ${size};
+  ${background};
   .position-details {
     display: flex;
     justify-content: space-between;
@@ -44,20 +44,20 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
 
   ${media.lessThan('medium')`
     border-radius: 14px;
-    border-top-left-radius: ${props => props.noTopBorder && '0px'};
-    border-top-right-radius: ${props => props.noTopBorder && '0px'};
-    border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
-    border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
     .position-details {
       border-bottom: none;
     }
   `}
 
   ${media.between('medium', 'large')`
-    border-top-left-radius: ${props => props.noTopBorder && '0px'};
-    border-top-right-radius: ${props => props.noTopBorder && '0px'};
-    border-bottom-left-radius: ${props => props.noBottomBorder && '0px'};
-    border-bottom-right-radius: ${props => props.noBottomBorder && '0px'};
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
     border-radius: 14px;
   `}
 `;

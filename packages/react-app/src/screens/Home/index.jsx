@@ -35,7 +35,7 @@ function Home() {
   return (
     <HomeContainer style={props}>
       {isMobile && (
-        <SectionTitle fontWeight="500" fontSize="20px" m={3} mt={4}>
+        <SectionTitle fontWeight="500" fontSize="20px" m={4} mb={3}>
           The first DeFi Borrowing Aggregator
         </SectionTitle>
       )}
