@@ -1,24 +1,14 @@
 // Script that fetches borrowers from all vaults,
 // sorts and filters by unique user addresses
 // and creates a csv file
-require('dotenv').config();
-const { ethers, Wallet } = require('ethers');
-const chalk = require('chalk');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const { loadContracts } = require('./utils');
-let provider;
-if (process.env.INFURA) {
-  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
-} else {
-  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
-}
-let signer;
-if (process.env.PRIVATE_KEY) {
-  signer = new Wallet(process.env.PRIVATE_KEY, provider);
-} else {
-  throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
-}
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
+
+import chalk from 'chalk';
+import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import { VAULTS_ADDRESS } from './consts/index.js';
+import { getSigner, loadContracts } from './utils/index.js';
+
+const signer = getSigner();
+
 const searchBorrowers = async (vault, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
   const events = await vault.queryFilter(filterBorrowers, searchLength);
@@ -63,9 +53,11 @@ const saveFile = borrowers => {
     .then(() => console.log(`Successfully saved ${borrowers.length} borrowers`));
 };
 const getBorrowers = async () => {
-  const contracts = await loadContracts(signer);
-  console.log('contracts');
+  const contracts = await loadContracts(signer.provider);
+
   let borrowers = [];
+
+  const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     console.log('Searching BORROW positions in', chalk.blue(vaultName));
