@@ -65,7 +65,7 @@ function App() {
                   ))}
                 </NavUnlisted>
 
-                <NavUnlisted justifyContent="flex-start" position="right">
+                <NavUnlisted justifyContent="flex-start" alignItems="center" position="right">
                   <NavLink to="/about">
                     <NavText>About</NavText>
                   </NavLink>
