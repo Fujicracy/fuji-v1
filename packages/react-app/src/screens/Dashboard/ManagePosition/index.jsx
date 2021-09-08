@@ -53,12 +53,14 @@ function ManagePosition({ contracts, provider, address }) {
   };
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center" width={1}>
-      <BlackBoxContainer
-        hasBlackContainer={false}
-        padding={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 240px 32px'}
-        width={1}
-      >
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      width={1}
+      padding={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
+    >
+      <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
         <Flex width={1 / 1} margin="0px 0px 16px">
           <Link to="my-positions" className="back-to-link">
             <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />

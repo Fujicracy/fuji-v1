@@ -14,7 +14,7 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   justify-content: space-between;
   color: ${themeGet('colors.text64')};
   cursor: pointer;
-  padding-top: 32px;
+  padding-top: ${props => (props.isMobile ? 0 : 32)}px;
   ${media.lessThan('medium')`
     height: 32px;
   `}

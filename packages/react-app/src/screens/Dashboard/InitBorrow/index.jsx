@@ -224,11 +224,7 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box
-        width={1}
-        padding={isMobile ? '32px 28px' : isTablet ? '36px 176px' : '24px 160px'}
-        maxWidth="95rem"
-      >
+      <Box width="95rem" padding={isMobile ? '32px 28px' : isTablet ? '36px 176px' : '24px 160px'}>
         <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
           <Grid item xs={12} sm={12} md={4}>
             <Box ml={isMobile || isTablet ? '' : '56px'}>

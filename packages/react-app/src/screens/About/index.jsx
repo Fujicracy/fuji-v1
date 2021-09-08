@@ -160,7 +160,7 @@ function Infos() {
             </Grid>
           </Grid>
 
-          <Grid container className={classes.item} spacing={4}>
+          <Grid container className={classes.item} spacing={6}>
             <Grid item md={12} xs={12}>
               <Typography className={classes.title}>Partners</Typography>
             </Grid>

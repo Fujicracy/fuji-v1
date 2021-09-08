@@ -21,9 +21,9 @@ const SelectMarket = ({ hasBlackContainer = true }) => {
   });
 
   const onClickMarket = option => {
-    setMarket(option);
+    setMarket('Core');
     if (option === MARKETS.Fuse) {
-      window.location.href = 'https://fuse.fujidao.org/';
+      window.open('https://fuse.fujidao.org/', '_blank');
     }
   };
 

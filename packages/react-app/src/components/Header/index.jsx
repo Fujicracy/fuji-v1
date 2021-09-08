@@ -101,8 +101,11 @@ function Header() {
                     About
                   </MenuItem>
                 </NavLink>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Claim My NFT</MenuItem>
+                <NavLink to="https://docs.fujidao.org" target="_blank" isSelected={false}>
+                  <MenuItem>Documentation</MenuItem>
+                </NavLink>
+
+                {/* <MenuItem>Claim My NFT</MenuItem> */}
               </Flex>
             </MenuContainer>
             <MenuNavigationContainer>

@@ -78,12 +78,17 @@ function MyPositions({ contracts, address }) {
               {hasPosition() ? (
                 <Grid item>
                   {/* <span className="empty-tab" /> */}
-                  <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
+                  <BlackBoxContainer
+                    hasBlackContainer={false}
+                    ml="28px"
+                    mb={3}
+                    mr={!isMobile && !isTablet && '28px'}
+                  >
                     <Grid container>
-                      <Grid item xs={4}>
+                      <Grid item xs={4} md={3}>
                         {' '}
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={8} md={7}>
                         <Flex width={1 / 1}>
                           <SectionTitle
                             fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
@@ -110,6 +115,9 @@ function MyPositions({ contracts, address }) {
                             <>Health Factor</>
                           </SectionTitle>
                         </Flex>
+                      </Grid>
+                      <Grid item xs={0} md={2}>
+                        {' '}
                       </Grid>
                     </Grid>
                   </BlackBoxContainer>

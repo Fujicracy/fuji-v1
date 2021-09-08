@@ -62,14 +62,12 @@ function PositionElement({ position, actionType }) {
     setHealthRatio(hr);
   }, [price, position]);
 
-  const isShowFactor =
-    actionType === PositionActions.Manage ||
-    actionType === PositionActions.Liquidate ||
-    actionType === PositionActions.None;
+  const isShowManage = !isMobile && !isTablet && actionType === PositionActions.Manage;
+  console.log({ isShowManage });
   return (
     <Grid container>
       <Flex alignItems="center" justifyContent="flex-start" width={1 / 1}>
-        <Grid item xs={isShowFactor ? 4 : 6} md={4}>
+        <Grid item xs={4} md={isShowManage ? 3 : 4}>
           <Flex alignItems="center" justifyContent="flex-start">
             <Flex>
               <Image
@@ -97,11 +95,11 @@ function PositionElement({ position, actionType }) {
           </Flex>
         </Grid>
 
-        <Grid item xs={isShowFactor ? 8 : 6} md={8}>
+        <Grid item xs={8} md={isShowManage ? 7 : 8}>
           <Flex flexDirection="row" width={1 / 1}>
             <Flex
               flexDirection="column"
-              sx={{ width: isShowFactor ? '30%' : '50%' }}
+              sx={{ width: '30%' }}
               justifyContent="center"
               alignItems="center"
             >
@@ -133,7 +131,7 @@ function PositionElement({ position, actionType }) {
 
             <Flex
               flexDirection="column"
-              sx={{ width: isShowFactor ? '30%' : '50%' }}
+              sx={{ width: '30%' }}
               justifyContent="center"
               alignItems="center"
             >
@@ -163,24 +161,22 @@ function PositionElement({ position, actionType }) {
               )}
             </Flex>
 
-            {isShowFactor && (
-              <Flex
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                color={hsl(healthRatio)}
-                fontSize={isMobile ? 2 : 4}
-                fontWeight="500"
-                sx={{ width: '40%' }}
-              >
-                {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
-              </Flex>
-            )}
+            <Flex
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              color={hsl(healthRatio)}
+              fontSize={isMobile ? 2 : 4}
+              fontWeight="500"
+              sx={{ width: '40%' }}
+            >
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+            </Flex>
           </Flex>
         </Grid>
 
-        {isMobile && isTablet && (
-          <Grid item className="position-actions" xs={3}>
+        {isShowManage && (
+          <Grid item className="position-actions" md={2}>
             {actionType === PositionActions.Manage ? (
               <Button
                 className="position-btn"

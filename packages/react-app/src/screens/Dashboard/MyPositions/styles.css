@@ -4,10 +4,9 @@
 
 .positions-container {
   /* z-index: 1; */
-  margin: 72px 240px 32px;
+  margin: 72px 100px;
+  max-width: 71rem;
   min-height: calc(100vh - 13.125rem);
-  max-width: 75rem;
-  width: calc(100% - 4rem);
   /*padding: 0rem 2rem;*/
   display: flex;
   align-items: flex-start;
@@ -18,7 +17,7 @@
 }
 
 .one-position {
-  padding: 16px 0px 16px 28px;
+  padding: 16px 28px;
   background: var(--blocks56);
   border: 0.1rem solid var(--text05);
   backdrop-filter: blur(0.375rem);
@@ -227,7 +226,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed var(--fujiColor);
+  border: 1px dashed var(--fujiColor);
   color: var(--fujiColor);
   transition: all 250ms ease;
 }
@@ -248,6 +247,7 @@
 
 @media screen and (max-width: 768px) {
   .one-position{
+    padding: 16px 0px 16px 28px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -269,7 +269,6 @@
 
   .adding-position {
     height: 64px;
-    border: 1px dashed var(--fujiColor);
   }
 
   .positions .position-about {
@@ -289,10 +288,11 @@
 
 @media screen and (min-width: 768px) and (max-width: 992px) {
   .positions-container {
-    margin: 64px 36px;
+    margin: 64px 112px;
   }
 
   .one-position{
+    padding: 16px 0px 16px 28px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -303,6 +303,5 @@
 
   .adding-position {
     height: 80px;
-    border: 1px dashed var(--fujiColor);
   }
 }
