@@ -9,9 +9,7 @@ export const Container = styled(Box)`
   z-index: 2;
 `;
 
-export const HeaderContainer = styled(Box).attrs({
-  px: 4,
-})`
+export const HeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -25,10 +23,10 @@ export const HeaderContainer = styled(Box).attrs({
   ${media.lessThan('medium')`
     height:64px;
     background-color:  rgba(255, 255, 255, 0.05);
-    padding: 16px;
+    padding: 16px 28px;
   `}
   ${media.between('medium', 'large')`
-    padding: 16px;
+    padding: 16px 40px;
     height: 88px;
     background-color:  rgba(255, 255, 255, 0.05);
   `}

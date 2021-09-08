@@ -84,7 +84,10 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer padding="32px 28px 16px" mt="4px">
+    <BlackBoxContainer
+      padding={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '32px'}
+      mt="4px"
+    >
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (
@@ -103,7 +106,11 @@ function CollaterizationIndicator({ position }) {
       {isMobile || isTablet ? (
         <>
           <Flex justifyContent="center" alignItems="center" color="white">
-            <SectionTitle fontSize={isMobile ? '24px' : isTablet ? '24px' : '16px'} m="16px">
+            <SectionTitle
+              fontSize={isMobile ? '24px' : isTablet ? '28px' : '16px'}
+              m={isMobile ? '16px' : '24px'}
+              color={isTablet && hsl(healthRatio)}
+            >
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </SectionTitle>
           </Flex>
@@ -149,7 +156,7 @@ function CollaterizationIndicator({ position }) {
         <div className="position-details">
           <div className="title">
             Current Loan-to-Value
-            {!isMobile && (
+            {!isMobile && !isTablet && (
               <div className="tooltip-info">
                 <InfoOutlinedIcon />
                 <span className="tooltip">
@@ -181,7 +188,12 @@ function CollaterizationIndicator({ position }) {
         </div>
       </Collapse>
       {isMobile || isTablet ? (
-        <Flex justifyContent="center" alignItems="center" color="white" m="16px 16px 0px">
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          color="white"
+          m={isMobile ? '16px 16px 0px' : '24px 24px 0px'}
+        >
           {more ? (
             <ExpandLessIcon
               style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.5)' }}

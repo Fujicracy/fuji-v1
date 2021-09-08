@@ -111,7 +111,7 @@ function Header() {
           <Logo
             alt="logo"
             src={isMobile || isTablet ? logoIcon : logoTitleIcon}
-            // width={isMobile ? '28px' : isTablet ? '48px' : '135px'}
+            width={isMobile ? '32px' : isTablet ? '38px' : '135px'}
           />
         </a>
 

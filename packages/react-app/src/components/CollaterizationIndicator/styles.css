@@ -154,3 +154,18 @@
     stroke-dasharray: 0 100;
   }
 }
+
+
+@media screen and (max-width: 768px) {
+  
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .position-details {
+    padding: 12px 0px;
+  }
+  .position-details .title, .position-details .number {
+    font-size: 18px;
+  }
+
+}
