@@ -8,6 +8,7 @@ import { useSpring, animated } from 'react-spring';
 import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/images';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import { Label, NavImageLink } from 'components/UI';
 
 import { CONTACTS } from 'consts/contacts';
@@ -64,7 +65,16 @@ function Header() {
                 e.stopPropagation();
               }}
             >
-              <Flex flexDirection="column" padding="40px">
+              <Flex flexDirection="column" padding="20px 20px 40px 40px">
+                <Flex flexDirection="row" justifyContent="flex-end">
+                  <CloseOutlinedIcon
+                    style={{ color: 'white', fontSize: 40, padding: 0, margin: 0 }}
+                    onClick={e => {
+                      e.stopPropagation();
+                      setIsMenuOpen(false);
+                    }}
+                  />
+                </Flex>
                 <NavLink to="/dashboard/init-borrow">
                   <MenuItem
                     isSelected={currentPage.pathname === '/dashboard/init-borrow'}
