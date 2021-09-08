@@ -55,24 +55,24 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
           <AnimatedCounter countTo={defaultOption?.rate} /> %
         </Box>
       ) : isDropDown ? (
-        <>
-          <Box width={1 / 3} alignItems="center">
-            <AssetContainer>
+        <Flex flexDirection="column" width={1}>
+          <Flex alignItems="center" mb={3}>
+            <AssetContainer hasBottomBorder>
               <Image
                 alt={vault.borrowAsset.name}
                 src={vault.borrowAsset.icon}
-                width="32px"
-                height="32px"
+                width="24px"
+                height="24px"
               />
               <Text fontSize={2} fontWeight="bold" ml={2}>
                 {vault.borrowAsset.name}
               </Text>
             </AssetContainer>
-          </Box>
-          <Box width={2 / 3} ml={2}>
+          </Flex>
+          <Flex>
             <DropDown options={options} defaultOption={defaultOption} isSelectable={isSelectable} />
-          </Box>
-        </>
+          </Flex>
+        </Flex>
       ) : (
         <Flex flexDirection="column" width={1}>
           <AssetContainer hasBottomBorder>
@@ -87,7 +87,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
             </Text>
           </AssetContainer>
           {options?.map(option => (
-            <AssetContainer flexDirection="row" ml={4} mt={3} hasBottomBorder key={Math.random()}>
+            <AssetContainer flexDirection="row" hasBottomBorder key={Math.random()}>
               <Box width={5 / 7} cursor="pointer">
                 {option.title}
               </Box>
@@ -125,9 +125,12 @@ function ProvidersList({
     <BlackBoxContainer
       zIndex={1}
       hasBlackContainer={hasBlackContainer}
-      padding={hasBlackContainer && '32px'}
+      padding={hasBlackContainer && '32px 28px'}
     >
-      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'} mb={isMobile ? 3 : 3}>
+      <SectionTitle
+        fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}
+        mb={isMobile ? '16px' : isTablet ? '20px' : '-12px'}
+      >
         {title}
         {!isMobile && !isTablet && (
           <div className="tooltip-info">

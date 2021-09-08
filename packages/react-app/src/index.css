@@ -252,7 +252,7 @@ input[type='number'] {
 .main-button {
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   color: var(--text);
-  height: 48px;
+  height: 44px;
 }
 
 @media screen and (max-width: 768px) {
@@ -313,7 +313,7 @@ input[type='number'] {
 .container {
   /* z-index: 1; */
   /* margin: 0px 32px; */
-  margin-top: 7.75rem;
+  margin-top: 104px;
   min-height: calc(100vh - 13.125rem);
   /* max-width: 65.875rem; */
   width: calc(100% - 4rem);

@@ -4,8 +4,7 @@
 
 .positions-container {
   /* z-index: 1; */
-  margin: 0px 32px;
-  margin-top: 7.75rem;
+  margin: 72px 240px 32px;
   min-height: calc(100vh - 13.125rem);
   max-width: 75rem;
   width: calc(100% - 4rem);

@@ -13,11 +13,11 @@ export const RadioContainer = styled(Box).attrs({
 export const MarketButton = styled(Box)`
   display: flex;
   width: 100%;
-  font-size: 16px;
+  font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: 32px;
 
   font-weight: 600;
 
@@ -25,15 +25,13 @@ export const MarketButton = styled(Box)`
     props.clicked
       ? 'linear-gradient(180deg, rgba(9, 9, 9, 0.15) 0%, rgba(255, 255, 255, 0.15) 100%)'
       : 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(9, 9, 9, 0.5) 90%)'};
-  border-radius: ${props => (props.left ? '10px 0 0 10px' : props.right ? '0 10px 10px 0' : '0')};
+  border-radius: ${props => (props.left ? '8px 0 0 8px' : props.right ? '0 8px 8px 0' : '0')};
   border: 1px solid rgb(60, 60, 60);
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: white;
   cursor: pointer;
   ${media.lessThan('medium')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
-    font-size: 12px;
-    height: 32px;
   `}
 
   ${media.between('medium', 'large')`

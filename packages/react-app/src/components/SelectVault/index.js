@@ -39,17 +39,13 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
     <DropDownContainer>
       <SectionTitle
         fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}
-        mb={isMobile ? '16px' : '24px'}
+        mb={isMobile ? '16px' : isTablet ? '24px' : '20px'}
       >
         Borrow
       </SectionTitle>
       <Box mb={isMobile ? 4 : 4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
-          <Box
-            width={isMobile ? 1 / 2 : isTablet ? 3 / 7 : 2 / 5}
-            display="flex"
-            alignItems="center"
-          >
+          <Box width={isTablet ? 3 / 7 : 1 / 2} display="flex" alignItems="center">
             <Box
               width={2 / 3}
               display="flex"
@@ -57,11 +53,8 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
               justifyContent="flex-start"
               alignItems="center"
             >
-              <Image
-                src={selectedVault.borrowAsset.icon}
-                width={isMobile ? 20 : isTablet ? 24 : 26}
-              />
-              <SectionTitle ml={isMobile ? 2 : 3} fontWeight="500">
+              <Image src={selectedVault.borrowAsset.icon} width={isTablet ? 24 : 20} />
+              <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
                 {selectedVault.borrowAsset.name}
               </SectionTitle>
             </Box>
@@ -79,20 +72,16 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
           </Box>
 
           <Box
-            width={isMobile ? 1 / 2 : isTablet ? 4 / 7 : 3 / 5}
+            width={isTablet ? 4 / 7 : 1 / 2}
             display="flex"
             alignItems="center"
-            ml={isMobile ? 2 : 3}
+            ml={isTablet ? 3 : 2}
           >
             <Box width={6 / 7} display="flex" alignItems="center">
-              <Image
-                src={selectedVault.collateralAsset.icon}
-                width={isMobile ? 20 : isTablet ? 24 : 26}
-              />
+              <Image src={selectedVault.collateralAsset.icon} width={isTablet ? 24 : 20} />
 
-              <SectionTitle ml={isMobile ? 2 : 3} fontWeight="500">
-                {`${selectedVault.collateralAsset.name} `}{' '}
-                {isMobile || isTablet ? '' : 'collateral'}
+              <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
+                {`${selectedVault.collateralAsset.name} `}
               </SectionTitle>
             </Box>
 
@@ -116,11 +105,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                 key =>
                   VAULTS[key].name !== selectedVault.name && (
                     <ListItem onClick={onOptionClicked(VAULTS[key])} key={Math.random()}>
-                      <Box
-                        width={isMobile ? 1 / 2 : isTablet ? 3 / 7 : 2 / 5}
-                        display="flex"
-                        alignItems="center"
-                      >
+                      <Box width={isTablet ? 3 / 7 : 1 / 2} display="flex" alignItems="center">
                         <Box
                           width={2 / 3}
                           display="flex"
@@ -128,9 +113,9 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                           justifyContent="flex-start"
                           alignItems="center"
                         >
-                          <Image src={VAULTS[key].borrowAsset.icon} width={isMobile ? 20 : 26} />
+                          <Image src={VAULTS[key].borrowAsset.icon} width={isTablet ? 26 : 20} />
 
-                          <SectionTitle ml={isMobile ? 2 : 3} fontWeight="500">
+                          <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
                             {`${VAULTS[key].borrowAsset.name}`}
                           </SectionTitle>
                         </Box>
@@ -152,15 +137,14 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                       </Box>
 
                       <Box
-                        width={isMobile ? 1 / 2 : isTablet ? 4 / 7 : 3 / 5}
+                        width={isTablet ? 4 / 7 : 1 / 2}
                         display="flex"
                         alignItems="center"
-                        ml={isMobile ? 2 : 3}
+                        ml={isTablet ? 3 : 2}
                       >
-                        <Image src={VAULTS[key].collateralAsset.icon} width={isMobile ? 20 : 26} />
-                        <SectionTitle ml={isMobile ? 2 : 3} fontWeight="500">
-                          {`${VAULTS[key].collateralAsset.name} `}{' '}
-                          {isMobile || isTablet ? '' : 'collateral'}
+                        <Image src={VAULTS[key].collateralAsset.icon} width={isTablet ? 26 : 20} />
+                        <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
+                          {`${VAULTS[key].collateralAsset.name} `}
                         </SectionTitle>
                       </Box>
                     </ListItem>

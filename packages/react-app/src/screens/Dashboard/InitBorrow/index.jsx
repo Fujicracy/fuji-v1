@@ -224,14 +224,18 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-      <Box maxWidth="90rem" padding={isMobile ? '32px 28px' : isTablet ? '36px 176px' : '32px'}>
+      <Box
+        width={1}
+        padding={isMobile ? '32px 28px' : isTablet ? '36px 176px' : '24px 160px'}
+        maxWidth="95rem"
+      >
         <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
           <Grid item xs={12} sm={12} md={4}>
             <Box ml={isMobile || isTablet ? '' : '56px'}>
               {!isMobile && !isTablet && <HowItWorks />}
               <BlackBoxContainer
                 hasBlackContainer
-                padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px'}
+                padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
                   <Grid item xs={8} sm={8} md={12}>
@@ -254,7 +258,7 @@ function InitBorrow({ contracts, provider, address }) {
           <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer
               hasBlackContainer
-              padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px'}
+              padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
             >
               <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
               <form noValidate autoComplete="off">
@@ -333,7 +337,8 @@ function InitBorrow({ contracts, provider, address }) {
                 {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
 
                 <Helper>
-                  Liquidity for this transaction comes from <span>{getActiveProviderName()}</span>.
+                  Liquidity for this transaction comes from
+                  <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
                 <Button
                   onClick={handleSubmit(onSubmit)}
@@ -354,7 +359,7 @@ function InitBorrow({ contracts, provider, address }) {
                     )
                   }
                 >
-                  <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '20px'}>
+                  <SectionTitle fontSize={isTablet ? '20px' : '16px'}>
                     Borrow{loading ? 'ing...' : ''}
                   </SectionTitle>
                 </Button>

@@ -4,7 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 import media from 'styled-media-query';
 
 export const InputContainer = styled.div`
-  height: 56px;
+  height: 44px;
   border-radius: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -31,8 +31,8 @@ export const InputContainer = styled.div`
 `;
 
 export const SubTitleContainer = styled.div`
-  font-size: 14px;
-  margin-bottom: 16px;
+  font-size: 12px;
+  margin-bottom: 20px;
   color: white;
   font-weight: 500;
   display: flex;
@@ -40,6 +40,10 @@ export const SubTitleContainer = styled.div`
   align-items: center;
   position: relative;
 
+  ${media.lessThan('medium')`
+    font-size: 12px;
+    margin-bottom: 16px;
+  `}
   ${media.between('medium', 'large')`
     font-size: 20px;
     margin-bottom: 24px;
@@ -47,27 +51,19 @@ export const SubTitleContainer = styled.div`
 `;
 
 export const SubTitleInfo = styled.span`
-  display: contents;
-  font-size: 0.75rem;
+  display: flex;
+  position: absolute;
+  align-items: flex-end;
+  text-align: right;
+  right: 0px;
+  font-size: 10px;
+  line-height: 15px;
   color: ${themeGet('colors.text64')};
-  ${media.lessThan('medium')`
-    font-size: 10px;
-    line-height: 15px;
-    display: flex;
-    position:absolute;
-    align-items: flex-end;
-    text-align: right;
-    right:0px;
-    margin-top: 24px;
-  `}
+  margin-top: 24px;
+
   ${media.between('medium', 'large')`
     font-size: 12px;
     line-height: 18px;
-    display: flex;
-    position:absolute;
-    align-items: flex-end;
-    text-align: right;
-    right:0px;
     margin-top: 24px;
   `}
 `;

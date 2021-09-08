@@ -53,11 +53,11 @@ function ManagePosition({ contracts, provider, address }) {
   };
 
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center">
+    <Flex flexDirection="column" alignItems="center" justifyContent="center" width={1}>
       <BlackBoxContainer
         hasBlackContainer={false}
-        padding={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '32px'}
-        width={!isMobile && !isTablet && '1200px'}
+        padding={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 240px 32px'}
+        width={1}
       >
         <Flex width={1 / 1} margin="0px 0px 16px">
           <Link to="my-positions" className="back-to-link">

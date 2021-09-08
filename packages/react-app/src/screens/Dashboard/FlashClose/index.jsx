@@ -144,17 +144,19 @@ function FlashClose({ position, contracts, provider }) {
         </DialogActions>
       </Dialog>
       <div className="flash-close">
-        <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
-          Flash Close
-        </SectionTitle>
-        {!isMobile && !isTablet && (
-          <div className="tooltip-info">
-            <InfoOutlinedIcon />
-            <span className="tooltip">
-              Repay your debt position from your collateral by using a flash loan. Fee: 1%
-            </span>
-          </div>
-        )}
+        <div className="section-title">
+          <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+            Flash Close
+          </SectionTitle>
+          {!isMobile && !isTablet && (
+            <div className="tooltip-info">
+              <InfoOutlinedIcon />
+              <span className="tooltip">
+                Repay your debt position from your collateral by using a flash loan. Fee: 1%
+              </span>
+            </div>
+          )}
+        </div>
 
         <div className="content">
           <div className="description">
