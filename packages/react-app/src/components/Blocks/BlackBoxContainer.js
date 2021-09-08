@@ -44,6 +44,10 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
 
   ${media.lessThan('medium')`
     border-radius: 14px;
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
     .position-details {
       border-bottom: none;
     }
@@ -51,6 +55,10 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
 
   ${media.between('medium', 'large')`
     border-radius: 14px;
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
     .position-details {
       font-size: 18px;
       padding: 12px 0px;

@@ -56,17 +56,19 @@ function ManagePosition({ contracts, provider, address }) {
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
       <BlackBoxContainer
         hasBlackContainer={false}
-        padding="32px 28px"
-        width={!isMobile && '1200px'}
+        padding={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '32px'}
+        width={!isMobile && !isTablet && '1200px'}
       >
         <Flex width={1 / 1} margin="0px 0px 16px">
           <Link to="my-positions" className="back-to-link">
-            <ArrowBackIosOutlinedIcon style={{ fontSize: 16 }} />
-            <SectionTitle marginLeft="8px">Back</SectionTitle>
+            <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
+            <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
+              Back
+            </SectionTitle>
           </Link>
         </Flex>
-        <Grid container spacing={isMobile ? 3 : 6}>
-          <Grid item md={8} sm={8} xs={12}>
+        <Grid container spacing={isMobile ? 3 : isTablet ? 4 : 6}>
+          <Grid item md={8} sm={12} xs={12}>
             <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
               <Grid container>
                 <Grid item xs={4}>
@@ -151,7 +153,7 @@ function ManagePosition({ contracts, provider, address }) {
                 </Grid>
               </form>
             </BlackBoxContainer>
-            {!isMobile && (
+            {!isMobile && !isTablet && (
               <FlashClose
                 position={position}
                 contracts={contracts}
@@ -160,7 +162,7 @@ function ManagePosition({ contracts, provider, address }) {
               />
             )}
           </Grid>
-          <Grid item md={4} sm={4} xs={12}>
+          <Grid item md={4} sm={12} xs={12}>
             <Grid container direction="column" spacing={isMobile ? 4 : 6}>
               <Grid item>
                 <CollaterizationIndicator position={position} />
@@ -176,8 +178,8 @@ function ManagePosition({ contracts, provider, address }) {
               )}
             </Grid>
           </Grid>
-          {isMobile && (
-            <Grid item md={4} sm={4} xs={12}>
+          {(isMobile || isTablet) && (
+            <Grid item md={4} sm={12} xs={12}>
               <FlashClose
                 position={position}
                 contracts={contracts}

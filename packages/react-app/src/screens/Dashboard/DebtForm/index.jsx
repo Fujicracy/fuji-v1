@@ -23,6 +23,7 @@ import { useContractReader, useExchangePrice } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Repay: 0,
@@ -300,7 +301,8 @@ function DebtForm({ position, contracts, provider, address }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">Debt</Typography>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Debt</SectionTitle>
+
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
             <InfoOutlinedIcon />

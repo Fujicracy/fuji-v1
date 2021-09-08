@@ -117,7 +117,7 @@ function PositionElement({ position, actionType }) {
                 />
                 <SectionTitle
                   fontWeight="500"
-                  fontSize={isMobile ? '10px' : isTablet ? '24px' : '16px'}
+                  fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >
@@ -149,7 +149,7 @@ function PositionElement({ position, actionType }) {
                 />
                 <SectionTitle
                   fontWeight="500"
-                  fontSize={isMobile ? '10px' : isTablet ? '24px' : '16px'}
+                  fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >

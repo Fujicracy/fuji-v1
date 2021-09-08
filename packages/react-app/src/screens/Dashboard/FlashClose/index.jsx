@@ -15,6 +15,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { VAULTS, ASSET_NAME, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
+import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
 
@@ -143,17 +144,17 @@ function FlashClose({ position, contracts, provider }) {
         </DialogActions>
       </Dialog>
       <div className="flash-close">
-        <div className="section-title">
-          <h3>Flash Close</h3>
-          {!isMobile && !isTablet && (
-            <div className="tooltip-info">
-              <InfoOutlinedIcon />
-              <span className="tooltip">
-                Repay your debt position from your collateral by using a flash loan. Fee: 1%
-              </span>
-            </div>
-          )}
-        </div>
+        <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+          Flash Close
+        </SectionTitle>
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip">
+              Repay your debt position from your collateral by using a flash loan. Fee: 1%
+            </span>
+          </div>
+        )}
 
         <div className="content">
           <div className="description">

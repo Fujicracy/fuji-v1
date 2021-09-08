@@ -23,6 +23,7 @@ import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
@@ -265,7 +266,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       </Dialog>
 
       <Grid item className="section-title">
-        <Typography variant="h3">Collateral</Typography>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Collateral</SectionTitle>
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
             <InfoOutlinedIcon />

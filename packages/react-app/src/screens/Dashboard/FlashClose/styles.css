@@ -61,10 +61,6 @@
     border-radius: 14px;
   }
   .flash-close .description {
-    margin-right: 2rem;
-    font-size: 0.875rem;
-    color: var(--text);
-
     font-weight: 600;
     font-size: 8px;
     line-height: 12px;
@@ -90,5 +86,33 @@
 @media screen and (min-width: 768px) and (max-width: 992px) {
   .main-button {
     height: 55px !important;
+  }
+
+  .flash-close{
+    padding: 44px 36px 40px;
+  }
+
+  .flash-close .description {
+    font-size: 16px;
+
+    font-weight: 600;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+
+    color: rgba(245, 245, 253, 0.5);
+  }
+
+  .flash-close button {
+    border: 1px solid rgb(63, 60, 60);
+    color: var(--fujiColor);
+    width: 112px;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(9, 9, 9, 0.15) 100%);
+    box-sizing: border-box;
+    border-radius: 51px;
+
+    font-weight: 600;
+    font-size: 16px;
   }
 }

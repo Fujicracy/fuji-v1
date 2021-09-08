@@ -298,4 +298,24 @@
   .main-button {
     height: 55px !important;
   }
+
+  .toggle-button .button, .toggle-button .knobs, .toggle-mode .button, .toggle-button .knobs  {
+    height: 56px;
+  }
+
+  .toggle-button .button .knobs .toggle-options span,
+  .toggle-button [data-toggle]:after {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .toggle-button .button .knobs .toggle-options {
+    top: 10px;
+    z-index: 1;
+  }
+
+  .toggle-mode .button .knobs .toggle-options {
+    top: 10px;
+    z-index: 1;
+  }
 }
