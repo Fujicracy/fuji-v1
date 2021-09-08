@@ -93,7 +93,14 @@ function Header() {
                   </MenuItem>
                 </NavLink>
 
-                <MenuItem>About</MenuItem>
+                <NavLink to="/about">
+                  <MenuItem
+                    isSelected={currentPage.pathname === '/about'}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    About
+                  </MenuItem>
+                </NavLink>
                 <MenuItem>FAQ</MenuItem>
                 <MenuItem>Claim My NFT</MenuItem>
               </Flex>
