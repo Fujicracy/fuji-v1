@@ -101,9 +101,14 @@ function Header() {
                     About
                   </MenuItem>
                 </NavLink>
-                <NavLink to="https://docs.fujidao.org" target="_blank" isSelected={false}>
-                  <MenuItem>Documentation</MenuItem>
-                </NavLink>
+                <MenuItem
+                  isSelected={false}
+                  onClick={() => {
+                    window.open('https://docs.fujidao.org', '_blank');
+                  }}
+                >
+                  Documentation
+                </MenuItem>
 
                 {/* <MenuItem>Claim My NFT</MenuItem> */}
               </Flex>
