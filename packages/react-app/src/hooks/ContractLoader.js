@@ -1,8 +1,6 @@
-/* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 import { Contract } from '@ethersproject/contracts';
 import { useState, useEffect } from 'react';
-import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
 import { ASSETS } from 'consts/assets';
 import { ERC20_ABI } from 'consts/abis';
 
@@ -37,7 +35,7 @@ export default function useContractLoader(providerOrSigner) {
 
         const newContracts = {};
 
-        const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+        const contractsData = require(`../contracts/1-core.deployment.json`);
         const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
