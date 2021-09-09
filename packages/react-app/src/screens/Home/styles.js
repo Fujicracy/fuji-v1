@@ -9,6 +9,7 @@ export const HomeContainer = styled(animated.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   color: white;
   font-family: sans-serif;
   text-align: center;
