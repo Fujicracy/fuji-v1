@@ -4,7 +4,7 @@ import { Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import { marketFuse, marketCore } from 'assets/images';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, FUSE_DASHBOARD_URL } from 'consts';
 
 import { RadioContainer, MarketButton } from './styles';
 
@@ -23,7 +23,7 @@ const SelectMarket = ({ hasBlackContainer = true }) => {
   const onClickMarket = option => {
     setMarket('Core');
     if (option === MARKETS.Fuse) {
-      window.open('https://fuse.fujidao.org/', '_blank');
+      window.open(FUSE_DASHBOARD_URL, '_blank');
     }
   };
 
