@@ -27,9 +27,9 @@ import partnerSpartan from './images/partner/spartan.svg';
 import discordImage from './images/home/discord.svg';
 import telegramImage from './images/home/telegram.svg';
 import twitterImage from './images/home/twitter.svg';
-import discordRedImage from './images/home/discord_red.svg';
-import telegramRedImage from './images/home/telegram_red.svg';
-import twitterRedImage from './images/home/twitter_red.svg';
+import discordHoverImage from './images/home/discord_hover.svg';
+import telegramHoverImage from './images/home/telegram_hover.svg';
+import twitterHoverImage from './images/home/twitter_hover.svg';
 import flaskIcon from './images/flask.svg';
 
 // Network Icons
@@ -89,9 +89,9 @@ export {
   discordImage,
   telegramImage,
   twitterImage,
-  discordRedImage,
-  telegramRedImage,
-  twitterRedImage,
+  discordHoverImage,
+  telegramHoverImage,
+  twitterHoverImage,
   logoTitleIcon,
   logoIcon,
   notFoundIcon,
