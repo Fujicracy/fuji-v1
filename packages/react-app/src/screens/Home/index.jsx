@@ -36,7 +36,7 @@ function Home() {
     <Flex flexDireciton="column" justifyContent="center" alignItems="center" height="100vh">
       <HomeContainer style={props}>
         {isMobile && (
-          <SectionTitle fontWeight="500" fontSize="20px" m={4} mb={3}>
+          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
             The first DeFi Borrowing Aggregator
           </SectionTitle>
         )}
