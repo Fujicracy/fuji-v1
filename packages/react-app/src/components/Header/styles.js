@@ -16,7 +16,7 @@ export const HeaderContainer = styled(Box)`
   justify-content: space-between;
   height: 100px;
 
-  padding: 32px 64px 32px 64px;
+  padding: 32px 40px;
 
   ${size}
 

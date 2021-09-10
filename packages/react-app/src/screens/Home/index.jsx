@@ -42,7 +42,8 @@ function Home() {
         )}
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding}
-          mt={5}
+          mt={2}
+          p={!isMobile && !isTablet && '48px 40px 0px'}
         />
         <HomeCta container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>

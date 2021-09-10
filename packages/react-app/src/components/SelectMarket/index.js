@@ -45,12 +45,7 @@ const SelectMarket = ({ handleChange, hasBlackContainer = true }) => {
           clicked={market === MARKET_NAMES.FUSE}
           onClick={() => onClickMarket(MARKET_NAMES.FUSE)}
         >
-          <Image
-            src={MARKETS[MARKET_NAMES.FUSE].icon}
-            width={isMobile ? 14 : 20}
-            height={20}
-            mr={2}
-          />
+          <Image src={MARKETS[MARKET_NAMES.FUSE].icon} width={isMobile ? 14 : 16} mr={2} />
           Fuse
         </MarketButton>
       </RadioContainer>
