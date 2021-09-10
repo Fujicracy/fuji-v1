@@ -38,8 +38,8 @@ import ethGrayIcon from './icons/tokens/ETH_GRAY.svg';
 import ethBlueIcon from './icons/tokens/ETH_BLUE.svg';
 
 // Market Icons
-import marketCore from './icons/markets/core.svg';
-import marketFuse from './icons/markets/fuse.svg';
+import marketCoreIcon from './icons/markets/core.svg';
+import marketFuseIcon from './icons/markets/fuse.svg';
 
 import logoTitleIcon from './icons/logo-title.svg';
 import logoIcon from './icons/logo.svg';
@@ -96,6 +96,6 @@ export {
   logoIcon,
   notFoundIcon,
   // Markets
-  marketFuse,
-  marketCore,
+  marketFuseIcon,
+  marketCoreIcon,
 };
