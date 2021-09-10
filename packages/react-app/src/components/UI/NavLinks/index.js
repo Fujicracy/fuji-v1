@@ -15,6 +15,9 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   align-content: center;
   left: ${props => props.position === 'left' && '32px'};
   right: ${props => props.position === 'right' && '32px'};
+  ${media.lessThan('large')`
+    justify-content: space-between;
+  `}
 `;
 
 export const NavImageLink = styled.a.attrs(props => ({
@@ -36,6 +39,9 @@ export const NavImageLink = styled.a.attrs(props => ({
   ${media.between('medium', 'large')`
     height: 28px;
     width: 28px;
+  `}
+  ${media.lessThan('large')`
+    margin: 0px;
   `}
 `;
 
