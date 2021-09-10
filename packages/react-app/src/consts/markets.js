@@ -1,4 +1,4 @@
-import { marketCore, marketFuse } from 'assets/images';
+import { marketCoreIcon, marketFuseIcon } from 'assets/images';
 
 export const MARKET_NAMES = {
   CORE: 'CORE',
@@ -9,11 +9,11 @@ export const MARKETS = {
   [MARKET_NAMES.CORE]: {
     id: MARKET_NAMES.CORE.toLowerCase(),
     name: MARKET_NAMES.CORE,
-    icon: marketCore.toString(),
+    icon: marketCoreIcon.toString(),
   },
   [MARKET_NAMES.FUSE]: {
     id: MARKET_NAMES.FUSE.toLowerCase(),
     name: MARKET_NAMES.FUSE,
-    icon: marketFuse.toString(),
+    icon: marketFuseIcon.toString(),
   },
 };

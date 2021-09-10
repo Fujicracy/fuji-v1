@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import map from 'lodash/map';
-import find from 'lodash/find';
+// import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
@@ -39,13 +39,7 @@ function Dashboard() {
       ) : (
         <Switch>
           <ProtectedRoute exact path={`${path}`}>
-            {!collateralBals ? (
-              <Loader />
-            ) : find(collateralBals, balance => balance.gt(0)) ? (
-              <Redirect to="/dashboard/my-positions" />
-            ) : (
-              <Redirect to="/dashboard/init-borrow" />
-            )}
+            {!collateralBals ? <Loader /> : <Redirect to="/dashboard/init-borrow" />}
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
             <InitBorrow contracts={contracts} provider={provider} address={address} />

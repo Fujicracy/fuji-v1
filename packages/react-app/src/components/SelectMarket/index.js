@@ -3,17 +3,12 @@ import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
-import { marketFuse, marketCore } from 'assets/images';
-import { BREAKPOINTS, BREAKPOINT_NAMES, FUSE_DASHBOARD_URL } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, MARKET_NAMES, FUSE_DASHBOARD_URL, MARKETS } from 'consts';
 
 import { RadioContainer, MarketButton } from './styles';
 
-const MARKETS = {
-  Core: 'Core',
-  Fuse: 'Fuse',
-};
-const SelectMarket = ({ hasBlackContainer = true }) => {
-  const [market, setMarket] = useState('Core');
+const SelectMarket = ({ handleChange, hasBlackContainer = true }) => {
+  const [market, setMarket] = useState(MARKET_NAMES.CORE);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -21,10 +16,11 @@ const SelectMarket = ({ hasBlackContainer = true }) => {
   });
 
   const onClickMarket = option => {
-    setMarket('Core');
-    if (option === MARKETS.Fuse) {
+    setMarket(MARKET_NAMES.CORE);
+    if (option === MARKET_NAMES.FUSE) {
       window.open(FUSE_DASHBOARD_URL, '_blank');
     }
+    if (handleChange) handleChange(option);
   };
 
   return (
@@ -38,18 +34,23 @@ const SelectMarket = ({ hasBlackContainer = true }) => {
       <RadioContainer>
         <MarketButton
           left
-          clicked={market === MARKETS.Core}
-          onClick={() => onClickMarket(MARKETS.Core)}
+          clicked={market === MARKET_NAMES.CORE}
+          onClick={() => onClickMarket(MARKET_NAMES.CORE)}
         >
-          <Image src={marketCore} width={isMobile ? 10 : 12} mr={2} />
+          <Image src={MARKETS[MARKET_NAMES.CORE].icon} width={isMobile ? 10 : 12} mr={2} />
           Core
         </MarketButton>
         <MarketButton
           right
-          clicked={market === MARKETS.Fuse}
-          onClick={() => onClickMarket(MARKETS.Fuse)}
+          clicked={market === MARKET_NAMES.FUSE}
+          onClick={() => onClickMarket(MARKET_NAMES.FUSE)}
         >
-          <Image src={marketFuse} width={isMobile ? 14 : 20} height={20} mr={2} />
+          <Image
+            src={MARKETS[MARKET_NAMES.FUSE].icon}
+            width={isMobile ? 14 : 20}
+            height={20}
+            mr={2}
+          />
           Fuse
         </MarketButton>
       </RadioContainer>
