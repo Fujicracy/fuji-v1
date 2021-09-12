@@ -4,7 +4,6 @@ import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
-
 import { useContractLoader, useContractReader, useAuth } from 'hooks';
 import { COLLATERAL_IDS } from 'consts';
 
@@ -69,21 +68,24 @@ function ProtectedRoute({ children, ...rest }) {
   const { address } = useAuth();
 
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        address ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/dashboard/not-connected',
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    <>
+      <Route
+        {...rest}
+        render={({ location }) =>
+          address ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: '/dashboard/not-connected',
+                state: { from: location },
+              }}
+            />
+          )
+        }
+      />
+      <BackgroundEffect />
+    </>
   );
 }
 
