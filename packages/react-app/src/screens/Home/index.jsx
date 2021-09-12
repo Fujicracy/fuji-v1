@@ -1,12 +1,11 @@
 import React from 'react';
 import { useSpring, config } from 'react-spring';
 import { Button } from 'components/UI';
-import { NavLink } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 
 import { fujiLanding, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
 
@@ -52,11 +51,16 @@ function Home() {
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-            <NavLink to="/dashboard">
-              <Button block color="white" fontSize="18px">
-                App
-              </Button>
-            </NavLink>
+            <Button
+              block
+              color="white"
+              fontSize="18px"
+              onClick={() => {
+                window.location = `${APP_URL}/#/dashboard`;
+              }}
+            >
+              App
+            </Button>
           </Grid>
         </HomeCta>
       </HomeContainer>
