@@ -13,6 +13,8 @@ import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
 // App Images
 import fujiLanding from './images/home/fujiLanding.svg';
+import fujiLandingMobile from './images/home/fujiLandingMobile.svg';
+import fujiLandingTablet from './images/home/fujiLandingTablet.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
@@ -25,9 +27,9 @@ import partnerSpartan from './images/partner/spartan.svg';
 import discordImage from './images/home/discord.svg';
 import telegramImage from './images/home/telegram.svg';
 import twitterImage from './images/home/twitter.svg';
-import discordRedImage from './images/home/discord_red.svg';
-import telegramRedImage from './images/home/telegram_red.svg';
-import twitterRedImage from './images/home/twitter_red.svg';
+import discordHoverImage from './images/home/discord_hover.svg';
+import telegramHoverImage from './images/home/telegram_hover.svg';
+import twitterHoverImage from './images/home/twitter_hover.svg';
 import flaskIcon from './images/flask.svg';
 
 // Network Icons
@@ -35,11 +37,13 @@ import ethRedIcon from './icons/tokens/ETH_RED.svg';
 import ethGrayIcon from './icons/tokens/ETH_GRAY.svg';
 import ethBlueIcon from './icons/tokens/ETH_BLUE.svg';
 
-import maticYellowIcon from './icons/tokens/MATIC.svg';
-import maticGrayIcon from './icons/tokens/MATIC_GRAY.svg';
+// Market Icons
+import marketCoreIcon from './icons/markets/core.svg';
+import marketFuseIcon from './icons/markets/fuse.svg';
 
-import logoTitle from './icons/logo-title.svg';
-import notFound from './icons/not-found-404.svg';
+import logoTitleIcon from './icons/logo-title.svg';
+import logoIcon from './icons/logo.svg';
+import notFoundIcon from './icons/not-found-404.svg';
 
 import infoStep1 from './images/info/step1.png';
 import infoStep2 from './images/info/step2.png';
@@ -53,11 +57,6 @@ export const ethIcons = {
   GRAY: ethGrayIcon,
   RED: ethRedIcon,
   BLUE: ethBlueIcon,
-};
-
-export const maticIcons = {
-  GRAY: maticGrayIcon,
-  YELLOW: maticYellowIcon,
 };
 
 export {
@@ -77,6 +76,8 @@ export {
   barIcon,
   // Images
   fujiLanding,
+  fujiLandingMobile,
+  fujiLandingTablet,
   partnerDelphi,
   partnerMaven,
   partnerCapital,
@@ -88,9 +89,13 @@ export {
   discordImage,
   telegramImage,
   twitterImage,
-  discordRedImage,
-  telegramRedImage,
-  twitterRedImage,
-  logoTitle,
-  notFound,
+  discordHoverImage,
+  telegramHoverImage,
+  twitterHoverImage,
+  logoTitleIcon,
+  logoIcon,
+  notFoundIcon,
+  // Markets
+  marketFuseIcon,
+  marketCoreIcon,
 };

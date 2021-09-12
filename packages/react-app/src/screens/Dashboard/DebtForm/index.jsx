@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
+import { useMediaQuery } from 'react-responsive';
+
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -14,12 +16,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { VAULTS } from 'consts';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
 import { Transactor, GasEstimator } from '../../../helpers';
 import { useContractReader, useExchangePrice } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Repay: 0,
@@ -65,6 +69,12 @@ function DebtForm({ position, contracts, provider, address }) {
     debtBalance || '0',
     'true',
   ]);
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
@@ -291,14 +301,18 @@ function DebtForm({ position, contracts, provider, address }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">Debt</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip tooltip-top">
-            <span className="bold">Repay</span> {vault.borrowAsset.name} from your wallet balance or
-            <span className="bold"> borrow</span> more from it against your free collateral.
-          </span>
-        </div>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Debt</SectionTitle>
+
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip tooltip-top">
+              <span className="bold">Repay</span> {vault.borrowAsset.name} from your wallet balance
+              or
+              <span className="bold"> borrow</span> more from it against your free collateral.
+            </span>
+          </div>
+        )}
       </Grid>
       <Grid item className="toggle-button">
         <div className="button">

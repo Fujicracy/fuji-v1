@@ -1,11 +1,4 @@
-import { BREAKPOINT_NAMES } from './constants';
-
-export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: '480px',
-  [BREAKPOINT_NAMES.TABLET]: '768px',
-  [BREAKPOINT_NAMES.DESKTOP]: '991px',
-  [BREAKPOINT_NAMES.LARGE]: '1439px',
-};
+import { BREAKPOINT_NAMES, BREAKPOINTS } from 'consts/globals';
 
 const baseTheme = {
   name: 'Fuji main theme',

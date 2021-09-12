@@ -23,9 +23,8 @@ const useStyles = makeStyles(theme =>
       alignItems: 'center',
     },
     section: {
-      padding: theme.spacing(6, 0),
+      padding: theme.spacing(6, 3),
       textAlign: 'left',
-      maxWidth: 720,
     },
     item: {
       textAlign: 'center',
@@ -94,7 +93,7 @@ function Infos() {
               <Typography className={classes.title}>Team</Typography>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item md={4} sm={4} xs={12}>
               <img src={teamDaigaroPhoto} alt="Daigaro Cota" />
 
               <Typography className={classes.subtitle}>Daigaro Cota</Typography>
@@ -114,7 +113,7 @@ function Infos() {
               </a>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item md={4} sm={4} xs={12}>
               <img src={teamBoyanPhoto} alt="Boyan Barakov" />
 
               <Typography className={classes.subtitle}>Boyan Barakov</Typography>
@@ -135,7 +134,7 @@ function Infos() {
               </a>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item md={4} sm={4} xs={12}>
               <img src={teamEdgarPhoto} alt="Edgar Moreau" />
 
               <Typography className={classes.subtitle}>Edgar Moreau</Typography>
@@ -161,29 +160,29 @@ function Infos() {
             </Grid>
           </Grid>
 
-          <Grid container className={classes.item} spacing={4}>
-            <Grid item md={12}>
+          <Grid container className={classes.item} spacing={6}>
+            <Grid item md={12} xs={12}>
               <Typography className={classes.title}>Partners</Typography>
             </Grid>
 
-            <Grid item md={6} className={classes.partner}>
+            <Grid item md={6} xs={12} className={classes.partner}>
               <img
                 src={partnerDelphi}
                 className={classes.partnerImage}
                 alt="Partner - Delphi Digital"
               />
             </Grid>
-            <Grid item md={6} className={classes.partner}>
+            <Grid item md={6} xs={12} className={classes.partner}>
               <img
                 src={partnerCapital}
                 className={classes.partnerImage}
                 alt="Partner - Origin Capital"
               />
             </Grid>
-            <Grid item md={6} className={classes.partner}>
+            <Grid item md={6} xs={12} className={classes.partner}>
               <img src={partnerMaven} className={classes.partnerImage} alt="Partner - Maven 11" />
             </Grid>
-            <Grid item md={6} className={classes.partner}>
+            <Grid item md={6} xs={12} className={classes.partner}>
               <img src={partnerSpartan} className={classes.partnerImage} alt="Partner - Spartan" />
             </Grid>
           </Grid>

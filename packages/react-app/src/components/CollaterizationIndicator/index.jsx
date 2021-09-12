@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { useSpring, animated } from 'react-spring';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
+import { Flex } from 'rebass';
+import { Typography, Button, Collapse } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { useMediaQuery } from 'react-responsive';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
@@ -55,6 +56,11 @@ function CollaterizationIndicator({ position }) {
   const [borrowLimit, setLimit] = useState(0);
   const [ltv, setLtv] = useState(0);
   const [liqPrice, setLiqPrice] = useState(0);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     const ratios = PositionRatios(position, price);
@@ -78,58 +84,90 @@ function CollaterizationIndicator({ position }) {
   });
 
   return (
-    <BlackBoxContainer>
-      <SectionTitle mb={4}>
-        <Typography variant="h3">Health Factor</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip">
-            The health factor represents the safety of your loan derived from the proportion of
-            collateral versus amount borrowed.
-            <br />
-            <span className="bold">Keep it above 1 to avoid liquidation.</span>
-          </span>
-        </div>
+    <BlackBoxContainer
+      padding={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '32px 28px 20px'}
+    >
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+        Health Factor
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip">
+              The health factor represents the safety of your loan derived from the proportion of
+              collateral versus amount borrowed.
+              <br />
+              <span className="bold">Keep it above 1 to avoid liquidation.</span>
+            </span>
+          </div>
+        )}
       </SectionTitle>
 
-      <div className="ratio">
-        <div className="svg-chart">
-          <svg viewBox="0 0 36 36" className="inner-chart">
-            <animated.path
-              className="circle"
-              stroke={hsl(healthRatio)}
-              style={props}
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-            />
-          </svg>
-        </div>
-        <div className="percentage-chart">
-          {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
-        </div>
-        <div className="bg-chart" />
-      </div>
+      {isMobile || isTablet ? (
+        <>
+          <Flex justifyContent="center" alignItems="center" color="white">
+            <SectionTitle
+              fontSize={isMobile ? '24px' : isTablet ? '28px' : '16px'}
+              m={isMobile ? '16px' : '24px'}
+              color={isTablet && hsl(healthRatio)}
+            >
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
+            </SectionTitle>
+          </Flex>
+          <Flex width={1 / 1}>
+            <svg viewBox="0 0 100 4" className="inner-progress">
+              <animated.path
+                className="progress"
+                stroke={hsl(healthRatio)}
+                style={props}
+                d="M 3 2 l 100 0"
+              />
+            </svg>
+          </Flex>
+        </>
+      ) : (
+        <>
+          <div className="ratio">
+            <div className="svg-chart">
+              <svg viewBox="0 0 36 36" className="inner-chart">
+                <animated.path
+                  className="circle"
+                  stroke={hsl(healthRatio)}
+                  style={props}
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+            </div>
+            <div className="percentage-chart">
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+            </div>
+            <div className="bg-chart" />
+          </div>
 
-      <div className="position-details first">
-        <div className="title">
-          <Typography variant="h3">Borrow Limit Used</Typography>
-        </div>
-        <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
-      </div>
+          <div className="position-details first">
+            <div className="title">
+              <Typography variant="h3">Borrow Limit Used</Typography>
+            </div>
+            <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
+          </div>
+        </>
+      )}
       <Collapse in={more}>
         <div className="position-details">
           <div className="title">
             Current Loan-to-Value
-            <div className="tooltip-info">
-              <InfoOutlinedIcon />
-              <span className="tooltip">
-                The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                <br />
-                A max. LTV of 75% means the user can borrow up to $75 in the principal currency for
-                every $100 worth of collateral.
-                <br />
-                <span className="bold">With LTV above 75% they risk a liquidation.</span>
-              </span>
-            </div>
+            {!isMobile && !isTablet && (
+              <div className="tooltip-info">
+                <InfoOutlinedIcon />
+                <span className="tooltip">
+                  The Maximum Loan-to-Value ratio represents the maximum borrow limit.
+                  <br />
+                  A max. LTV of 75% means the user can borrow up to $75 in the principal currency
+                  for every $100 worth of collateral.
+                  <br />
+                  <span className="bold">With LTV above 75% they risk a liquidation.</span>
+                </span>
+              </div>
+            )}
           </div>
           <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
         </div>
@@ -148,18 +186,39 @@ function CollaterizationIndicator({ position }) {
           </div>
         </div>
       </Collapse>
-      <div className="position-details">
-        <Button
-          size="small"
-          disableRipple
-          onClick={() => {
-            return setMore(!more);
-          }}
-          endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      {isMobile || isTablet ? (
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          color="white"
+          m={isMobile ? '16px 16px 0px' : '24px 24px 0px'}
         >
-          Show {more ? 'less' : 'more'}
-        </Button>
-      </div>
+          {more ? (
+            <ExpandLessIcon
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.5)' }}
+              onClick={() => setMore(!more)}
+            />
+          ) : (
+            <ExpandMoreIcon
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.5)' }}
+              onClick={() => setMore(!more)}
+            />
+          )}
+        </Flex>
+      ) : (
+        <div className="position-details">
+          <Button
+            size="small"
+            disableRipple
+            onClick={() => {
+              return setMore(!more);
+            }}
+            endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          >
+            Show {more ? 'less' : 'more'}
+          </Button>
+        </div>
+      )}
     </BlackBoxContainer>
   );
 }

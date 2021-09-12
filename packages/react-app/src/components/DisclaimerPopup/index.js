@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import { Image, Flex } from 'rebass';
 import Cookies from 'js-cookie';
 import { flaskIcon } from 'assets/images';
+import { useMediaQuery } from 'react-responsive';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { StyledModal, Label, Button, CheckBox } from '../UI';
 import { ContentContainer } from './style';
 
 const DisclaimerPopup = ({ isOpen, onSubmit }) => {
   const [opacity, setOpacity] = useState(0);
   const [checked, setChecked] = useState(false);
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   function toggleModal() {
     setOpacity(0);
@@ -42,32 +50,62 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
     >
       <Flex flexDirection="column">
         <ContentContainer>
-          <Flex flexDirection="row" alignItems="center">
-            <Flex width={1 / 4}>
-              <Image src={flaskIcon} width="60px" height="60px" />
+          <Flex flexDirection={isMobile || isTablet ? 'column' : 'row'} alignItems="center">
+            <Flex
+              width={isMobile ? 1 : 1 / 4}
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+              mb={isMobile ? '40px' : '0px'}
+            >
+              <Image
+                src={flaskIcon}
+                width={isMobile ? '80px' : '60px'}
+                height={isMobile ? '80px' : '60px'}
+              />
             </Flex>
 
-            <Flex flexDirection="column" alignItems="flex-start" ml={3}>
-              <Label color="colors.text100" fontWeight="700" fontSize={16}>
+            <Flex
+              flexDirection="column"
+              alignItems={isMobile ? 'center' : 'flex-start'}
+              ml={isMobile ? 0 : 3}
+            >
+              <Label color="colors.text100" fontWeight="700" fontSize={isMobile ? 20 : 16}>
                 Safety Notice
               </Label>
-              <Label textAlign="left" mt={2} fontSize={16} color="colors.text100">
+              <Label
+                textAlign={isMobile ? 'center' : 'left'}
+                mt={isMobile ? '24px' : 2}
+                fontSize={16}
+                color="colors.text100"
+                lineHeight={isMobile ? '150%' : '100%'}
+              >
                 This is an alpha version, and contracts have not yet been audited.
               </Label>
             </Flex>
           </Flex>
         </ContentContainer>
 
-        <Flex flexDirecion="row" mt={3} pl={3} pr={2} pt={2}>
-          <Flex width={2 / 3} pr={4}>
+        <Flex
+          flexDirection={isMobile ? 'column' : 'row'}
+          padding={isMobile ? '32px 28px 40px' : '24px 8px 0px 16px'}
+        >
+          <Flex width={isMobile ? 1 : 2 / 3} pr={isMobile ? 0 : 4} mb={isMobile ? '32px' : '0px'}>
             <CheckBox
               checked={checked}
               onChange={handleCheckboxChange}
+              descriptionFontSize={isMobile ? 14 : 12}
               description="I acknowledge the risks involved with current release."
             />
           </Flex>
-          <Flex width={1 / 3} mr={2} alignItems="center">
-            <Button onClick={toggleModal} borderRadius={55} block disabled={!checked} height={33}>
+          <Flex width={isMobile ? 1 : 1 / 3} mr={2} alignItems="center">
+            <Button
+              onClick={toggleModal}
+              borderRadius={isMobile ? 4 : 55}
+              block
+              disabled={!checked}
+              height={isMobile ? 40 : 33}
+            >
               Submit
             </Button>
           </Flex>

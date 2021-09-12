@@ -6,6 +6,7 @@ import { ProvideAuth } from 'hooks';
 import GlobalStyle from 'components/GlobalStyle';
 import themes from 'theme';
 import map from 'lodash/map';
+import { useMediaQuery } from 'react-responsive';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
@@ -15,12 +16,16 @@ import Team from 'screens/Team';
 import Error from 'screens/Error';
 import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
-
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Container, FadingBackground, NavText } from './styles';
 import './style.css';
 
 function App() {
   const theme = themes.main;
+
+  const isMobileOrTablet = useMediaQuery({
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,27 +57,23 @@ function App() {
                 <Error />
               </Route>
             </Switch>
-            <footer>
-              <NavUnlisted justifyContent="space-between" position="left">
-                {map(Object.keys(CONTACTS), key => (
-                  <NavImageLink key={key} contact={CONTACTS[key]} />
-                ))}
-              </NavUnlisted>
+            {!isMobileOrTablet && (
+              <footer>
+                <NavUnlisted position="left">
+                  {map(Object.keys(CONTACTS), key => (
+                    <NavImageLink key={key} contact={CONTACTS[key]} />
+                  ))}
+                </NavUnlisted>
 
-              <NavUnlisted justifyContent="flex-start" position="right">
-                <NavLink to="/about">
-                  <NavText>About</NavText>
-                </NavLink>
-                <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                <Label fontSize={12}>© FujiDAO 2021</Label>
-              </NavUnlisted>
-            </footer>
-            <div className="bg-effect" />
-            <div className="ohno">
-              Oh no!
-              <br />
-              This website isn&apos;t available (yet) on mobile
-            </div>
+                <NavUnlisted alignItems="center" position="right">
+                  <NavLink to="/about">
+                    <NavText>About</NavText>
+                  </NavLink>
+                  <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
+                  <Label fontSize={12}>© FujiDAO 2021</Label>
+                </NavUnlisted>
+              </footer>
+            )}
           </HashRouter>
         </Container>
       </ModalProvider>

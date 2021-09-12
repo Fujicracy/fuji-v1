@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 // import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Typography from '@material-ui/core/Typography';
 import { find } from 'lodash';
-import { VAULTS } from 'consts';
 import { Image, Box, Text, Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
 import { useContractReader, useRates } from '../../hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
+import AnimatedCounter from '../UI/AnimatedCounter';
+
 import './styles.css';
 import { ProviderContainer, AssetContainer } from './styles';
 
@@ -16,6 +20,11 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     let tmpDefaultOption;
@@ -32,26 +41,38 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
   }, [rates, activeProvider, vault.providers, vault.borrowAsset.id, contracts]);
 
   return (
-    <ProviderContainer>
-      {isDropDown ? (
-        <>
-          <Box width={1 / 3} alignItems="center">
-            <AssetContainer>
+    <ProviderContainer isMobile={isMobile}>
+      {isMobile || isTablet ? (
+        <Box
+          width={1 / 1}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+          color="#42FF00"
+          fontSize="28px"
+          fontWeight="700"
+        >
+          <AnimatedCounter countTo={defaultOption?.rate} /> %
+        </Box>
+      ) : isDropDown ? (
+        <Flex flexDirection="column" width={1}>
+          <Flex alignItems="center" mb={3}>
+            <AssetContainer hasBottomBorder>
               <Image
                 alt={vault.borrowAsset.name}
                 src={vault.borrowAsset.icon}
-                width="32px"
-                height="32px"
+                width="24px"
+                height="24px"
               />
               <Text fontSize={2} fontWeight="bold" ml={2}>
                 {vault.borrowAsset.name}
               </Text>
             </AssetContainer>
-          </Box>
-          <Box width={2 / 3} ml={2}>
+          </Flex>
+          <Flex>
             <DropDown options={options} defaultOption={defaultOption} isSelectable={isSelectable} />
-          </Box>
-        </>
+          </Flex>
+        </Flex>
       ) : (
         <Flex flexDirection="column" width={1}>
           <AssetContainer hasBottomBorder>
@@ -66,7 +87,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
             </Text>
           </AssetContainer>
           {options?.map(option => (
-            <AssetContainer flexDirection="row" ml={4} mt={3} hasBottomBorder key={Math.random()}>
+            <AssetContainer flexDirection="row" hasBottomBorder key={Math.random()}>
               <Box width={5 / 7} cursor="pointer">
                 {option.title}
               </Box>
@@ -94,16 +115,31 @@ function ProvidersList({
   isSelectable = true,
 }) {
   const rates = useRates(contracts);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
   return (
-    <BlackBoxContainer mt={4} zIndex={1} hasBlackContainer={hasBlackContainer}>
-      <SectionTitle mb={1}>
-        <Typography variant="h3">{title}</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip">
-            Live fetching borrow rates from underlying protocols that provide liquidity.
-          </span>
-        </div>
+    <BlackBoxContainer
+      zIndex={1}
+      hasBlackContainer={hasBlackContainer}
+      padding={hasBlackContainer && '32px 28px'}
+    >
+      <SectionTitle
+        fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}
+        mb={isMobile ? '16px' : isTablet ? '20px' : '-12px'}
+      >
+        {title}
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip">
+              Live fetching borrow rates from underlying protocols that provide liquidity.
+            </span>
+          </div>
+        )}
       </SectionTitle>
 
       {markets &&

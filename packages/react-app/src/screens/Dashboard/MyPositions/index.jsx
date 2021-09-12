@@ -5,16 +5,25 @@ import orderBy from 'lodash/orderBy';
 import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useContractReader } from 'hooks';
+import { Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
 import { PositionElement, PositionActions, ProvidersList } from 'components';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import './styles.css';
-import { VAULTS } from 'consts';
 
 function MyPositions({ contracts, address }) {
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
   const history = useHistory();
   const positions = map(Object.keys(VAULTS), key => {
     const vault = VAULTS[key];
@@ -57,54 +66,109 @@ function MyPositions({ contracts, address }) {
   };
 
   return (
-    <div className="container">
-      <div className="left-content">
-        <Grid container direction="column" justifyContent="center" className="positions">
-          <Typography variant="h3">My positions</Typography>
-          <div className="position-board">
-            {hasPosition() ? (
-              <Grid item className="legend">
-                <span className="empty-tab" />
-                <div className="legend-elements">
-                  <span>Collateral</span>
-                  <span>Debt</span>
-                  <span>Health Factor</span>
-                </div>
-                <span className="empty-button" />
-              </Grid>
-            ) : (
-              <div style={{ height: '2.5rem' }} />
-            )}
-            {map(
-              orderBy(
-                positions,
-                item => Number(formatUnits(item.collateralBalance || 0, item.borrowAsset.decimals)),
-                'desc',
-              ),
-              position =>
-                hasPosition(position.borrowAsset.name) && (
-                  <Grid key={position.borrowAsset.name} item className="one-position">
-                    <PositionElement actionType={PositionActions.Manage} position={position} />
-                  </Grid>
+    <Flex flex flexDirection="row" justifyContent="center">
+      <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
+        <Grid item md={8} sm={12} xs={12}>
+          <Grid container direction="column" justifyContent="center" className="positions">
+            <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
+              {' '}
+              My positions
+            </SectionTitle>
+            <div className="position-board">
+              {hasPosition() ? (
+                <Grid item>
+                  {/* <span className="empty-tab" /> */}
+                  <BlackBoxContainer
+                    hasBlackContainer={false}
+                    ml="28px"
+                    mb={3}
+                    mr={!isMobile && !isTablet && '28px'}
+                  >
+                    <Grid container>
+                      <Grid item xs={4} md={3}>
+                        {' '}
+                      </Grid>
+                      <Grid item xs={8} md={7}>
+                        <Flex width={1 / 1}>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Collateral</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Debt</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="40%"
+                          >
+                            <>Health Factor</>
+                          </SectionTitle>
+                        </Flex>
+                      </Grid>
+                      <Grid item xs={0} md={2}>
+                        {' '}
+                      </Grid>
+                    </Grid>
+                  </BlackBoxContainer>
+                  {/* <span className="empty-button" /> */}
+                </Grid>
+              ) : isMobile ? (
+                <></>
+              ) : (
+                <div style={{ height: '2.5rem' }} />
+              )}
+              {map(
+                orderBy(
+                  positions,
+                  item =>
+                    Number(formatUnits(item.collateralBalance || 0, item.borrowAsset.decimals)),
+                  'desc',
                 ),
-            )}
-            <Grid
-              item
-              onClick={() => history.push(`/dashboard/init-borrow`)}
-              className="adding-position"
-            >
-              <AddIcon />
-              Borrow
-            </Grid>
-            ), )
-          </div>
+                position =>
+                  hasPosition(position.borrowAsset.name) && (
+                    <Grid
+                      key={position.borrowAsset.name}
+                      item
+                      className="one-position"
+                      onClick={() => {
+                        return history.push(
+                          `/dashboard/position?vaultAddress=${position.vaultAddress}`,
+                        );
+                      }}
+                    >
+                      <PositionElement actionType={PositionActions.Manage} position={position} />
+                    </Grid>
+                  ),
+              )}
+              <Grid
+                item
+                onClick={() => history.push(`/dashboard/init-borrow`)}
+                className="adding-position"
+              >
+                <AddIcon />
+                Borrow
+              </Grid>
+            </div>
+          </Grid>
         </Grid>
-      </div>
-      <div className="right-content">
-        <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
-        {/* TODO align-center in small width */}
-      </div>
-    </div>
+        {!isMobile && !isTablet && (
+          <Grid item md={4} sm={4}>
+            <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
+          </Grid>
+        )}
+      </Grid>
+    </Flex>
   );
 }
 
