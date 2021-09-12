@@ -59,13 +59,13 @@ function App() {
             </Switch>
             {!isMobileOrTablet && (
               <footer>
-                <NavUnlisted justifyContent="space-between" position="left">
+                <NavUnlisted position="left">
                   {map(Object.keys(CONTACTS), key => (
                     <NavImageLink key={key} contact={CONTACTS[key]} />
                   ))}
                 </NavUnlisted>
 
-                <NavUnlisted justifyContent="flex-start" alignItems="center" position="right">
+                <NavUnlisted alignItems="center" position="right">
                   <NavLink to="/about">
                     <NavText>About</NavText>
                   </NavLink>

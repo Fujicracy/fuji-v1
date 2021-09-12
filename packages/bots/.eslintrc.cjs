@@ -8,7 +8,6 @@ const prettierOptions = JSON.parse(
 module.exports = {
   extends: ['airbnb', 'plugin:prettier/recommended', 'prettier'],
   plugins: ['babel'],
-  ignorePatterns: ['**/contracts/**'],
   rules: {
     'prettier/prettier': ['error', prettierOptions],
     'import/extensions': [
@@ -26,5 +25,7 @@ module.exports = {
     'func-names': 'off',
     'no-await-in-loop': 'off',
     'no-plusplus': 'off',
+    'import/extensions': 'off',
+    'import/no-cycle': 'off',
   },
 };

@@ -1,12 +1,11 @@
 import React from 'react';
 import { useSpring, config } from 'react-spring';
 import { Button } from 'components/UI';
-import { NavLink } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 
 import { fujiLanding, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
 
@@ -36,13 +35,14 @@ function Home() {
     <Flex flexDireciton="column" justifyContent="center" alignItems="center" height="100vh">
       <HomeContainer style={props}>
         {isMobile && (
-          <SectionTitle fontWeight="500" fontSize="20px" m={4} mb={3}>
+          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
             The first DeFi Borrowing Aggregator
           </SectionTitle>
         )}
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding}
-          mt={5}
+          mt={2}
+          p={!isMobile && !isTablet && '48px 40px 0px'}
         />
         <HomeCta container spacing={3}>
           <Grid item xs={12} sm={6} md={6}>
@@ -51,11 +51,16 @@ function Home() {
             </Button>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
-            <NavLink to="/dashboard">
-              <Button block color="white" fontSize="18px">
-                App
-              </Button>
-            </NavLink>
+            <Button
+              block
+              color="white"
+              fontSize="18px"
+              onClick={() => {
+                window.location = `${APP_URL}/#/dashboard`;
+              }}
+            >
+              App
+            </Button>
           </Grid>
         </HomeCta>
       </HomeContainer>

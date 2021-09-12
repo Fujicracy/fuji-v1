@@ -1,19 +1,18 @@
-import { marketCore, marketFuse } from 'assets/images';
-
-export const MARKET_NAMES = {
-  CORE: 'CORE',
-  FUSE: 'FUSE',
-};
+import { marketCoreIcon, marketFuseIcon } from 'assets/images';
+import { DEPLOYMENT_TYPES } from './globals';
 
 export const MARKETS = {
-  [MARKET_NAMES.CORE]: {
-    id: MARKET_NAMES.CORE.toLowerCase(),
-    name: MARKET_NAMES.CORE,
-    icon: marketCore.toString(),
+  [DEPLOYMENT_TYPES.CORE]: {
+    id: DEPLOYMENT_TYPES.CORE,
+    name: DEPLOYMENT_TYPES.CORE.toUpperCase(),
+    icon: marketCoreIcon.toString(),
+    dashboardUrl: process.env.REACT_APP_FUJI_DASHBOARD_URL || 'https://app.fujidao.org/#/dashboard',
   },
-  [MARKET_NAMES.FUSE]: {
-    id: MARKET_NAMES.FUSE.toLowerCase(),
-    name: MARKET_NAMES.FUSE,
-    icon: marketFuse.toString(),
+  [DEPLOYMENT_TYPES.FUSE]: {
+    id: DEPLOYMENT_TYPES.FUSE,
+    name: DEPLOYMENT_TYPES.FUSE.toUpperCase(),
+    icon: marketFuseIcon.toString(),
+    dashboardUrl:
+      process.env.REACT_APP_FUSE_DASHBOARD_URL || 'https://fuse.fujidao.org/#/dashboard',
   },
 };
