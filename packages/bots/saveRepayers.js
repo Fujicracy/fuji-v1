@@ -2,28 +2,12 @@
 // sorts and filters by unique user addresses
 // and creates a csv file
 
-require('dotenv').config();
+import chalk from 'chalk';
+import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import { VAULTS_ADDRESS } from './consts/index.js';
+import { getSigner, loadContracts } from './utils/index.js';
 
-const { ethers, Wallet } = require('ethers');
-const chalk = require('chalk');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const { loadContracts } = require('./utils');
-
-let provider;
-if (process.env.INFURA) {
-  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
-} else {
-  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
-}
-
-let signer;
-if (process.env.PRIVATE_KEY) {
-  signer = new Wallet(process.env.PRIVATE_KEY, provider);
-} else {
-  throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
-}
-
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
+const signer = getSigner();
 
 const searchRepayers = async (vault, searchLength) => {
   const filterRepayers = vault.filters.Payback();
@@ -74,18 +58,18 @@ const saveFile = (transactors, name) => {
 };
 
 const getRepayers = async () => {
-  const contracts = await loadContracts(signer);
+  const contracts = await loadContracts(signer.provider);
 
-  console.log('contracts');
   let repayers = [];
 
+  const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
-    let vaultName = vaultsList[v];
+    const vaultName = vaultsList[v];
     console.log('Searching PAYBACK positions in', chalk.blue(vaultName));
 
-    let vault = contracts[vaultName];
+    const vault = contracts[vaultName];
 
-    let found = await searchRepayers(vault);
+    const found = await searchRepayers(vault);
     repayers.push(...found);
   }
 

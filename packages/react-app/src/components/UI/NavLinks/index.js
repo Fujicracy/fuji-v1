@@ -11,10 +11,13 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   position: ${props => (props.navPosition ? props.navPosition : 'fixed')};
   bottom: 0rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: center;
   left: ${props => props.position === 'left' && '32px'};
   right: ${props => props.position === 'right' && '32px'};
+  ${media.lessThan('large')`
+    justify-content: space-between;
+  `}
 `;
 
 export const NavImageLink = styled.a.attrs(props => ({
@@ -25,7 +28,7 @@ export const NavImageLink = styled.a.attrs(props => ({
   background: ${props => `url(${props.contact.image}) no-repeat top center`};
   height: 20px;
   width: 20px;
-  margin: 0px 16px;
+  margin: 0px 16px 0px 0px;
   background-size: contain;
   &:hover {
     height: 20px;
@@ -36,6 +39,9 @@ export const NavImageLink = styled.a.attrs(props => ({
   ${media.between('medium', 'large')`
     height: 28px;
     width: 28px;
+  `}
+  ${media.lessThan('large')`
+    margin: 0px;
   `}
 `;
 

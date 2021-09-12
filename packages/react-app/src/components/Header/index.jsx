@@ -197,18 +197,6 @@ function Header() {
                   </Box>
                 </BallanceContainer>
               </li>
-
-              {/* <li>
-            <a
-              href="/"
-              onClick={() => (!address ? loadWeb3Modal() : onboard.walletReset)}
-              onMouseEnter={() => setLogout(true)}
-              onMouseLeave={() => setLogout(false)}
-              className={address ? 'button-nav connected' : 'button-nav'}
-            >
-              {!address ? 'Connect Wallet' : logout ? 'Disconnect' : ellipsedAddress}
-            </a>
-          </li> */}
             </Navigation>
           ))}
       </HeaderContainer>

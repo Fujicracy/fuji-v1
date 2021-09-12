@@ -4,9 +4,7 @@ import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
-
 import { useContractLoader, useContractReader, useAuth } from 'hooks';
-import { CHAIN_ID } from 'consts/globals';
 import { COLLATERAL_IDS } from 'consts';
 
 import Error from '../Error';
@@ -18,6 +16,7 @@ import InitBorrow from './InitBorrow';
 function Dashboard() {
   const { path } = useRouteMatch();
   const { address, provider } = useAuth();
+
   const [loader, setLoader] = useState(true);
 
   const contracts = useContractLoader(provider);
@@ -68,24 +67,12 @@ function Dashboard() {
 function ProtectedRoute({ children, ...rest }) {
   const { address } = useAuth();
 
-  const [chainId, setChainId] = useState(Number(window.ethereum ? window.ethereum.chainId : null));
-
-  useEffect(() => {
-    if (window.ethereum && window.ethereum.on) {
-      window.ethereum.on('chainChanged', chainID => {
-        setChainId(Number(chainID));
-      });
-    }
-  }, [chainId]);
-
   return (
     <>
       <Route
         {...rest}
         render={({ location }) =>
-          chainId !== Number(CHAIN_ID) ? (
-            <Redirect to="/dashboard/wrong-network" />
-          ) : address ? (
+          address ? (
             children
           ) : (
             <Redirect

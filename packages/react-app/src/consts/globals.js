@@ -33,8 +33,7 @@ const APP_URL = process.env.REACT_APP_APP_URL || 'http://localhost:3000';
 const LANDING_URL = process.env.REACT_APP_LANDING_URL || 'http://localhost:3000';
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 const DEPLOYMENT = process.env.REACT_APP_DEPLOYMENT || DEPLOYMENT_TYPES.CORE;
-const FUSE_DASHBOARD_URL =
-  process.env.REACT_APP_FUSE_DASHBOARD_URL || 'https://fuse.fujidao.org/#/dashboard';
+
 export {
   CHAIN_ID,
   NETWORK,
@@ -44,5 +43,4 @@ export {
   DEPLOYMENT,
   DEPLOYMENT_TYPES,
   ETH_CAP_VALUE,
-  FUSE_DASHBOARD_URL,
 };

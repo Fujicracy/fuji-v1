@@ -9,7 +9,7 @@ export const Container = styled(Box)`
 `;
 
 export const FadingBackground = styled(BaseModalBackground)`
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
   transition: all 0.3s ease-in-out;
   ${media.lessThan('medium')`

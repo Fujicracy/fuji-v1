@@ -1,10 +1,10 @@
 import {
   discordImage,
-  discordRedImage,
+  discordHoverImage,
   telegramImage,
-  telegramRedImage,
+  telegramHoverImage,
   twitterImage,
-  twitterRedImage,
+  twitterHoverImage,
 } from 'assets/images';
 
 export const CONTACTS = {
@@ -12,21 +12,21 @@ export const CONTACTS = {
     id: 'twitter',
     url: 'https://twitter.com/FujiFinance',
     image: twitterImage,
-    imageHover: twitterRedImage,
+    imageHover: twitterHoverImage,
     alt: 'twitter',
   },
   DISCORD: {
     id: 'discord',
     url: 'https://discord.com/invite/dnvJeEMeDJ',
     image: discordImage,
-    imageHover: discordRedImage,
+    imageHover: discordHoverImage,
     alt: 'discord',
   },
   TELEGRAM: {
     id: 'telegram',
     url: 'https://t.me/joinchat/U4cKWNCUevKVsrtY',
     image: telegramImage,
-    imageHover: telegramRedImage,
+    imageHover: telegramHoverImage,
     alt: 'telegram',
   },
 };

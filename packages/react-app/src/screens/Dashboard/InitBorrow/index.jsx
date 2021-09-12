@@ -32,7 +32,7 @@ import {
 import { TextInput } from 'components/UI';
 
 import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { MARKETS, MARKET_NAMES } from 'consts/markets';
+// import { MARKETS, MARKET_NAMES } from 'consts/markets';
 import { Transactor, GasEstimator } from 'helpers';
 import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
@@ -50,7 +50,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
-  const [network, setNetwork] = useState(MARKETS[MARKET_NAMES.CORE]);
+  // const [market, setMarket] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
 
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
@@ -156,9 +156,9 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeNetwork = option => {
-    setNetwork(option);
-  };
+  // const handleChangeMarket = option => {
+  //   setMarket(option);
+  // };
 
   const handleChangeVault = v => {
     setBorrowAsset(v.borrowAsset.name);
@@ -202,7 +202,6 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network, errors: errors?.borrowAmount?.message, isTablet });
   return (
     <Container>
       <Dialog
@@ -235,7 +234,9 @@ function InitBorrow({ contracts, provider, address }) {
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
                   <Grid item xs={8} sm={8} md={12}>
-                    <SelectMarket handleChange={handleChangeNetwork} hasBlackContainer={false} />
+                    <SelectMarket
+                      /* handleChange={handleChangeMarket} */ hasBlackContainer={false}
+                    />
                   </Grid>
                   <Grid item xs={4} sm={4} md={12}>
                     <ProvidersList
