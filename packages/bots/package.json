@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -18,14 +19,15 @@
     "axios": "^0.20.0",
     "chalk": "^4.1.0",
     "csv-writer": "^1.6.0",
+    "defender-relay-client": "^1.10.0",
     "dotenv": "^8.2.0",
-    "ethers": "^5.1.4",
+    "ethers": "^5.4.4",
     "redis": "^3.1.2"
   },
   "scripts": {
     "lint": "eslint . --format table",
     "lint:fix": "yarn lint --fix",
-    "format": "prettier --write . '!contracts/**.js'",
+    "format": "prettier --write .",
     "liquidate": "node liquidate.js"
   }
 }

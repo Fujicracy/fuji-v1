@@ -1,41 +1,17 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { formatUnits } from '@ethersproject/units';
-// import { useUserAddress } from 'eth-hooks';
-// import { Web3Provider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-// import Web3Modal from 'web3modal';
-// import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from 'bnc-onboard';
 import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/globals';
 
 const AuthContext = createContext();
-
-// const web3Modal = new Web3Modal({
-//   // network: "mainnet", // optional
-//   cacheProvider: true, // optional
-//   providerOptions: {
-//     walletconnect: {
-//       package: WalletConnectProvider, // required
-//       options: {
-//         infuraId: process.env.REACT_APP_INFURA_ID,
-//       },
-//     },
-//   },
-//   theme: {
-//     background: 'rgb(0, 0, 0)',
-//     main: 'rgb(245, 245, 253)',
-//     secondary: 'rgba(245, 245, 253, 0.8)',
-//     border: 'rgb(240, 1, 79)',
-//     hover: 'rgb(41, 41, 41)',
-//   },
-// });
+const localStorage = window.localStorage;
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [provider, setProvider] = useState(undefined);
-  // const address = useUserAddress(provider);
-  const [wallet, setWallet] = useState('');
-  const [address, setAddress] = useState('');
+  const [wallet, setWallet] = useState(localStorage.getItem('selectedWallet'));
+  const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
   const [balance, setBalance] = useState(0);
 
@@ -52,37 +28,6 @@ function useProvideAuth() {
       }
     }
   }
-
-  // async function disconnectAccount() {
-  //   if (onboard) {
-  //     console.log('disconnecting account');
-  //     setAddress();
-  //     setProvider(undefined);
-  //     setWallet(null);
-
-  //     window.localStorage.removeItem('selectedWallet');
-  //     window.localStorage.removeItem('selectedAddress');
-  //     onboard.walletReset();
-  //   }
-  // }
-
-  // const loadWeb3Modal = useCallback(async () => {
-  //   const newProvider = await web3Modal.connect();
-  //   setProvider(new Web3Provider(newProvider));
-  // }, [setProvider]);
-
-  // const logoutOfWeb3Modal = async () => {
-  //   await web3Modal.clearCachedProvider();
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 1);
-  // };
-
-  // useEffect(() => {
-  //   if (web3Modal.cachedProvider) {
-  //     loadWeb3Modal();
-  //   }
-  // }, [loadWeb3Modal]);
 
   useEffect(() => {
     const tmpOnboard = Onboard({
@@ -122,20 +67,19 @@ function useProvideAuth() {
             setWallet(onboardWallet);
             const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
             setProvider(ethersProvider);
-            window.localStorage.setItem('selectedWallet', onboardWallet.name);
+            localStorage.setItem('selectedWallet', onboardWallet.name);
           } else {
             setAddress('');
             setProvider(undefined);
             setWallet('');
 
-            window.localStorage.removeItem('selectedWallet');
-            window.localStorage.removeItem('selectedAddress');
+            localStorage.removeItem('selectedWallet');
+            localStorage.removeItem('selectedAddress');
           }
         },
         address: onboardAddress => {
-          window.localStorage.setItem('selectedAddress', onboardAddress);
-          if (onboardAddress) setAddress(onboardAddress);
-          else setAddress('');
+          localStorage.setItem('selectedAddress', onboardAddress || '');
+          setAddress(onboardAddress || '');
         },
         balance: onboardBalance => {
           if (onboardBalance) {
@@ -151,8 +95,8 @@ function useProvideAuth() {
 
   useEffect(() => {
     async function connectWalletAccount() {
-      const previouslySelectedWallet = window.localStorage.getItem('selectedWallet');
-      const previouslySelectedAddress = window.localStorage.getItem('selectedAddress');
+      const previouslySelectedWallet = localStorage.getItem('selectedWallet');
+      const previouslySelectedAddress = localStorage.getItem('selectedAddress');
       if (previouslySelectedWallet && previouslySelectedAddress && onboard) {
         await onboard.walletSelect(previouslySelectedWallet);
         await onboard.walletCheck(previouslySelectedAddress);
@@ -170,9 +114,6 @@ function useProvideAuth() {
     address,
     provider,
     connectAccount,
-    // disconnectAccount,
-    // loadWeb3Modal,
-    // logoutOfWeb3Modal,
     onboard,
     wallet,
     balance,

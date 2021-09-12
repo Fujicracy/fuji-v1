@@ -1,38 +1,23 @@
-require('dotenv').config();
-
-const retry = require('async-retry');
-const chalk = require('chalk');
-const { ethers, Wallet, BigNumber } = require('ethers');
-const {
+import retry from 'async-retry';
+import chalk from 'chalk';
+import { ethers, BigNumber } from 'ethers';
+import { ASSETS, VAULTS_ADDRESS } from './consts/index.js';
+import {
   loadContracts,
+  getSigner,
   getGasPrice,
   getETHPrice,
-  getLiquidationProviderIndex,
-  USDC_ADDR,
-} = require('./utils');
-const {
-  searchBorrowers,
+  getFlashloanProvider,
+  getBorrowers,
   connectRedis,
   pushNew,
   buildPositions,
   logStatus,
-} = require('./utils/liquidateHelpers');
+} from './utils/index.js';
 
-let provider;
-if (process.env.INFURA) {
-  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
-} else {
-  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
-}
+const { utils } = ethers;
 
-let signer;
-if (process.env.PRIVATE_KEY) {
-  signer = new Wallet(process.env.PRIVATE_KEY, provider);
-} else {
-  throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
-}
-
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC', 'VaultETHUSDT'];
+const signer = getSigner();
 
 const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   let totalDebt = BigNumber.from(0);
@@ -41,7 +26,7 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
     totalDebt = totalDebt.add(positions[i].debt);
   }
 
-  const formatUnits = ethers.utils.formatUnits;
+  const formatUnits = utils.formatUnits;
 
   let bonus = totalDebt.mul(BigNumber.from(43)).div(BigNumber.from(1000));
   bonus = formatUnits(bonus.toString(), decimals);
@@ -62,7 +47,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
     return;
   }
 
-  const index = await getLiquidationProviderIndex(vault, contracts);
+  const index = await getFlashloanProvider(vault);
   const gasPrice = await getGasPrice();
   const ethPrice = await getETHPrice();
 
@@ -70,7 +55,6 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
     positions.map(p => p.account),
     vault.address,
     index,
-    { gasPrice },
   );
 
   if (!isViable(positions, gasPrice, gasLimit, ethPrice, decimals)) {
@@ -80,14 +64,14 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
   console.log(chalk.green('---> Proceed to liquidations'));
 
   // increase by 10% to prevent outOfGas tx failing
-  gasLimit = gasLimit.add(gasLimit.div(ethers.BigNumber.from('10')));
+  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
 
   try {
     const res = await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
       positions.map(p => p.account),
       vault.address,
       index,
-      { gasPrice, gasLimit },
+      { gasLimit },
     );
     if (res && res.hash) {
       console.log(`TX submited: ${res.hash}`);
@@ -102,7 +86,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
   }
 };
 
-const getBorrowers = async vault => {
+const getAllBorrowers = async vault => {
   console.log('---> find borrowers');
 
   let borrowers;
@@ -113,35 +97,36 @@ const getBorrowers = async vault => {
 
     if (!borrowers) {
       console.log('---> no cached borrowers');
-      borrowers = await searchBorrowers(provider, vault);
+      borrowers = await getBorrowers(vault);
       await client.set('borrowers', JSON.stringify(borrowers));
     } else {
       borrowers = JSON.parse(borrowers);
       console.log('---> cached borrowers, fetch only new');
-      const newBorrowers = await searchBorrowers(provider, vault, 10);
+      const newBorrowers = await getBorrowers(vault, 10);
       borrowers = pushNew(newBorrowers, borrowers);
 
       await client.set('borrowers', JSON.stringify(borrowers));
     }
   } else {
     console.log('---> not using redis');
-    borrowers = await searchBorrowers(provider, vault);
+    borrowers = await getBorrowers(vault);
   }
   return borrowers;
 };
 
 const checkForLiquidations = async () => {
-  const contracts = await loadContracts(signer);
+  const contracts = await loadContracts(signer.provider);
 
+  const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
     const { borrowAsset } = await vault.vAssets();
-    const decimals = borrowAsset === USDC_ADDR ? 6 : 18;
+    const decimals = Object.values(ASSETS).find(a => a.address === borrowAsset).decimals;
 
-    const borrowers = await getBorrowers(vault);
+    const borrowers = await getAllBorrowers(vault);
     const [toLiq, stats] = await buildPositions(borrowers, vault, decimals, contracts.FujiERC1155);
 
     logStatus(toLiq, stats, decimals);
