@@ -15,9 +15,25 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 if (!process.env.ALCHEMY_ID && !process.env.INFURA_ID) {
   throw "Please set ALCHEMY_ID or INFURA_ID in ./packages/hardhat/.env";
 }
-const mainnetUrl = process.env.ALCHEMY_ID
+
+// Input name of network to fork in the .env file, IF NOT ethereum mainnet
+// FORK_NETWORK=name // Currently configured: {fantom,bsc}
+
+let forkURL;
+let mainnetUrl = process.env.ALCHEMY_ID
   ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_ID}`
   : `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`;
+
+switch (process.env.FORK_NETWORK) {
+  case 'fantom':
+    forkURL = `https://rpc.ftm.tools/`;
+    break;
+  case 'bsc':
+    forkURL = 'https://bsc-dataseed.binance.org/';
+    break;
+  default:
+    forkURL = mainnetUrl;
+}
 
 //
 // Select the network you want to deploy to here:
@@ -42,7 +58,7 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: mainnetUrl,
+        url: forkURL,
         //blockNumber: 12962882, //before London
       },
     },
@@ -68,6 +84,10 @@ module.exports = {
     },
     mainnet: {
       url: mainnetUrl,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
+    },
+    fantom: {
+      url: `https://rpc.ftm.tools/`,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     ropsten: {
