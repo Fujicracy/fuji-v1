@@ -50,12 +50,12 @@ export const NavTextLink = styled.a.attrs(props => ({
   target: props.target || '_blank',
   rel: props.rel || 'noopener noreferrer',
 }))`
-  margin-right: 10px;
-  font-size: 12px;
-
+  margin-right: ${props => (props.marginRight ? props.marginRight : '10px')};
+  font-size: ${props => (props.fontSize ? props.fontSize : '12px')};
+  font-weight: ${props => (props.fontWeight ? props.fontWeight : '400')};
   &:link,
   &:visited {
-    color: ${themeGet('colors.text64')};
+    color: ${props => (props.color ? props.color : themeGet('colors.text64'))};
   }
 
   &:hover {

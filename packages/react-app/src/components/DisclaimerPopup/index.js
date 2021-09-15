@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { flaskIcon } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { StyledModal, Label, Button, CheckBox } from '../UI';
+import { StyledModal, Label, Button, CheckBox, NavTextLink } from '../UI';
 import { ContentContainer } from './style';
 
 const DisclaimerPopup = ({ isOpen, onSubmit }) => {
@@ -50,9 +50,9 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
     >
       <Flex flexDirection="column">
         <ContentContainer>
-          <Flex flexDirection={isMobile || isTablet ? 'column' : 'row'} alignItems="center">
+          <Flex flexDirection={isMobile ? 'column' : 'row'} alignItems="center">
             <Flex
-              width={isMobile ? 1 : 1 / 4}
+              width={isMobile ? 1 : 1 / 3}
               flexDirection="row"
               alignItems="center"
               justifyContent="center"
@@ -60,8 +60,8 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
             >
               <Image
                 src={flaskIcon}
-                width={isMobile ? '80px' : '60px'}
-                height={isMobile ? '80px' : '60px'}
+                width={isMobile ? '80px' : '80px'}
+                height={isMobile ? '80px' : '80px'}
               />
             </Flex>
 
@@ -70,7 +70,11 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
               alignItems={isMobile ? 'center' : 'flex-start'}
               ml={isMobile ? 0 : 3}
             >
-              <Label color="colors.text100" fontWeight="700" fontSize={isMobile ? 20 : 16}>
+              <Label
+                color="colors.text100"
+                fontWeight="700"
+                fontSize={isMobile || isTablet ? 20 : 16}
+              >
                 Safety Notice
               </Label>
               <Label
@@ -78,35 +82,53 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 mt={isMobile ? '24px' : 2}
                 fontSize={16}
                 color="colors.text100"
-                lineHeight={isMobile ? '150%' : '100%'}
+                lineHeight={isMobile ? '150%' : '150%'}
               >
-                This is an alpha version, and contracts have not yet been audited.
+                Please be advised that the current version of the contracts isn&apos;t fully
+                audited. Use at your own risk.
               </Label>
             </Flex>
           </Flex>
         </ContentContainer>
 
         <Flex
-          flexDirection={isMobile ? 'column' : 'row'}
-          padding={isMobile ? '32px 28px 40px' : '24px 8px 0px 16px'}
+          flexDirection={isMobile || isTablet ? 'column' : 'row'}
+          padding={isMobile ? '32px 28px 40px' : isTablet ? '32px 40px 40px' : '24px 0px 0px 0px'}
         >
-          <Flex width={isMobile ? 1 : 2 / 3} pr={isMobile ? 0 : 4} mb={isMobile ? '32px' : '0px'}>
+          <Flex
+            width={isMobile || isTablet ? 1 : 0.7}
+            pr={isMobile ? 0 : 3}
+            mb={isMobile || isTablet ? '32px' : '0px'}
+          >
             <CheckBox
               checked={checked}
               onChange={handleCheckboxChange}
               descriptionFontSize={isMobile ? 14 : 12}
-              description="I acknowledge the risks involved with current release."
             />
+            <Label textAlign={isMobile ? 'center' : 'left'} ml={3} lineHeight="130%">
+              By moving forward, you accept our{' '}
+              <NavTextLink
+                url="https://docs.fujidao.org"
+                fontSize="14px"
+                marginRight="5px"
+                fontWeight="700"
+                color="white"
+              >
+                Terms of Use
+              </NavTextLink>
+              and confirm that you understand the risks
+            </Label>
           </Flex>
-          <Flex width={isMobile ? 1 : 1 / 3} mr={2} alignItems="center">
+          <Flex width={isMobile || isTablet ? 1 : 0.3} alignItems="center" justifyContent="center">
             <Button
               onClick={toggleModal}
-              borderRadius={isMobile ? 4 : 55}
-              block
+              borderRadius={4}
+              block={!isTablet}
               disabled={!checked}
               height={isMobile ? 40 : 33}
+              width="50%"
             >
-              Submit
+              Accept
             </Button>
           </Flex>
         </Flex>
