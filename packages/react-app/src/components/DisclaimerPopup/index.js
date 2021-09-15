@@ -108,7 +108,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
             <Label textAlign={isMobile ? 'center' : 'left'} ml={3} lineHeight="130%">
               By moving forward, you accept our{' '}
               <NavTextLink
-                url="https://docs.fujidao.org"
+                url="https://docs.fujidao.org/legals/terms-of-use"
                 fontSize="14px"
                 marginRight="5px"
                 fontWeight="700"
