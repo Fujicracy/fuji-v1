@@ -1,6 +1,6 @@
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 const StyledModal = Modal.styled`
   display: flex;
@@ -14,7 +14,7 @@ const StyledModal = Modal.styled`
   transition : all 0.3s ease-in-out;
   color: ${themeGet('colors.text64')};
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     width: 100%;
     margin-left: 28px;
     margin-right: 28px;
@@ -24,7 +24,7 @@ const StyledModal = Modal.styled`
     border-radius: 14px;
     border: 2px solid rgb(44, 44, 44);
   `}
-  ${media.greaterThan('medium')`
+  ${fujiMedia.greaterThan('medium')`
     margin: 56px;
   `}
 `;
