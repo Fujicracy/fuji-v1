@@ -17,7 +17,7 @@ if (!process.env.ALCHEMY_ID && !process.env.INFURA_ID) {
 }
 
 // Input name of network to fork in the .env file, IF NOT ethereum mainnet
-// FORK_NETWORK=name // Currently configured: {fantom,bsc}
+// NETWORK=name // Currently configured: {fantom,bsc}
 
 let forkURL;
 let mainnetUrl = process.env.ALCHEMY_ID
