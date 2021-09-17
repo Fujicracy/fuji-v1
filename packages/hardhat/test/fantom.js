@@ -67,21 +67,21 @@ describe("Fantom Fuji Instance", function () {
   let evmSnapshot2;
 
   before(async function () {
-    users = await ethers.getSigners();
-    user1 = users[1];
+    this.users = await ethers.getSigners();
+    this.user1 = this.users[1];
 
-    const loadFixture = createFixtureLoader(users, provider);
+    const loadFixture = createFixtureLoader(this.users, provider);
     this.f = await loadFixture(fixture);
     evmSnapshot0 = await evmSnapshot();
 
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
       await this.f.swapper
-        .connect(users[x])
+        .connect(this.users[x])
         .swapETHForExactTokens(
           parseUnits(500),
           [ASSETS.WFTM.address, ASSETS.DAI.address],
-          users[x].address,
+          this.users[x].address,
           block.timestamp + x + 1,
           { value: parseUnits(500) }
         );
@@ -89,11 +89,11 @@ describe("Fantom Fuji Instance", function () {
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
       await this.f.swapper
-        .connect(users[x])
+        .connect(this.users[x])
         .swapETHForExactTokens(
           500e6,
           [ASSETS.WFTM.address, ASSETS.USDC.address],
-          users[x].address,
+          this.users[x].address,
           block.timestamp + x + 1,
           { value: parseUnits(500) }
         );
@@ -101,11 +101,11 @@ describe("Fantom Fuji Instance", function () {
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
       await this.f.swapper
-        .connect(users[x])
+        .connect(this.users[x])
         .swapETHForExactTokens(
           parseUnits(.1),
           [ASSETS.WFTM.address, ASSETS.WETH.address],
-          users[x].address,
+          this.users[x].address,
           block.timestamp + x + 1,
           { value: parseUnits(500) }
         );
@@ -113,11 +113,11 @@ describe("Fantom Fuji Instance", function () {
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
       await this.f.swapper
-        .connect(users[x])
+        .connect(this.users[x])
         .swapETHForExactTokens(
           500000, // 500k sats
           [ASSETS.WFTM.address, ASSETS.WBTC.address],
-          users[x].address,
+          this.users[x].address,
           block.timestamp + x + 1,
           { value: parseUnits(500) }
         );
@@ -150,7 +150,6 @@ describe("Fantom Fuji Instance", function () {
     yell();
 
     testDeposit1(
-      this.f,
       ftmAddrs.ftmcreamMapper,
       [vaultwftmdai],
       DEPOSIT_ERC20

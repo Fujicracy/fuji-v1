@@ -1,7 +1,8 @@
 const { ethers, upgrades } = require("hardhat");
 const { getContractAt, getContractFactory } = ethers;
+const { expect } = require("chai");
 
-const { formatUnitsOfCurrency, ZERO_ADDR } = require("./utils-alpha");
+const { formatUnitsOfCurrency, parseUnits, ZERO_ADDR } = require("./utils-alpha");
 
 const SPOOKY_ROUTER_ADDR = "0xF491e7B69E4244ad4002BC14e878a34207E38c29";
 const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
@@ -150,24 +151,23 @@ const yell = () => {
   console.log('fuck you!')
 }
 
-const testDeposit1 = (loadedfixture, mapperAddr, vaults, depositAmount) => {
+function testDeposit1(mapperAddr, vaults, amount) {
   for (let i = 0; i < vaults.length; i += 1) {
     const vault = vaults[i];
-    it(`deposit FTM as collateral, check ${vault.name} balance`, async () => {
+    it(`deposit FTM as collateral, check ${vault.name} balance`, async function() {
       const fujimapper = await getContractAt("FujiMapping", mapperAddr);
       const vAssets = await this.f[vault.name].vAssets();
-      /*
       const cTokenAddr = await fujimapper.addressMapping(vAssets.collateralAsset);
       const cETH = await getContractAt("ICEth", cTokenAddr);
 
-      const depositAmount = parseUnits(depositAmount);
-      const negdepositAmount = parseUnits(-depositAmount);
+      const depositAmount = parseUnits(amount);
+      const negdepositAmount = parseUnits(-amount);
 
       await expect(
-        await loadedfixture[vault.name].connect(user1).deposit(depositAmount, { value: depositAmount })
-      ).to.changeEtherBalance(user1, negdepositAmount);
+        await this.f[vault.name].connect(this.user1).deposit(depositAmount, { value: depositAmount })
+      ).to.changeEtherBalance(this.user1, negdepositAmount);
 
-      let vaultBal = await cETH.balanceOf(loadedfixture[vault.name].address);
+      let vaultBal = await cETH.balanceOf(this.f[vault.name].address);
       vaultBal = await formatUnitsOfCurrency(cETH.address, vaultBal);
 
       const rate = await cETH.exchangeRateStored();
@@ -176,7 +176,6 @@ const testDeposit1 = (loadedfixture, mapperAddr, vaults, depositAmount) => {
       tokenAmount = await formatUnitsOfCurrency(cETH.address, tokenAmount);
 
       await expect(vaultBal).to.be.equal(tokenAmount);
-      */
     });
   }
 }
