@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { size } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const Container = styled(Box)`
   position: relative;
@@ -20,12 +20,12 @@ export const HeaderContainer = styled(Box)`
 
   ${size}
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     height:64px;
     background-color:  rgba(255, 255, 255, 0.05);
     padding: 16px 28px;
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     padding: 16px 40px;
     height: 88px;
     background-color:  rgba(255, 255, 255, 0.05);
@@ -50,7 +50,7 @@ export const MenuBackContainer = styled(Box)`
   background: transparent;
   z-index: 9999;
   backdrop-filter: blur(0.25rem);
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     top: 88px;
     padding-left: 50%;
   `}
@@ -89,7 +89,7 @@ export const MenuNavigationContainer = styled(Box)`
   box-sizing: border-box;
   border-radius: 12px 12px 0px 0px;
   padding: 0px 24px;
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     height: 76px;
     bottom: 76px;
     padding: 0px 32px;
@@ -151,10 +151,10 @@ export const Navigation = styled.ul`
       }
     }
   }
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     display:none
   `}
-  ${media.greaterThan('medium')`
+  ${fujiMedia.greaterThan('medium')`
   `}
 `;
 

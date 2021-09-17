@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const NavUnlisted = styled(Box).attrs(props => ({
   pt: 4,
@@ -15,7 +15,7 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   align-content: center;
   left: ${props => props.position === 'left' && '32px'};
   right: ${props => props.position === 'right' && '32px'};
-  ${media.lessThan('large')`
+  ${fujiMedia.lessThan('large')`
     justify-content: space-between;
   `}
 `;
@@ -36,11 +36,11 @@ export const NavImageLink = styled.a.attrs(props => ({
     background: ${props => `url(${props.contact.imageHover}) no-repeat top center`};
     background-size: contain;
   }
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     height: 28px;
     width: 28px;
   `}
-  ${media.lessThan('large')`
+  ${fujiMedia.lessThan('large')`
     margin: 0px;
   `}
 `;

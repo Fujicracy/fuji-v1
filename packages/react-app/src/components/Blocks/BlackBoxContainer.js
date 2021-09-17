@@ -3,7 +3,7 @@ import { size, background } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import PropTypes from 'prop-types';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 const BlackBoxContainer = styled(Box).attrs(props => ({
   // px: props.hasBlackContainer ? 4 : 0,
@@ -42,7 +42,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     }
   }
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     border-radius: 14px;
     border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
     border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
@@ -53,7 +53,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     }
   `}
 
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     border-radius: 14px;
     border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
     border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};

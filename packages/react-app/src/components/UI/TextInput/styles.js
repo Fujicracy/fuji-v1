@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { mapToTheme } from 'styled-map';
 import { themeGet } from '@styled-system/theme-get';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const InputContainer = styled.div`
   height: 44px;
@@ -19,12 +19,12 @@ export const InputContainer = styled.div`
     border: 1px solid ${themeGet('colors.primary')};
   }
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     height: 40px;
     border-radius: 4px;
   `}
 
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     height: 56px;
     border-radius: 4px;
   `}
@@ -40,11 +40,11 @@ export const SubTitleContainer = styled.div`
   align-items: center;
   position: relative;
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 12px;
     margin-bottom: 16px;
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     font-size: 20px;
     margin-bottom: 24px;
   `}
@@ -61,7 +61,7 @@ export const SubTitleInfo = styled.span`
   color: ${themeGet('colors.text64')};
   margin-top: 24px;
 
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     font-size: 12px;
     line-height: 18px;
     margin-top: 24px;
@@ -76,7 +76,7 @@ export const Description = styled.label`
   display: block;
   color: white;
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 0.5rem;
   `}
 `;
@@ -92,10 +92,10 @@ export const AdornmentText = styled.label`
   color: ${themeGet('colors.text64')};
   font-size: 14px;
   font-weight: 400;
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 12px;
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     font-size: 16px;
   `}
 `;
