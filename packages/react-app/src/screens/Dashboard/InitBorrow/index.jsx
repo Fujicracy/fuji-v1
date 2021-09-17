@@ -202,8 +202,6 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ isMobile, isTablet });
-
   return (
     <Container>
       <Dialog
