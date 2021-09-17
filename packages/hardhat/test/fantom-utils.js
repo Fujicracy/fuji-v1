@@ -1,9 +1,11 @@
 const { ethers, upgrades } = require("hardhat");
-
 const { getContractAt, getContractFactory } = ethers;
+
+const { formatUnitsOfCurrency, ZERO_ADDR } = require("./utils-alpha");
 
 const SPOOKY_ROUTER_ADDR = "0xF491e7B69E4244ad4002BC14e878a34207E38c29";
 const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
+
 const ASSETS = {
   DAI: {
     name: "dai",
@@ -99,11 +101,11 @@ const fixture = async ([wallet]) => {
   const scream = await ProviderFTMCream.deploy([]);
 
   // Setp 3: Vaults
-  const FujiVault = await getContractFactory("FujiVault");
+  const FujiVaultFTM = await getContractFactory("FujiVaultFTM");
   // deploy a vault for each entry in ASSETS
   const vaults = {};
   for (const { name, collateral, debt } of getVaults()) {
-    const vault = await upgrades.deployProxy(FujiVault, [
+    const vault = await upgrades.deployProxy(FujiVaultFTM, [
       fujiadmin.address,
       oracle.address,
       collateral.address,
@@ -142,22 +144,30 @@ const fixture = async ([wallet]) => {
   };
 };
 
-const testDeposit1 = (ctrlAddr, vaults) => {
+const [DEPOSIT_ERC20, BORROW_ERC20, DEPOSIT_ETH, BORROW_ETH] = [7000, 4000, 2, 1];
+
+const yell = () => {
+  console.log('fuck you!')
+}
+
+const testDeposit1 = (loadedfixture, mapperAddr, vaults, depositAmount) => {
   for (let i = 0; i < vaults.length; i += 1) {
     const vault = vaults[i];
-    it(`deposit ETH as collateral, check ${vault.name} balanace`, async () => {
-      const fuseComptroller = await getContractAt("IFuseComptroller", ctrlAddr);
-      const cTokenAddr = await fuseComptroller.cTokensByUnderlying(ZERO_ADDR);
+    it(`deposit FTM as collateral, check ${vault.name} balance`, async () => {
+      const fujimapper = await getContractAt("FujiMapping", mapperAddr);
+      const vAssets = await this.f[vault.name].vAssets();
+      /*
+      const cTokenAddr = await fujimapper.addressMapping(vAssets.collateralAsset);
       const cETH = await getContractAt("ICEth", cTokenAddr);
 
-      const depositAmount = parseUnits(DEPOSIT_ETH);
-      const negdepositAmount = parseUnits(-DEPOSIT_ETH);
+      const depositAmount = parseUnits(depositAmount);
+      const negdepositAmount = parseUnits(-depositAmount);
 
       await expect(
-        await f[vault.name].connect(user1).deposit(depositAmount, { value: depositAmount })
+        await loadedfixture[vault.name].connect(user1).deposit(depositAmount, { value: depositAmount })
       ).to.changeEtherBalance(user1, negdepositAmount);
 
-      let vaultBal = await cETH.balanceOf(f[vault.name].address);
+      let vaultBal = await cETH.balanceOf(loadedfixture[vault.name].address);
       vaultBal = await formatUnitsOfCurrency(cETH.address, vaultBal);
 
       const rate = await cETH.exchangeRateStored();
@@ -166,6 +176,7 @@ const testDeposit1 = (ctrlAddr, vaults) => {
       tokenAmount = await formatUnitsOfCurrency(cETH.address, tokenAmount);
 
       await expect(vaultBal).to.be.equal(tokenAmount);
+      */
     });
   }
 }
@@ -494,6 +505,8 @@ module.exports = {
   ASSETS,
   VAULTS: getVaults(),
   testDeposit1,
+  yell
+  /*
   testDeposit2,
   testBorrow1,
   testBorrow2,
@@ -504,4 +517,5 @@ module.exports = {
   testRefinance1,
   testRefinance2,
   testRefinance3,
+  */
 };

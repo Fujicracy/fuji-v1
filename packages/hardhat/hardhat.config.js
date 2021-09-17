@@ -24,7 +24,7 @@ let mainnetUrl = process.env.ALCHEMY_ID
   ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_ID}`
   : `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`;
 
-switch (process.env.FORK_NETWORK) {
+switch (process.env.NETWORK) {
   case 'fantom':
     forkURL = `https://rpc.ftm.tools/`;
     break;

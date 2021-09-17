@@ -4,7 +4,6 @@ const { createFixtureLoader } = require("ethereum-waffle");
 const { getContractAt, provider } = ethers;
 
 const {
-  formatUnitsOfCurrency,
   formatUnitsToNum,
   parseUnits,
   toBN,
@@ -12,12 +11,22 @@ const {
   evmRevert,
   ZERO_ADDR,
 } = require("./utils-alpha");
-const { fixture, ASSETS, VAULTS } = require("./fantom-utils.js");
 
-const fuseAddrs = {
+const {
+  fixture,
+  ASSETS,
+  VAULTS,
+  testDeposit1,
+  yell
+} = require("./fantom-utils.js");
+
+const ftmAddrs = {
   ftmcreamComptroller: "0x4250A6D3BD57455d7C6821eECb6206F507576cD2",
+  ftmcreamMapper: "0x1eEdE44b91750933C96d2125b6757C4F89e63E20",
   screamComptroller: "0x260E596DAbE3AFc463e75B6CC05d8c46aCAcFB09",
+  screamMapper: "0xA9c29eA1a067740be6dB1F98FcbA0043C475041A"
 };
+
 const _vaults = {};
 for (const v of VAULTS) {
   _vaults[v.name] = v;
@@ -45,7 +54,7 @@ const {
   vaultwbtcweth
 } = _vaults;
 
-const [DEPOSIT_ERC20, BORROW_ERC20, DEPOSIT_ETH, BORROW_ETH] = [7000, 4000, 2, 1];
+const [DEPOSIT_ERC20, BORROW_ERC20, DEPOSIT_FTM, BORROW_FTM] = [750, 100, 750, 200];
 
 describe("Fantom Fuji Instance", function () {
   let f;
@@ -62,43 +71,55 @@ describe("Fantom Fuji Instance", function () {
     user1 = users[1];
 
     const loadFixture = createFixtureLoader(users, provider);
-    f = await loadFixture(fixture);
+    this.f = await loadFixture(fixture);
     evmSnapshot0 = await evmSnapshot();
 
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper
+      await this.f.swapper
         .connect(users[x])
         .swapETHForExactTokens(
-          parseUnits(10000),
-          [ASSETS.WETH.address, ASSETS.DAI.address],
+          parseUnits(500),
+          [ASSETS.WFTM.address, ASSETS.DAI.address],
           users[x].address,
           block.timestamp + x + 1,
-          { value: parseUnits(10) }
+          { value: parseUnits(500) }
         );
     }
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper
+      await this.f.swapper
         .connect(users[x])
         .swapETHForExactTokens(
-          10000e6,
-          [ASSETS.WETH.address, ASSETS.USDC.address],
+          500e6,
+          [ASSETS.WFTM.address, ASSETS.USDC.address],
           users[x].address,
           block.timestamp + x + 1,
-          { value: parseUnits(10) }
+          { value: parseUnits(500) }
         );
     }
     for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
-      await f.swapper
+      await this.f.swapper
         .connect(users[x])
         .swapETHForExactTokens(
-          parseUnits(10000),
-          [ASSETS.WETH.address, ASSETS.FEI.address],
+          parseUnits(.1),
+          [ASSETS.WFTM.address, ASSETS.WETH.address],
           users[x].address,
           block.timestamp + x + 1,
-          { value: parseUnits(10) }
+          { value: parseUnits(500) }
+        );
+    }
+    for (let x = 0; x < 4; x += 1) {
+      const block = await provider.getBlock();
+      await this.f.swapper
+        .connect(users[x])
+        .swapETHForExactTokens(
+          500000, // 500k sats
+          [ASSETS.WFTM.address, ASSETS.WBTC.address],
+          users[x].address,
+          block.timestamp + x + 1,
+          { value: parseUnits(500) }
         );
     }
 
@@ -115,18 +136,27 @@ describe("Fantom Fuji Instance", function () {
     evmRevert(evmSnapshot0);
   });
 
-  describe("Pool 3", function () {
+  describe("Fantom Cream", function () {
     before(async function () {
       //evmRevert(evmSnapshot1);
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse3.address]);
-        await f[vault.name].setActiveProvider(f.fuse3.address);
+        await this.f[vault.name].setProviders([this.f.ftmcream.address]);
+        await this.f[vault.name].setActiveProvider(this.f.ftmcream.address);
       }
     });
 
-    testDeposit1(fuseAddrs.fuse3Comptroller, [vaultethdai, vaultethusdc]);
+    yell();
+
+    testDeposit1(
+      this.f,
+      ftmAddrs.ftmcreamMapper,
+      [vaultwftmdai],
+      DEPOSIT_ERC20
+    );
+
+    /*
     testDeposit2(fuseAddrs.fuse3Comptroller, [vaultdaiusdc, vaultusdcdai]);
 
     testBorrow1([vaultethdai, vaultethusdc]);
@@ -140,8 +170,10 @@ describe("Fantom Fuji Instance", function () {
     testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
     testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
     testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
+    */
   });
 
+  /*
   describe("Pool 6", function () {
     before(async function () {
       // REVERT to 2
@@ -269,4 +301,5 @@ describe("Fantom Fuji Instance", function () {
     testRefinance2([vaultusdcdai], "fuse18", "fuse3", 1);
     testRefinance3([vaultdaieth, vaultfeieth], "fuse18", "fuse8", 2);
   });
+  */
 });

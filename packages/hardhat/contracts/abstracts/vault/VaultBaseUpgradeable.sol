@@ -25,7 +25,7 @@ abstract contract VaultControlUpgradeable is OwnableUpgradeable, PausableUpgrade
   }
 
   /**
-   * @dev Emergency Call to stop all basic money flow functions.
+   * @dev Emergency Call to enable again basic money flow functions.
    */
   function unpause() public onlyOwner {
     _unpause();
