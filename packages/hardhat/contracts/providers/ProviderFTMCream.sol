@@ -24,10 +24,10 @@ contract HelperFunct {
     return 0x4250A6D3BD57455d7C6821eECb6206F507576cD2; // Cream fantom
   }
 
-  //IronBank functions
+  //fantomCream functions
 
   /**
-   * @dev Approves vault's assets as collateral for IronBank Protocol.
+   * @dev Approves vault's assets as collateral for fantomCream Protocol.
    * @param _cyTokenAddress: asset type to be approved as collateral.
    */
   function _enterCollatMarket(address _cyTokenAddress) internal {
@@ -40,7 +40,7 @@ contract HelperFunct {
   }
 
   /**
-   * @dev Removes vault's assets as collateral for IronBank Protocol.
+   * @dev Removes vault's assets as collateral for fantomCream Protocol.
    * @param _cyTokenAddress: asset type to be removed as collateral.
    */
   function _exitCollatMarket(address _cyTokenAddress) internal {
@@ -86,7 +86,7 @@ contract ProviderFTMCream is IProvider, HelperFunct {
     //Approve to move ERC20tokens
     erc20token.univApprove(address(cyTokenAddr), _amount);
 
-    // IronBank Protocol mints cyTokens, trhow error if not
+    // fantomCream Protocol mints cyTokens, trhow error if not
     require(cyToken.mint(_amount) == 0, "Deposit-failed");
   }
 
@@ -102,7 +102,7 @@ contract ProviderFTMCream is IProvider, HelperFunct {
     // Create a reference to the corresponding cyToken contract
     IGenCToken cyToken = IGenCToken(cyTokenAddr);
 
-    //IronBank Protocol Redeem Process, throw errow if not.
+    //fantomCream Protocol Redeem Process, throw errow if not.
     require(cyToken.redeemUnderlying(_amount) == 0, "Withdraw-failed");
 
     if (_isFTM(_asset)) {
@@ -123,10 +123,10 @@ contract ProviderFTMCream is IProvider, HelperFunct {
     // Create a reference to the corresponding cyToken contract
     IGenCToken cyToken = IGenCToken(cyTokenAddr);
 
-    //Enter and/or ensure collateral market is enacted
-    //_enterCollatMarket(cyTokenAddr);
+    // Enter and/or ensure collateral market is enacted
+    // _enterCollatMarket(cyTokenAddr);
 
-    //IronBank Protocol Borrow Process, throw errow if not.
+    // fantomCream Protocol Borrow Process, throw errow if not.
     require(cyToken.borrow(_amount) == 0, "borrow-failed");
   }
 
@@ -164,10 +164,10 @@ contract ProviderFTMCream is IProvider, HelperFunct {
   function getBorrowRateFor(address _asset) external view override returns (uint256) {
     address cyTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
 
-    //Block Rate transformed for common mantissa for Fuji in ray (1e27), Note: IronBank uses base 1e18
+    //Block Rate transformed for common mantissa for Fuji in ray (1e27), Note: fantomCream uses base 1e18
     uint256 bRateperBlock = IGenCToken(cyTokenAddr).borrowRatePerBlock() * 10**9;
 
-    // The approximate number of blocks per year that is assumed by the IronBank interest rate model
+    // The approximate number of blocks per year that is assumed by the fantomCream interest rate model
     uint256 blocksperYear = 2102400;
     return bRateperBlock * blocksperYear;
   }
@@ -184,7 +184,7 @@ contract ProviderFTMCream is IProvider, HelperFunct {
 
   /**
    * @dev Return borrow balance of ETH/ERC20_Token.
-   * This function is the accurate way to get IronBank borrow balance.
+   * This function is the accurate way to get fantomCream borrow balance.
    * It costs ~84K gas and is not a view function.
    * @param _asset token address to query the balance.
    * @param _who address of the account.

@@ -17,7 +17,10 @@ const {
   ASSETS,
   VAULTS,
   testDeposit1,
-  yell
+  testDeposit2,
+  testBorrow1,
+  testBorrow2,
+  testBorrow3
 } = require("./fantom-utils.js");
 
 const ftmAddrs = {
@@ -32,10 +35,16 @@ for (const v of VAULTS) {
   _vaults[v.name] = v;
 }
 const {
+  vaultftmdai,
+  vaultftmusdc,
+  vaultftmweth,
+  vaultftmwbtc,
+  vaultdaiftm,
   vaultdaiusdc,
   vaultdaiwftm,
   vaultdaiweth,
   vaultdaiwbtc,
+  vaultusdcftm,
   vaultusdcdai,
   vaultusdcwftm,
   vaultusdcweth,
@@ -44,17 +53,31 @@ const {
   vaultwftmusdc,
   vaultwftmweth,
   vaultwftmwbtc,
+  vaultwethftm,
   vaultwethdai,
   vaultwethusdc,
   vaultwethwftm,
   vaultwethwbtc,
+  vaultwbtcftm,
   vaultwbtcdai,
   vaultwbtcusdc,
   vaultwbtcwftm,
   vaultwbtcweth
 } = _vaults;
 
-const [DEPOSIT_ERC20, BORROW_ERC20, DEPOSIT_FTM, BORROW_FTM] = [750, 100, 750, 200];
+const [
+  DEPOSIT_STABLE,
+  DEPOSIT_FTM,
+  DEPOSIT_WETH,
+  DEPOSIT_WBTC
+] = [400, 400,  0.1, .0075];
+
+const [
+  BORROW_STABLE,
+  BORROW_FTM,
+  BORROW_WETH,
+  BORROW_WBTC
+] = [DEPOSIT_STABLE/2, DEPOSIT_FTM/2, DEPOSIT_WETH/2, DEPOSIT_WBTC/2];
 
 describe("Fantom Fuji Instance", function () {
   let f;
@@ -79,7 +102,7 @@ describe("Fantom Fuji Instance", function () {
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
-          parseUnits(500),
+          parseUnits(DEPOSIT_STABLE),
           [ASSETS.WFTM.address, ASSETS.DAI.address],
           this.users[x].address,
           block.timestamp + x + 1,
@@ -91,7 +114,7 @@ describe("Fantom Fuji Instance", function () {
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
-          500e6,
+          parseUnits(DEPOSIT_STABLE,6),
           [ASSETS.WFTM.address, ASSETS.USDC.address],
           this.users[x].address,
           block.timestamp + x + 1,
@@ -103,7 +126,7 @@ describe("Fantom Fuji Instance", function () {
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
-          parseUnits(.1),
+          parseUnits(DEPOSIT_WETH),
           [ASSETS.WFTM.address, ASSETS.WETH.address],
           this.users[x].address,
           block.timestamp + x + 1,
@@ -115,7 +138,7 @@ describe("Fantom Fuji Instance", function () {
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
-          500000, // 500k sats
+          parseUnits(DEPOSIT_WBTC,8),
           [ASSETS.WFTM.address, ASSETS.WBTC.address],
           this.users[x].address,
           block.timestamp + x + 1,
@@ -136,7 +159,7 @@ describe("Fantom Fuji Instance", function () {
     evmRevert(evmSnapshot0);
   });
 
-  describe("Fantom Cream", function () {
+  describe("Fantom Cream Provider Tests", function () {
     before(async function () {
       //evmRevert(evmSnapshot1);
 
@@ -147,20 +170,26 @@ describe("Fantom Fuji Instance", function () {
       }
     });
 
-    yell();
-
+    /*
     testDeposit1(
       ftmAddrs.ftmcreamMapper,
-      [vaultwftmdai],
-      DEPOSIT_ERC20
+      [vaultftmdai,vaultftmusdc,vaultftmweth,vaultftmwbtc],
+      DEPOSIT_FTM
     );
+    testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiftm,vaultusdcftm], DEPOSIT_STABLE);
+    testDeposit2(ftmAddrs.ftmcreamMapper, [vaultwethftm], DEPOSIT_WETH);
+    testDeposit2(ftmAddrs.ftmcreamMapper, [vaultwbtcftm], DEPOSIT_WBTC);
 
+    testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+    testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+    testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+
+
+    testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+    */
+
+    testBorrow3([vaultdaiftm],DEPOSIT_STABLE,BORROW_FTM);
     /*
-    testDeposit2(fuseAddrs.fuse3Comptroller, [vaultdaiusdc, vaultusdcdai]);
-
-    testBorrow1([vaultethdai, vaultethusdc]);
-    testBorrow2([vaultdaiusdc, vaultusdcdai]);
-    testBorrow3([vaultdaieth]);
 
     testPaybackAndWithdraw1([vaultethdai, vaultethusdc]);
     testPaybackAndWithdraw2([vaultdaiusdc, vaultusdcdai]);
@@ -173,7 +202,7 @@ describe("Fantom Fuji Instance", function () {
   });
 
   /*
-  describe("Pool 6", function () {
+  describe("Fantom Scream! Provider Tests", function () {
     before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
@@ -209,96 +238,5 @@ describe("Fantom Fuji Instance", function () {
     //testRefinance3([vaultdaieth], "fuse6", "fuse18", 1);
   });
 
-  describe("Pool 7", function () {
-    before(async function () {
-      // REVERT to 2
-      evmRevert(evmSnapshot2);
-
-      for (let i = 0; i < VAULTS.length; i += 1) {
-        const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse7.address]);
-        await f[vault.name].setActiveProvider(f.fuse7.address);
-      }
-    });
-
-    testDeposit1(fuseAddrs.fuse7Comptroller, [vaultethusdc, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse7Comptroller, [vaultfeiusdc, vaultusdcfei]);
-
-    testBorrow1([vaultethusdc, vaultethfei]);
-    testBorrow2([vaultfeiusdc, vaultusdcfei]);
-    // borrowing ETH is paused on this pool
-    //testBorrow3([vaultdaieth, vaultfeieth]);
-
-    testPaybackAndWithdraw1([vaultethusdc, vaultethfei]);
-    testPaybackAndWithdraw2([vaultfeiusdc, vaultusdcfei]);
-    // borrowing ETH is paused on this pool
-    //testPaybackAndWithdraw3([vaultdaieth, vaultfeieth]);
-
-    testRefinance1([vaultethfei, vaultethusdc], "fuse7", "fuse18", 2);
-    testRefinance2([vaultusdcfei], "fuse7", "fuse18", 2);
-    // borrowing ETH is paused on this pool
-    //testRefinance3([vaultfeieth], "fuse7", "fuse18", 1);
-  });
-
-  describe("Pool 8", function () {
-    before(async function () {
-      // REVERT to 2
-      evmRevert(evmSnapshot2);
-
-      for (let i = 0; i < VAULTS.length; i += 1) {
-        const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse8.address]);
-        await f[vault.name].setActiveProvider(f.fuse8.address);
-      }
-    });
-
-    testDeposit1(fuseAddrs.fuse8Comptroller, [vaultethdai, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse8Comptroller, [vaultfeidai, vaultdaifei]);
-
-    testBorrow1([vaultethdai, vaultethfei]);
-    testBorrow2([vaultfeidai, vaultdaifei]);
-    testBorrow3([vaultdaieth, vaultfeieth]);
-
-    testPaybackAndWithdraw1([vaultethdai, vaultethfei]);
-    testPaybackAndWithdraw2([vaultfeidai, vaultdaifei]);
-    testPaybackAndWithdraw3([vaultdaieth, vaultfeieth]);
-
-    testRefinance1([vaultethfei, vaultethdai], "fuse8", "fuse18", 2);
-    testRefinance2([vaultdaifei, vaultfeidai], "fuse8", "fuse18", 2);
-    testRefinance3([vaultdaieth, vaultfeieth], "fuse8", "fuse18", 1);
-  });
-
-  describe("Pool 18", function () {
-    before(async function () {
-      // REVERT to 2
-      evmRevert(evmSnapshot2);
-
-      for (let i = 0; i < VAULTS.length; i += 1) {
-        const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse18.address]);
-        await f[vault.name].setActiveProvider(f.fuse18.address);
-      }
-    });
-
-    testDeposit1(fuseAddrs.fuse18Comptroller, [vaultethdai, vaultethusdc, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse18Comptroller, [
-      vaultdaiusdc,
-      vaultusdcdai,
-      vaultdaiusdt,
-      vaultdaieth,
-    ]);
-
-    testBorrow1([vaultethdai, vaultethusdc, vaultethfei]);
-    testBorrow2([vaultdaiusdc, vaultusdcdai]);
-    testBorrow3([vaultdaieth, vaultfeieth]);
-
-    testPaybackAndWithdraw1([vaultethdai, vaultethusdc, vaultethfei]);
-    testPaybackAndWithdraw2([vaultdaiusdc, vaultusdcdai]);
-    testPaybackAndWithdraw3([vaultdaieth, vaultfeieth]);
-
-    testRefinance1([vaultethfei, vaultethusdc], "fuse18", "fuse6", 2);
-    testRefinance2([vaultusdcdai], "fuse18", "fuse3", 1);
-    testRefinance3([vaultdaieth, vaultfeieth], "fuse18", "fuse8", 2);
-  });
   */
 });
