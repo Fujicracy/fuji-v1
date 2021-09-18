@@ -43,7 +43,7 @@ const DropDown = ({ options, defaultOption, isSelectable }) => {
         >
           <AnimatedCounter countTo={selectedOption?.rate} /> %
         </Box>
-        <Box width={1 / 7} display="flex" alignItems="center" justifyContent="center">
+        <Box width={1 / 7} display="flex" alignItems="center" justifyContent="flex-end" pr={1}>
           <Image src={isOpen ? closeIcon : plusIcon} width={12} height={12} />
         </Box>
       </DropDownHeader>

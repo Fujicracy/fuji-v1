@@ -26,12 +26,12 @@ const Button = styled(Box).attrs({
   transition: all ${themeGet('transitionTime')} ease;
   box-shadow: ${props => !props.outline && mapToTheme('buttons.shadow')};
   cursor: pointer;
+  width: ${props => props.width && props.width};
   ${props =>
     props.block &&
     css`
       width: 100%;
     `}
-
   svg {
     position: absolute;
     left: 8px;
