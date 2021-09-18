@@ -4,8 +4,9 @@
 
 .positions-container {
   /* z-index: 1; */
-  margin: 72px 100px;
-  max-width: 71rem;
+  margin: 64px 112px;
+  min-width: 71rem;
+  width: 71rem;
   min-height: calc(100vh - 13.125rem);
   /*padding: 0rem 2rem;*/
   display: flex;
@@ -245,7 +246,15 @@
   margin-top: 80px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 450px) {
+  .positions-container {
+    margin: 40px 28px;
+    min-width: 320px;
+    width: 320px;
+  }
+}
+
+@media screen and (min-width: 451px) and (max-width: 1120px) {
   .one-position{
     padding: 16px 0px 16px 28px;
     display: flex;
@@ -256,6 +265,8 @@
   }
   .positions-container {
     margin: 40px 28px;
+    min-width: 420px;
+    width: 420px;
   }
 
   .positions h3 {
@@ -287,10 +298,6 @@
 }
 
 @media screen and (min-width: 768px) and (max-width: 992px) {
-  .positions-container {
-    margin: 64px 112px;
-  }
-
   .one-position{
     padding: 16px 0px 16px 28px;
     display: flex;

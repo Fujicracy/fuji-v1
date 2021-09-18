@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 // import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const Container = styled(Box)`
   margin-top: 72px !important;
@@ -13,7 +13,7 @@ export const Container = styled(Box)`
   padding-bottom: 24px 0px 64px;
   position: relative;
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     margin-top: 0px !important;
   `}
 `;
@@ -34,11 +34,11 @@ export const Helper = styled(Box)`
   font-size: 10px;
   padding: 8px;
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     margin: -8px -12px 16px -12px !important;
   `}
 
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     font-size: 12px;
     margin-top: -4px;
   `}

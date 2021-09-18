@@ -13,6 +13,7 @@ import { PositionRatios } from '../../helpers';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
 
 import './styles.css';
+import { ChartContainer } from './style';
 
 function hsl(r) {
   const hue = (r / 100) * 120;
@@ -114,28 +115,30 @@ function CollaterizationIndicator({ position }) {
             </SectionTitle>
           </Flex>
           <Flex width={1 / 1}>
-            <svg viewBox="0 0 100 4" className="inner-progress">
-              <animated.path
-                className="progress"
-                stroke={hsl(healthRatio)}
-                style={props}
-                d="M 3 2 l 100 0"
-              />
-            </svg>
+            <div className="inner-progress">
+              <ChartContainer viewBox="0 0 100 4" filterColor={hsl(healthRatio)}>
+                <animated.path
+                  className="progress"
+                  stroke={hsl(healthRatio)}
+                  style={props}
+                  d="M 3 2 l 100 0"
+                />
+              </ChartContainer>
+            </div>
           </Flex>
         </>
       ) : (
         <>
           <div className="ratio">
             <div className="svg-chart">
-              <svg viewBox="0 0 36 36" className="inner-chart">
+              <ChartContainer viewBox="0 0 36 36" filterColor={hsl(healthRatio)}>
                 <animated.path
                   className="circle"
                   stroke={hsl(healthRatio)}
                   style={props}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-              </svg>
+              </ChartContainer>
             </div>
             <div className="percentage-chart">
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}

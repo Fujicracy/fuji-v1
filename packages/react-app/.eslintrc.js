@@ -27,6 +27,7 @@ module.exports = {
     'brace-style': ['error', '1tbs'],
     'prettier/prettier': ['error', prettierOptions],
     'react/forbid-prop-types': 'off',
+    'react/jsx-no-bind': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
