@@ -15,12 +15,13 @@ import "./interfaces/IFujiAdmin.sol";
 import "./interfaces/IFujiOracle.sol";
 import "./interfaces/IFujiERC1155.sol";
 import "./interfaces/IProvider.sol";
+import "./interfaces/IWETH.sol";
 import "./libraries/Errors.sol";
-import "./libraries/LibUniversalERC20.sol";
+import "./libraries/LibUniversalERC20FTM.sol";
 
 contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
   using SafeERC20 for IERC20;
-  using LibUniversalERC20 for IERC20;
+  using LibUniversalERC20FTM for IERC20;
 
   address public constant FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
@@ -263,6 +264,10 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
     // Delegate Call Borrow to current provider
     _borrow(_borrowAmount, address(activeProvider));
+
+    if(vAssets.borrowAsset == FTM) {
+      IWETH(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).withdraw(_borrowAmount);
+    }
 
     // Transer Assets to User
     IERC20(vAssets.borrowAsset).univTransfer(payable(msg.sender), _borrowAmount);

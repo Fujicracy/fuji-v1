@@ -12,6 +12,8 @@ const {
 const SPOOKY_ROUTER_ADDR = "0xF491e7B69E4244ad4002BC14e878a34207E38c29";
 const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
 
+const DEBUG = false;
+
 const ASSETS = {
   FTM: {
     name: "ftm",
@@ -113,6 +115,18 @@ const fixture = async ([wallet]) => {
   const ProviderScream = await getContractFactory("ProviderScream");
   const scream = await ProviderFTMCream.deploy([]);
 
+  // Log if debug is set true
+  if(DEBUG) {
+    console.log("fujiadmin", fujiadmin.address);
+    console.log("fliquidator", fliquidator.address);
+    console.log("flasher", flasher.address);
+    console.log("controller", controller.address);
+    console.log("f1155", f1155.address);
+    console.log("oracle", oracle.address);
+    console.log("ftmcream", ftmcream.address);
+    console.log("scream", scream.address);
+  }
+
   // Setp 3: Vaults
   const FujiVaultFTM = await getContractFactory("FujiVaultFTM");
   // deploy a vault for each entry in ASSETS
@@ -124,6 +138,9 @@ const fixture = async ([wallet]) => {
       collateral.address,
       debt.address,
     ]);
+
+    if(DEBUG) {console.log(name,vault.address);}
+
     await f1155.setPermit(vault.address, true);
     await vault.setFujiERC1155(f1155.address);
     await fujiadmin.allowVault(vault.address, true);
@@ -277,6 +294,7 @@ function testBorrow2 (vaults, amountToDeposit, amountToBorrow) {
 function testBorrow3(vaults, amountToDeposit, amountToBorrow) {
   for (let i = 0; i < vaults.length; i += 1) {
     const { name, collateral, debt } = vaults[i];
+    console.log(vaults[i]);
     it(`borrow ${amountToBorrow} FTM after depositing ${amountToDeposit} ERC20 -> ${collateral.nameUp} as collateral`, async function () {
       const depositAmount = parseUnits(amountToDeposit, collateral.decimals);
       const negdepositAmount = parseUnits(-amountToDeposit, collateral.decimals);
@@ -289,7 +307,7 @@ function testBorrow3(vaults, amountToDeposit, amountToBorrow) {
         this.user1,
         negdepositAmount
       );
-      console.log('deposit done');
+
       await expect(await this.f.f1155.balanceOf(this.user1.address, collateralID)).to.be.equal(
         depositAmount
       );
@@ -298,85 +316,86 @@ function testBorrow3(vaults, amountToDeposit, amountToBorrow) {
         this.user1,
         borrowAmount
       );
+
       await expect(await this.f.f1155.balanceOf(this.user1.address, borrowID)).to.be.equal(borrowAmount);
     });
   }
 }
 
-/*
-const testPaybackAndWithdraw1 = (vaults) => {
+function testPaybackAndWithdraw1 (vaults, amountToDeposit, amountToBorrow) {
   for (let i = 0; i < vaults.length; i += 1) {
     const { name, collateral, debt } = vaults[i];
-    it(`payback ERC20 -> ${debt.nameUp} and withdraw ETH`, async function () {
-      const depositAmount = parseUnits(DEPOSIT_ETH);
-      const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
+    it(`payback ${amountToBorrow} ERC20 -> ${debt.nameUp} and withdraw ${amountToDeposit} FTM`, async function () {
+      const depositAmount = parseUnits(amountToDeposit);
+      const borrowAmount = parseUnits(amountToBorrow, debt.decimals);
       const one = parseUnits(1, debt.decimals);
-      const negborrowAmount = parseUnits(-BORROW_ERC20, debt.decimals);
-      const { collateralID, borrowID } = await f[name].vAssets();
+      const negborrowAmount = parseUnits(-amountToBorrow, debt.decimals);
+      const { collateralID, borrowID } = await this.f[name].vAssets();
       // boostrap vault
-      await f[name].connect(users[0]).deposit(depositAmount, { value: depositAmount });
+      await this.f[name].connect(this.users[0]).deposit(depositAmount, { value: depositAmount });
 
       for (let x = 1; x < 4; x += 1) {
-        await f[name]
-          .connect(users[x])
+        await this.f[name]
+          .connect(this.users[x])
           .depositAndBorrow(depositAmount, borrowAmount, { value: depositAmount });
       }
 
       for (let x = 1; x < 4; x += 1) {
-        await f[debt.name].connect(users[x]).approve(f[name].address, borrowAmount);
-        await expect(() => f[name].connect(users[x]).payback(borrowAmount)).to.changeTokenBalance(
-          f[debt.name],
-          users[x],
+        await this.f[debt.name].connect(this.users[x]).approve(this.f[name].address, borrowAmount);
+        await expect(() => this.f[name].connect(this.users[x]).payback(borrowAmount)).to.changeTokenBalance(
+          this.f[debt.name],
+          this.users[x],
           negborrowAmount
         );
-        await expect(await f.f1155.balanceOf(users[x].address, borrowID)).to.be.lt(one);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, borrowID)).to.be.lt(one);
       }
 
       for (let x = 1; x < 4; x += 1) {
-        await f[name].connect(users[x]).withdraw(-1);
-        await expect(await f.f1155.balanceOf(users[x].address, collateralID)).to.be.lt(1e13);
+        await this.f[name].connect(this.users[x]).withdraw(-1);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, collateralID)).to.be.lt(1e13);
       }
     });
   }
 }
 
-const testPaybackAndWithdraw2 = (vaults) => {
+function testPaybackAndWithdraw2 (vaults, amountToDeposit, amountToBorrow) {
   for (let i = 0; i < vaults.length; i += 1) {
     const { name, collateral, debt } = vaults[i];
-    it(`payback ERC20 -> ${debt.nameUp} and withdraw ERC20 -> ${collateral.nameUp}`, async () => {
-      const depositAmount = parseUnits(DEPOSIT_ERC20, collateral.decimals);
-      const borrowAmount = parseUnits(BORROW_ERC20, debt.decimals);
-      const negborrowAmount = parseUnits(-BORROW_ERC20, debt.decimals);
-      const { collateralID, borrowID } = await f[name].vAssets();
+    it(`payback ${amountToBorrow} ERC20 -> ${debt.nameUp} and withdraw ${amountToDeposit} ERC20 -> ${collateral.nameUp}`, async function () {
+      const depositAmount = parseUnits(amountToDeposit, collateral.decimals);
+      const borrowAmount = parseUnits(amountToBorrow, debt.decimals);
+      const negborrowAmount = parseUnits(-amountToBorrow, debt.decimals);
+      const { collateralID, borrowID } = await this.f[name].vAssets();
       // boostrap vault
-      await f[collateral.name].connect(users[0]).approve(f[name].address, depositAmount);
-      await f[name].connect(users[0]).deposit(depositAmount);
+      await this.f[collateral.name].connect(this.users[0]).approve(this.f[name].address, depositAmount);
+      await this.f[name].connect(this.users[0]).deposit(depositAmount);
 
       for (let x = 1; x < 4; x += 1) {
-        await f[collateral.name].connect(users[x]).approve(f[name].address, depositAmount);
-        await f[name].connect(users[x]).depositAndBorrow(depositAmount, borrowAmount);
+        await this.f[collateral.name].connect(this.users[x]).approve(this.f[name].address, depositAmount);
+        await this.f[name].connect(this.users[x]).depositAndBorrow(depositAmount, borrowAmount);
       }
 
       const oneDebt = parseUnits(1, debt.decimals);
       for (let x = 1; x < 4; x += 1) {
-        await f[debt.name].connect(users[x]).approve(f[name].address, borrowAmount);
-        await expect(() => f[name].connect(users[x]).payback(borrowAmount)).to.changeTokenBalance(
-          f[debt.name],
-          users[x],
+        await this.f[debt.name].connect(this.users[x]).approve(this.f[name].address, borrowAmount);
+        await expect(() => this.f[name].connect(this.users[x]).payback(borrowAmount)).to.changeTokenBalance(
+          this.f[debt.name],
+          this.users[x],
           negborrowAmount
         );
-        await expect(await f.f1155.balanceOf(users[x].address, borrowID)).to.be.lt(oneDebt);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, borrowID)).to.be.lt(oneDebt);
       }
 
       const oneCol = parseUnits(1, collateral.decimals);
       for (let x = 1; x < 4; x += 1) {
-        await f[name].connect(users[x]).withdraw(-1);
-        await expect(await f.f1155.balanceOf(users[x].address, collateralID)).to.be.lt(oneCol);
+        await this.f[name].connect(this.users[x]).withdraw(-1);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, collateralID)).to.be.lt(oneCol);
       }
     });
   }
 }
 
+/*
 const testPaybackAndWithdraw3 = (vaults) => {
   for (let i = 0; i < vaults.length; i += 1) {
     const { name, collateral, debt } = vaults[i];
@@ -518,9 +537,9 @@ module.exports = {
   testBorrow1,
   testBorrow2,
   testBorrow3,
-  /*
   testPaybackAndWithdraw1,
   testPaybackAndWithdraw2,
+  /*
   testPaybackAndWithdraw3,
   testRefinance1,
   testRefinance2,
