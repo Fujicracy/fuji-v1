@@ -97,13 +97,8 @@ describe("Fantom Fuji Instance", function () {
     evmSnapshot0 = await evmSnapshot();
 
     for (let x = 0; x < 4; x += 1) {
-      await this.f.ftmWrapper
-        .connect(this.users[x])
-        .deposit(
-          { value: parseUnits(500) }
-        );
-    }
-    for (let x = 0; x < 4; x += 1) {
+      await this.f.ftmWrapper.connect(this.users[x]).deposit({ value: parseUnits(500) });
+
       const block = await provider.getBlock();
       await this.f.swapper
         .connect(this.users[x])
@@ -111,43 +106,34 @@ describe("Fantom Fuji Instance", function () {
           parseUnits(DEPOSIT_STABLE),
           [ASSETS.WFTM.address, ASSETS.DAI.address],
           this.users[x].address,
-          block.timestamp + x + 1,
+          block.timestamp + 60,
           { value: parseUnits(500) }
         );
-    }
-    for (let x = 0; x < 4; x += 1) {
-      const block = await provider.getBlock();
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
           parseUnits(DEPOSIT_STABLE, 6),
           [ASSETS.WFTM.address, ASSETS.USDC.address],
           this.users[x].address,
-          block.timestamp + x + 1,
+          block.timestamp + 60,
           { value: parseUnits(500) }
         );
-    }
-    for (let x = 0; x < 4; x += 1) {
-      const block = await provider.getBlock();
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
           parseUnits(DEPOSIT_WETH),
           [ASSETS.WFTM.address, ASSETS.WETH.address],
           this.users[x].address,
-          block.timestamp + x + 1,
+          block.timestamp + 60,
           { value: parseUnits(500) }
         );
-    }
-    for (let x = 0; x < 4; x += 1) {
-      const block = await provider.getBlock();
       await this.f.swapper
         .connect(this.users[x])
         .swapETHForExactTokens(
           parseUnits(DEPOSIT_WBTC, 8),
           [ASSETS.WFTM.address, ASSETS.WBTC.address],
           this.users[x].address,
-          block.timestamp + x + 1,
+          block.timestamp + 60,
           { value: parseUnits(500) }
         );
     }
@@ -232,7 +218,6 @@ describe("Fantom Fuji Instance", function () {
     // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
 
-  /*
   describe("Scream! as Provider", function () {
     before(async function () {
       // REVERT to 2
@@ -240,34 +225,65 @@ describe("Fantom Fuji Instance", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse6.address]);
-        await f[vault.name].setActiveProvider(f.fuse6.address);
+        await this.f[vault.name].setProviders([this.f.scream.address]);
+        await this.f[vault.name].setActiveProvider(this.f.scream.address);
       }
     });
 
-    testDeposit1(fuseAddrs.fuse6Comptroller, [vaultethdai, vaultethusdc, vaultethfei]);
-    testDeposit2(fuseAddrs.fuse6Comptroller, [
-      vaultdaiusdc,
-      vaultusdcdai,
-      vaultdaiusdt,
-      vaultdaieth,
-    ]);
+    describe("Native token as collateral, ERC20 as borrow asset.", function () {
+      testDeposit1(
+        ftmAddrs.ftmcreamMapper,
+        [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
+        DEPOSIT_FTM
+      );
 
-    testBorrow1([vaultethdai, vaultethusdc, vaultethfei]);
-    testBorrow2([vaultdaiusdc, vaultusdcdai]);
-    // borrowing ETH is paused on this pool
-    //testBorrow3([vaultdaieth, vaultfeieth]);
+      testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+      testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+      testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
 
-    testPaybackAndWithdraw1([vaultethdai, vaultethusdc, vaultethfei]);
-    testPaybackAndWithdraw2([vaultdaiusdc, vaultusdcdai]);
-    // borrowing ETH is paused on this pool
-    //testPaybackAndWithdraw3([vaultdaieth, vaultfeieth]);
+      testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+      testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+      testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    });
 
-    testRefinance1([vaultethfei, vaultethusdc], "fuse6", "fuse18", 2);
-    testRefinance2([vaultusdcdai], "fuse6", "fuse18", 1);
-    // borrowing ETH is paused on this pool
-    //testRefinance3([vaultdaieth], "fuse6", "fuse18", 1);
+    describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
+        DEPOSIT_FTM
+      );
+      testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
+        DEPOSIT_WETH
+      );
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
+        DEPOSIT_WBTC
+      );
+
+      testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+      testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
+      testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
+      testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+      testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+
+      testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+      testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    });
+
+    describe("ERC20 token as collateral, native token as borrow asset.", function () {
+      testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
+
+      testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
+      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
+      testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
+    });
+
+    // testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
+    // testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
+    // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
-
-  */
 });

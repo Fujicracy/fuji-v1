@@ -3,7 +3,7 @@ const { expect } = require("chai");
 
 const { getContractAt, getContractFactory } = ethers;
 
-const { formatUnitsOfCurrency, parseUnits, toBN, advanceblocks, ZERO_ADDR } = require("./utils-alpha");
+const { formatUnitsOfCurrency, parseUnits, toBN, timeTravel, ZERO_ADDR } = require("./utils-alpha");
 
 const SPOOKY_ROUTER_ADDR = "0xF491e7B69E4244ad4002BC14e878a34207E38c29";
 const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
@@ -82,7 +82,10 @@ const fixture = async ([wallet]) => {
     tokens[`${ASSETS[asset].name}`] = await getContractAt("IERC20", ASSETS[asset].address);
   }
   const swapper = await getContractAt("IUniswapV2Router02", SPOOKY_ROUTER_ADDR);
-  const ftmWrapper = await getContractAt("contracts/interfaces/IWETH.sol:IWETH", ASSETS.WFTM.address);
+  const ftmWrapper = await getContractAt(
+    "contracts/interfaces/IWETH.sol:IWETH",
+    ASSETS.WFTM.address
+  );
 
   // Step 1: Base Contracts
   const FujiAdmin = await getContractFactory("FujiAdmin");
@@ -339,6 +342,7 @@ function testPaybackAndWithdraw1(vaults, amountToDeposit, amountToBorrow) {
         await this.f[name]
           .connect(this.users[x])
           .depositAndBorrow(depositAmount, borrowAmount, { value: depositAmount });
+        await timeTravel(60);
       }
 
       for (let x = 1; x < 4; x += 1) {
@@ -411,12 +415,16 @@ function testPaybackAndWithdraw3(vaults, amountToDeposit, amountToBorrow) {
       const negborrowAmount = parseUnits(-amountToBorrow);
       const { collateralID, borrowID } = await this.f[name].vAssets();
       // boostrap vault
-      await this.f[collateral.name].connect(this.users[0]).approve(this.f[name].address, depositAmount);
+      await this.f[collateral.name]
+        .connect(this.users[0])
+        .approve(this.f[name].address, depositAmount);
       await this.f[name].connect(this.users[0]).deposit(depositAmount);
 
       for (let x = 1; x < 4; x += 1) {
-        await this.f[collateral.name].connect(this.users[x]).approve(this.f[name].address, depositAmount);
-        await advanceblocks(1);
+        await this.f[collateral.name]
+          .connect(this.users[x])
+          .approve(this.f[name].address, depositAmount);
+        await timeTravel(60);
         await this.f[name].connect(this.users[x]).depositAndBorrow(depositAmount, borrowAmount);
       }
 
@@ -425,13 +433,17 @@ function testPaybackAndWithdraw3(vaults, amountToDeposit, amountToBorrow) {
         await expect(
           await this.f[name].connect(this.users[x]).payback(borrowAmount, { value: borrowAmount })
         ).to.changeEtherBalance(this.users[x], negborrowAmount);
-        await expect(await this.f.f1155.balanceOf(this.users[x].address, borrowID)).to.be.lt(fractionDebt);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, borrowID)).to.be.lt(
+          fractionDebt
+        );
       }
 
       const oneCol = parseUnits(1, collateral.decimals);
       for (let x = 1; x < 4; x += 1) {
         await this.f[name].connect(this.users[x]).withdraw(-1);
-        await expect(await this.f.f1155.balanceOf(this.users[x].address, collateralID)).to.be.lt(oneCol);
+        await expect(await this.f.f1155.balanceOf(this.users[x].address, collateralID)).to.be.lt(
+          oneCol
+        );
       }
     });
   }
