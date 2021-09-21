@@ -24,6 +24,7 @@ const {
   testBorrow3,
   testPaybackAndWithdraw1,
   testPaybackAndWithdraw2,
+  testPaybackAndWithdraw3,
 } = require("./fantom-utils");
 
 const ftmAddrs = {
@@ -96,6 +97,13 @@ describe("Fantom Fuji Instance", function () {
     evmSnapshot0 = await evmSnapshot();
 
     for (let x = 0; x < 4; x += 1) {
+      await this.f.ftmWrapper
+        .connect(this.users[x])
+        .deposit(
+          { value: parseUnits(500) }
+        );
+    }
+    for (let x = 0; x < 4; x += 1) {
       const block = await provider.getBlock();
       await this.f.swapper
         .connect(this.users[x])
@@ -157,7 +165,7 @@ describe("Fantom Fuji Instance", function () {
     evmRevert(evmSnapshot0);
   });
 
-  describe("Fantom Cream Provider Tests", function () {
+  describe("Cream as Provider", function () {
     before(async function () {
       // evmRevert(evmSnapshot1);
       for (let i = 0; i < VAULTS.length; i += 1) {
@@ -167,67 +175,65 @@ describe("Fantom Fuji Instance", function () {
       }
     });
 
-    // Native token as collateral, ERC20 as borrow asset.
+    describe("Native token as collateral, ERC20 as borrow asset.", function () {
+      testDeposit1(
+        ftmAddrs.ftmcreamMapper,
+        [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
+        DEPOSIT_FTM
+      );
 
-    testDeposit1(
-      ftmAddrs.ftmcreamMapper,
-      [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
-      DEPOSIT_FTM
-    );
+      testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+      testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+      testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
 
-    testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-    testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-    testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+      testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+      testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+      testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    });
 
-    testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-    testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-    testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
+        DEPOSIT_FTM
+      );
+      testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
+        DEPOSIT_WETH
+      );
+      testDeposit2(
+        ftmAddrs.ftmcreamMapper,
+        [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
+        DEPOSIT_WBTC
+      );
 
-    // ERC20 token as collateral, ERC20 as borrow asset.
+      testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+      testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
+      testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
+      testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+      testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
 
-    testDeposit2(
-      ftmAddrs.ftmcreamMapper,
-      [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
-      DEPOSIT_FTM
-    );
-    testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
-    testDeposit2(
-      ftmAddrs.ftmcreamMapper,
-      [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
-      DEPOSIT_WETH
-    );
-    testDeposit2(
-      ftmAddrs.ftmcreamMapper,
-      [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
-      DEPOSIT_WBTC
-    );
+      testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+      testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    });
 
-    testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
-    testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
-    testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
-    testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-    testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    describe("ERC20 token as collateral, native token as borrow asset.", function () {
+      testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
 
-    testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-    testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+      testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
+      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
+      testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
+    });
 
-    // ERC20 token as collateral, native token as borrow asset.
-
-    testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
-    testPaybackAndWithdraw2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE * 0.5);
-    testPaybackAndWithdraw2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE * 0.5);
-
-    /*
-    testPaybackAndWithdraw3([vaultdaieth]);
-
-    testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
-    testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
-    testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
-    */
+    // testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
+    // testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
+    // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
 
   /*
-  describe("Fantom Scream! Provider Tests", function () {
+  describe("Scream! as Provider", function () {
     before(async function () {
       // REVERT to 2
       evmRevert(evmSnapshot2);
