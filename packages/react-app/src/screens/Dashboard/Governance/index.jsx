@@ -102,7 +102,9 @@ const Governance = ({ address }) => {
         height="100%"
       >
         <SectionTitle fontSize="16px">Claim NFT</SectionTitle>
-        <Image alt="NFT animation" src={nftAnimation} />
+        <Flex justifyContent="center" alignItems="center">
+          <Image alt="NFT animation" src={nftAnimation} />
+        </Flex>
         <SectionTitle
           fontSize="12px"
           color={isEligible ? '#50FE34' : 'rgb(255, 16, 85)'}
