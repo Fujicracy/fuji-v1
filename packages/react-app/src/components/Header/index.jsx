@@ -9,7 +9,7 @@ import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/imag
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
-import { Label, NavImageLink } from 'components/UI';
+import { Label, NavImageLink, Button } from 'components/UI';
 
 import { CONTACTS } from 'consts/contacts';
 import map from 'lodash/map';
@@ -110,7 +110,14 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                {/* <MenuItem>Claim My NFT</MenuItem> */}
+                <NavLink to="/dashboard/governance">
+                  <MenuItem
+                    isSelected={currentPage.pathname === '/dashboard/governance'}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Claim My NFT
+                  </MenuItem>
+                </NavLink>
               </Flex>
             </MenuContainer>
             <MenuNavigationContainer>
@@ -160,6 +167,21 @@ function Header() {
               <li className="nav-item">
                 <NavLink to="/dashboard/my-positions" activeClassName="current">
                   My positions
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/dashboard/governance" activeClassName="current">
+                  <Button
+                    block
+                    outline
+                    color="white"
+                    fontSize="16px"
+                    borderRadius="64"
+                    background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
+                  >
+                    Claim NFT
+                  </Button>
                 </NavLink>
               </li>
 
