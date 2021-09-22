@@ -51,7 +51,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
   const gasPrice = await getGasPrice();
   const ethPrice = await getETHPrice();
 
-  let gasLimit = await contracts.Fliquidator.estimateGas.flashBatchLiquidate(
+  let gasLimit = await contracts.Fliquidator.connect(signer).estimateGas.flashBatchLiquidate(
     positions.map(p => p.account),
     vault.address,
     index,
