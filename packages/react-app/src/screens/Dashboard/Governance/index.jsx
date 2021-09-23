@@ -1,30 +1,55 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { utils } from 'ethers';
+import { MerkleTree } from 'merkletreejs';
+import keccak256 from 'keccak256';
 // import { Grid } from '@material-ui/core';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { Grid } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { useExternalContractLoader, useAuth } from 'hooks';
 
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { Button } from 'components/UI';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, MERKLE_DROP_ABI } from 'consts';
 import { nftAnimation } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
 
 import { NftButton } from './style';
 
-const Governance = ({ address }) => {
+const leaves = ELIGIBLE_USERS.map(addr =>
+  Buffer.from(utils.solidityKeccak256(['address'], [addr]).slice(2), 'hex'),
+);
+const mtree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+
+const Governance = () => {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const eligibleUser = ELIGIBLE_USERS[address.toLowerCase()];
-  const isEligible = !!eligibleUser;
-  const isClaimed = eligibleUser?.isClaimed || false;
+  const { address, provider } = useAuth();
+
+  const [isClaimed, setIsClaimed] = useState(false);
+
+  const userIndex = ELIGIBLE_USERS.indexOf(address.toLowerCase());
+  const isEligible = userIndex !== -1;
+
+  const merkle = useExternalContractLoader(
+    provider,
+    '0x646977B16aF256E81288b329B7838aA77f30fd1A', // will be replaced with the real address
+    MERKLE_DROP_ABI,
+  );
+
+  const claimNFT = async () => {
+    const proof = mtree.getHexProof(leaves[userIndex]);
+    const tx = await merkle.claim(address, proof);
+    const res = await tx.wait();
+    console.log(res);
+  };
 
   const notification = isClaimed
     ? 'You have already claimed the NFT'
@@ -32,8 +57,20 @@ const Governance = ({ address }) => {
     ? 'You are eligible to claim the NFT'
     : 'Address has no available claim';
 
-  console.log({ isMobile, isTablet, eligibleUser });
+  console.log({ isMobile, isTablet, userIndex });
 
+  useEffect(() => {
+    async function check() {
+      if (address && merkle) {
+        const claimed = await merkle.isClaimed(address);
+        setIsClaimed(claimed);
+      }
+    }
+
+    check();
+  }, [merkle, address]);
+
+  /*
   const handleNftButton = () => {
     if (isClaimed) {
       window.open(`https://opensea.io/${address}`, '_blank');
@@ -41,6 +78,7 @@ const Governance = ({ address }) => {
       window.open(`https://opensea.io/${address}`, '_blank');
     }
   };
+  */
   return (
     <Flex
       flex
@@ -114,7 +152,7 @@ const Governance = ({ address }) => {
           {notification}
           {isEligible && <CheckCircleIcon color="green" style={{ fontSize: 14, marginLeft: 4 }} />}
         </SectionTitle>
-        <Button block mt={4} fontSize={16} onClick={handleNftButton} disabled={!isEligible}>
+        <Button block mt={4} fontSize={16} onClick={claimNFT} disabled={!isEligible}>
           {isClaimed ? 'View on OpenSea' : 'Claim NFT'}
         </Button>
       </BlackBoxContainer>
