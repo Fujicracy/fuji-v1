@@ -509,4 +509,86 @@ const CHAINLINK_ABI = [
   },
 ];
 
-export { ERC20_ABI, CHAINLINK_ABI };
+const MERKLE_DROP_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'merkleRoot_',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'address',
+        name: 'erc721address_',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes32[]',
+        name: 'proof',
+        type: 'bytes32[]',
+      },
+    ],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'erc721address',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'isClaimed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'merkleRoot',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
+
+export { ERC20_ABI, CHAINLINK_ABI, MERKLE_DROP_ABI };
