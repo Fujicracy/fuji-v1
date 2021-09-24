@@ -110,7 +110,7 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                <NavLink to="/dashboard/governance">
+                <NavLink to="/governance">
                   <MenuItem
                     isSelected={currentPage.pathname === '/dashboard/governance'}
                     onClick={() => setIsMenuOpen(false)}
@@ -171,7 +171,7 @@ function Header() {
               </li>
 
               <li className="nav-item">
-                <NavLink to="/dashboard/governance" activeClassName="current">
+                <NavLink to="/governance" activeClassName="current">
                   <Button
                     block
                     outline

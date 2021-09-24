@@ -14,6 +14,8 @@ import Infos from 'screens/Infos';
 import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
+import Governance from 'screens/Governance';
+
 import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -52,6 +54,11 @@ function App() {
               </Route>
               <Route path="/info">
                 <Infos />
+              </Route>
+              <Route path="/governance">
+                <ProvideAuth>
+                  <Governance />
+                </ProvideAuth>
               </Route>
               <Route path="*">
                 <Error />

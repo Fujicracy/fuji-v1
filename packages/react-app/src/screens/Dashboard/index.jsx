@@ -12,7 +12,6 @@ import Error from '../Error';
 import MyPositions from './MyPositions';
 import ManagePosition from './ManagePosition';
 import InitBorrow from './InitBorrow';
-import Governance from './Governance';
 
 function Dashboard() {
   const { path } = useRouteMatch();
@@ -55,9 +54,6 @@ function Dashboard() {
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/position`}>
             <ManagePosition contracts={contracts} provider={provider} address={address} />
-          </ProtectedRoute>
-          <ProtectedRoute path={`${path}/governance`}>
-            <Governance address={address} />
           </ProtectedRoute>
 
           <Route path={`${path}/:errorType`}>
