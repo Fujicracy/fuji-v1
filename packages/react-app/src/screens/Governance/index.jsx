@@ -12,7 +12,7 @@ import { useExternalContractLoader, useAuth } from 'hooks';
 
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, MERKLE_DROP_ABI } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, MERKLE_DROP_ABI, NFT_CONTRACT_ADDRESS } from 'consts';
 import { nftAnimation } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
 import { Header } from 'components';
@@ -39,11 +39,7 @@ const Governance = () => {
   const userIndex = ELIGIBLE_USERS.indexOf(address.toLowerCase());
   const isEligible = userIndex !== -1;
 
-  const merkle = useExternalContractLoader(
-    provider,
-    '0x646977B16aF256E81288b329B7838aA77f30fd1A', // will be replaced with the real address
-    MERKLE_DROP_ABI,
-  );
+  const merkle = useExternalContractLoader(provider, NFT_CONTRACT_ADDRESS, MERKLE_DROP_ABI);
 
   const claimNFT = async () => {
     try {
