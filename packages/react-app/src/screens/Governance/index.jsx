@@ -1,9 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
+import { Redirect, useLocation } from 'react-router-dom';
+
 import { utils } from 'ethers';
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
-// import { Grid } from '@material-ui/core';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { Grid, Button, CircularProgress } from '@material-ui/core';
@@ -33,7 +33,6 @@ const Governance = () => {
   });
 
   const { address, provider } = useAuth();
-
   const [isClaimed, setIsClaimed] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
 
@@ -42,6 +41,7 @@ const Governance = () => {
 
   const merkle = useExternalContractLoader(provider, NFT_CONTRACT_ADDRESS, MERKLE_DROP_ABI);
   const tx = Transactor(provider);
+  const location = useLocation();
 
   const claimNFT = async () => {
     try {
@@ -82,6 +82,17 @@ const Governance = () => {
     }
   };
   */
+  if (!address) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/dashboard/not-connected',
+          state: { from: location },
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <Header />
@@ -163,7 +174,7 @@ const Governance = () => {
           <Button
             onClick={claimNFT}
             className="main-button"
-            disabled={isClaiming}
+            disabled={isClaiming || !isEligible}
             startIcon={
               isClaiming ? (
                 <CircularProgress
