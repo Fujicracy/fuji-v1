@@ -9,6 +9,7 @@ import { useMediaQuery } from 'react-responsive';
 import { Grid, Button, CircularProgress } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useExternalContractLoader, useAuth } from 'hooks';
+import { Transactor } from 'helpers';
 
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
@@ -40,18 +41,17 @@ const Governance = () => {
   const isEligible = userIndex !== -1;
 
   const merkle = useExternalContractLoader(provider, NFT_CONTRACT_ADDRESS, MERKLE_DROP_ABI);
+  const tx = Transactor(provider);
 
   const claimNFT = async () => {
     try {
       setIsClaiming(true);
       const proof = mtree.getHexProof(leaves[userIndex]);
-      const tx = await merkle.claim(address, proof);
-      const res = await tx.wait();
-      console.log({ res });
+      await tx(merkle.claim(address, proof));
       setIsClaiming(false);
     } catch (error) {
       // when user rejected transaction on Metamask
-      console.log({ error });
+      console.error({ error });
       setIsClaiming(false);
     }
   };
