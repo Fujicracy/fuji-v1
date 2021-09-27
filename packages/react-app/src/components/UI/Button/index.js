@@ -34,12 +34,6 @@ const Button = styled(Box).attrs({
     css`
       width: 100%;
     `}
-  svg {
-    position: absolute;
-    left: 8px;
-    top: 10px;
-  }
-
   &:disabled {
     box-shadow: none;
   }

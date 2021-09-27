@@ -6,17 +6,16 @@ import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { Grid, Button, CircularProgress } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useExternalContractLoader, useAuth } from 'hooks';
 import { Transactor } from 'helpers';
 
-import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+import { BlackBoxContainer, SectionTitle, Header, Button } from 'components';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, MERKLE_DROP_ABI, NFT_CONTRACT_ADDRESS } from 'consts';
 import { nftAnimation } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
-import { Header } from 'components';
 
 import { NftButton } from './style';
 
@@ -172,30 +171,19 @@ const Governance = () => {
           </SectionTitle>
 
           <Button
+            block
+            marginTop={28}
             onClick={claimNFT}
-            className="main-button"
             disabled={isClaiming || !isEligible}
-            startIcon={
-              isClaiming ? (
-                <CircularProgress
-                  style={{
-                    width: 25,
-                    height: 25,
-                    marginRight: '10px',
-                    color: 'rgba(0, 0, 0, 0.26)',
-                  }}
-                />
-              ) : (
-                ''
-              )
-            }
-            style={{
-              marginTop: '16px',
-            }}
+            fontSize={16}
+            borderRadius={6}
           >
-            <SectionTitle fontSize="16px">
-              {isClaimed ? 'View on OpenSea' : isClaiming ? 'Claiming NFT' : 'Claim NFT'}
-            </SectionTitle>
+            <Flex flexDirection="row" justifyContent="center" alignItems="center">
+              {isClaiming ? <CircularProgress size={25} color="white" thickness={5} /> : ''}
+              <Flex ml={3}>
+                {isClaimed ? 'View on OpenSea' : isClaiming ? 'Claiming NFT' : 'Claim NFT'}
+              </Flex>
+            </Flex>
           </Button>
         </BlackBoxContainer>
       </Flex>
