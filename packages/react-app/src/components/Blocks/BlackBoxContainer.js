@@ -3,23 +3,27 @@ import { size, background } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import PropTypes from 'prop-types';
+import { fujiMedia } from 'consts';
 
 const BlackBoxContainer = styled(Box).attrs(props => ({
-  px: props.hasBlackContainer ? 4 : 0,
+  // px: props.hasBlackContainer ? 4 : 0,
   bg: props.hasBlackContainer ? themeGet('colors.dark56')(props) : 'transparent',
 }))`
-  border: ${props => props.hasBlackContainer && `0.1rem solid ${themeGet('colors.text05')}`};
+  border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
   backdrop-filter: ${props => props.hasBlackContainer && 'blur(0.375rem)'};
   -webkit-backdrop-filter: blur(0.375rem);
-  border-radius: 1rem;
-  padding: ${props => (props.hasBlackContainer ? '2rem 1rem 2rem 1rem' : '0rem')};
+  border-radius: 16px;
   margin-top: 2rem;
-  // z-index: ${props => (props.zIndex ? props.zIndex : '10')};
   position: relative;
+  padding: ${props => (props.padding ? props.padding : '0px')};
+  border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+  border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
 
-  ${size}
-  ${background}
-
+  border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+  border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+  border-bottom: ${props => props.noBottomBorder && 'none'};
+  ${size};
+  ${background};
   .position-details {
     display: flex;
     justify-content: space-between;
@@ -28,7 +32,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
     &:first-child {
-      padding: 0rem 0rem 0.5rem 0rem;
+      padding: 24px 0px 8px;
     }
     &:last-child {
       padding: 0.5rem 0rem 0rem 0rem;
@@ -37,6 +41,29 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
       border-bottom: none;
     }
   }
+
+  ${fujiMedia.lessThan('medium')`
+    border-radius: 14px;
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
+    .position-details {
+      border-bottom: none;
+    }
+  `}
+
+  ${fujiMedia.between('medium', 'large')`
+    border-radius: 14px;
+    border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
+    border-bottom-left-radius: ${props => props.noBottomBorderRadius && '0px'};
+    border-bottom-right-radius: ${props => props.noBottomBorderRadius && '0px'};
+    .position-details {
+      font-size: 18px;
+      padding: 12px 0px;
+    }
+  `}
 `;
 
 BlackBoxContainer.defaultProps = {

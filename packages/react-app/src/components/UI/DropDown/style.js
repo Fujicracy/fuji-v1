@@ -6,14 +6,14 @@ export const DropDownContainer = styled('div')`
 `;
 
 export const DropDownHeader = styled('div')`
-  height: 40px;
+  height: 28px;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
+  font-size: 12px;
   margin: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0px 5px 0px 10px;
+  padding: 0px 8px 0px 12px;
   color: #f5f5f5;
 
   border-top-left-radius: 6px;

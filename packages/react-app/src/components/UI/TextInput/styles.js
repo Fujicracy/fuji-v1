@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { mapToTheme } from 'styled-map';
 import { themeGet } from '@styled-system/theme-get';
+import { fujiMedia } from 'consts';
 
 export const InputContainer = styled.div`
-  height: 3.5rem;
+  height: 44px;
   border-radius: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -17,22 +18,54 @@ export const InputContainer = styled.div`
   &:focus-within {
     border: 1px solid ${themeGet('colors.primary')};
   }
+
+  ${fujiMedia.lessThan('medium')`
+    height: 40px;
+    border-radius: 4px;
+  `}
+
+  ${fujiMedia.between('medium', 'large')`
+    height: 56px;
+    border-radius: 4px;
+  `}
 `;
 
 export const SubTitleContainer = styled.div`
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
+  font-size: 12px;
+  margin-bottom: 20px;
   color: white;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+
+  ${fujiMedia.lessThan('medium')`
+    font-size: 12px;
+    margin-bottom: 16px;
+  `}
+  ${fujiMedia.between('medium', 'large')`
+    font-size: 20px;
+    margin-bottom: 24px;
+  `}
 `;
 
 export const SubTitleInfo = styled.span`
-  display: contents;
-  font-size: 0.75rem;
+  display: flex;
+  position: absolute;
+  align-items: flex-end;
+  text-align: right;
+  right: 0px;
+  font-size: 10px;
+  line-height: 15px;
   color: ${themeGet('colors.text64')};
+  margin-top: 24px;
+
+  ${fujiMedia.between('medium', 'large')`
+    font-size: 12px;
+    line-height: 18px;
+    margin-top: 24px;
+  `}
 `;
 
 export const Description = styled.label`
@@ -42,19 +75,29 @@ export const Description = styled.label`
   margin-top: 4px;
   display: block;
   color: white;
+
+  ${fujiMedia.lessThan('medium')`
+    font-size: 0.5rem;
+  `}
 `;
 
 export const AdornmentAvatar = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 1rem;
+  width: ${props => (props.width ? props.width : '1.5rem')};
+  height: ${props => (props.width ? props.width : '1.5rem')};
+  margin-right: ${props => (props.marginRight ? props.marginRight : '1rem')};
   src: ${props => props.src};
 `;
 
 export const AdornmentText = styled.label`
   color: ${themeGet('colors.text64')};
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 400;
+  ${fujiMedia.lessThan('medium')`
+    font-size: 12px;
+  `}
+  ${fujiMedia.between('medium', 'large')`
+    font-size: 16px;
+  `}
 `;
 
 export const StyledInput = styled.input`
@@ -63,7 +106,7 @@ export const StyledInput = styled.input`
   justify-content: flex-start;
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: ${props => (props.fontSize ? props.fontSize : '1rem')};
   font-weight: 600;
   border-color: ${props => (props.error ? 'red' : 'black')};
   margin: 0;

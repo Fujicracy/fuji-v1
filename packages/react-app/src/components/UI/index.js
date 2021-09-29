@@ -6,6 +6,7 @@ import { NavUnlisted, NavImageLink, NavTextLink } from './NavLinks';
 import StyledModal from './Modal';
 import CheckBox from './CheckBox';
 import AnimatedCounter from './AnimatedCounter';
+import BackgroundEffect from './BackgroundEffect';
 
 export {
   Button,
@@ -18,4 +19,5 @@ export {
   StyledModal,
   CheckBox,
   AnimatedCounter,
+  BackgroundEffect,
 };

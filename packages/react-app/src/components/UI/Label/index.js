@@ -7,7 +7,7 @@ const Label = styled.p`
   font-size: ${props => (props.fontSize ? `${themeGet(props.fontSize)}px` : '14px')};
   text-align: ${props => (props.textAlign ? props.textAlign : 'center')};
   font-weight: ${props => (props.fontWeight ? props.fontWeight : '400')};
-  ${fontSize}
-  ${space}
+  line-height: ${props => (props.lineHeight ? props.lineHeight : '100%')};
+  ${fontSize} ${space};
 `;
 export default Label;

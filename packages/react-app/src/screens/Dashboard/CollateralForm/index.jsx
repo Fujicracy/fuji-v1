@@ -18,10 +18,12 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator } from 'helpers';
 import { useBalance, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
-import { VAULTS } from 'consts';
-import DeltaPositionRatios from '../DeltaPositionRatios';
+import { useMediaQuery } from 'react-responsive';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
+import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
@@ -63,6 +65,12 @@ function CollateralForm({ position, contracts, provider, address }) {
     debtBalance || '0',
     'true',
   ]);
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
@@ -258,14 +266,16 @@ function CollateralForm({ position, contracts, provider, address }) {
       </Dialog>
 
       <Grid item className="section-title">
-        <Typography variant="h3">Collateral</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip tooltip-top">
-            <span className="bold">Supply</span> more ETH as collateral or
-            <span className="bold"> withdraw</span> what is not locked for your borrows.
-          </span>
-        </div>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Collateral</SectionTitle>
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip tooltip-top">
+              <span className="bold">Supply</span> more ETH as collateral or
+              <span className="bold"> withdraw</span> what is not locked for your borrows.
+            </span>
+          </div>
+        )}
       </Grid>
       <Grid item className="toggle-button">
         <div className="button">

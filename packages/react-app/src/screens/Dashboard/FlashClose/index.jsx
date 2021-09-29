@@ -12,8 +12,10 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { VAULTS, ASSET_NAME, PROVIDERS } from 'consts';
+import { VAULTS, ASSET_NAME, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
+import { useMediaQuery } from 'react-responsive';
+import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
 
@@ -42,6 +44,12 @@ function FlashClose({ position, contracts, provider }) {
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
   const [amount, setAmount] = useState('');
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   const vault = VAULTS[position.vaultAddress];
 
@@ -137,13 +145,17 @@ function FlashClose({ position, contracts, provider }) {
       </Dialog>
       <div className="flash-close">
         <div className="section-title">
-          <h3>Flash Close</h3>
-          <div className="tooltip-info">
-            <InfoOutlinedIcon />
-            <span className="tooltip">
-              Repay your debt position from your collateral by using a flash loan. Fee: 1%
-            </span>
-          </div>
+          <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+            Flash Close
+          </SectionTitle>
+          {!isMobile && !isTablet && (
+            <div className="tooltip-info">
+              <InfoOutlinedIcon />
+              <span className="tooltip">
+                Repay your debt position from your collateral by using a flash loan. Fee: 1%
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="content">

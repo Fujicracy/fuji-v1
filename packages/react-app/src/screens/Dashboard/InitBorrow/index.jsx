@@ -12,8 +12,10 @@ import {
   DialogContentText,
   CircularProgress,
   DialogTitle,
+  Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { Box } from 'rebass';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useBalance, useContractReader, useExchangePrice } from 'hooks';
 import {
@@ -23,15 +25,19 @@ import {
   DisclaimerPopup,
   SelectVault,
   BlackBoxContainer,
-  SelectNetwork,
+  SelectMarket,
+  SectionTitle,
+  // SectionTitle,
 } from 'components';
 import { TextInput } from 'components/UI';
-import { VAULTS, ASSETS, PROVIDERS } from 'consts';
-import { NETWORKS, NETWORK_NAME } from 'consts/networks';
+
+import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+// import { MARKETS, MARKET_NAMES } from 'consts/markets';
 import { Transactor, GasEstimator } from 'helpers';
-import './styles.css';
 import map from 'lodash/map';
+import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
+import { Container, Helper } from './style';
 
 function InitBorrow({ contracts, provider, address }) {
   const defaultVault = Object.values(VAULTS)[0];
@@ -44,11 +50,16 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
-  const [network, setNetwork] = useState(NETWORKS[NETWORK_NAME.ETH]);
+  // const [market, setMarket] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
 
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -145,9 +156,9 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(false);
   };
 
-  const handleChangeNetwork = option => {
-    setNetwork(option);
-  };
+  // const handleChangeMarket = option => {
+  //   setMarket(option);
+  // };
 
   const handleChangeVault = v => {
     setBorrowAsset(v.borrowAsset.name);
@@ -191,9 +202,8 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ network, errors: errors?.borrowAmount?.message });
   return (
-    <div className="container initial-step">
+    <Container>
       <Dialog
         open={dialog === 'success' || dialog === 'capCollateral'}
         aria-labelledby="form-dialog-title"
@@ -213,146 +223,161 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogContent>
         {dialogContents[dialog]?.actions()}
       </Dialog>
-
-      <div className="left-content">
-        <HowItWorks />
-        <BlackBoxContainer mb={4}>
-          <SelectNetwork
-            title="Networks"
-            handleChange={handleChangeNetwork}
-            options={NETWORKS}
-            defaultOption={NETWORKS.ETH}
-            hasBlackContainer={false}
-          />
-
-          <ProvidersList
-            contracts={contracts}
-            markets={[borrowAsset]}
-            title="Borrow APR"
-            isDropDown
-            hasBlackContainer={false}
-            isSelectable={false}
-          />
-        </BlackBoxContainer>
-      </div>
-
-      <div className="center-content">
-        <div className="dark-block borrow-actions">
-          <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
-          <form noValidate autoComplete="off">
-            <TextInput
-              placeholder={borrowAmount}
-              id="borrowAmount"
-              name="borrowAmount"
-              type="number"
-              step="any"
-              defaultValue={borrowAmount}
-              value={borrowAmount}
-              onChange={({ target }) => {
-                setBorrowAmount(target.value);
-                clearErrors();
-              }}
-              ref={register({
-                required: { value: true, message: 'required-amount' },
-                min: { value: 1, message: 'insufficient-borrow' },
-              })}
-              startAdornmentImage={ASSETS[borrowAsset].icon}
-              endAdornment={{
-                text: (borrowAmount * borrowAssetPrice).toFixed(2),
-                type: 'currency',
-              }}
-              subTitle="Amount to borrow"
-              description={
-                errors?.borrowAmount?.message === 'required-amount'
-                  ? 'Please, type the amount you like to borrow'
-                  : errors?.borrowAmount?.message === 'insufficient-borrow' &&
-                    'Please, type the amount at least 1'
-              }
-            />
-
-            <div className="borrow-inputs">
-              <TextInput
-                id="collateralAmount"
-                name="collateralAmount"
-                type="number"
-                step="any"
-                placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
-                onChange={({ target }) => setCollateralAmount(target.value)}
-                ref={register({
-                  required: { value: true, message: 'required-amount' },
-                  min: { value: neededCollateral, message: 'insufficient-collateral' },
-                  max: { value: ethBalance, message: 'insufficient-balance' },
-                })}
-                startAdornmentImage={ASSETS[collateralAsset].icon}
-                endAdornment={{
-                  text: (collateralAmount * ethPrice).toFixed(2),
-                  type: 'currency',
-                }}
-                subTitle="Collateral"
-                subTitleInfo={`Your balance: ${
-                  ethBalance ? Number(ethBalance).toFixed(3) : '...'
-                } Ξ`}
-                errorComponent={
-                  errors?.collateralAmount?.message === 'required-amount' ? (
-                    <Typography className="error-input-msg" variant="body2">
-                      Please, type the amount you want to provide as collateral
-                    </Typography>
-                  ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
-                    <Typography className="error-input-msg" variant="body2">
-                      Please, provide at least{' '}
-                      <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
-                      collateral!
-                    </Typography>
-                  ) : (
-                    errors?.collateralAmount?.message === 'insufficient-balance' && (
-                      <Typography className="error-input-msg" variant="body2">
-                        Insufficient ETH balance
-                      </Typography>
-                    )
-                  )
-                }
-              />
-            </div>
-            <div className="helper">
-              <Typography variant="body2">
-                The liquidity for this transaction is coming from{' '}
-                <span>{getActiveProviderName()}</span>.
-              </Typography>
-            </div>
-            <div>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                className="main-button"
-                disabled={loading}
-                startIcon={
-                  loading ? (
-                    <CircularProgress
-                      style={{
-                        width: 25,
-                        height: 25,
-                        marginRight: '10px',
-                        color: 'rgba(0, 0, 0, 0.26)',
-                      }}
-                    />
-                  ) : (
-                    ''
-                  )
-                }
+      <Box
+        minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
+        width={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
+        margin={isMobile ? '32px 28px' : isTablet ? '36px 176px' : '24px 160px'}
+      >
+        <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
+          <Grid item xs={12} sm={12} md={4}>
+            <Box ml={isMobile || isTablet ? '' : '56px'}>
+              {!isMobile && !isTablet && <HowItWorks />}
+              <BlackBoxContainer
+                hasBlackContainer
+                padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
-                Borrow{loading ? 'ing...' : ''}
-              </Button>
-            </div>
-          </form>
-        </div>
-      </div>
+                <Grid container spacing={isMobile ? 3 : 4}>
+                  <Grid item xs={8} sm={8} md={12}>
+                    <SelectMarket
+                      /* handleChange={handleChangeMarket} */ hasBlackContainer={false}
+                    />
+                  </Grid>
+                  <Grid item xs={4} sm={4} md={12}>
+                    <ProvidersList
+                      contracts={contracts}
+                      markets={[borrowAsset]}
+                      title="APR"
+                      isDropDown
+                      hasBlackContainer={false}
+                      isSelectable={false}
+                    />
+                  </Grid>
+                </Grid>
+              </BlackBoxContainer>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <BlackBoxContainer
+              hasBlackContainer
+              padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
+            >
+              <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
+              <form noValidate autoComplete="off">
+                <TextInput
+                  placeholder={borrowAmount}
+                  id="borrowAmount"
+                  name="borrowAmount"
+                  type="number"
+                  step="any"
+                  defaultValue={borrowAmount}
+                  value={borrowAmount}
+                  onChange={({ target }) => {
+                    setBorrowAmount(target.value);
+                    clearErrors();
+                  }}
+                  ref={register({
+                    required: { value: true, message: 'required-amount' },
+                    min: { value: 1, message: 'insufficient-borrow' },
+                  })}
+                  startAdornmentImage={ASSETS[borrowAsset].icon}
+                  endAdornment={{
+                    text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                    type: 'currency',
+                  }}
+                  subTitle="Amount to borrow"
+                  description={
+                    errors?.borrowAmount?.message === 'required-amount'
+                      ? 'Please, type the amount you like to borrow'
+                      : errors?.borrowAmount?.message === 'insufficient-borrow' &&
+                        'Please, type the amount at least 1'
+                  }
+                />
+                <div className="borrow-inputs">
+                  <TextInput
+                    id="collateralAmount"
+                    name="collateralAmount"
+                    type="number"
+                    step="any"
+                    placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
+                    onChange={({ target }) => setCollateralAmount(target.value)}
+                    ref={register({
+                      required: { value: true, message: 'required-amount' },
+                      min: { value: neededCollateral, message: 'insufficient-collateral' },
+                      max: { value: ethBalance, message: 'insufficient-balance' },
+                    })}
+                    startAdornmentImage={ASSETS[collateralAsset].icon}
+                    endAdornment={{
+                      text: (collateralAmount * ethPrice).toFixed(2),
+                      type: 'currency',
+                    }}
+                    subTitle="Collateral"
+                    subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
+                      ethBalance ? Number(ethBalance).toFixed(3) : '...'
+                    } Ξ`}
+                    errorComponent={
+                      errors?.collateralAmount?.message === 'required-amount' ? (
+                        <Typography className="error-input-msg" variant="body2">
+                          Please, type the amount you want to provide as collateral
+                        </Typography>
+                      ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
+                        <Typography className="error-input-msg" variant="body2">
+                          Please, provide at least{' '}
+                          <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
+                          collateral!
+                        </Typography>
+                      ) : (
+                        errors?.collateralAmount?.message === 'insufficient-balance' && (
+                          <Typography className="error-input-msg" variant="body2">
+                            Insufficient ETH balance
+                          </Typography>
+                        )
+                      )
+                    }
+                  />
+                </div>
+                {/* <SectionTitle mb={isMobile ? 3 : 4} fontSize={isMobile ? 0 : 1}> */}
 
-      <div className="right-content">
-        <CollaterizationIndicator position={position} />
-      </div>
+                <Helper>
+                  Liquidity for this transaction comes from
+                  <span>{` ${getActiveProviderName()}`}</span>.
+                </Helper>
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  className="main-button"
+                  disabled={loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress
+                        style={{
+                          width: 25,
+                          height: 25,
+                          marginRight: '10px',
+                          color: 'rgba(0, 0, 0, 0.26)',
+                        }}
+                      />
+                    ) : (
+                      ''
+                    )
+                  }
+                >
+                  <SectionTitle fontSize={isTablet ? '20px' : '16px'}>
+                    Borrow{loading ? 'ing...' : ''}
+                  </SectionTitle>
+                </Button>
+              </form>
+            </BlackBoxContainer>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <Box mr={isMobile || isTablet ? '' : '56px'}>
+              <CollaterizationIndicator position={position} />
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
       {!!Cookies.get('confirm_disclaim') === false && (
         <DisclaimerPopup isOpen={!checkedClaim} onSubmit={setCheckedClaim} />
       )}
-    </div>
+    </Container>
   );
 }
 

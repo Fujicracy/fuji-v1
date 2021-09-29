@@ -2,26 +2,100 @@ import styled from 'styled-components';
 import { size } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
+import { fujiMedia } from 'consts';
 
-export const Container = styled(Box).attrs({
-  px: 4,
-})`
+export const Container = styled(Box)`
+  position: relative;
+  z-index: 2;
+`;
+
+export const HeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   height: 100px;
 
-  backdrop-filter: blur(0.25rem);
-  -webkit-backdrop-filter: blur(0.25rem);
+  padding: 32px 28px;
+
   ${size}
+
+  ${fujiMedia.lessThan('medium')`
+    height:64px;
+    background-color:  rgba(255, 255, 255, 0.05);
+    padding: 16px 28px;
+  `}
+  ${fujiMedia.between('medium', 'large')`
+    padding: 16px 40px;
+    height: 88px;
+    background-color:  rgba(255, 255, 255, 0.05);
+  `}
 `;
 
 export const Logo = styled.img`
+  height: 100%;
   transition: all 250ms ease;
   &:hover {
     opacity: 0.8;
   }
+  ${size}
+`;
+
+export const MenuBackContainer = styled(Box)`
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 64px;
+  padding-left: 30%;
+  background: transparent;
+  z-index: 9999;
+  backdrop-filter: blur(0.25rem);
+  ${fujiMedia.between('medium', 'large')`
+    top: 88px;
+    padding-left: 50%;
+  `}
+`;
+
+export const MenuContainer = styled(Box)`
+  height: 100vh;
+  background: rgb(20, 20, 20);
+  opacity: 0.97;
+  z-index: 9998;
+`;
+
+export const MenuItem = styled(Box)`
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 36px;
+  color: ${props => (props.isSelected ? '#f0014f' : '#f5f5fd')};
+  margin: 16px 0px !important;
+  &:hover {
+    color: #f0014f;
+  }
+`;
+
+export const MenuNavigationContainer = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 64px;
+  height: 64px;
+  width: calc(100% - 56px);
+  left: 28px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  border-radius: 12px 12px 0px 0px;
+  padding: 0px 24px;
+  ${fujiMedia.between('medium', 'large')`
+    height: 76px;
+    bottom: 76px;
+    padding: 0px 32px;
+    width: calc(100% - 88px);
+    left: 44px;
+  `}
 `;
 
 export const Navigation = styled.ul`
@@ -77,6 +151,11 @@ export const Navigation = styled.ul`
       }
     }
   }
+  ${fujiMedia.lessThan('medium')`
+    display:none
+  `}
+  ${fujiMedia.greaterThan('medium')`
+  `}
 `;
 
 export const BallanceContainer = styled(Box)`
