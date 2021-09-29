@@ -6,18 +6,28 @@ const VAULTS_ADDRESS = {
   VaultETHDAI: getContractAddress('VaultETHDAI'),
   VaultETHUSDC: getContractAddress('VaultETHUSDC'),
   VaultETHUSDT: getContractAddress('VaultETHUSDT'),
+
+  VaultDAIETH: getContractAddress('VaultDAIETH'),
+  VaultUSDCETH: getContractAddress('VaultUSDCETH'),
+  VaultUSDTETH: getContractAddress('VaultUSDTETH'),
 };
 
 const COLLATERAL_IDS = {
   [VAULTS_ADDRESS.VaultETHDAI]: 0,
   [VAULTS_ADDRESS.VaultETHUSDC]: 2,
   [VAULTS_ADDRESS.VaultETHUSDT]: 4,
+  [VAULTS_ADDRESS.VaultDAIETH]: 6,
+  [VAULTS_ADDRESS.VaultUSDCETH]: 8,
+  [VAULTS_ADDRESS.VaultUSDTETH]: 10,
 };
 
 const BORROW_IDS = {
   [VAULTS_ADDRESS.VaultETHDAI]: 1,
   [VAULTS_ADDRESS.VaultETHUSDC]: 3,
   [VAULTS_ADDRESS.VaultETHUSDT]: 5,
+  [VAULTS_ADDRESS.VaultDAIETH]: 7,
+  [VAULTS_ADDRESS.VaultUSDCETH]: 9,
+  [VAULTS_ADDRESS.VaultUSDTETH]: 11,
 };
 
 const VAULTS = {
@@ -61,6 +71,51 @@ const VAULTS = {
     ],
     name: 'VaultETHUSDT',
     title: 'ETH-USDT',
+  },
+
+  [VAULTS_ADDRESS.VaultDAIETH]: {
+    borrowAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: ASSETS[ASSET_NAME.DAI],
+    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultDAIETH],
+    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultDAIETH],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.DYDX],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
+    isCollateralERC20: true,
+    name: 'VaultDAIETH',
+    title: 'DAI-ETH',
+  },
+  [VAULTS_ADDRESS.VaultUSDCETH]: {
+    borrowAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: ASSETS[ASSET_NAME.USDC],
+    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultUSDCETH],
+    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultUSDCETH],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.DYDX],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
+    isCollateralERC20: true,
+    name: 'VaultUSDCETH',
+    title: 'USDC-ETH',
+  },
+  [VAULTS_ADDRESS.VaultUSDTETH]: {
+    borrowAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: ASSETS[ASSET_NAME.USDT],
+    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultUSDTETH],
+    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultUSDTETH],
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.AAVE],
+      PROVIDERS[PROVIDER_TYPE.COMPOUND],
+      PROVIDERS[PROVIDER_TYPE.IRONBANK],
+    ],
+    isCollateralERC20: true,
+    name: 'VaultUSDTETH',
+    title: 'USDT-ETH',
   },
 };
 
