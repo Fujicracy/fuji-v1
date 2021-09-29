@@ -42,7 +42,7 @@ function MyPositions({ contracts, address }) {
     };
   });
 
-  const markets = map(Object.values(VAULTS), vault => vault.borrowAsset.name);
+  const markets = [...new Set(map(Object.values(VAULTS), vault => vault.borrowAsset.name))];
 
   const hasPosition = asset => {
     if (asset) {
@@ -116,7 +116,7 @@ function MyPositions({ contracts, address }) {
                           </SectionTitle>
                         </Flex>
                       </Grid>
-                      <Grid item xs={0} md={2}>
+                      <Grid item md={2}>
                         {' '}
                       </Grid>
                     </Grid>
