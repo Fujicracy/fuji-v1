@@ -282,7 +282,7 @@ function InitBorrow({ contracts, provider, address }) {
                   }}
                   ref={register({
                     required: { value: true, message: 'required-amount' },
-                    min: { value: 1, message: 'insufficient-borrow' },
+                    min: { value: 0, message: 'insufficient-borrow' },
                   })}
                   startAdornmentImage={ASSETS[borrowAsset].icon}
                   endAdornment={{
