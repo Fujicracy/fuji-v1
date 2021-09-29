@@ -1,1 +1,20 @@
-module.exports = ["AlphaWhitelist","Controller","Flasher","Fliquidator","FujiAdmin","FujiERC1155","ProviderAave","ProviderCompound","ProviderDYDX","ProviderIronBank","VaultETHDAI","VaultETHUSDC","VaultETHUSDT","VaultHarvester"];
+module.exports = [
+  'AlphaWhitelist',
+  'Controller',
+  'Flasher',
+  'Fliquidator',
+  'FujiAdmin',
+  'FujiERC1155',
+  'ProviderAave',
+  'ProviderCompound',
+  'ProviderDYDX',
+  'ProviderIronBank',
+  'VaultETHDAI',
+  'VaultETHUSDC',
+  'VaultETHUSDT',
+  'VaultHarvester',
+
+  'VaultDAIETH',
+  'VaultUSDCETH',
+  'VaultUSDTETH',
+];
