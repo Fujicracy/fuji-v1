@@ -75,9 +75,13 @@ function InitBorrow({ contracts, provider, address }) {
     }
   }, [borrowAsset, collateralAsset]);
 
-  const ethPrice = useExchangePrice();
+  useEffect(() => {
+    if (vault.isCollateralERC20) setBorrowAmount('1');
+    else setBorrowAmount('1000');
+  }, [vault]);
+  // const ethPrice = useExchangePrice();
   const borrowAssetPrice = useExchangePrice(borrowAsset);
-  // const collateralAssetPrice = useExchangePrice(collateralAsset);
+  const collateralAssetPrice = useExchangePrice(collateralAsset);
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -105,6 +109,7 @@ function InitBorrow({ contracts, provider, address }) {
     'getNeededCollateralFor',
     [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
   );
+
   const neededCollateral = unFormattedNeededCollateral
     ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
     : null;
@@ -307,7 +312,7 @@ function InitBorrow({ contracts, provider, address }) {
                     })}
                     startAdornmentImage={ASSETS[collateralAsset].icon}
                     endAdornment={{
-                      text: (collateralAmount * ethPrice).toFixed(2),
+                      text: (collateralAmount * collateralAssetPrice).toFixed(2),
                       type: 'currency',
                     }}
                     subTitle="Collateral"
@@ -322,13 +327,15 @@ function InitBorrow({ contracts, provider, address }) {
                       ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
                         <Typography className="error-input-msg" variant="body2">
                           Please, provide at least{' '}
-                          <span className="brand-color">{neededCollateral.toFixed(3)} ETH</span> as
-                          collateral!
+                          <span className="brand-color">
+                            {neededCollateral.toFixed(3)} {vault.collateralAsset.name}
+                          </span>{' '}
+                          as collateral!
                         </Typography>
                       ) : (
                         errors?.collateralAmount?.message === 'insufficient-balance' && (
                           <Typography className="error-input-msg" variant="body2">
-                            Insufficient ETH balance
+                            Insufficient {vault.collateralAsset.name} balance
                           </Typography>
                         )
                       )
