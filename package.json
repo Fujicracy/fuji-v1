@@ -1,70 +1,72 @@
 {
-	"name": "@fuji/monorepo",
-	"version": "1.0.0",
-	"keywords": [
-		"ethereum",
-		"react",
-		"uniswap",
-		"workspaces",
-		"yarn"
-	],
-	"private": true,
-	"engines": {
-		"node": ">=14.17.1",
-		"npm": ">=6.12.1"
-	},
-	"scripts": {
-		"lint": "yarn workspaces run lint",
-		"lint:fix": "yarn workspaces run lint:fix",
-		"lint:sol": "yarn workspace @fuji/hardhat lint:sol",
-		"format": "yarn workspaces run format",
-		"format:sol": "yarn workspace @fuji/hardhat format:sol",
-		"react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
-		"react-app:eject": "yarn workspace @fuji/react-app eject",
-		"react-app:test": "yarn workspace @fuji/react-app test",
-		"build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
-		"chain": "yarn workspace @fuji/hardhat chain",
-		"fork": "yarn workspace @fuji/hardhat fork",
-		"fork2": "yarn workspace @fuji/hardhat fork2",
-		"node": "yarn workspace @fuji/hardhat chain",
-		"contracts:download": "yarn contracts:sync",
-		"contracts:size": "yarn workspace @fuji/hardhat contracts:size",
-		"sync": "yarn workspace @fuji/hardhat sync",
-		"compile": "yarn workspace @fuji/hardhat compile",
-		"deploy": "yarn workspace @fuji/hardhat deploy",
-		"accounts": "yarn workspace @fuji/hardhat accounts",
-		"balance": "yarn workspace @fuji/hardhat balance",
-		"send": "yarn workspace @fuji/hardhat send",
-		"start": "yarn workspace @fuji/react-app start:dev",
-		"ipfs": "yarn workspace @fuji/react-app ipfs",
-		"surge": "yarn workspace @fuji/react-app surge",
-		"s3": "yarn workspace @fuji/react-app s3",
-		"ship": "yarn workspace @fuji/react-app ship",
-		"bots:liquidate": "yarn workspace @fuji/bots liquidate",
-		"generate": "yarn workspace @fuji/hardhat generate",
-		"account": "yarn workspace @fuji/hardhat account",
-		"mine": "cd packages/hardhat && npx hardhat mine",
-		"wallet": "cd packages/hardhat && npx hardhat wallet",
-		"fundedwallet": "cd packages/hardhat && npx hardhat fundedwallet",
-		"flatten": "cd packages/hardhat && npx hardhat flatten",
-		"prepare": "husky install"
-	},
-	"lint-staged": {
-		"**/*.{js,jsx}": [
-			"yarn lint"
-		],
-		"**/*.sol": [
-			"yarn lint:sol"
-		]
-	},
-	"workspaces": {
-		"packages": [
-			"packages/*"
-		],
-		"nohoist": []
-	},
-	"dependencies": {
-		"husky": ">=6",
-		"lint-staged": ">=10"
-	}
+  "name": "@fuji/monorepo",
+  "version": "1.0.0",
+  "keywords": [
+    "ethereum",
+    "react",
+    "uniswap",
+    "workspaces",
+    "yarn"
+  ],
+  "private": true,
+  "engines": {
+    "node": ">=14.17.1",
+    "npm": ">=6.12.1"
+  },
+  "scripts": {
+    "lint": "yarn workspaces run lint",
+    "lint:fix": "yarn workspaces run lint:fix",
+    "lint:sol": "yarn workspace @fuji/hardhat lint:sol",
+    "format": "yarn workspaces run format",
+    "format:sol": "yarn workspace @fuji/hardhat format:sol",
+    "react-app:build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
+    "react-app:eject": "yarn workspace @fuji/react-app eject",
+    "react-app:test": "yarn workspace @fuji/react-app test",
+    "build": "yarn workspace @fuji/react-app build --max-old-space-size=12288",
+    "chain": "yarn workspace @fuji/hardhat chain",
+    "fork": "yarn workspace @fuji/hardhat fork",
+    "fork2": "yarn workspace @fuji/hardhat fork2",
+    "node": "yarn workspace @fuji/hardhat chain",
+    "contracts:download": "yarn contracts:sync",
+    "contracts:size": "yarn workspace @fuji/hardhat contracts:size",
+    "sync": "yarn workspace @fuji/hardhat sync",
+    "compile": "yarn workspace @fuji/hardhat compile",
+    "deploy": "yarn workspace @fuji/hardhat deploy",
+    "accounts": "yarn workspace @fuji/hardhat accounts",
+    "balance": "yarn workspace @fuji/hardhat balance",
+    "send": "yarn workspace @fuji/hardhat send",
+    "start": "yarn workspace @fuji/react-app start:dev",
+    "ipfs": "yarn workspace @fuji/react-app ipfs",
+    "surge": "yarn workspace @fuji/react-app surge",
+    "s3": "yarn workspace @fuji/react-app s3",
+    "ship": "yarn workspace @fuji/react-app ship",
+    "bots:liquidate": "yarn workspace @fuji/bots liquidate",
+    "generate": "yarn workspace @fuji/hardhat generate",
+    "account": "yarn workspace @fuji/hardhat account",
+    "mine": "cd packages/hardhat && npx hardhat mine",
+    "wallet": "cd packages/hardhat && npx hardhat wallet",
+    "fundedwallet": "cd packages/hardhat && npx hardhat fundedwallet",
+    "flatten": "cd packages/hardhat && npx hardhat flatten",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx}": [
+      "yarn lint"
+    ],
+    "**/*.sol": [
+      "yarn lint:sol"
+    ]
+  },
+  "workspaces": {
+    "packages": [
+      "packages/bots",
+      "packages/hardhat",
+      "packages/react-app"
+    ],
+    "nohoist": []
+  },
+  "dependencies": {
+    "husky": ">=6",
+    "lint-staged": ">=10"
+  }
 }
