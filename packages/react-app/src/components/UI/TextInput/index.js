@@ -57,7 +57,7 @@ const TextField = React.forwardRef(
           <StyledInput
             name={name}
             type={type}
-            defaultValue={defaultValue}
+            value={defaultValue}
             placeholder={placeholder}
             onChange={onChange}
             onFocus={onFocus}
