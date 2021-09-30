@@ -24,7 +24,7 @@ export const ASSETS = {
     icon: usdcIcon.toString(),
     decimals: 6,
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    oracle: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    oracle: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
   },
   [ASSET_NAME.USDT]: {
     id: ASSET_NAME.USDT.toLowerCase(),
@@ -32,7 +32,7 @@ export const ASSETS = {
     icon: usdtIcon.toString(),
     decimals: 6,
     address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    oracle: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    oracle: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
   },
   [ASSET_NAME.ETH]: {
     id: ASSET_NAME.ETH.toLowerCase(),
