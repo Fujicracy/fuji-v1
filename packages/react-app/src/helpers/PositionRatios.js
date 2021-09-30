@@ -1,10 +1,10 @@
 import { formatUnits } from '@ethersproject/units';
 
-export default function PositionRatios(position, price) {
+export default function PositionRatios(position, collateralPrice, borrowPrice) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
-  let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
-  if (debt < 1) debt = 0;
+  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
+  // if (debt < 1) debt = 0;
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;
@@ -13,10 +13,10 @@ export default function PositionRatios(position, price) {
   // collateralization and healthy factor
   const factor = 1.33;
 
-  const healthFactor = (collateral * price * liqThres) / debt;
-  const maxFactor = collateral * price * liqThres;
-  const liqPrice = debt / (collateral * liqThres);
-  const ltv = debt / (collateral * price);
+  const healthFactor = (collateral * collateralPrice * liqThres) / (debt * borrowPrice);
+  const maxFactor = collateral * collateralPrice * liqThres;
+  const liqPrice = (debt * borrowPrice) / (collateral * collateralPrice * liqThres);
+  const ltv = (debt * borrowPrice) / (collateral * collateralPrice);
   const borrowLimit = Math.min(ltv * factor, 1);
   // if (price > 0) {
   //   debugger;
