@@ -96,8 +96,6 @@ function InitBorrow({ contracts, provider, address }) {
     ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
     : null;
 
-  const { decimals } = ASSETS[borrowAsset];
-
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
     vault.collateralId,
@@ -112,7 +110,7 @@ function InitBorrow({ contracts, provider, address }) {
     contracts,
     vault.name,
     'getNeededCollateralFor',
-    [borrowAmount ? parseUnits(borrowAmount, decimals) : '', 'true'],
+    [borrowAmount ? parseUnits(borrowAmount, ASSETS[borrowAsset].decimals) : '', 'true'],
   );
 
   const neededCollateral = unFormattedNeededCollateral
@@ -123,22 +121,15 @@ function InitBorrow({ contracts, provider, address }) {
     borrowAsset: ASSETS[borrowAsset],
     collateralAsset: ASSETS[collateralAsset],
     debtBalance:
-      !debtBalance || !borrowAmount ? 0 : debtBalance.add(parseUnits(borrowAmount, decimals)),
+      !debtBalance || !borrowAmount
+        ? 0
+        : debtBalance.add(parseUnits(borrowAmount, ASSETS[borrowAsset].decimals)),
     collateralBalance:
       !collateralBalance || !collateralAmount
         ? 0
         : // : collateralBalance.add(parseEther(collateralAmount)),
           collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
-    decimals,
   };
-
-  console.log({
-    collateralAsset,
-    balance,
-    position,
-    borrowAssetPrice,
-    collateralAssetPrice,
-  });
 
   const tx = Transactor(provider);
   const onSubmit = async () => {
@@ -151,13 +142,13 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(true);
     const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
       parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
-      parseUnits(borrowAmount, decimals),
+      parseUnits(borrowAmount, ASSETS[borrowAsset].decimals),
       { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals) },
     ]);
     const res = await tx(
       contracts[vault.name].depositAndBorrow(
         parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
-        parseUnits(borrowAmount, decimals),
+        parseUnits(borrowAmount, ASSETS[borrowAsset].decimals),
         {
           value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
           gasLimit,
