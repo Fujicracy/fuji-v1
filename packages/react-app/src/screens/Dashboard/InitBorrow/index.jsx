@@ -133,11 +133,11 @@ function InitBorrow({ contracts, provider, address }) {
 
   const tx = Transactor(provider);
   const onSubmit = async () => {
-    const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-    if (totalCollateral > ETH_CAP_VALUE) {
-      setDialog('capCollateral');
-      return;
-    }
+    // const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
+    // if (totalCollateral > ETH_CAP_VALUE) {
+    //   setDialog('capCollateral');
+    //   return;
+    // }
 
     setLoading(true);
     const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
