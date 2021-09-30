@@ -37,8 +37,8 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
   // Collateralization factor
   Factor public collatF;
 
-  // Bonus Factor for Flash Liquidation
-  Factor public bonusFlashLiqF;
+  // Protocol Fee factor
+  Factor public override protocolFee;
 
   // Bonus factor for liquidation
   Factor public bonusLiqF;
@@ -55,6 +55,11 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
 
   uint8 internal _collateralAssetDecimals;
   uint8 internal _borrowAssetDecimals;
+
+  uint256 public constant ONE_YEAR = 60 * 60 * 24 * 365;
+
+  mapping(address => uint256) internal _userFeeTimestamps; // to be used for protocol fee calculation
+  uint256 public remainingProtocolFee;
 
   modifier isAuthorized() {
     require(
@@ -121,6 +126,9 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     // 0.05
     bonusLiqF.a = 1;
     bonusLiqF.b = 20;
+
+    protocolFee.a = 1;
+    protocolFee.b = 1000;
   }
 
   receive() external payable {}
@@ -251,17 +259,30 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
       vAssets.collateralID
     );
 
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 totalBorrow = _borrowAmount + debtPrincipal;
     // Get Required Collateral with Factors to maintain debt position healthy
-    uint256 neededCollateral = getNeededCollateralFor(
-      _borrowAmount + IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID),
-      true
-    );
+    uint256 neededCollateral = getNeededCollateralFor(totalBorrow, true);
 
     // Check Provided Collateral is not Zero, and greater than needed to maintain healthy position
     require(
       _borrowAmount != 0 && providedCollateral > neededCollateral,
       Errors.VL_INVALID_BORROW_AMOUNT
     );
+
+    // Update timestamp for fee calculation
+
+    uint256 userFee = (debtPrincipal *
+      (block.timestamp - _userFeeTimestamps[msg.sender]) *
+      protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
+
+    _userFeeTimestamps[msg.sender] =
+      block.timestamp -
+      (userFee * ONE_YEAR * protocolFee.a) /
+      protocolFee.b /
+      totalBorrow;
 
     // Debt Management
     IFujiERC1155(fujiERC1155).mint(msg.sender, vAssets.borrowID, _borrowAmount, "");
@@ -284,15 +305,16 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     // Logic used when called by normal user
     updateF1155Balances();
 
-    uint256 userDebtBalance = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 debtBalance = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 userFee = _userProtocolFee(msg.sender, debtBalance);
 
     // Check User Debt is greater than Zero and amount is not Zero
-    require(_repayAmount != 0 && userDebtBalance > 0, Errors.VL_NO_DEBT_TO_PAYBACK);
+    require(uint256(_repayAmount) > userFee && debtBalance > 0, Errors.VL_NO_DEBT_TO_PAYBACK);
 
     // TODO: Get => corresponding amount of BaseProtocol Debt and FujiDebt
 
     // If passed argument amount is negative do MAX
-    uint256 amountToPayback = _repayAmount < 0 ? userDebtBalance : uint256(_repayAmount);
+    uint256 amountToPayback = _repayAmount < 0 ? debtBalance + userFee : uint256(_repayAmount);
 
     if (vAssets.borrowAsset == ETH) {
       require(msg.value >= amountToPayback, Errors.VL_AMOUNT_ERROR);
@@ -319,12 +341,16 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     }
 
     // Delegate Call Payback to current provider
-    _payback(amountToPayback, address(activeProvider));
+    _payback(amountToPayback - userFee, address(activeProvider));
 
     // Debt Management
-    IFujiERC1155(fujiERC1155).burn(msg.sender, vAssets.borrowID, amountToPayback);
+    IFujiERC1155(fujiERC1155).burn(msg.sender, vAssets.borrowID, amountToPayback - userFee);
 
-    emit Payback(msg.sender, vAssets.borrowAsset, userDebtBalance);
+    // Update protocol fees
+    _userFeeTimestamps[msg.sender] = block.timestamp;
+    remainingProtocolFee += userFee;
+
+    emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
   }
 
   /**
@@ -332,9 +358,28 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
    * @param _repayAmount: token amount of underlying to repay, or pass -1 to repay full ammount
    * Emits a {Repay} event.
    */
-  function paybackLiq(int256 _repayAmount) external payable override onlyFliquidator {
+  function paybackLiq(address[] memory _users, uint256 _repayAmount)
+    external
+    payable
+    override
+    onlyFliquidator
+  {
+    // calculate protocol fee
+    uint256 _fee = 0;
+    for (uint256 i = 0; i < _users.length; i++) {
+      if (_users[i] != address(0)) {
+        _userFeeTimestamps[_users[i]] = block.timestamp;
+
+        uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_users[i], vAssets.borrowID);
+        _fee += _userProtocolFee(_users[i], debtPrincipal);
+      }
+    }
+
     // Logic used when called by Fliquidator
-    _payback(uint256(_repayAmount), address(activeProvider));
+    _payback(_repayAmount - _fee, address(activeProvider));
+
+    // Update protocol fees
+    remainingProtocolFee += _fee;
   }
 
   /**
@@ -442,6 +487,9 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     } else if (typeHash == keccak256(abi.encode("bonusLiqF"))) {
       bonusLiqF.a = _newFactorA;
       bonusLiqF.b = _newFactorB;
+    } else if (typeHash == keccak256(abi.encode("protocolFee"))) {
+      protocolFee.a = _newFactorA;
+      protocolFee.b = _newFactorB;
     }
   }
 
@@ -540,6 +588,39 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
   }
 
   /**
+   * @dev Returns the total debt of a user
+   * @param _user: address of a user
+   * @return the total debt of a user including the protocol fee
+   */
+  function userDebtBalance(address _user) external view override returns (uint256) {
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.borrowID);
+    uint256 fee = (debtPrincipal * (block.timestamp - _userFeeTimestamps[_user]) * protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
+
+    return debtPrincipal + fee;
+  }
+
+  /**
+   * @dev Returns the protocol fee of a user
+   * @param _user: address of a user
+   * @return the protocol fee of a user
+   */
+  function userProtocolFee(address _user) external view override returns (uint256) {
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.borrowID);
+    return _userProtocolFee(_user, debtPrincipal);
+  }
+
+  /**
+   * @dev Returns the collateral asset balance of a user
+   * @param _user: address of a user
+   * @return the collateral asset balance
+   */
+  function userDepositBalance(address _user) external view override returns (uint256) {
+    return IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.collateralID);
+  }
+
+  /**
    * @dev Harvests the Rewards from baseLayer Protocols
    * @param _farmProtocolNum: number per VaultHarvester Contract for specific farm
    * @param _data: the additional data to be used for harvest
@@ -576,5 +657,23 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
 
       updateF1155Balances();
     }
+  }
+
+  function withdrawProtocolFee() external nonReentrant {
+    IERC20Upgradeable(vAssets.borrowAsset).univTransfer(
+      payable(IFujiAdmin(_fujiAdmin).getTreasury()),
+      remainingProtocolFee
+    );
+
+    remainingProtocolFee = 0;
+  }
+
+  // Internal Functions
+
+  function _userProtocolFee(address _user, uint256 _debtPrincipal) internal view returns (uint256) {
+    return
+      (_debtPrincipal * (block.timestamp - _userFeeTimestamps[_user]) * protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
   }
 }
