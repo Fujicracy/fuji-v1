@@ -34,7 +34,6 @@ import { TextInput } from 'components/UI';
 import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 // import { MARKETS, MARKET_NAMES } from 'consts/markets';
 import { Transactor, GasEstimator } from 'helpers';
-import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 import { Container, Helper } from './style';
@@ -63,15 +62,13 @@ function InitBorrow({ contracts, provider, address }) {
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
-      map(Object.keys(VAULTS), key => {
-        if (
+      const vaultKey = find(
+        Object.keys(VAULTS),
+        key =>
           VAULTS[key].borrowAsset.name === borrowAsset &&
-          VAULTS[key].collateralAsset.name === collateralAsset
-        ) {
-          setVault(VAULTS[key]);
-          console.log('SETTING:', VAULTS[key]);
-        }
-      });
+          VAULTS[key].collateralAsset.name === collateralAsset,
+      );
+      setVault(VAULTS[vaultKey]);
     }
   }, [borrowAsset, collateralAsset]);
 
@@ -79,7 +76,7 @@ function InitBorrow({ contracts, provider, address }) {
     if (vault.isCollateralERC20) setBorrowAmount('1');
     else setBorrowAmount('1000');
   }, [vault]);
-  // const ethPrice = useExchangePrice();
+
   const borrowAssetPrice = useExchangePrice(borrowAsset);
   const collateralAssetPrice = useExchangePrice(collateralAsset);
   const [dialog, setDialog] = useState('');
@@ -87,10 +84,18 @@ function InitBorrow({ contracts, provider, address }) {
 
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
 
-  const unFormattedEthBalance = useBalance(provider, address);
-  const ethBalance = unFormattedEthBalance
-    ? Number(formatUnits(unFormattedEthBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
+  const unFormattedBalance = useBalance(
+    provider,
+    address,
+    contracts,
+    vault.collateralAsset.name,
+    vault.isCollateralERC20,
+    1000,
+  );
+  const balance = unFormattedBalance
+    ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
     : null;
+
   const { decimals } = ASSETS[borrowAsset];
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -126,6 +131,14 @@ function InitBorrow({ contracts, provider, address }) {
           collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
     decimals,
   };
+
+  console.log({
+    collateralAsset,
+    balance,
+    position,
+    borrowAssetPrice,
+    collateralAssetPrice,
+  });
 
   const tx = Transactor(provider);
   const onSubmit = async () => {
@@ -308,7 +321,7 @@ function InitBorrow({ contracts, provider, address }) {
                     ref={register({
                       required: { value: true, message: 'required-amount' },
                       min: { value: neededCollateral, message: 'insufficient-collateral' },
-                      max: { value: ethBalance, message: 'insufficient-balance' },
+                      max: { value: balance, message: 'insufficient-balance' },
                     })}
                     startAdornmentImage={ASSETS[collateralAsset].icon}
                     endAdornment={{
@@ -317,7 +330,7 @@ function InitBorrow({ contracts, provider, address }) {
                     }}
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
-                      ethBalance ? Number(ethBalance).toFixed(3) : '...'
+                      balance ? Number(balance).toFixed(3) : '...'
                     } Ξ`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
