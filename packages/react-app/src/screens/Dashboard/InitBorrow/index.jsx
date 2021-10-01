@@ -185,7 +185,6 @@ function InitBorrow({ contracts, provider, address }) {
       ? base.pow(e).sub(1)
       : parseUnits(unFormattedAmount, vault.collateralAsset.decimals);
 
-    console.log({ base, e, approveAmount, unFormattedAmount, temp: base.pow(e).sub(1) });
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
       contracts[vault.collateralAsset.name].approve(
