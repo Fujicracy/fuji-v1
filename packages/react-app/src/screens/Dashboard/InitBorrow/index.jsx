@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
+import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import {
@@ -17,7 +18,7 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Box } from 'rebass';
 import { ETH_CAP_VALUE } from 'consts/globals';
-import { useBalance, useContractReader, useExchangePrice } from 'hooks';
+import { useBalance, useContractReader, useExchangePrice, useAllowance } from 'hooks';
 import {
   CollaterizationIndicator,
   ProvidersList,
@@ -51,7 +52,7 @@ function InitBorrow({ contracts, provider, address }) {
   const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
   // const [market, setMarket] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
-
+  const [vaultAddress, setVaultAddress] = useState(Object.keys(VAULTS)[0]);
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -69,11 +70,12 @@ function InitBorrow({ contracts, provider, address }) {
           VAULTS[key].collateralAsset.name === collateralAsset,
       );
       setVault(VAULTS[vaultKey]);
+      setVaultAddress(vaultKey);
     }
   }, [borrowAsset, collateralAsset]);
 
   useEffect(() => {
-    if (vault.isCollateralERC20) setBorrowAmount('1');
+    if (vault.collateralAsset.isERC20) setBorrowAmount('1');
     else setBorrowAmount('1000');
   }, [vault]);
 
@@ -84,12 +86,14 @@ function InitBorrow({ contracts, provider, address }) {
 
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
 
+  const allowance = useAllowance(contracts, collateralAsset, [address, vaultAddress]);
+
   const unFormattedBalance = useBalance(
     provider,
     address,
     contracts,
     vault.collateralAsset.name,
-    vault.isCollateralERC20,
+    vault.collateralAsset.isERC20,
     1000,
   );
   const balance = unFormattedBalance
@@ -132,25 +136,25 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const tx = Transactor(provider);
-  const onSubmit = async () => {
-    // const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-    // if (totalCollateral > ETH_CAP_VALUE) {
-    //   setDialog('capCollateral');
-    //   return;
-    // }
 
-    setLoading(true);
+  const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
       parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
       parseUnits(borrowAmount, ASSETS[borrowAsset].decimals),
-      { value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals) },
+      {
+        value: vault.collateralAsset.isERC20
+          ? 0
+          : parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
+      },
     ]);
     const res = await tx(
       contracts[vault.name].depositAndBorrow(
         parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
         parseUnits(borrowAmount, ASSETS[borrowAsset].decimals),
         {
-          value: parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
+          value: vault.collateralAsset.isERC20
+            ? 0
+            : parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
           gasLimit,
         },
       ),
@@ -159,10 +163,67 @@ function InitBorrow({ contracts, provider, address }) {
     if (res && res.hash) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
-        setDialog('success');
+        setDialog({ step: 'success' });
       }
     }
     setLoading(false);
+  };
+
+  const approve = async infiniteApproval => {
+    let unFormattedAmount = collateralAmount;
+    // when repaying max debt, amount needs to be scaled by 2%
+    // so that user approves a bit more in order to account for
+    // the accrued interest
+    // TODO add message to inform user
+    if (parseUnits(collateralAmount, vault.collateralAsset.decimals).eq(collateralBalance)) {
+      unFormattedAmount = (Number(collateralAmount) * 1.02).toFixed(6);
+    }
+
+    const base = BigNumber.from(2);
+    const e = BigNumber.from(256);
+    const approveAmount = infiniteApproval
+      ? base.pow(e).sub(1)
+      : parseUnits(unFormattedAmount, vault.collateralAsset.decimals);
+
+    console.log({ base, e, approveAmount, unFormattedAmount, temp: base.pow(e).sub(1) });
+    setDialog({ step: 'approvalPending', withApproval: true });
+    const res = await tx(
+      contracts[vault.collateralAsset.name].approve(
+        contracts[vault.name].address,
+        BigNumber.from(approveAmount),
+      ),
+    );
+
+    if (res && res.hash) {
+      const receipt = await res.wait();
+      if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
+        borrow();
+      }
+    } else {
+      // error
+      setDialog({ step: null, withApproval: false });
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = async () => {
+    // const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
+    // if (totalCollateral > ETH_CAP_VALUE) {
+    //   setDialog({step:'capCollateral'});
+    //   return;
+    // }
+    setLoading(true);
+
+    if (vault.collateralAsset.isERC20) {
+      if (parseUnits(collateralAmount, vault.collateralAsset.decimals).gt(allowance)) {
+        setDialog({ step: 'approval', withApproval: true });
+      } else {
+        await borrow();
+      }
+      return;
+    }
+
+    await borrow();
   };
 
   // const handleChangeMarket = option => {
@@ -193,6 +254,20 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogActions>
       ),
     },
+    approval: {
+      title: 'Approving...',
+      content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
+      actions: () => (
+        <DialogActions>
+          <Button onClick={() => approve(false)} className="main-button">
+            Approve {Number(collateralAmount).toFixed(2)} {collateralAsset}
+          </Button>
+          <Button onClick={() => approve(true)} className="main-button">
+            Infinite Approve
+          </Button>
+        </DialogActions>
+      ),
+    },
     capCollateral: {
       title: 'Collateral Cap',
       content: `The total amount of ETH you provide as collateral exceeds ${ETH_CAP_VALUE} ETH. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon.`,
@@ -200,7 +275,7 @@ function InitBorrow({ contracts, provider, address }) {
         <DialogActions>
           <Button
             onClick={() => {
-              setDialog('');
+              setDialog({ step: null });
             }}
             className="main-button"
           >
@@ -214,23 +289,23 @@ function InitBorrow({ contracts, provider, address }) {
   return (
     <Container>
       <Dialog
-        open={dialog === 'success' || dialog === 'capCollateral'}
+        open={['success', 'capCollateral', 'approval'].includes(dialog.step)}
         aria-labelledby="form-dialog-title"
       >
         <div
           className="close"
           onClick={() => {
-            setDialog('');
+            setDialog({ step: null });
             setLoading(false);
           }}
         >
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">{dialogContents[dialog]?.title}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{dialogContents[dialog.step]?.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{dialogContents[dialog]?.content}</DialogContentText>
+          <DialogContentText>{dialogContents[dialog.step]?.content}</DialogContentText>
         </DialogContent>
-        {dialogContents[dialog]?.actions()}
+        {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Box
         minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
@@ -311,7 +386,10 @@ function InitBorrow({ contracts, provider, address }) {
                     onChange={({ target }) => setCollateralAmount(target.value)}
                     ref={register({
                       required: { value: true, message: 'required-amount' },
-                      min: { value: neededCollateral, message: 'insufficient-collateral' },
+                      min: {
+                        value: neededCollateral,
+                        message: 'insufficient-collateral',
+                      },
                       max: { value: balance, message: 'insufficient-balance' },
                     })}
                     startAdornmentImage={ASSETS[collateralAsset].icon}

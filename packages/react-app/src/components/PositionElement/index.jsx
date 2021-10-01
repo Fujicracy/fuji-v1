@@ -40,7 +40,6 @@ function PositionElement({ position, actionType }) {
   const collateralAssetPrice = useExchangePrice(collateralAsset.name);
   const borrowAssetPrice = useExchangePrice(borrowAsset.name);
 
-  console.log({ borrowAsset, collateralAssetPrice, collateralAsset, borrowAssetPrice });
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
 

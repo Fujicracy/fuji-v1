@@ -19,7 +19,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { Transactor, GasEstimator } from '../../../helpers';
-import { useContractReader, useExchangePrice } from '../../../hooks';
+import { useContractReader, useExchangePrice, useBalance, useAllowance } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -45,13 +45,24 @@ function DebtForm({ position, contracts, provider, address }) {
   const vault = VAULTS[position.vaultAddress];
   const { decimals } = vault.borrowAsset;
 
-  const unFormattedBalance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [
+  // const unFormattedBalance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [
+  //   address,
+  // ]);
+
+  const unFormattedBalance = useBalance(
+    provider,
     address,
-  ]);
+    contracts,
+    vault.borrowAsset.name,
+    vault.borrowAsset.isERC20,
+    1000,
+  );
+
   const balance = unFormattedBalance
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
-  const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
+
+  const allowance = useAllowance(contracts, vault.borrowAsset.name, [
     address,
     position.vaultAddress,
   ]);
@@ -119,10 +130,11 @@ function DebtForm({ position, contracts, provider, address }) {
         : unFormattedAmount;
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
-      parseUnits(unFormattedAmount, decimals),
+      { value: vault.borrowAsset.isERC20 ? parseUnits(unFormattedAmount, decimals) : 0 },
     ]);
     const res = await tx(
       contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
+        value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),
         gasLimit,
       }),
     );
@@ -177,8 +189,12 @@ function DebtForm({ position, contracts, provider, address }) {
   const onSubmit = async () => {
     setLoading(true);
     if (action === Action.Repay) {
-      if (parseUnits(amount, decimals).gt(allowance)) {
-        setDialog({ step: 'approval', withApproval: true });
+      if (vault.borrowAsset.isERC20) {
+        if (parseUnits(amount, decimals).gt(allowance)) {
+          setDialog({ step: 'approval', withApproval: true });
+        } else {
+          payback(false);
+        }
       } else {
         payback(false);
       }

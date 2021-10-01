@@ -44,19 +44,27 @@ function MyPositions({ contracts, address }) {
 
   const markets = [...new Set(map(Object.values(VAULTS), vault => vault.borrowAsset.name))];
 
-  const hasPosition = asset => {
-    if (asset) {
-      const position = find(positions, item => item.borrowAsset.name === asset);
+  const hasPosition = (borrowAssetName, collateralAssetName) => {
+    if (borrowAssetName) {
+      const position = find(
+        positions,
+        item =>
+          item.borrowAsset.name === borrowAssetName &&
+          item.collateralAsset.name === collateralAssetName,
+      );
+
       return (
         position &&
         position.collateralBalance &&
-        Number(formatUnits(position.collateralBalance, position.borrowAsset.decimals)) > 0
+        Number(formatUnits(position.collateralBalance, position.collateralAsset.decimals)) > 0
       );
     }
+
     for (let i = 0; i < positions.length; i += 1) {
       if (
         positions[i].collateralBalance &&
-        Number(formatUnits(positions[i].collateralBalance, positions[i].borrowAsset.decimals)) > 0
+        Number(formatUnits(positions[i].collateralBalance, positions[i].collateralAsset.decimals)) >
+          0
       ) {
         return true;
       }
@@ -136,9 +144,9 @@ function MyPositions({ contracts, address }) {
                   'desc',
                 ),
                 position =>
-                  hasPosition(position.borrowAsset.name) && (
+                  hasPosition(position.borrowAsset.name, position.collateralAsset.name) && (
                     <Grid
-                      key={position.borrowAsset.name}
+                      key={`${position.borrowAsset.name}-${position.collateralAsset.name}`}
                       item
                       className="one-position"
                       onClick={() => {
