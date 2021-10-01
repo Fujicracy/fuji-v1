@@ -265,7 +265,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     // Delegate Call Borrow to current provider
     _borrow(_borrowAmount, address(activeProvider));
 
-    if(vAssets.borrowAsset == FTM) {
+    if (vAssets.borrowAsset == FTM) {
       IWETH(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).withdraw(_borrowAmount);
     }
 

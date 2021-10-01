@@ -25,11 +25,11 @@ let mainnetUrl = process.env.ALCHEMY_ID
   : `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`;
 
 switch (process.env.NETWORK) {
-  case 'fantom':
+  case "fantom":
     forkURL = `https://rpc.ftm.tools/`;
     break;
-  case 'bsc':
-    forkURL = 'https://bsc-dataseed.binance.org/';
+  case "bsc":
+    forkURL = "https://bsc-dataseed.binance.org/";
     break;
   default:
     forkURL = mainnetUrl;

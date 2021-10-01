@@ -356,7 +356,7 @@ function testPaybackAndWithdraw1(vaults, amountToDeposit, amountToBorrow) {
       for (let x = 1; x < 4; x += 1) {
         await this.f[name].connect(this.users[x]).withdraw(-1);
         await expect(await this.f.f1155.balanceOf(this.users[x].address, collateralID)).to.be.lt(
-          1e13
+          1e15
         );
       }
     });
