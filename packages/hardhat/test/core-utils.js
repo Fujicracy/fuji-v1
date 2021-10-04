@@ -1,15 +1,18 @@
 const { ethers, upgrades } = require("hardhat");
+const { expect } = require("chai");
 
 const { getContractAt, getContractFactory } = ethers;
 
-const UNISWAP_V2_ROUTER = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
-const TREASURY_ADDR = "0x9F5A10E45906Ef12497237cE10fB7AB9B850Ff86";
+const SUSHI_ROUTER_ADDR = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
+
 const ASSETS = {
   DAI: {
     name: "dai",
     nameUp: "DAI",
     address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     oracle: "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9",
+    aToken: "0x028171bca77440897b824ca71d1c56cac55b68a3",
     decimals: 18,
   },
   USDC: {
@@ -17,6 +20,7 @@ const ASSETS = {
     nameUp: "USDC",
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     oracle: "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6",
+    aToken: "0x9bA00D6856a4eDF4665BcA2C2309936572473B7E",
     decimals: 6,
   },
   USDT: {
@@ -24,6 +28,7 @@ const ASSETS = {
     nameUp: "USDT",
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     oracle: "0x3E7d1eAB13ad0104d2750B8863b489D65364e32D",
+    aToken: "0x71fc860F7D3A592A4a98740e39dB31d25db65ae8",
     decimals: 6,
   },
   ETH: {
@@ -31,6 +36,7 @@ const ASSETS = {
     nameUp: "ETH",
     address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     oracle: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+    aToken: "0x030ba81f1c18d280636f32af80b9aad02cf0854e",
     decimals: 18,
   },
   WETH: {
@@ -38,14 +44,16 @@ const ASSETS = {
     nameUp: "WETH",
     address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     oracle: "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+    aToken: "0x030ba81f1c18d280636f32af80b9aad02cf0854e",
     decimals: 18,
   },
-  FEI: {
-    name: "fei",
-    nameUp: "FEI",
-    address: "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
-    oracle: "0x31e0a88fecB6eC0a411DBe0e9E76391498296EE9",
-    decimals: 18,
+  WBTC: {
+    name: "wbtc",
+    nameUp: "WBTC",
+    address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    oracle: "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",
+    aToken: "0x9ff58f4ffb29fa2266ab25e75e2a8b3503311656",
+    decimals: 8,
   },
 };
 
@@ -73,7 +81,7 @@ const fixture = async ([wallet]) => {
   for (const asset in ASSETS) {
     tokens[`${ASSETS[asset].name}`] = await getContractAt("IERC20", ASSETS[asset].address);
   }
-  const swapper = await getContractAt("IUniswapV2Router02", UNISWAP_V2_ROUTER);
+  const swapper = await getContractAt("IUniswapV2Router02", SUSHI_ROUTER_ADDR);
 
   // Step 1: Base Contracts
   const FujiAdmin = await getContractFactory("FujiAdmin");
@@ -97,17 +105,21 @@ const fixture = async ([wallet]) => {
     Object.values(ASSETS).map((asset) => asset.oracle)
   );
 
+  const Harvester = await getContractFactory("VaultHarvester");
+  const harvester = await Harvester.deploy([]);
+
+  const FujiSwapper = await getContractFactory("Swapper");
+  const fujiSwapper = await FujiSwapper.deploy([]);
+
   // Step 2: Providers
-  const Fuse3 = await getContractFactory("ProviderFuse3");
-  const fuse3 = await Fuse3.deploy([]);
-  const Fuse6 = await getContractFactory("ProviderFuse6");
-  const fuse6 = await Fuse6.deploy([]);
-  const Fuse7 = await getContractFactory("ProviderFuse7");
-  const fuse7 = await Fuse7.deploy([]);
-  const Fuse8 = await getContractFactory("ProviderFuse8");
-  const fuse8 = await Fuse8.deploy([]);
-  const Fuse18 = await getContractFactory("ProviderFuse18");
-  const fuse18 = await Fuse18.deploy([]);
+  const Compound = await getContractFactory("ProviderCompound");
+  const compound = await Compound.deploy([]);
+  const Aave = await getContractFactory("ProviderAave");
+  const aave = await Aave.deploy([]);
+  const DyDx = await getContractFactory("ProviderDYDX");
+  const dydx = await DyDx.deploy([]);
+  const IronBank = await getContractFactory("ProviderIronBank");
+  const ironBank = await IronBank.deploy([]);
 
   // Setp 3: Vaults
   const FujiVault = await getContractFactory("FujiVault");
@@ -132,8 +144,10 @@ const fixture = async ([wallet]) => {
   await fujiadmin.setFliquidator(fliquidator.address);
   await fujiadmin.setTreasury(TREASURY_ADDR);
   await fujiadmin.setController(controller.address);
+  await fujiadmin.setVaultHarvester(harvester.address);
+  await fujiadmin.setSwapper(fujiSwapper.address);
   await fliquidator.setFujiAdmin(fujiadmin.address);
-  await fliquidator.setSwapper(UNISWAP_V2_ROUTER);
+  await fliquidator.setSwapper(SUSHI_ROUTER_ADDR);
   await flasher.setFujiAdmin(fujiadmin.address);
   await controller.setFujiAdmin(fujiadmin.address);
   await f1155.setPermit(fliquidator.address, true);
@@ -141,11 +155,10 @@ const fixture = async ([wallet]) => {
   return {
     ...tokens,
     ...vaults,
-    fuse3,
-    fuse6,
-    fuse7,
-    fuse8,
-    fuse18,
+    compound,
+    aave,
+    dydx,
+    ironBank,
     oracle,
     fujiadmin,
     fliquidator,

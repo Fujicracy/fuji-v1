@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { size, padding } from 'styled-system';
 import { Box } from 'rebass';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const Container = styled(Box)`
   display: flex;
@@ -14,10 +14,10 @@ export const Container = styled(Box)`
   border-color: rgb(239, 1, 80);
   ${size}
   ${padding}
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     
   `}
 `;

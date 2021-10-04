@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { Grid } from '@material-ui/core';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const HomeContainer = styled(animated.div)`
   background-size: contain !important;
@@ -14,13 +14,13 @@ export const HomeContainer = styled(animated.div)`
   font-family: sans-serif;
   text-align: center;
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     margin: 56px;
   `}
-  ${media.greaterThan('medium')`
+  ${fujiMedia.greaterThan('medium')`
     margin: 56px;
   `}
-  ${media.greaterThan('large')`
+  ${fujiMedia.greaterThan('large')`
     margin: 0px 128px;
   `}
 `;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const DropDownContainer = styled('div')`
   width: 100%;
@@ -23,11 +23,11 @@ export const DropDownHeader = styled('div')`
   border-bottom-right-radius: ${props => (props.isOpened ? '0px' : '6px')};
   border-bottom-left-radius: ${props => (props.isOpened ? '0px' : '6px')};
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 12px;
     height: 40px;
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     height: 56px;
     font-size: 18px;
   `}
@@ -72,7 +72,7 @@ export const DropDownList = styled('ul')`
     border-bottom-left-radius: 6px;
   }
   cursor: pointer;
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 12px;
   `}
 `;
@@ -97,11 +97,11 @@ export const ListItem = styled('li')`
     border-bottom-right-radius: 6px;
   }
 
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     font-size: 12px;
     height: 40px;
   `}
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     height: 56px;
     font-size: 18px;
   `}
