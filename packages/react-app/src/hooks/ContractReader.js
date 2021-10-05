@@ -20,7 +20,7 @@ export default function useContractReader(
     adjustPollTime = args;
   }
 
-  const [value, setValue] = useState();
+  const [value, setValue] = useState('');
   useEffect(() => {
     if (typeof onChange === 'function') {
       setTimeout(onChange.bind(this, value), 1);

@@ -18,7 +18,7 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Box } from 'rebass';
 import { ETH_CAP_VALUE } from 'consts/globals';
-import { useBalance, useContractReader, useExchangePrice, useAllowance } from 'hooks';
+import { useContractReader, useExchangePrice, useAllowance } from 'hooks';
 import {
   CollaterizationIndicator,
   ProvidersList,
@@ -33,8 +33,7 @@ import {
 import { TextInput } from 'components/UI';
 
 import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-// import { MARKETS, MARKET_NAMES } from 'consts/markets';
-import { Transactor, GasEstimator } from 'helpers';
+import { Transactor, GasEstimator, CallContractFunction, getUserBalance } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 import { Container, Helper } from './style';
@@ -88,17 +87,7 @@ function InitBorrow({ contracts, provider, address }) {
 
   const allowance = useAllowance(contracts, collateralAsset, [address, vaultAddress]);
 
-  const unFormattedBalance = useBalance(
-    provider,
-    address,
-    contracts,
-    vault.collateralAsset.name,
-    vault.collateralAsset.isERC20,
-    1000,
-  );
-  const balance = unFormattedBalance
-    ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
-    : null;
+  const [balance, setBalance] = useState(null);
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -110,16 +99,48 @@ function InitBorrow({ contracts, provider, address }) {
     vault.borrowId,
   ]);
 
-  const unFormattedNeededCollateral = useContractReader(
-    contracts,
-    vault.name,
-    'getNeededCollateralFor',
-    [borrowAmount ? parseUnits(borrowAmount, ASSETS[borrowAsset].decimals) : '', 'true'],
-  );
+  const [neededCollateral, setNeededCollateral] = useState(null);
 
-  const neededCollateral = unFormattedNeededCollateral
-    ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
-    : null;
+  useEffect(() => {
+    async function fetchBalance() {
+      const unFormattedBalance = await getUserBalance(
+        provider,
+        address,
+        contracts,
+        vault.collateralAsset.name,
+        vault.collateralAsset.isERC20,
+      );
+
+      const formattedBalance = unFormattedBalance
+        ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
+        : null;
+
+      setBalance(formattedBalance);
+    }
+
+    fetchBalance();
+  }, [collateralAsset, address, provider, vault, contracts]);
+
+  useEffect(() => {
+    async function fetchNeededCollateral() {
+      console.log({ borrowAmount });
+      const parsedBorrowAmount =
+        borrowAmount !== '' ? parseUnits(borrowAmount, ASSETS[borrowAsset].decimals) : 0x0;
+
+      const unFormattedNeededCollateral = await CallContractFunction(
+        contracts,
+        vault.name,
+        'getNeededCollateralFor',
+        [borrowAmount ? parsedBorrowAmount : '', 'true'],
+      );
+      const collateral = unFormattedNeededCollateral
+        ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
+        : null;
+      setNeededCollateral(collateral);
+    }
+
+    fetchNeededCollateral();
+  }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault.name]);
 
   const position = {
     borrowAsset: ASSETS[borrowAsset],
@@ -230,6 +251,8 @@ function InitBorrow({ contracts, provider, address }) {
   // };
 
   const handleChangeVault = v => {
+    setNeededCollateral(null);
+
     setBorrowAsset(v.borrowAsset.name);
     setCollateralAsset(v.collateralAsset.name);
     setVault(v);
