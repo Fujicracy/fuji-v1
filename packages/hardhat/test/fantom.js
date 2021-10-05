@@ -11,7 +11,7 @@ const {
   evmSnapshot,
   evmRevert,
   ZERO_ADDR,
-} = require("./utils-alpha");
+} = require("./v0-utils");
 
 const {
   fixture,
@@ -25,6 +25,7 @@ const {
   testPaybackAndWithdraw1,
   testPaybackAndWithdraw2,
   testPaybackAndWithdraw3,
+  testRefinance1,
 } = require("./fantom-utils");
 
 const ftmAddrs = {
@@ -161,67 +162,74 @@ describe("Fantom Fuji Instance", function () {
       }
     });
 
-    describe("Native token as collateral, ERC20 as borrow asset.", function () {
-      testDeposit1(
-        ftmAddrs.ftmcreamMapper,
-        [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
-        DEPOSIT_FTM
-      );
+    //   describe("Native token as collateral, ERC20 as borrow asset.", function () {
+    //     testDeposit1(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
+    //       DEPOSIT_FTM
+    //     );
 
-      testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    //     testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+    //     testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+    //     testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
 
-      testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
-    });
+    //     testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+    //     testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+    //     testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    //   });
 
-    describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
-        DEPOSIT_FTM
-      );
-      testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
-        DEPOSIT_WETH
-      );
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
-        DEPOSIT_WBTC
-      );
+    //   describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
+    //       DEPOSIT_FTM
+    //     );
+    //     testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
+    //       DEPOSIT_WETH
+    //     );
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
+    //       DEPOSIT_WBTC
+    //     );
 
-      testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
-      testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
-      testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
-      testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    //     testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+    //     testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
+    //     testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
+    //     testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+    //     testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
 
-      testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
-    });
+    //     testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+    //     testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    //   });
 
-    describe("ERC20 token as collateral, native token as borrow asset.", function () {
-      testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
+    //   describe("ERC20 token as collateral, native token as borrow asset.", function () {
+    //     testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
 
-      testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
-    });
+    //     testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
+    //     testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
+    //     testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
+    //   });
 
-    // testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
+    // testRefinance1(
+    //   [vaultwethdai, vaultwethusdc],
+    //   "ftmcream",
+    //   "scream",
+    //   DEPOSIT_WETH,
+    //   BORROW_STABLE,
+    //   0
+    // );
     // testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
     // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
 
   describe("Scream! as Provider", function () {
     before(async function () {
-      // REVERT to 2
-      evmRevert(evmSnapshot2);
+      // // REVERT to 2
+      // evmRevert(evmSnapshot2);
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
@@ -230,60 +238,67 @@ describe("Fantom Fuji Instance", function () {
       }
     });
 
-    describe("Native token as collateral, ERC20 as borrow asset.", function () {
-      testDeposit1(
-        ftmAddrs.ftmcreamMapper,
-        [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
-        DEPOSIT_FTM
-      );
+    //   describe("Native token as collateral, ERC20 as borrow asset.", function () {
+    //     testDeposit1(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
+    //       DEPOSIT_FTM
+    //     );
 
-      testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    //     testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+    //     testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+    //     testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
 
-      testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
-    });
+    //     testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
+    //     testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
+    //     testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+    //   });
 
-    describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
-        DEPOSIT_FTM
-      );
-      testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
-        DEPOSIT_WETH
-      );
-      testDeposit2(
-        ftmAddrs.ftmcreamMapper,
-        [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
-        DEPOSIT_WBTC
-      );
+    //   describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
+    //       DEPOSIT_FTM
+    //     );
+    //     testDeposit2(ftmAddrs.ftmcreamMapper, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
+    //       DEPOSIT_WETH
+    //     );
+    //     testDeposit2(
+    //       ftmAddrs.ftmcreamMapper,
+    //       [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
+    //       DEPOSIT_WBTC
+    //     );
 
-      testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
-      testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
-      testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
-      testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    //     testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+    //     testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
+    //     testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
+    //     testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+    //     testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
 
-      testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
-    });
+    //     testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
+    //     testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+    //   });
 
-    describe("ERC20 token as collateral, native token as borrow asset.", function () {
-      testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
+    //   describe("ERC20 token as collateral, native token as borrow asset.", function () {
+    //     testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
 
-      testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
-    });
+    //     testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
+    //     testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
+    //     testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
+    //   });
 
-    // testRefinance1([vaultethusdc, vaultethdai], "fuse3", "fuse18", 1);
-    // testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
-    // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
+    testRefinance1(
+      [vaultwethdai, vaultwethusdc],
+      "scream",
+      "ftmcream",
+      DEPOSIT_WETH,
+      BORROW_STABLE,
+      0
+    );
+    //   // testRefinance2([vaultusdcdai], "fuse3", "fuse18", 1);
+    //   // testRefinance3([vaultdaieth], "fuse3", "fuse18", 1);
   });
 });

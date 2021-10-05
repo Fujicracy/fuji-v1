@@ -11,6 +11,8 @@ import "./interfaces/IFujiAdmin.sol";
 import "./libraries/FlashLoans.sol";
 import "./libraries/Errors.sol";
 
+import "hardhat/console.sol";
+
 contract Controller is Claimable {
   IFujiAdmin private _fujiAdmin;
   mapping(address => bool) public isExecutor;
@@ -52,6 +54,7 @@ contract Controller is Claimable {
     IVaultControl.VaultAssets memory vAssets = IVaultControl(_vaultAddr).vAssets();
     vault.updateF1155Balances();
 
+console.log("1");
     // Check Vault borrowbalance and apply ratio (consider compound or not)
     uint256 debtPosition = IProvider(vault.activeProvider()).getBorrowBalanceOf(
       vAssets.borrowAsset,
@@ -59,6 +62,7 @@ contract Controller is Claimable {
     );
     uint256 applyRatiodebtPosition = (debtPosition * _ratioA) / _ratioB;
 
+console.log("2");
     // Check Ratio Input and Vault Balance at ActiveProvider
     require(
       debtPosition >= applyRatiodebtPosition && applyRatiodebtPosition > 0,
@@ -78,8 +82,10 @@ contract Controller is Claimable {
       fliquidator: address(0)
     });
 
+console.log(_fujiAdmin.getFlasher());
     Flasher(payable(_fujiAdmin.getFlasher())).initiateFlashloan(info, _flashNum);
 
+console.log("3");
     IVault(_vaultAddr).setActiveProvider(_newProvider);
   }
 

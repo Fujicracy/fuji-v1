@@ -3,12 +3,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 import "./abstracts/vault/VaultBaseUpgradeable.sol";
 import "./interfaces/IVault.sol";
 import "./interfaces/IHarvester.sol";
+import "./interfaces/ISwapper.sol";
 import "./interfaces/IERC20Extended.sol";
 import "./interfaces/chainlink/AggregatorV3Interface.sol";
 import "./interfaces/IFujiAdmin.sol";
@@ -19,9 +20,11 @@ import "./interfaces/IWETH.sol";
 import "./libraries/Errors.sol";
 import "./libraries/LibUniversalERC20FTM.sol";
 
+import "hardhat/console.sol";
+
 contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
-  using SafeERC20 for IERC20;
-  using LibUniversalERC20FTM for IERC20;
+  using SafeERC20Upgradeable for IERC20Upgradeable;
+  using LibUniversalERC20FTM for IERC20Upgradeable;
 
   address public constant FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
@@ -36,8 +39,8 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   // Collateralization factor
   Factor public collatF;
 
-  // Bonus Factor for Flash Liquidation
-  Factor public bonusFlashLiqF;
+  // Protocol Fee factor
+  Factor public override protocolFee;
 
   // Bonus factor for liquidation
   Factor public bonusLiqF;
@@ -54,6 +57,11 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
   uint8 internal _collateralAssetDecimals;
   uint8 internal _borrowAssetDecimals;
+
+  uint256 public constant ONE_YEAR = 60 * 60 * 24 * 365;
+
+  mapping(address => uint256) internal _userFeeTimestamps; // to be used for protocol fee calculation
+  uint256 public remainingProtocolFee;
 
   modifier isAuthorized() {
     require(
@@ -120,6 +128,9 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     // 0.05
     bonusLiqF.a = 1;
     bonusLiqF.b = 20;
+
+    protocolFee.a = 1;
+    protocolFee.b = 1000;
   }
 
   receive() external payable {}
@@ -157,7 +168,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
       require(msg.value == _collateralAmount && _collateralAmount != 0, Errors.VL_AMOUNT_ERROR);
     } else {
       require(_collateralAmount != 0, Errors.VL_AMOUNT_ERROR);
-      IERC20(vAssets.collateralAsset).safeTransferFrom(
+      IERC20Upgradeable(vAssets.collateralAsset).safeTransferFrom(
         msg.sender,
         address(this),
         _collateralAmount
@@ -216,7 +227,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     _withdraw(amountToWithdraw, address(activeProvider));
 
     // Transer Assets to User
-    IERC20(vAssets.collateralAsset).univTransfer(payable(msg.sender), amountToWithdraw);
+    IERC20Upgradeable(vAssets.collateralAsset).univTransfer(payable(msg.sender), amountToWithdraw);
 
     emit Withdraw(msg.sender, vAssets.collateralAsset, amountToWithdraw);
   }
@@ -231,7 +242,10 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   function withdrawLiq(int256 _withdrawAmount) external override nonReentrant onlyFliquidator {
     // Logic used when called by Fliquidator
     _withdraw(uint256(_withdrawAmount), address(activeProvider));
-    IERC20(vAssets.collateralAsset).univTransfer(payable(msg.sender), uint256(_withdrawAmount));
+    IERC20Upgradeable(vAssets.collateralAsset).univTransfer(
+      payable(msg.sender),
+      uint256(_withdrawAmount)
+    );
   }
 
   /**
@@ -247,11 +261,10 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
       vAssets.collateralID
     );
 
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 totalBorrow = _borrowAmount + debtPrincipal;
     // Get Required Collateral with Factors to maintain debt position healthy
-    uint256 neededCollateral = getNeededCollateralFor(
-      _borrowAmount + IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID),
-      true
-    );
+    uint256 neededCollateral = getNeededCollateralFor(totalBorrow, true);
 
     // Check Provided Collateral is not Zero, and greater than needed to maintain healthy position
     require(
@@ -259,18 +272,32 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
       Errors.VL_INVALID_BORROW_AMOUNT
     );
 
+    // Update timestamp for fee calculation
+
+    uint256 userFee = (debtPrincipal *
+      (block.timestamp - _userFeeTimestamps[msg.sender]) *
+      protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
+
+    _userFeeTimestamps[msg.sender] =
+      block.timestamp -
+      (userFee * ONE_YEAR * protocolFee.a) /
+      protocolFee.b /
+      totalBorrow;
+
     // Debt Management
     IFujiERC1155(fujiERC1155).mint(msg.sender, vAssets.borrowID, _borrowAmount, "");
 
     // Delegate Call Borrow to current provider
     _borrow(_borrowAmount, address(activeProvider));
 
-    if (vAssets.borrowAsset == FTM) {
+    if(vAssets.borrowAsset == FTM) {
       IWETH(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).withdraw(_borrowAmount);
     }
 
     // Transer Assets to User
-    IERC20(vAssets.borrowAsset).univTransfer(payable(msg.sender), _borrowAmount);
+    IERC20Upgradeable(vAssets.borrowAsset).univTransfer(payable(msg.sender), _borrowAmount);
 
     emit Borrow(msg.sender, vAssets.borrowAsset, _borrowAmount);
   }
@@ -284,39 +311,52 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     // Logic used when called by normal user
     updateF1155Balances();
 
-    uint256 userDebtBalance = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 debtBalance = IFujiERC1155(fujiERC1155).balanceOf(msg.sender, vAssets.borrowID);
+    uint256 userFee = _userProtocolFee(msg.sender, debtBalance);
 
     // Check User Debt is greater than Zero and amount is not Zero
-    require(_repayAmount != 0 && userDebtBalance > 0, Errors.VL_NO_DEBT_TO_PAYBACK);
+    require(uint256(_repayAmount) > userFee && debtBalance > 0, Errors.VL_NO_DEBT_TO_PAYBACK);
 
     // TODO: Get => corresponding amount of BaseProtocol Debt and FujiDebt
 
     // If passed argument amount is negative do MAX
-    uint256 amountToPayback = _repayAmount < 0 ? userDebtBalance : uint256(_repayAmount);
+    uint256 amountToPayback = _repayAmount < 0 ? debtBalance + userFee : uint256(_repayAmount);
 
     if (vAssets.borrowAsset == FTM) {
       require(msg.value >= amountToPayback, Errors.VL_AMOUNT_ERROR);
       if (msg.value > amountToPayback) {
-        IERC20(vAssets.borrowAsset).univTransfer(payable(msg.sender), msg.value - amountToPayback);
+        IERC20Upgradeable(vAssets.borrowAsset).univTransfer(
+          payable(msg.sender),
+          msg.value - amountToPayback
+        );
       }
     } else {
       // Check User Allowance
       require(
-        IERC20(vAssets.borrowAsset).allowance(msg.sender, address(this)) >= amountToPayback,
+        IERC20Upgradeable(vAssets.borrowAsset).allowance(msg.sender, address(this)) >=
+          amountToPayback,
         Errors.VL_MISSING_ERC20_ALLOWANCE
       );
 
       // Transfer Asset from User to Vault
-      IERC20(vAssets.borrowAsset).safeTransferFrom(msg.sender, address(this), amountToPayback);
+      IERC20Upgradeable(vAssets.borrowAsset).safeTransferFrom(
+        msg.sender,
+        address(this),
+        amountToPayback
+      );
     }
 
     // Delegate Call Payback to current provider
-    _payback(amountToPayback, address(activeProvider));
+    _payback(amountToPayback - userFee, address(activeProvider));
 
     // Debt Management
-    IFujiERC1155(fujiERC1155).burn(msg.sender, vAssets.borrowID, amountToPayback);
+    IFujiERC1155(fujiERC1155).burn(msg.sender, vAssets.borrowID, amountToPayback - userFee);
 
-    emit Payback(msg.sender, vAssets.borrowAsset, userDebtBalance);
+    // Update protocol fees
+    _userFeeTimestamps[msg.sender] = block.timestamp;
+    remainingProtocolFee += userFee;
+
+    emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
   }
 
   /**
@@ -324,9 +364,28 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
    * @param _repayAmount: token amount of underlying to repay, or pass -1 to repay full ammount
    * Emits a {Repay} event.
    */
-  function paybackLiq(int256 _repayAmount) external payable override onlyFliquidator {
+  function paybackLiq(address[] memory _users, uint256 _repayAmount)
+    external
+    payable
+    override
+    onlyFliquidator
+  {
+    // calculate protocol fee
+    uint256 _fee = 0;
+    for (uint256 i = 0; i < _users.length; i++) {
+      if (_users[i] != address(0)) {
+        _userFeeTimestamps[_users[i]] = block.timestamp;
+
+        uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_users[i], vAssets.borrowID);
+        _fee += _userProtocolFee(_users[i], debtPrincipal);
+      }
+    }
+
     // Logic used when called by Fliquidator
-    _payback(uint256(_repayAmount), address(activeProvider));
+    _payback(_repayAmount - _fee, address(activeProvider));
+
+    // Update protocol fees
+    remainingProtocolFee += _fee;
   }
 
   /**
@@ -340,28 +399,39 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     uint256 _flashLoanAmount,
     uint256 _fee
   ) external payable override onlyFlash whenNotPaused {
+    console.log("_flashLoanAmount =", _flashLoanAmount);
     // Compute Ratio of transfer before payback
     uint256 ratio = (_flashLoanAmount * 1e18) /
       (IProvider(activeProvider).getBorrowBalance(vAssets.borrowAsset));
 
+    console.log("ratio =", ratio);
     // Payback current provider
     _payback(_flashLoanAmount, activeProvider);
 
+    console.log("payback");
     // Withdraw collateral proportional ratio from current provider
     uint256 collateraltoMove = (IProvider(activeProvider).getDepositBalance(
       vAssets.collateralAsset
     ) * ratio) / 1e18;
+    console.log("collateraltoMove =", collateraltoMove);
 
     _withdraw(collateraltoMove, activeProvider);
+    console.log("_withdraw");
 
     // Deposit to the new provider
     _deposit(collateraltoMove, _newProvider);
+    console.log("_deposit");
 
     // Borrow from the new provider, borrowBalance + premium
     _borrow(_flashLoanAmount + _fee, _newProvider);
+    console.log("_borrow");
 
     // return borrowed amount to Flasher
-    IERC20(vAssets.borrowAsset).univTransfer(payable(msg.sender), _flashLoanAmount + _fee);
+    IERC20Upgradeable(vAssets.borrowAsset).univTransfer(
+      payable(msg.sender),
+      _flashLoanAmount + _fee
+    );
+    console.log("univTransfer");
 
     emit Switch(activeProvider, _newProvider, _flashLoanAmount, collateraltoMove);
   }
@@ -431,6 +501,9 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     } else if (typeHash == keccak256(abi.encode("bonusLiqF"))) {
       bonusLiqF.a = _newFactorA;
       bonusLiqF.b = _newFactorB;
+    } else if (typeHash == keccak256(abi.encode("protocolFee"))) {
+      protocolFee.a = _newFactorA;
+      protocolFee.b = _newFactorB;
     }
   }
 
@@ -454,20 +527,14 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
    * @dev External Function to call updateState in F1155
    */
   function updateF1155Balances() public override {
-    uint256 borrowBals;
-    uint256 depositBals;
-
-    // take into account all balances across providers
-    uint256 length = providers.length;
-    for (uint256 i = 0; i < length; i++) {
-      depositBals =
-        depositBals +
-        IProvider(providers[i]).getDepositBalance(vAssets.collateralAsset);
-      borrowBals = borrowBals + (IProvider(providers[i]).getBorrowBalance(vAssets.borrowAsset));
-    }
-
-    IFujiERC1155(fujiERC1155).updateState(vAssets.borrowID, borrowBals);
-    IFujiERC1155(fujiERC1155).updateState(vAssets.collateralID, depositBals);
+    IFujiERC1155(fujiERC1155).updateState(
+      vAssets.borrowID,
+      IProvider(activeProvider).getBorrowBalance(vAssets.borrowAsset)
+    );
+    IFujiERC1155(fujiERC1155).updateState(
+      vAssets.collateralID,
+      IProvider(activeProvider).getDepositBalance(vAssets.collateralAsset)
+    );
   }
 
   //Getter Functions
@@ -529,15 +596,92 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   }
 
   /**
+   * @dev Returns the total debt of a user
+   * @param _user: address of a user
+   * @return the total debt of a user including the protocol fee
+   */
+  function userDebtBalance(address _user) external view override returns (uint256) {
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.borrowID);
+    uint256 fee = (debtPrincipal * (block.timestamp - _userFeeTimestamps[_user]) * protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
+
+    return debtPrincipal + fee;
+  }
+
+  /**
+   * @dev Returns the protocol fee of a user
+   * @param _user: address of a user
+   * @return the protocol fee of a user
+   */
+  function userProtocolFee(address _user) external view override returns (uint256) {
+    uint256 debtPrincipal = IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.borrowID);
+    return _userProtocolFee(_user, debtPrincipal);
+  }
+
+  /**
+   * @dev Returns the collateral asset balance of a user
+   * @param _user: address of a user
+   * @return the collateral asset balance
+   */
+  function userDepositBalance(address _user) external view override returns (uint256) {
+    return IFujiERC1155(fujiERC1155).balanceOf(_user, vAssets.collateralID);
+  }
+
+  /**
    * @dev Harvests the Rewards from baseLayer Protocols
    * @param _farmProtocolNum: number per VaultHarvester Contract for specific farm
+   * @param _data: the additional data to be used for harvest
    */
-  function harvestRewards(uint256 _farmProtocolNum) external onlyOwner {
-    address tokenReturned = IVaultHarvester(_fujiAdmin.getVaultHarvester()).collectRewards(
-      _farmProtocolNum
+  function harvestRewards(uint256 _farmProtocolNum, bytes memory _data) external onlyOwner {
+    (address tokenReturned, IHarvester.Transaction memory harvestTransaction) = IHarvester(
+      _fujiAdmin.getVaultHarvester()
+    ).getHarvestTransaction(_farmProtocolNum, _data);
+
+    // Claim rewards
+    (bool success, ) = harvestTransaction.to.call(harvestTransaction.data);
+    require(success, "failed to harvest rewards");
+
+    if (tokenReturned != address(0)) {
+      uint256 tokenBal = IERC20Upgradeable(tokenReturned).univBalanceOf(address(this));
+      require(tokenReturned != address(0) && tokenBal > 0, Errors.VL_HARVESTING_FAILED);
+
+      ISwapper.Transaction memory swapTransaction = ISwapper(_fujiAdmin.getSwapper())
+      .getSwapTransaction(tokenReturned, vAssets.collateralAsset, tokenBal);
+
+      // Approve rewards
+      if (tokenReturned != FTM) {
+        IERC20Upgradeable(tokenReturned).univApprove(swapTransaction.to, tokenBal);
+      }
+
+      // Swap rewards -> collateralAsset
+      (success, ) = swapTransaction.to.call{ value: swapTransaction.value }(swapTransaction.data);
+      require(success, "failed to swap rewards");
+
+      _deposit(
+        IERC20Upgradeable(vAssets.collateralAsset).univBalanceOf(address(this)),
+        address(activeProvider)
+      );
+
+      updateF1155Balances();
+    }
+  }
+
+  function withdrawProtocolFee() external nonReentrant {
+    IERC20Upgradeable(vAssets.borrowAsset).univTransfer(
+      payable(IFujiAdmin(_fujiAdmin).getTreasury()),
+      remainingProtocolFee
     );
-    uint256 tokenBal = IERC20(tokenReturned).balanceOf(address(this));
-    require(tokenReturned != address(0) && tokenBal > 0, Errors.VL_HARVESTING_FAILED);
-    IERC20(tokenReturned).univTransfer(payable(_fujiAdmin.getTreasury()), tokenBal);
+
+    remainingProtocolFee = 0;
+  }
+
+  // Internal Functions
+
+  function _userProtocolFee(address _user, uint256 _debtPrincipal) internal view returns (uint256) {
+    return
+      (_debtPrincipal * (block.timestamp - _userFeeTimestamps[_user]) * protocolFee.a) /
+      protocolFee.b /
+      ONE_YEAR;
   }
 }

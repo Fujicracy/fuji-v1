@@ -2,20 +2,20 @@
 
 pragma solidity ^0.8.0;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { IERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import { SafeERC20Upgradeable } from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 library LibUniversalERC20FTM {
-  using SafeERC20 for IERC20;
+  using SafeERC20Upgradeable for IERC20Upgradeable;
 
-  IERC20 private constant _FTM_ADDRESS = IERC20(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
-  IERC20 private constant _ZERO_ADDRESS = IERC20(0x0000000000000000000000000000000000000000);
+  IERC20Upgradeable private constant _FTM_ADDRESS = IERC20Upgradeable(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF);
+  IERC20Upgradeable private constant _ZERO_ADDRESS = IERC20Upgradeable(0x0000000000000000000000000000000000000000);
 
-  function isFTM(IERC20 token) internal pure returns (bool) {
+  function isFTM(IERC20Upgradeable token) internal pure returns (bool) {
     return (token == _ZERO_ADDRESS || token == _FTM_ADDRESS);
   }
 
-  function univBalanceOf(IERC20 token, address account) internal view returns (uint256) {
+  function univBalanceOf(IERC20Upgradeable token, address account) internal view returns (uint256) {
     if (isFTM(token)) {
       return account.balance;
     } else {
@@ -24,7 +24,7 @@ library LibUniversalERC20FTM {
   }
 
   function univTransfer(
-    IERC20 token,
+    IERC20Upgradeable token,
     address payable to,
     uint256 amount
   ) internal {
@@ -39,7 +39,7 @@ library LibUniversalERC20FTM {
   }
 
   function univApprove(
-    IERC20 token,
+    IERC20Upgradeable token,
     address to,
     uint256 amount
   ) internal {
