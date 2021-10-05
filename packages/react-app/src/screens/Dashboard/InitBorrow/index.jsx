@@ -44,16 +44,17 @@ function InitBorrow({ contracts, provider, address }) {
   const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const [checkedClaim, setCheckedClaim] = useState(false);
   const queries = new URLSearchParams(useLocation().search);
-  const queryBorrowAsset = queries.get('borrowAsset');
-  const queryBorrowAmount = queries.get('borrowAmount');
 
-  const [borrowAmount, setBorrowAmount] = useState(queryBorrowAmount || '1000');
-  const [borrowAsset, setBorrowAsset] = useState(queryBorrowAsset || defaultVault.borrowAsset.name);
+  const [borrowAmount, setBorrowAmount] = useState(queries.get('borrowAmount') || '1000');
+  const [borrowAsset, setBorrowAsset] = useState(
+    queries.get('borrowAsset') || defaultVault.borrowAsset.name,
+  );
   // const [market, setMarket] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
   const [vaultAddress, setVaultAddress] = useState(Object.keys(VAULTS)[0]);
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -122,7 +123,6 @@ function InitBorrow({ contracts, provider, address }) {
 
   useEffect(() => {
     async function fetchNeededCollateral() {
-      console.log({ borrowAmount });
       const parsedBorrowAmount =
         borrowAmount !== '' ? parseUnits(borrowAmount, ASSETS[borrowAsset].decimals) : 0x0;
 
@@ -306,6 +306,8 @@ function InitBorrow({ contracts, provider, address }) {
       ),
     },
   };
+
+  console.log({ outsideBorrowAmount: borrowAmount });
 
   return (
     <Container>

@@ -2,7 +2,6 @@ const DEBUG = false;
 
 export async function CallContractFunction(contracts, contractName, functionName, args, formatter) {
   let value = 0;
-  console.log({ contractName, functionName, args });
   if (contracts && contracts[contractName]) {
     try {
       if (DEBUG) console.log('CALLING ', contractName, functionName, 'with args', args);
