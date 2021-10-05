@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -57,9 +58,9 @@ const TextField = React.forwardRef(
           <StyledInput
             name={name}
             type={type}
-            value={value}
+            defaultValue={value}
             placeholder={placeholder}
-            onChange={onChange}
+            onChange={e => onChange(e.target.value || '')}
             onFocus={onFocus}
             onBlur={onBlur}
             disabled={disabled}

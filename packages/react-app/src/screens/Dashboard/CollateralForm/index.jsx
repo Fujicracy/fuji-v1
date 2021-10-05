@@ -300,8 +300,8 @@ function CollateralForm({ position, contracts, provider, address }) {
           id="collateralAmount"
           name="amount"
           type="number"
-          onChange={({ target }) => {
-            return setAmount(target.value);
+          onChange={value => {
+            return setAmount(value);
           }}
           onFocus={() => {
             return setFocus(true);

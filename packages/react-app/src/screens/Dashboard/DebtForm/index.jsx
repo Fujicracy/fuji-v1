@@ -351,7 +351,7 @@ function DebtForm({ position, contracts, provider, address }) {
           name="amount"
           type="number"
           step="any"
-          onChange={({ target }) => setAmount(target.value)}
+          onChange={value => setAmount(value)}
           onFocus={() => setFocus(true)}
           onBlur={() => clearErrors()}
           ref={register({
