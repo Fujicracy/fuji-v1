@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useAuth } from 'hooks';
+import { useAuth, useBalance } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
@@ -13,6 +13,8 @@ import { Label, NavImageLink } from 'components/UI';
 
 import { CONTACTS } from 'consts/contacts';
 import map from 'lodash/map';
+import { formatUnits } from '@ethersproject/units';
+import { ASSETS, ASSET_NAME } from 'consts';
 
 import { LANDING_URL, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts/globals';
 import {
@@ -36,7 +38,13 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
-  const { address, onboard, balance } = useAuth();
+  const { address, onboard, provider } = useAuth();
+  const unFormattedBalance = useBalance(provider, address);
+
+  const balance = unFormattedBalance
+    ? Number(formatUnits(unFormattedBalance, ASSETS[ASSET_NAME.ETH].decimals)).toFixed(2)
+    : 0;
+
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
