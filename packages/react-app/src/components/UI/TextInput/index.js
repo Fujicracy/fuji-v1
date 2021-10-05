@@ -29,8 +29,8 @@ const TextField = React.forwardRef(
       description,
       subTitleInfo,
       errorComponent,
-      defaultValue,
       autoComplete,
+      value,
     },
     ref,
   ) => {
@@ -57,7 +57,7 @@ const TextField = React.forwardRef(
           <StyledInput
             name={name}
             type={type}
-            value={defaultValue}
+            value={value}
             placeholder={placeholder}
             onChange={onChange}
             onFocus={onFocus}
