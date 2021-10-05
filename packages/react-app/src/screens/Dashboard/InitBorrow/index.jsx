@@ -60,24 +60,6 @@ function InitBorrow({ contracts, provider, address }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  useEffect(() => {
-    if (borrowAsset && collateralAsset) {
-      const vaultKey = find(
-        Object.keys(VAULTS),
-        key =>
-          VAULTS[key].borrowAsset.name === borrowAsset &&
-          VAULTS[key].collateralAsset.name === collateralAsset,
-      );
-      setVault(VAULTS[vaultKey]);
-      setVaultAddress(vaultKey);
-    }
-  }, [borrowAsset, collateralAsset]);
-
-  useEffect(() => {
-    if (vault.collateralAsset.isERC20) setBorrowAmount('1');
-    else setBorrowAmount('1000');
-  }, [vault]);
-
   const borrowAssetPrice = useExchangePrice(borrowAsset);
   const collateralAssetPrice = useExchangePrice(collateralAsset);
   const [dialog, setDialog] = useState('');
@@ -101,6 +83,23 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [neededCollateral, setNeededCollateral] = useState(null);
 
+  useEffect(() => {
+    if (borrowAsset && collateralAsset) {
+      const vaultKey = find(
+        Object.keys(VAULTS),
+        key =>
+          VAULTS[key].borrowAsset.name === borrowAsset &&
+          VAULTS[key].collateralAsset.name === collateralAsset,
+      );
+      setVault(VAULTS[vaultKey]);
+      setVaultAddress(vaultKey);
+    }
+  }, [borrowAsset, collateralAsset]);
+
+  useEffect(() => {
+    if (vault.collateralAsset.isERC20) setBorrowAmount('1');
+    else setBorrowAmount('1000');
+  }, [vault]);
   useEffect(() => {
     async function fetchBalance() {
       const unFormattedBalance = await getUserBalance(
