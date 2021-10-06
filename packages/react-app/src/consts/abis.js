@@ -509,7 +509,7 @@ const CHAINLINK_ABI = [
   },
 ];
 
-const MERKLE_DROP_ABI = [
+const MERKLE_DIST_ABI = [
   {
     inputs: [
       {
@@ -591,4 +591,31 @@ const MERKLE_DROP_ABI = [
   },
 ];
 
-export { ERC20_ABI, CHAINLINK_ABI, MERKLE_DROP_ABI };
+const ERC721_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'tokenOfOwnerByIndex',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
+
+export { ERC20_ABI, ERC721_ABI, CHAINLINK_ABI, MERKLE_DIST_ABI };

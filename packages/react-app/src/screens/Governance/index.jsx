@@ -13,7 +13,14 @@ import { Transactor } from 'helpers';
 
 import { BlackBoxContainer, SectionTitle, Header, Button } from 'components';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, MERKLE_DROP_ABI, NFT_CONTRACT_ADDRESS } from 'consts';
+import {
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  MERKLE_DIST_ABI,
+  MERKLE_DIST_ADDR,
+  ERC721_ABI,
+  FUJIFLOPS_NFT_ADDR,
+} from 'consts';
 import { nftAnimation } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
 
@@ -34,11 +41,13 @@ const Governance = () => {
   const { address, provider } = useAuth();
   const [isClaimed, setIsClaimed] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [tokenId, setTokenId] = useState(0);
 
   const userIndex = ELIGIBLE_USERS.indexOf(address.toLowerCase());
   const isEligible = userIndex !== -1;
 
-  const merkle = useExternalContractLoader(provider, NFT_CONTRACT_ADDRESS, MERKLE_DROP_ABI);
+  const merkle = useExternalContractLoader(provider, MERKLE_DIST_ADDR, MERKLE_DIST_ABI);
+  const nft = useExternalContractLoader(provider, FUJIFLOPS_NFT_ADDR, ERC721_ABI);
   const tx = Transactor(provider);
   const location = useLocation();
 
@@ -46,7 +55,13 @@ const Governance = () => {
     try {
       setIsClaiming(true);
       const proof = mtree.getHexProof(leaves[userIndex]);
-      await tx(merkle.claim(address, proof));
+      const res = await tx(merkle.claim(address, proof));
+      if (res && res.hash) {
+        const receipt = await res.wait();
+        if (receipt) {
+          setIsClaimed(true);
+        }
+      }
       setIsClaiming(false);
     } catch (error) {
       // when user rejected transaction on Metamask
@@ -56,9 +71,9 @@ const Governance = () => {
   };
 
   const notification = isClaimed
-    ? 'You have already claimed the NFT'
+    ? 'You have already claimed your FujiFlops'
     : isEligible
-    ? 'You are eligible to claim the NFT'
+    ? 'You are eligible to claim FujiFlops'
     : 'Address has no available claim';
 
   useEffect(() => {
@@ -67,20 +82,25 @@ const Governance = () => {
         const claimed = await merkle.isClaimed(address);
         setIsClaimed(claimed);
       }
+      if (address && nft && isClaimed) {
+        const id = await nft.tokenOfOwnerByIndex(address, 0);
+        setTokenId(id);
+      }
     }
 
     check();
-  }, [merkle, address]);
+  }, [merkle, nft, address, isClaimed]);
 
-  /*
-  const handleNftButton = () => {
+  const handleNftButton = async () => {
     if (isClaimed) {
-      window.open(`https://opensea.io/${address}`, '_blank');
+      window.open(`https://opensea.io/asset/${FUJIFLOPS_NFT_ADDR}/${tokenId}`, '_blank');
+    } else if (isEligible) {
+      await claimNFT();
     } else {
-      window.open(`https://opensea.io/${address}`, '_blank');
+      window.open(`https://opensea.io/collection/fujidao`, '_blank');
     }
   };
-  */
+
   if (!address) {
     return (
       <Redirect
@@ -173,15 +193,19 @@ const Governance = () => {
           <Button
             block
             marginTop={28}
-            onClick={claimNFT}
-            disabled={isClaiming || !isEligible}
+            onClick={handleNftButton}
+            disabled={isClaiming}
             fontSize={16}
             borderRadius={6}
           >
             <Flex flexDirection="row" justifyContent="center" alignItems="center">
               {isClaiming ? <CircularProgress size={25} color="white" thickness={5} /> : ''}
               <Flex ml={3}>
-                {isClaimed ? 'View on OpenSea' : isClaiming ? 'Claiming NFT' : 'Claim NFT'}
+                {isClaimed || !isEligible
+                  ? 'View on OpenSea'
+                  : isClaiming
+                  ? 'Claiming NFT'
+                  : 'Claim NFT'}
               </Flex>
             </Flex>
           </Button>
