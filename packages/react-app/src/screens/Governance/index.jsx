@@ -175,7 +175,7 @@ const Governance = () => {
           height="100%"
         >
           <SectionTitle fontSize="16px">Claim NFT</SectionTitle>
-          <Flex justifyContent="center" alignItems="center">
+          <Flex justifyContent="center" alignItems="center" mt={4} mb={4}>
             <Image alt="NFT animation" src={nftAnimation} />
           </Flex>
           <SectionTitle

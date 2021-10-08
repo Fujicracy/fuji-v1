@@ -23,7 +23,7 @@ import partnerMaven from './images/partner/maven11.svg';
 import partnerCapital from './images/partner/origin-capital.svg';
 import partnerSpartan from './images/partner/spartan.svg';
 
-import nftAnimation from './images/nft-animation.svg';
+import nftAnimation from './images/nft-animation.png';
 
 // Contact Images
 import discordImage from './images/home/discord.svg';
