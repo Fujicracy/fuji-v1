@@ -224,6 +224,7 @@ function DebtForm({ position, contracts, provider, address }) {
               ? debtBalance.sub(parseUnits(amount, decimals))
               : debtBalance.add(parseUnits(amount, decimals))
           }
+          provider={provider}
         />
       ),
       actions: () => (

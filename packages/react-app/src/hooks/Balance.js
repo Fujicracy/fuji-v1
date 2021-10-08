@@ -11,7 +11,7 @@ export default function useBalance(
 ) {
   const [balance, setBalance] = useState();
   const pollBalance = async () => {
-    if (address && provider) {
+    if (address && provider && contracts) {
       const newBalance = isERC20
         ? await contracts[assetName].balanceOf(address)
         : await provider.getBalance(address);
