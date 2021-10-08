@@ -17,6 +17,9 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Box } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+import find from 'lodash/find';
+
 import { ETH_CAP_VALUE } from 'consts/globals';
 import {
   CollaterizationIndicator,
@@ -40,8 +43,8 @@ import {
   getExchangePrice,
   getAllowance,
 } from 'helpers';
-import { useMediaQuery } from 'react-responsive';
-import find from 'lodash/find';
+import { useBalance } from 'hooks';
+
 import { Container, Helper } from './style';
 
 function InitBorrow({ contracts, provider, address }) {
@@ -72,7 +75,6 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState(null);
   const [neededCollateral, setNeededCollateral] = useState(null);
 
   const [activeProvider, setActiveProvider] = useState('');
@@ -80,6 +82,8 @@ function InitBorrow({ contracts, provider, address }) {
 
   const [collateralBalance, setCollateralBalance] = useState();
   const [debtBalance, setDebtBalance] = useState();
+
+  const [balance, setBalance] = useState(null);
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -94,8 +98,15 @@ function InitBorrow({ contracts, provider, address }) {
     }
   }, [borrowAsset, collateralAsset]);
 
+  const pollUnformatedUserBalance = useBalance(
+    provider,
+    address,
+    contracts,
+    vault.collateralAsset.name,
+    vault.collateralAsset.isERC20,
+  );
   useEffect(() => {
-    async function fetchBalanceAndAllowance() {
+    async function fetchBalance() {
       const unFormattedBalance = await getUserBalance(
         provider,
         address,
@@ -109,12 +120,18 @@ function InitBorrow({ contracts, provider, address }) {
         : null;
 
       setBalance(formattedBalance);
+    }
 
+    fetchBalance();
+  }, [collateralAsset, address, provider, vault, contracts, pollUnformatedUserBalance]);
+
+  useEffect(() => {
+    async function fetchAllowance() {
       setAllowance(await getAllowance(contracts, collateralAsset, [address, vaultAddress]));
     }
 
-    fetchBalanceAndAllowance();
-  }, [collateralAsset, address, provider, vault, contracts, vaultAddress]);
+    fetchAllowance();
+  }, [collateralAsset, address, contracts, vaultAddress]);
 
   useEffect(() => {
     async function fetchNeededCollateral() {
