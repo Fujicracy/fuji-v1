@@ -76,7 +76,7 @@ function InitBorrow({ contracts, provider, address }) {
   const [neededCollateral, setNeededCollateral] = useState(null);
 
   const [activeProvider, setActiveProvider] = useState('');
-  const allowance = getAllowance(contracts, collateralAsset, [address, vaultAddress]);
+  const [allowance, setAllowance] = useState();
 
   const [collateralBalance, setCollateralBalance] = useState();
   const [debtBalance, setDebtBalance] = useState();
@@ -95,7 +95,7 @@ function InitBorrow({ contracts, provider, address }) {
   }, [borrowAsset, collateralAsset]);
 
   useEffect(() => {
-    async function fetchBalance() {
+    async function fetchBalanceAndAllowance() {
       const unFormattedBalance = await getUserBalance(
         provider,
         address,
@@ -109,10 +109,12 @@ function InitBorrow({ contracts, provider, address }) {
         : null;
 
       setBalance(formattedBalance);
+
+      setAllowance(await getAllowance(contracts, collateralAsset, [address, vaultAddress]));
     }
 
-    fetchBalance();
-  }, [collateralAsset, address, provider, vault, contracts]);
+    fetchBalanceAndAllowance();
+  }, [collateralAsset, address, provider, vault, contracts, vaultAddress]);
 
   useEffect(() => {
     async function fetchNeededCollateral() {
