@@ -268,12 +268,13 @@ function CollateralForm({ position, contracts, provider, address }) {
       </Dialog>
 
       <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Collateral</SectionTitle>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip tooltip-top">
-              <span className="bold">Supply</span> more ETH as collateral or
+              <span className="bold">Supply</span> more {vault.collateralAsset.name} as collateral
+              or
               <span className="bold"> withdraw</span> what is not locked for your borrows.
             </span>
           </div>

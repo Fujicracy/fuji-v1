@@ -317,7 +317,7 @@ function DebtForm({ position, contracts, provider, address }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Debt</SectionTitle>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
 
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
