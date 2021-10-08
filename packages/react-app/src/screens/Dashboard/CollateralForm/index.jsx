@@ -42,12 +42,14 @@ function CollateralForm({ position, contracts, provider, address }) {
   const [leftCollateral, setLeftCollateral] = useState('');
 
   const vault = VAULTS[position.vaultAddress];
-  // const unformattedUserBalance = useBalance(provider, address);
-  const unformattedUserBalance = useBalance(provider, address);
+  const unformattedUserBalance = useBalance(
+    provider,
+    address,
+    contracts,
+    vault.collateralAsset.name,
+    vault.collateralAsset.isERC20,
+  );
 
-  // const userBalance = unformattedUserBalance
-  //   ? Number(formatEther(unformattedUserBalance)).toFixed(6)
-  //   : null;
   const userBalance = unformattedUserBalance
     ? Number(formatUnits(unformattedUserBalance, vault.collateralAsset.decimals)).toFixed(6)
     : null;
