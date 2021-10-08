@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import { PositionRatios } from '../../../helpers';
+import { PositionRatios, getExchangePrice } from '../../../helpers';
 import { useExchangePrice } from '../../../hooks';
 
 function DeltaPositionRatios({
@@ -16,6 +16,7 @@ function DeltaPositionRatios({
   currentDebt,
   newCollateral,
   newDebt,
+  provider,
 }) {
   const price = useExchangePrice();
 
@@ -24,34 +25,50 @@ function DeltaPositionRatios({
   const [ltv, setLtv] = useState([]);
 
   useEffect(() => {
-    let position = {
-      borrowAsset,
-      collateralAsset,
-      collateralBalance: currentCollateral,
-      debtBalance: currentDebt,
-      decimals: borrowAsset.decimals,
-    };
-    const {
-      healthFactor: oldHf,
-      ltv: oldLtv,
-      borrowLimit: oldLimit,
-    } = PositionRatios(position, price);
+    async function fetchValues() {
+      const collateralAssetPrice = await getExchangePrice(provider, collateralAsset.name);
+      const borrowAssetPrice = await getExchangePrice(provider, borrowAsset.name);
 
-    position = {
-      ...position,
-      collateralBalance: newCollateral,
-      debtBalance: newDebt,
-    };
-    const {
-      healthFactor: newHf,
-      ltv: newLtv,
-      borrowLimit: newLimit,
-    } = PositionRatios(position, price);
+      let position = {
+        borrowAsset,
+        collateralAsset,
+        collateralBalance: currentCollateral,
+        debtBalance: currentDebt,
+        decimals: borrowAsset.decimals,
+      };
+      const {
+        healthFactor: oldHf,
+        ltv: oldLtv,
+        borrowLimit: oldLimit,
+      } = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
 
-    setHealthFactor([oldHf, newHf]);
-    setLtv([oldLtv * 100, newLtv * 100]);
-    setLimit([oldLimit * 100, newLimit * 100]);
-  }, [price, borrowAsset, currentCollateral, currentDebt, newCollateral, newDebt, collateralAsset]);
+      position = {
+        ...position,
+        collateralBalance: newCollateral,
+        debtBalance: newDebt,
+      };
+      const {
+        healthFactor: newHf,
+        ltv: newLtv,
+        borrowLimit: newLimit,
+      } = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
+
+      setHealthFactor([oldHf, newHf]);
+      setLtv([oldLtv * 100, newLtv * 100]);
+      setLimit([oldLimit * 100, newLimit * 100]);
+    }
+
+    fetchValues();
+  }, [
+    price,
+    borrowAsset,
+    currentCollateral,
+    currentDebt,
+    newCollateral,
+    newDebt,
+    collateralAsset,
+    provider,
+  ]);
 
   const formatValue = (value, precision) =>
     value !== undefined && value !== Infinity ? value.toFixed(precision) : '...';
