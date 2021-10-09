@@ -23,7 +23,7 @@ import partnerMaven from './images/partner/maven11.svg';
 import partnerCapital from './images/partner/origin-capital.svg';
 import partnerSpartan from './images/partner/spartan.svg';
 
-import nftAnimation from './images/nft-animation.png';
+import fujiFlopsGiftbox from './images/fujiflops-giftbox.png';
 
 // Contact Images
 import discordImage from './images/home/discord.svg';
@@ -87,7 +87,7 @@ export {
   teamBoyanPhoto,
   teamDaigaroPhoto,
   teamEdgarPhoto,
-  nftAnimation,
+  fujiFlopsGiftbox,
   // Contacts
   discordImage,
   telegramImage,

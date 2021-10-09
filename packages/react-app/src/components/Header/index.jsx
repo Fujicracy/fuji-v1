@@ -110,9 +110,9 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                <NavLink to="/governance">
+                <NavLink to="/claim-nft">
                   <MenuItem
-                    isSelected={currentPage.pathname === '/dashboard/governance'}
+                    isSelected={currentPage.pathname === '/dashboard/claim-nft'}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Claim My NFT
@@ -171,7 +171,7 @@ function Header() {
               </li>
 
               <li className="nav-item">
-                <NavLink to="/governance" activeClassName="current">
+                <NavLink to="/claim-nft" activeClassName="current">
                   <Button
                     block
                     outline

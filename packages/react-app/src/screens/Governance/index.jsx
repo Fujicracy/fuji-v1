@@ -21,7 +21,7 @@ import {
   ERC721_ABI,
   FUJIFLOPS_NFT_ADDR,
 } from 'consts';
-import { nftAnimation } from 'assets/images';
+import { fujiFlopsGiftbox } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
 
 import { NftButton } from './style';
@@ -176,7 +176,7 @@ const Governance = () => {
         >
           <SectionTitle fontSize="16px">Claim NFT</SectionTitle>
           <Flex justifyContent="center" alignItems="center" mt={4} mb={4}>
-            <Image alt="NFT animation" src={nftAnimation} />
+            <Image alt="NFT animation" src={fujiFlopsGiftbox} />
           </Flex>
           <SectionTitle
             fontSize="12px"

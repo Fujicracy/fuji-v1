@@ -55,7 +55,7 @@ function App() {
               <Route path="/info">
                 <Infos />
               </Route>
-              <Route path="/governance">
+              <Route path="/claim-nft">
                 <ProvideAuth>
                   <Governance />
                 </ProvideAuth>
