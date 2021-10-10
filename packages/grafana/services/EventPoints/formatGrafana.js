@@ -1,100 +1,63 @@
+const axios = require("axios");
 const { EventPoint } = require("../../db");
 
-const formatGrafana = async () => {
+const MAPPINGS = {
+  "ETHDAI-DEBT": "Debt (DAI)",
+  "ETHDAI-COLL": "Collateral (ETH)",
+  "ETHUSDC-DEBT": "Debt (USDC)",
+  "ETHUSDC-COLL": "Collateral (ETH)",
+  "ETHUSDT-DEBT": "Debt (USDT)",
+  "ETHUSDT-COLL": "Collateral (ETH)",
+  "TOTAL-ADDR": "Total Addresses",
+  "TVL": "Total Value Locked",
+  "TVB": "Total Value Borrowed",
+};
+const getETHPrice = async () => {
+  return axios
+    .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
+    .then(({ data }) => data.ethereum.usd);
+};
+
+const formatGrafana = async (targets) => {
   const events = await EventPoint.find({}).sort({ blocknumber: 1 });
+  const ethPrice = await getETHPrice();
 
-  const arr = events;
+  const response = [];
 
-  const response = [
-    { target: "ETHDAI-DEBT", datapoints: [] },
-    { target: "ETHDAI-COLL", datapoints: [] },
-    { target: "ETHUSDC-DEBT", datapoints: [] },
-    { target: "ETHUSDC-COLL", datapoints: [] },
-    { target: "USERSWITHDEBT", datapoints: [] },
-    { target: "USERSWITHONLYCOLL", datapoints: [] },
-  ];
-  const accounts = {};
-  let currentEthDaiSupply = 0;
-  let currentEthUsdcSupply = 0;
-  let currentDaiDebt = 0;
-  let currentUsdcDebt = 0;
+  targets.forEach((target, i) => {
+    response[i] = {
+      target: MAPPINGS[target],
+      datapoints: []
+    };
+    const [prefix, suffix] = target.split("-");
 
-  arr.forEach((e) => {
-    // console.log(response);
-    const type = `${e.vault}-${e.type}`;
-    const event = e.type;
-    const timestamp = e.timestamp * 1000;
-    const num = e.value;
-    const user = e.user;
-    // console.log(typeof num);
+    let [totalColl, totalDebt, totalAddr] = [0, 0, 0];
+    let users = [];
 
-    if (!accounts[user]) {
-      //   console.log("not present", user);
-      accounts[user] = {
-        ETHDAI: { debt: 0, coll: 0 },
-        ETHUSDC: { debt: 0, coll: 0 },
-      };
-    }
-    // console.log(event);
-    if (e.vault === "ETHDAI") {
-      if (event === "Payback") {
-        currentDaiDebt += num;
-        response[0].datapoints.push([currentDaiDebt, timestamp]);
-        accounts[user].ETHDAI.debt += num;
-      } else if (event === "Borrow") {
-        currentDaiDebt += num;
-        response[0].datapoints.push([currentDaiDebt, timestamp]);
-        accounts[user].ETHDAI.debt += num;
-      } else if (event === "Deposit") {
-        currentEthDaiSupply += num;
-        response[1].datapoints.push([currentEthDaiSupply, timestamp]);
-        accounts[user].ETHDAI.coll += num;
-      } else if (event === "Withdraw") {
-        currentEthDaiSupply += num;
-        response[1].datapoints.push([currentEthDaiSupply, timestamp]);
-        accounts[user].ETHDAI.coll += num;
-      }
-    } else if (e.vault === "ETHUSDC") {
-      if (event === "Payback") {
-        currentUsdcDebt += num;
-        response[2].datapoints.push([currentUsdcDebt, timestamp]);
-        accounts[user].ETHUSDC.debt += num;
-      } else if (event === "Borrow") {
-        currentUsdcDebt += num;
-        response[2].datapoints.push([currentUsdcDebt, timestamp]);
-        accounts[user].ETHUSDC.debt += num;
-      } else if (event === "Deposit") {
-        currentEthUsdcSupply += num;
-        response[3].datapoints.push([currentEthUsdcSupply, timestamp]);
-        accounts[user].ETHUSDC.coll += num;
-      } else if (event === "Withdraw") {
-        currentEthUsdcSupply += num;
-        response[3].datapoints.push([currentEthUsdcSupply, timestamp]);
-        accounts[user].ETHUSDC.coll += num;
-      }
-    }
-    let debtcount = 0;
-    let collcount = 0;
-    // console.log(accounts);
-    Object.entries(accounts).forEach(([key, value]) => {
-      const { ETHDAI, ETHUSDC } = value;
-      //   console.log(debtcount);
-      if (ETHDAI.debt > 0 || ETHUSDC.debt > 0) {
-        debtcount += 1;
-      }
-      if (
-        ETHDAI.debt === 0 &&
-        ETHUSDC === 0 &&
-        (ETHDAI.coll > 0 || ETHUSDC.coll > 0)
-      ) {
-        collcount += 1;
+    events.forEach(({ vault, type, user, value, timestamp }) => {
+      const ts = timestamp * 1000;
+
+      if ((prefix === vault && suffix === "COLL") || prefix === "TVL") {
+        if (type === "Deposit" || type === "Withdraw") {
+          totalColl += value * ethPrice;
+          response[i].datapoints.push([totalColl, ts]);
+        }
+      } else if ((prefix === vault && suffix === "DEBT" ) || prefix === "TVB") {
+        if (type === "Borrow" || type === "Payback") {
+          totalDebt += value;
+          response[i].datapoints.push([totalDebt, ts]);
+        }
+      } else if (prefix === "TOTAL" && suffix === "ADDR") {
+        if (!users.includes(user)) {
+          totalAddr += 1;
+          users.push(user);
+          response[i].datapoints.push([totalAddr, ts]);
+        }
       }
     });
-    response[4].datapoints.push([debtcount, timestamp]);
-    response[5].datapoints.push([collcount, timestamp]);
   });
 
   return response;
-};
+}
 
 module.exports = { formatGrafana };

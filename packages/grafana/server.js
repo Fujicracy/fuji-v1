@@ -2,8 +2,7 @@ const express = require("express");
 const { scraper } = require("./scraper");
 const EPService = require("./services/EventPoints");
 const RPService = require("./services/RatePoints");
-var bodyParser = require("body-parser");
-var jsonParser = bodyParser.json();
+const parser = require("body-parser").json();
 const app = express();
 
 const { MongoClient } = require("mongodb");
@@ -15,53 +14,51 @@ const client = new MongoClient(uri, {
 });
 
 client.connect(async (err, db) => {
-  app.post("/query", jsonParser, async (req, res) => {
-    const ratesTargets = [
-      "DYDXUSDC",
-      "DYDXDAI",
-      "AAVEUSDC",
-      "AAVEDAI",
-      "COMPOUNDUSDC",
-      "COMPOUNDDAI",
-    ];
+  app.post("/query", parser, async (req, res) => {
+    //const ratesTargets = [
+      //"DYDXUSDC",
+      //"DYDXDAI",
+      //"AAVEUSDC",
+      //"AAVEDAI",
+      //"COMPOUNDUSDC",
+      //"COMPOUNDDAI",
+    //];
 
-    let flag = false;
+    //let flag = false;
 
     const targets = req.body.targets[0].data.only;
-    targets.forEach((e) => {
-      if (ratesTargets.includes(e)) {
-        flag = true;
-      }
-    });
-    if (flag) {
-      const [bundle, isOld] = await RPService.lastRow();
-      if (isOld) {
-        RPService.formatGrafana(db);
-      }
-      const metrics = bundle.rates.filter((e) => targets.includes(e.target));
-      console.log(metrics);
-      res.send(bundle.rates.filter((e) => targets.includes(e.target)));
-    } else {
+    console.log(targets);
+    //targets.forEach((e) => {
+      //if (ratesTargets.includes(e)) {
+        //flag = true;
+      //}
+    //});
+    //if (flag) {
+      //const [bundle, isOld] = await RPService.lastRow();
+      //if (isOld) {
+        //RPService.formatGrafana(db);
+      //}
+      //const metrics = bundle.rates.filter((e) => targets.includes(e.target));
+      //console.log(metrics);
+      //res.send(bundle.rates.filter((e) => targets.includes(e.target)));
+    //} else {
       const lastBlock = (await EPService.lastBlock()) + 1;
       const eventPoints = await scraper(lastBlock);
       await EPService.addMany(eventPoints);
-      const data0 = await EPService.formatGrafana();
-      const metrics = data0.filter((e) => targets.includes(e.target));
-      res.send(metrics);
-    }
+
+      const data0 = await EPService.formatGrafana(targets);
+      res.send(data0);
+    //}
   });
 
-  app.post("/search", jsonParser, async (req, res) => {
+  app.post("/search", parser, async (req, res) => {
     console.log("search");
     res.send([
-      "ETHUSDC-DEBT",
-      "ETHDAI-DEBT",
-      "DYDXUSDC",
-      "DYDXDAI",
-      "AAVEUSDC",
-      "AAVEDAI",
-      "COMPOUNDUSDC",
-      "COMPOUNDDAI",
+      "ETHDAI",
+      "ETHUSDC",
+      "ETHUSDT",
+      "TOTAL-ADDR",
+      "TVL",
     ]);
   });
 

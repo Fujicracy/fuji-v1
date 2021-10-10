@@ -8,7 +8,6 @@ const {
 const { ethers } = require("ethers");
 const ETHDAIABI = require("../abis/VaultETHDAI.abi");
 const ETHUSDCABI = require("../abis/VaultETHUSDC.abi");
-const axios = require("axios");
 
 const contractDeployBlock = async (provider) => {
   const daiStartBlock = (await provider.getTransaction(ETHDAICreateTX))
