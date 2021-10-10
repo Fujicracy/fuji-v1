@@ -2,47 +2,33 @@
 // sorts and filters by unique user addresses
 // and creates a csv file
 
-require('dotenv').config();
+import chalk from 'chalk';
+import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import { VAULTS_ADDRESS } from './consts/index.js';
+import { getSigner, loadContracts } from './utils/index.js';
 
-const { ethers, Wallet } = require('ethers');
-const chalk = require('chalk');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const { loadContracts } = require('./utils');
-
-let provider;
-if (process.env.INFURA) {
-  provider = new ethers.providers.InfuraProvider('homestead', process.env.PROJECT_ID);
-} else {
-  provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_PROVIDER_URL);
-}
-
-let signer;
-if (process.env.PRIVATE_KEY) {
-  signer = new Wallet(process.env.PRIVATE_KEY, provider);
-} else {
-  throw new Error('PRIVATE_KEY not set: please, set it in ".env"!');
-}
-
-const vaultsList = ['VaultETHDAI', 'VaultETHUSDC'];
+const signer = getSigner();
 
 const searchBorrowers = async (vault, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
   const events = await vault.queryFilter(filterBorrowers, searchLength);
-
   const borrowers = [];
-
   for (let i = 0; i < events.length; i += 1) {
     const e = events[i];
+    const block = await e.getBlock();
+    const tx = await e.getTransactionReceipt();
     borrowers.push({
       vault: vault.address,
+      txhash: tx.transactionHash,
       blockNumber: e.blockNumber,
+      timestamp: block.timestamp,
       userAddr: e.args.userAddrs,
+      amount: e.args.amount,
     });
   }
 
   return borrowers;
 };
-
 const filterAndSort = borrowers => {
   return borrowers
     .sort((a, b) => Number(a.blockNumber) - Number(b.blockNumber))
@@ -51,39 +37,35 @@ const filterAndSort = borrowers => {
       return acc;
     }, []);
 };
-
 const saveFile = borrowers => {
   const csvWriter = createCsvWriter({
     path: 'fuji-borrowers.csv',
     header: [
-      { id: 'blockNumber', title: 'Block Number' },
+      { id: 'timestamp', title: 'Timestamp' },
+      { id: 'txhash', title: 'TxHash' },
       { id: 'userAddr', title: 'User Address' },
       { id: 'vault', title: 'Vault Address' },
+      { id: 'amount', title: 'Amount' },
     ],
   });
   csvWriter
     .writeRecords(borrowers)
     .then(() => console.log(`Successfully saved ${borrowers.length} borrowers`));
 };
-
 const getBorrowers = async () => {
-  const contracts = await loadContracts(signer);
+  const contracts = await loadContracts(signer.provider);
 
-  console.log('contracts');
   let borrowers = [];
 
+  const vaultsList = Object.keys(VAULTS_ADDRESS);
   for (let v = 0; v < vaultsList.length; v++) {
     const vaultName = vaultsList[v];
     console.log('Searching BORROW positions in', chalk.blue(vaultName));
-
     const vault = contracts[vaultName];
-
     const found = await searchBorrowers(vault);
     borrowers.push(...found);
   }
-
   borrowers = filterAndSort(borrowers);
   saveFile(borrowers);
 };
-
 getBorrowers();

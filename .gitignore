@@ -1,16 +1,18 @@
-packages/subgraph/subgraph.yaml
-packages/subgraph/generated
-packages/hardhat/*.txt
 **/aws.json
 **/goog-auth.json
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
-packages/hardhat/artifacts
-packages/react-app/src/contracts
-packages/bots/contracts
-packages/hardhat/cache
 packages/subgraph
+packages/*/artifacts/*
+!packages/*/artifacts/1-*.deploy
+packages/*/cache
+packages/*/*.txt
+packages/hardhat/.openzeppelin/unknown-31337.json
+packages/react-app/src/contracts/*
+!packages/react-app/src/contracts/1-*.deployment.json
+packages/bots/contracts/*
+!packages/bots/contracts/1-*.deployment.json
 
 docker
 # docker/**/data
@@ -39,3 +41,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea
+.vscode
+*.csv

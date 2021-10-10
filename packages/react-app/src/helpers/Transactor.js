@@ -1,5 +1,4 @@
 import { hexlify } from '@ethersproject/bytes';
-import { parseUnits } from '@ethersproject/units';
 
 import Notify from 'bnc-notify';
 
@@ -9,7 +8,7 @@ import Notify from 'bnc-notify';
 
 const BLOCKNATIVE_KEY = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
-export default function Transactor(provider, gasPrice, etherscan) {
+export default function Transactor(provider, etherscan) {
   if (typeof provider !== 'undefined') {
     // eslint-disable-next-line consistent-return
     return async tx => {
@@ -50,10 +49,6 @@ export default function Transactor(provider, gasPrice, etherscan) {
           result = await tx;
           dismissPendingWallet();
         } else {
-          if (!tx.gasPrice) {
-            // eslint-disable-next-line no-param-reassign
-            tx.gasPrice = gasPrice || parseUnits('4.1', 'gwei');
-          }
           if (!tx.gasLimit) {
             // eslint-disable-next-line no-param-reassign
             tx.gasLimit = hexlify(120000);

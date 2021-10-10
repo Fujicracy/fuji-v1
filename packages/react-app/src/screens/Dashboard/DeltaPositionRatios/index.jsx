@@ -11,6 +11,7 @@ import { useExchangePrice } from '../../../hooks';
 
 function DeltaPositionRatios({
   borrowAsset,
+  collateralAsset,
   currentCollateral,
   currentDebt,
   newCollateral,
@@ -25,8 +26,10 @@ function DeltaPositionRatios({
   useEffect(() => {
     let position = {
       borrowAsset,
+      collateralAsset,
       collateralBalance: currentCollateral,
       debtBalance: currentDebt,
+      decimals: borrowAsset.decimals,
     };
     const {
       healthFactor: oldHf,
@@ -35,7 +38,7 @@ function DeltaPositionRatios({
     } = PositionRatios(position, price);
 
     position = {
-      borrowAsset,
+      ...position,
       collateralBalance: newCollateral,
       debtBalance: newDebt,
     };
@@ -48,7 +51,7 @@ function DeltaPositionRatios({
     setHealthFactor([oldHf, newHf]);
     setLtv([oldLtv * 100, newLtv * 100]);
     setLimit([oldLimit * 100, newLimit * 100]);
-  }, [price, borrowAsset, currentCollateral, currentDebt, newCollateral, newDebt]);
+  }, [price, borrowAsset, currentCollateral, currentDebt, newCollateral, newDebt, collateralAsset]);
 
   const formatValue = (value, precision) =>
     value !== undefined && value !== Infinity ? value.toFixed(precision) : '...';

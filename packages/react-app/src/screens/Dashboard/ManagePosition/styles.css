@@ -42,6 +42,17 @@
   opacity: 0;
 }
 
+.one-manage-position {
+  padding: 28px;
+  background: var(--blocks56);
+  border: 0.1rem solid var(--text05);
+  backdrop-filter: blur(0.375rem);
+  -webkit-backdrop-filter: blur(0.375rem);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
 .manage-settings {
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -58,7 +69,7 @@
 
 .manage-content {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: space-between;
 }
 
@@ -122,10 +133,13 @@
 
 .toggle-button .button .knobs:before {
   content: '';
-  top: 0.125rem;
-  left: 0.125rem;
+  top: 0;
+  left: 0;
+  height: calc(100% - 4px);
+  width: calc(50% - 4px);
   border-radius: 0.375rem;
   background-color: var(--text32);
+  margin:2px;
 }
 
 .toggle-button .button .knobs .toggle-options span {
@@ -160,7 +174,7 @@
 }
 
 .toggle-button .button .checkbox:checked + .knobs:before {
-  left: calc(50% - 0.125rem);
+  left: calc(50%);
   background-color: var(--text32);
 }
 
@@ -256,4 +270,52 @@
 .toggle-mode .button .checkbox:checked + .knobs:before {
   left: calc(50% - 0.125rem);
   background-color: var(--brand);
+}
+
+@media screen and (max-width: 768px) {
+  .toggle-button .button {
+    border-radius: 4px;
+  }
+  .toggle-button .knobs {
+    border-radius: 4px;
+  }
+  .toggle-button .toggle-mode {
+    border-radius: 4px;
+  }
+  .toggle-button .button .knobs:before {
+    border-radius: 4px;
+  }
+
+  .toggle-button .button .knobs .toggle-options span,
+  .toggle-button [data-toggle]:after {
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .main-button {
+    height: 55px !important;
+  }
+
+  .toggle-button .button, .toggle-button .knobs, .toggle-mode .button, .toggle-button .knobs  {
+    height: 56px;
+  }
+
+  .toggle-button .button .knobs .toggle-options span,
+  .toggle-button [data-toggle]:after {
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .toggle-button .button .knobs .toggle-options {
+    top: 10px;
+    z-index: 1;
+  }
+
+  .toggle-mode .button .knobs .toggle-options {
+    top: 10px;
+    z-index: 1;
+  }
 }

@@ -8,17 +8,16 @@ require("@nomiclabs/hardhat-etherscan");
 require("@tenderly/hardhat-tenderly");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
+require("@openzeppelin/hardhat-upgrades");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
-/*
-      📡 This is where you configure your deploy configuration for 🏗 scaffold-eth
-
-      check out `packages/scripts/deploy.js` to customize your deployment
-
-      out of the box it will auto deploy anything in the `contracts` folder and named *.sol
-      plus it will use *.args for constructor args
-*/
+if (!process.env.ALCHEMY_ID && !process.env.INFURA_ID) {
+  throw "Please set ALCHEMY_ID or INFURA_ID in ./packages/hardhat/.env";
+}
+const mainnetUrl = process.env.ALCHEMY_ID
+  ? `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_ID}`
+  : `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`;
 
 //
 // Select the network you want to deploy to here:
@@ -40,13 +39,13 @@ function mnemonic() {
 
 module.exports = {
   defaultNetwork,
-
-  // don't forget to set your provider like:
-  // REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
-  // (then your frontend will talk to your contracts on the live network!)
-  // (you will need to restart the `yarn run start` dev server after editing the .env)
-
   networks: {
+    hardhat: {
+      forking: {
+        url: mainnetUrl,
+        //blockNumber: 12962882, //before London
+      },
+    },
     localhost: {
       url: "http://localhost:8545",
       timeout: 200000,
@@ -68,7 +67,7 @@ module.exports = {
       },
     },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+      url: mainnetUrl,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     ropsten: {
@@ -103,77 +102,14 @@ module.exports = {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   gasReporter: {
-    //coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    // coinmarketcap: process.env.COINMARKETCAP_API_KEY,
     currency: "USD",
-    //enabled: !!process.env.REPORT_GAS,
+    // enabled: !!process.env.REPORT_GAS,
     gasPrice: 20,
-    enabled: false
+    enabled: false,
   },
   solidity: {
     compilers: [
-      {
-        version: "0.7.4",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.4.25",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.5.3",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.6.0",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.6.12",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.6.2",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
-      {
-        version: "0.7.0",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 1000,
-          },
-        },
-      },
       {
         version: "0.8.0",
         settings: {
@@ -199,6 +135,54 @@ function debug(text) {
 }
 
 /* eslint-disable */
+function writeFiles(chainId, market, deployData) {
+  fs.writeFileSync(
+    `../bots/contracts/${chainId}-${market}.deployment.json`,
+    JSON.stringify(deployData, null, 2)
+  );
+  fs.writeFileSync(
+    `../react-app/src/contracts/${chainId}-${market}.deployment.json`,
+    JSON.stringify(deployData, null, 2)
+  );
+}
+
+task("publish", "Publish deployment data to other packages")
+  .addOptionalParam("market", "Markets: fuse, core", "core")
+  .setAction(async ({ market }, { ethers, config }) => {
+    const network = await ethers.provider.getNetwork();
+
+    const deployData = JSON.parse(
+      fs.readFileSync(`${config.paths.artifacts}/${network.chainId}-${market}.deploy`).toString()
+    );
+
+    writeFiles(network.chainId, market, deployData);
+  });
+
+task("sync", "Sync mainnet deployment data to be used in current network").setAction(
+  async (_, { ethers, config }) => {
+    const network = await ethers.provider.getNetwork();
+
+    try {
+      const deployDataCore = JSON.parse(
+        fs.readFileSync(`${config.paths.artifacts}/1-core.deploy`).toString()
+      );
+      writeFiles(network.chainId, "core", deployDataCore);
+      console.log("1-core deploy: synced");
+    } catch (e) {
+      console.log("1-core deploy: not synced");
+    }
+    try {
+      const deployDataFuse = JSON.parse(
+        fs.readFileSync(`${config.paths.artifacts}/1-fuse.deploy`).toString()
+      );
+      writeFiles(network.chainId, "fuse", deployDataFuse);
+      console.log("1-core deploy: synced");
+    } catch (e) {
+      console.log("1-fuse deploy: not synced");
+    }
+  }
+);
+
 task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom();
   const privateKey = randomWallet._signingKey().privateKey;
@@ -419,7 +403,6 @@ task("send", "Send ETH")
       to,
       value: parseUnits(taskArgs.amount ? taskArgs.amount : "0", "ether").toHexString(),
       nonce: await fromSigner.getTransactionCount(),
-      gasPrice: parseUnits(taskArgs.gasPrice ? taskArgs.gasPrice : "1.001", "gwei").toHexString(),
       gasLimit: taskArgs.gasLimit ? taskArgs.gasLimit : 24000,
       chainId: network.config.chainId,
     };

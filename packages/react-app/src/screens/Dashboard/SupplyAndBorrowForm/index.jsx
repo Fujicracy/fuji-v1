@@ -17,13 +17,19 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, getBorrowId, getCollateralId, getVaultName } from 'helpers';
-import { useBalance, useContractReader } from 'hooks';
-import { ETH_CAP_VALUE } from 'constants/providers';
 
-function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
+import { Transactor } from 'helpers';
+import { useBalance, useContractReader } from 'hooks';
+import { ETH_CAP_VALUE } from 'consts/globals';
+import { VAULTS } from 'consts';
+import { ethIcons } from 'assets/images';
+
+function SupplyAndBorrowForm({ position, contracts, provider, address }) {
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
+
+  const vault = VAULTS[position.vaultAddress];
+  const decimals = vault.borrowAsset.decimals;
 
   const [collateralAmount, setCollateralAmount] = useState('');
   const [borrowAmount, setBorrowAmount] = useState('');
@@ -31,24 +37,21 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
   const ethBalance = useBalance(provider, address);
 
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getCollateralId(borrowAsset),
+    vault.collateralId,
   ]);
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getBorrowId(borrowAsset),
+    vault.borrowId,
   ]);
 
-  const neededCollateral = useContractReader(
-    contracts,
-    getVaultName(borrowAsset),
-    'getNeededCollateralFor',
-    [borrowAmount ? parseUnits(`${borrowAmount}`, decimals).add(debtBalance || '0') : '', 'true'],
-  );
+  const neededCollateral = useContractReader(contracts, vault.name, 'getNeededCollateralFor', [
+    borrowAmount ? parseUnits(`${borrowAmount}`, decimals).add(debtBalance || '0') : '',
+    'true',
+  ]);
 
   useEffect(() => {
     if (neededCollateral) {
@@ -65,10 +68,10 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
     }
     setLoading(true);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].depositAndBorrow(
+      contracts[vault.name].depositAndBorrow(
         parseEther(collateralAmount),
         parseUnits(borrowAmount, decimals),
-        { value: parseEther(collateralAmount), gasPrice: parseUnits('40', 'gwei') },
+        { value: parseEther(collateralAmount) },
       ),
     );
 
@@ -139,7 +142,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
           <InfoOutlinedIcon />
           <span className="tooltip tooltip-top">
             <span className="bold">Supply</span> more collateral and
-            <span className="bold"> borrow</span> {borrowAsset} in a single transaction.
+            <span className="bold"> borrow</span> {vault.borrowAsset.name} in a single transaction.
           </span>
         </div>
       </Grid>
@@ -166,7 +169,7 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
+                  <Avatar alt="ETH" src={ethIcons.BLUE} className="icon" />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -203,13 +206,17 @@ function SupplyAndBorrowForm({ borrowAsset, contracts, provider, address }) {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
+                  <Avatar
+                    alt={vault.borrowAsset.name}
+                    src={vault.borrowAsset.icon}
+                    className="icon"
+                  />
                 </InputAdornment>
               ),
               endAdornment: (
                 <InputAdornment position="end">
                   <Typography variant="body1" className="input-infos">
-                    {borrowAsset}
+                    {vault.borrowAsset.name}
                   </Typography>
                 </InputAdornment>
               ),

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { formatEther, parseEther, formatUnits } from '@ethersproject/units';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import {
-  Avatar,
   Button,
   CircularProgress,
-  TextField,
   Typography,
   Grid,
   InputAdornment,
@@ -17,21 +15,24 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, GasEstimator, getBorrowId, getCollateralId, getVaultName } from 'helpers';
-import { useBalance, useContractReader, useGasPrice } from 'hooks';
-import { ETH_CAP_VALUE } from 'constants/providers';
+import { Transactor, GasEstimator } from 'helpers';
+import { useBalance, useContractReader } from 'hooks';
+import { ETH_CAP_VALUE } from 'consts/globals';
+import { useMediaQuery } from 'react-responsive';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
+import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
   Withdraw: 1,
 };
 
-function CollateralForm({ borrowAsset, contracts, provider, address }) {
-  const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
+function CollateralForm({ position, contracts, provider, address }) {
+  const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
@@ -40,44 +41,57 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
 
-  const unformattedEthBalance = useBalance(provider, address);
-  const ethBalance = unformattedEthBalance
-    ? Number(formatEther(unformattedEthBalance)).toFixed(6)
+  const vault = VAULTS[position.vaultAddress];
+  // const unformattedUserBalance = useBalance(provider, address);
+  const unformattedUserBalance = useBalance(provider, address);
+
+  // const userBalance = unformattedUserBalance
+  //   ? Number(formatEther(unformattedUserBalance)).toFixed(6)
+  //   : null;
+  const userBalance = unformattedUserBalance
+    ? Number(formatUnits(unformattedUserBalance, vault.collateralAsset.decimals)).toFixed(6)
     : null;
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getBorrowId(borrowAsset),
+    vault.borrowId,
   ]);
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getCollateralId(borrowAsset),
+    vault.collateralId,
   ]);
 
-  const neededCollateral = useContractReader(
-    contracts,
-    getVaultName(borrowAsset),
-    'getNeededCollateralFor',
-    [debtBalance || '0', 'true'],
-  );
+  const neededCollateral = useContractReader(contracts, vault.name, 'getNeededCollateralFor', [
+    debtBalance || '0',
+    'true',
+  ]);
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = formatEther(collateralBalance.sub(neededCollateral));
+      const diff = formatUnits(
+        collateralBalance.sub(neededCollateral),
+        vault.collateralAsset.decimals,
+      );
       // use toFixed to avoid scientific notation 2.1222e-6
       setLeftCollateral(Number(diff).toFixed(6));
     }
-  }, [neededCollateral, collateralBalance]);
+  }, [neededCollateral, collateralBalance, vault.collateralAsset.decimals]);
 
   const supply = async () => {
-    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'deposit', [
-      parseEther(amount),
-      { value: parseEther(amount), gasPrice },
+    const parsedAmount = parseUnits(amount, vault.collateralAsset.decimals);
+    const gasLimit = await GasEstimator(contracts[vault.name], 'deposit', [
+      parsedAmount,
+      { value: parsedAmount },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].deposit(parseEther(amount), {
-        value: parseEther(amount),
-        gasPrice,
+      contracts[vault.name].deposit(parsedAmount, {
+        value: parsedAmount,
         gasLimit,
       }),
     );
@@ -99,15 +113,16 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
 
   const withdraw = async () => {
     const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
-    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'withdraw', [
-      parseEther(unformattedAmount),
-      { gasPrice },
+    const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [
+      parseUnits(unformattedAmount, vault.collateralAsset.decimals),
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].withdraw(parseEther(unformattedAmount), {
-        gasPrice,
-        gasLimit,
-      }),
+      contracts[vault.name].withdraw(
+        parseUnits(unformattedAmount, vault.collateralAsset.decimals),
+        {
+          gasLimit,
+        },
+      ),
     );
 
     if (res && res.hash) {
@@ -154,7 +169,8 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
-          borrowAsset={borrowAsset}
+          borrowAsset={vault.borrowAsset}
+          collateralAsset={vault.collateralAsset}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newDebt={debtBalance}
@@ -162,8 +178,8 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
             !collateralBalance || !amount
               ? 0
               : action === Action.Withdraw
-              ? collateralBalance.sub(parseEther(amount))
-              : collateralBalance.add(parseEther(amount))
+              ? collateralBalance.sub(parseUnits(amount, vault.collateralAsset.decimals))
+              : collateralBalance.add(parseUnits(amount, vault.collateralAsset.decimals))
           }
         />
       ),
@@ -250,14 +266,16 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
       </Dialog>
 
       <Grid item className="section-title">
-        <Typography variant="h3">Collateral</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip tooltip-top">
-            <span className="bold">Supply</span> more ETH as collateral or
-            <span className="bold"> withdraw</span> what is not locked for your borrows.
-          </span>
-        </div>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Collateral</SectionTitle>
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip tooltip-top">
+              <span className="bold">Supply</span> more ETH as collateral or
+              <span className="bold"> withdraw</span> what is not locked for your borrows.
+            </span>
+          </div>
+        )}
       </Grid>
       <Grid item className="toggle-button">
         <div className="button">
@@ -277,94 +295,80 @@ function CollateralForm({ borrowAsset, contracts, provider, address }) {
         </div>
       </Grid>
       <Grid item>
-        <div className="subtitle">
-          <span className="complementary-infos">
-            {action === Action.Supply ? (
-              <>
-                <span>Available to supply:</span>
-                <span>{ethBalance ? Number(ethBalance).toFixed(3) : '...'} ETH Ξ</span>
-              </>
+        <TextInput
+          step="any"
+          id="collateralAmount"
+          name="amount"
+          type="number"
+          onChange={({ target }) => {
+            return setAmount(target.value);
+          }}
+          onFocus={() => {
+            return setFocus(true);
+          }}
+          onBlur={() => {
+            return clearErrors();
+          }}
+          ref={register({
+            required: { value: true, message: 'insufficient-amount' },
+            min: { value: 0, message: 'insufficient-amount' },
+            max: {
+              value: action === Action.Supply ? userBalance : leftCollateral,
+              message: 'insufficient-balance',
+            },
+          })}
+          subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
+          subTitleInfo={
+            action === Action.Supply
+              ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${
+                  vault.collateralAsset.name
+                } Ξ`
+              : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ${
+                  vault.collateralAsset.name
+                } Ξ`
+          }
+          startAdornmentImage={vault.collateralAsset.icon}
+          endAdornment={{
+            type: 'component',
+            component: (
+              <InputAdornment position="end">
+                {focus && (
+                  <Button
+                    className="max-button"
+                    onClick={() => {
+                      setAmount(action === Action.Supply ? userBalance : leftCollateral);
+                      setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  >
+                    max
+                  </Button>
+                )}
+                <Label>{vault.collateralAsset.name}</Label>
+              </InputAdornment>
+            ),
+          }}
+          errorComponent={
+            errors?.amount?.message === 'insufficient-amount' ? (
+              <Typography className="error-input-msg" variant="body2">
+                Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
+              </Typography>
+            ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
+              <Typography className="error-input-msg" variant="body2">
+                Insufficient {vault.collateralAsset.name} balance
+              </Typography>
             ) : (
-              <>
-                <span>Available to withdraw:</span>
-                <span>{leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ETH Ξ</span>
-              </>
-            )}
-          </span>
-        </div>
-        <div className="fake-input">
-          <TextField
-            className="input-container"
-            required
-            fullWidth
-            autoComplete="off"
-            name="amount"
-            type="number"
-            step="any"
-            id="collateralAmount"
-            variant="outlined"
-            onChange={({ target }) => {
-              return setAmount(target.value);
-            }}
-            onFocus={() => {
-              return setFocus(true);
-            }}
-            onBlur={() => {
-              return clearErrors();
-            }}
-            inputRef={register({
-              required: { value: true, message: 'insufficient-amount' },
-              min: { value: 0, message: 'insufficient-amount' },
-              max: {
-                value: action === Action.Supply ? ethBalance : leftCollateral,
-                message: 'insufficient-balance',
-              },
-            })}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Avatar alt="ETH" src="/ETH.png" className="icon" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  {focus && (
-                    <Button
-                      className="max-button"
-                      onClick={() => {
-                        setAmount(action === Action.Supply ? ethBalance : leftCollateral);
-                        setValue('amount', action === Action.Supply ? ethBalance : leftCollateral, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      max
-                    </Button>
-                  )}
-                  <Typography variant="body1" className="input-infos">
-                    ETH
-                  </Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
-        {errors?.amount?.message === 'insufficient-amount' && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Supply && (
-          <Typography className="error-input-msg" variant="body2">
-            Insufficient ETH balance
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Withdraw && (
-          <Typography className="error-input-msg" variant="body2">
-            You can withdraw max. {leftCollateral} ETH
-          </Typography>
-        )}
+              errors?.amount?.message === 'insufficient-balance' &&
+              action === Action.Withdraw && (
+                <Typography className="error-input-msg" variant="body2">
+                  You can withdraw max. {leftCollateral} {vault.collateralAsset.name}
+                </Typography>
+              )
+            )
+          }
+        />
       </Grid>
       <Grid item>
         <Button

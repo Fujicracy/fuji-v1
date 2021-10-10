@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
+import { useMediaQuery } from 'react-responsive';
+
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -16,27 +16,24 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import {
-  Transactor,
-  GasEstimator,
-  getBorrowId,
-  getCollateralId,
-  getVaultName,
-} from '../../../helpers';
-import { useContractReader, useExchangePrice, useGasPrice } from '../../../hooks';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
+import { Transactor, GasEstimator } from '../../../helpers';
+import { useContractReader, useExchangePrice } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
+import { TextInput, Label } from '../../../components/UI';
+import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Repay: 0,
   Borrow: 1,
 };
 
-function DebtForm({ borrowAsset, contracts, provider, address }) {
-  const { register, errors, setValue, handleSubmit, clearErrors } = useForm();
+function DebtForm({ position, contracts, provider, address }) {
+  const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const price = useExchangePrice();
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [action, setAction] = useState(Action.Repay);
   const [focus, setFocus] = useState(false);
@@ -45,32 +42,39 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   const [leftToBorrow, setLeftToBorrow] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const vault = VAULTS[position.vaultAddress];
+  const { decimals } = vault.borrowAsset;
 
-  const unFormattedBalance = useContractReader(contracts, borrowAsset, 'balanceOf', [address]);
+  const unFormattedBalance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [
+    address,
+  ]);
   const balance = unFormattedBalance
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
-  const allowance = useContractReader(contracts, borrowAsset, 'allowance', [
+  const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
     address,
-    contracts ? contracts[getVaultName(borrowAsset)].address : '0x',
+    position.vaultAddress,
   ]);
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getBorrowId(borrowAsset),
+    vault.borrowId,
   ]);
   const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
-    getCollateralId(borrowAsset),
+    vault.collateralId,
   ]);
 
-  const neededCollateral = useContractReader(
-    contracts,
-    getVaultName(borrowAsset),
-    'getNeededCollateralFor',
-    [debtBalance || '0', 'true'],
-  );
+  const neededCollateral = useContractReader(contracts, vault.name, 'getNeededCollateralFor', [
+    debtBalance || '0',
+    'true',
+  ]);
+
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
@@ -81,13 +85,11 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
   }, [neededCollateral, collateralBalance, price]);
 
   const borrow = async () => {
-    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'borrow', [
+    const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
       parseUnits(amount, decimals),
-      { gasPrice },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].borrow(parseUnits(amount, decimals), {
-        gasPrice,
+      contracts[vault.name].borrow(parseUnits(amount, decimals), {
         gasLimit,
       }),
     );
@@ -116,13 +118,11 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
         ? formatUnits(unFormattedBalance, decimals)
         : unFormattedAmount;
 
-    const gasLimit = await GasEstimator(contracts[getVaultName(borrowAsset)], 'payback', [
+    const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
       parseUnits(unFormattedAmount, decimals),
-      { gasPrice },
     ]);
     const res = await tx(
-      contracts[getVaultName(borrowAsset)].payback(parseUnits(unFormattedAmount, decimals), {
-        gasPrice,
+      contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
         gasLimit,
       }),
     );
@@ -156,10 +156,9 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       : parseUnits(unFormattedAmount, decimals);
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
-      contracts[borrowAsset].approve(
-        contracts[getVaultName(borrowAsset)].address,
+      contracts[vault.borrowAsset.name].approve(
+        contracts[vault.name].address,
         BigNumber.from(approveAmount),
-        { gasPrice: parseUnits('40', 'gwei') },
       ),
     );
 
@@ -197,7 +196,8 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
-          borrowAsset={borrowAsset}
+          borrowAsset={vault.borrowAsset}
+          collateralAsset={vault.collateralAsset}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newCollateral={collateralBalance}
@@ -230,7 +230,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(amount).toFixed(0)} {borrowAsset}
+            Approve {Number(amount).toFixed(0)} {vault.borrowAsset.name}
           </Button>
           <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
@@ -243,7 +243,7 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
       content: (
         <DialogContentText>
           You have successfully {action === Action.Repay ? 'repay' : 'borrow'}ed {amount}{' '}
-          {borrowAsset}.
+          {vault.borrowAsset.name}.
         </DialogContentText>
       ),
       actions: () => (
@@ -301,14 +301,18 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <Typography variant="h3">Debt</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip tooltip-top">
-            <span className="bold">Repay</span> {borrowAsset} from your wallet balance or
-            <span className="bold"> borrow</span> more from it against your free collateral.
-          </span>
-        </div>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Debt</SectionTitle>
+
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip tooltip-top">
+              <span className="bold">Repay</span> {vault.borrowAsset.name} from your wallet balance
+              or
+              <span className="bold"> borrow</span> more from it against your free collateral.
+            </span>
+          </div>
+        )}
       </Grid>
       <Grid item className="toggle-button">
         <div className="button">
@@ -326,95 +330,76 @@ function DebtForm({ borrowAsset, contracts, provider, address }) {
         </div>
       </Grid>
       <Grid item>
-        <div className="subtitle">
-          <span className="complementary-infos">
-            {action === Action.Repay ? (
-              <>
-                <span>Available to repay:</span>
-                <span>
-                  {balance ? Number(balance).toFixed(2) : '...'} {borrowAsset} Ξ
-                </span>
-              </>
-            ) : (
-              <>
-                <span>Available to borrow:</span>
-                <span>
-                  {leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} {borrowAsset} Ξ
-                </span>
-              </>
-            )}
-          </span>
-        </div>
-        <div className="fake-input">
-          <TextField
-            className="input-container"
-            required
-            fullWidth
-            autoComplete="off"
-            id="debtAmount"
-            name="amount"
-            type="number"
-            step="any"
-            variant="outlined"
-            onChange={({ target }) => setAmount(target.value)}
-            onFocus={() => setFocus(true)}
-            onBlur={() => clearErrors()}
-            inputRef={register({
-              required: { value: true, message: 'insufficient-amount' },
-              min: { value: 0, message: 'insufficient-amount' },
-              max: {
-                value: action === Action.Repay ? balance : leftToBorrow,
-                message: 'insufficient-balance',
-              },
-            })}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Avatar alt={borrowAsset} src={`/${borrowAsset}.png`} className="icon" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  {focus && (
-                    <Button
-                      className="max-button"
-                      onClick={() => {
-                        const debt = formatUnits(debtBalance, decimals);
-                        const maxRepay = Number(debt) > Number(balance) ? balance : debt;
+        <TextInput
+          id="debtAmount"
+          name="amount"
+          type="number"
+          step="any"
+          onChange={({ target }) => setAmount(target.value)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => clearErrors()}
+          ref={register({
+            required: { value: true, message: 'insufficient-amount' },
+            min: { value: 0, message: 'insufficient-amount' },
+            max: {
+              value: action === Action.Repay ? balance : leftToBorrow,
+              message: 'insufficient-balance',
+            },
+          })}
+          subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
+          subTitleInfo={
+            action === Action.Repay
+              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name} Ξ`
+              : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${
+                  vault.borrowAsset.name
+                } Ξ`
+          }
+          startAdornmentImage={vault.borrowAsset.icon}
+          endAdornment={{
+            type: 'component',
+            component: (
+              <InputAdornment position="end">
+                {focus && (
+                  <Button
+                    className="max-button"
+                    onClick={() => {
+                      const debt = formatUnits(debtBalance, decimals);
+                      const maxRepay = Number(debt) > Number(balance) ? balance : debt;
 
-                        setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
-                        setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                      }}
-                    >
-                      max
-                    </Button>
-                  )}
-                  <Typography variant="body1" className="input-infos">
-                    {borrowAsset}
-                  </Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
-        {errors?.amount?.message === 'insufficient-amount' && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Repay && (
-          <Typography className="error-input-msg" variant="body2">
-            Insufficient {borrowAsset} balance
-          </Typography>
-        )}
-        {errors?.amount?.message === 'insufficient-balance' && action === Action.Borrow && (
-          <Typography className="error-input-msg" variant="body2">
-            You can borrow max. {leftToBorrow} {borrowAsset}. Provide more collateral!
-          </Typography>
-        )}
+                      setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
+                      setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                  >
+                    max
+                  </Button>
+                )}
+                <Label>{vault.borrowAsset.name}</Label>
+              </InputAdornment>
+            ),
+          }}
+          errorComponent={
+            errors?.amount?.message === 'insufficient-amount' ? (
+              <Typography className="error-input-msg" variant="body2">
+                Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
+              </Typography>
+            ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
+              <Typography className="error-input-msg" variant="body2">
+                Insufficient {vault.borrowAsset.name} balance
+              </Typography>
+            ) : (
+              errors?.amount?.message === 'insufficient-balance' &&
+              action === Action.Borrow && (
+                <Typography className="error-input-msg" variant="body2">
+                  You can borrow max. {leftToBorrow} {vault.borrowAsset.name}. Provide more
+                  collateral!
+                </Typography>
+              )
+            )
+          }
+        />
       </Grid>
       <Grid item>
         <Button

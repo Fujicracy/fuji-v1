@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { createMuiTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
+import App from 'containers/App/index';
 import './index.css';
-import App from './App';
 
 // let subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"
 
@@ -12,7 +12,16 @@ import App from './App';
 // cache: new InMemoryCache()
 // });
 
-const theme = createMuiTheme({
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 450,
+      md: 1120,
+      lg: 1170,
+      xl: 1140,
+    },
+  },
   typography: {
     fontFamily: 'inherit',
   },

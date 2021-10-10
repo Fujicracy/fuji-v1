@@ -1,39 +1,25 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.6.12 <0.8.0;
+pragma solidity ^0.8.0;
 
-import { IFujiAdmin } from "./IFujiAdmin.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract FujiAdmin is IFujiAdmin, Ownable {
+import "./interfaces/IFujiAdmin.sol";
+import "./libraries/Errors.sol";
+
+contract FujiAdmin is IFujiAdmin, OwnableUpgradeable {
   address private _flasher;
   address private _fliquidator;
   address payable private _ftreasury;
   address private _controller;
-  address private _aWhiteList;
   address private _vaultHarvester;
 
   mapping(address => bool) public override validVault;
 
-  struct Factor {
-    uint64 a;
-    uint64 b;
-  }
+  address private _swapper;
 
-  // Bonus Factor for Flash Liquidation
-  Factor public bonusFlashL;
-
-  // Bonus Factor for normal Liquidation
-  Factor public bonusL;
-
-  constructor() {
-    // 0.043
-    bonusFlashL.a = 43;
-    bonusFlashL.b = 1000;
-
-    // 0.05
-    bonusL.a = 1;
-    bonusL.b = 20;
+  function initialize() external initializer {
+    __Ownable_init();
   }
 
   // Setter Functions
@@ -43,6 +29,7 @@ contract FujiAdmin is IFujiAdmin, Ownable {
    * @param _newFlasher: flasher address
    */
   function setFlasher(address _newFlasher) external onlyOwner {
+    require(_newFlasher != address(0), Errors.VL_ZERO_ADDR);
     _flasher = _newFlasher;
   }
 
@@ -51,6 +38,7 @@ contract FujiAdmin is IFujiAdmin, Ownable {
    * @param _newFliquidator: new fliquidator address
    */
   function setFliquidator(address _newFliquidator) external onlyOwner {
+    require(_newFliquidator != address(0), Errors.VL_ZERO_ADDR);
     _fliquidator = _newFliquidator;
   }
 
@@ -59,6 +47,7 @@ contract FujiAdmin is IFujiAdmin, Ownable {
    * @param _newTreasury: new Fuji Treasury address
    */
   function setTreasury(address payable _newTreasury) external onlyOwner {
+    require(_newTreasury != address(0), Errors.VL_ZERO_ADDR);
     _ftreasury = _newTreasury;
   }
 
@@ -67,15 +56,8 @@ contract FujiAdmin is IFujiAdmin, Ownable {
    * @param _newController: controller address
    */
   function setController(address _newController) external onlyOwner {
+    require(_newController != address(0), Errors.VL_ZERO_ADDR);
     _controller = _newController;
-  }
-
-  /**
-   * @dev Sets the Whitelistingcontract address
-   * @param _newAWhiteList: controller address
-   */
-  function setaWhitelist(address _newAWhiteList) external onlyOwner {
-    _aWhiteList = _newAWhiteList;
   }
 
   /**
@@ -83,37 +65,25 @@ contract FujiAdmin is IFujiAdmin, Ownable {
    * @param _newVaultHarverster: controller address
    */
   function setVaultHarvester(address _newVaultHarverster) external onlyOwner {
+    require(_newVaultHarverster != address(0), Errors.VL_ZERO_ADDR);
     _vaultHarvester = _newVaultHarverster;
   }
 
   /**
-   * @dev Set Factors "a" and "b" for a Struct Factor
-   * For bonusL; Sets the Bonus for normal Liquidation, should be < 1, a/b
-   * For bonusFlashL; Sets the Bonus for flash Liquidation, should be < 1, a/b
-   * @param _newFactorA: A number
-   * @param _newFactorB: A number
-   * @param _isbonusFlash: is bonusFlashFactor
+   * @dev Sets the Swapper address
+   * @param _newSwapper: controller address
    */
-  function setFactor(
-    uint64 _newFactorA,
-    uint64 _newFactorB,
-    bool _isbonusFlash
-  ) external onlyOwner {
-    if (_isbonusFlash) {
-      bonusFlashL.a = _newFactorA;
-      bonusFlashL.b = _newFactorB;
-    } else {
-      bonusL.a = _newFactorA;
-      bonusL.b = _newFactorB;
-    }
+  function setSwapper(address _newSwapper) external onlyOwner {
+    require(_newSwapper != address(0), Errors.VL_ZERO_ADDR);
+    _swapper = _newSwapper;
   }
 
   /**
    * @dev Adds a Vault.
    * @param _vaultAddr: Address of vault to be added
    */
-  function addVault(address _vaultAddr) external onlyOwner {
-    validVault[_vaultAddr] = true;
+  function allowVault(address _vaultAddr, bool _allowed) external onlyOwner {
+    validVault[_vaultAddr] = _allowed;
   }
 
   // Getter Functions
@@ -134,19 +104,11 @@ contract FujiAdmin is IFujiAdmin, Ownable {
     return _controller;
   }
 
-  function getaWhiteList() external view override returns (address) {
-    return _aWhiteList;
-  }
-
   function getVaultHarvester() external view override returns (address) {
     return _vaultHarvester;
   }
 
-  function getBonusFlashL() external view override returns (uint64, uint64) {
-    return (bonusFlashL.a, bonusFlashL.b);
-  }
-
-  function getBonusLiq() external view override returns (uint64, uint64) {
-    return (bonusL.a, bonusL.b);
+  function getSwapper() external view override returns (address) {
+    return _swapper;
   }
 }

@@ -12,55 +12,63 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { DAI_ADDRESS, USDC_ADDRESS } from 'constants/providers';
-import { useGasPrice } from 'hooks';
-import { Transactor, GasEstimator, getVaultName } from 'helpers';
+import { VAULTS, ASSET_NAME, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { Transactor, GasEstimator } from 'helpers';
+import { useMediaQuery } from 'react-responsive';
+import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
 
-async function getLiquidationProviderIndex(vaultName, contracts) {
+async function getLiquidationProviderIndex(vault, contracts) {
   const providerIndex = {
     aave: '0',
     dydx: '1',
     cream: '2',
   };
-  const { borrowAsset } = await contracts[vaultName].vAssets();
-  const activeProvider = await contracts[vaultName].activeProvider();
-  const dydxProviderAddr = contracts.ProviderDYDX.address;
+  const activeProvider = await contracts[vault.name].activeProvider();
+  const dydxProviderAddr = PROVIDERS.DYDX.address;
 
-  if ([DAI_ADDRESS, USDC_ADDRESS].includes(borrowAsset) && activeProvider !== dydxProviderAddr) {
+  if (
+    [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
+    activeProvider !== dydxProviderAddr
+  ) {
     return providerIndex.dydx;
   }
   return providerIndex.cream;
 }
 
-function FlashClose({ borrowAsset, contracts, provider }) {
+function FlashClose({ position, contracts, provider }) {
   const tx = Transactor(provider);
-  const gasPrice = useGasPrice();
 
   const [dialog, setDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
   const [amount, setAmount] = useState('');
 
-  const decimals = borrowAsset === 'USDC' ? 6 : 18;
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
+  const vault = VAULTS[position.vaultAddress];
+
+  const decimals = vault.borrowAsset.decimals;
   const onFlashClose = async () => {
     setLoading(true);
-    const vaultName = getVaultName(borrowAsset);
-    const providerIndex = await getLiquidationProviderIndex(vaultName, contracts);
+    const providerIndex = await getLiquidationProviderIndex(vault, contracts);
 
     const gasLimit = await GasEstimator(contracts.Fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
-      contracts[vaultName].address,
+      position.vaultAddress,
       providerIndex,
-      { gasPrice },
     ]);
     const res = await tx(
       contracts.Fliquidator.flashClose(
         parseUnits(amount, decimals),
-        contracts[vaultName].address,
+        position.vaultAddress,
         providerIndex,
-        { gasPrice, gasLimit },
+        { gasLimit },
       ),
     );
 
@@ -114,7 +122,7 @@ function FlashClose({ borrowAsset, contracts, provider }) {
             <Button
               onClick={() => onFlashClose()}
               className="main-button"
-              disabled
+              disabled={loading}
               startIcon={
                 loading ? (
                   <CircularProgress
@@ -130,20 +138,24 @@ function FlashClose({ borrowAsset, contracts, provider }) {
                 )
               }
             >
-              {loading ? 'Repaying...' : 'Coming soon'}
+              {loading ? 'Repaying...' : 'Repay'}
             </Button>
           )}
         </DialogActions>
       </Dialog>
       <div className="flash-close">
         <div className="section-title">
-          <h3>Flash Close</h3>
-          <div className="tooltip-info">
-            <InfoOutlinedIcon />
-            <span className="tooltip">
-              Repay your debt postion from your collateral by using a flash loan. Fee: 1%
-            </span>
-          </div>
+          <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+            Flash Close
+          </SectionTitle>
+          {!isMobile && !isTablet && (
+            <div className="tooltip-info">
+              <InfoOutlinedIcon />
+              <span className="tooltip">
+                Repay your debt position from your collateral by using a flash loan. Fee: 1%
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="content">

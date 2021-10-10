@@ -1,36 +1,27 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.6.12;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
 
-import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { IVault } from "./Vaults/IVault.sol";
-import { IProvider } from "./Providers/IProvider.sol";
-import { Flasher } from "./Flashloans/Flasher.sol";
-import { FlashLoan } from "./Flashloans/LibFlashLoan.sol";
-import { IFujiAdmin } from "./IFujiAdmin.sol";
-import { Errors } from "./Libraries/Errors.sol";
+import "./flashloans/Flasher.sol";
+import "./abstracts/claimable/Claimable.sol";
+import "./interfaces/IVault.sol";
+import "./interfaces/IVaultControl.sol";
+import "./interfaces/IProvider.sol";
+import "./interfaces/IFujiAdmin.sol";
+import "./libraries/FlashLoans.sol";
+import "./libraries/Errors.sol";
 
-interface IVaultExt is IVault {
-  //Asset Struct
-  struct VaultAssets {
-    address collateralAsset;
-    address borrowAsset;
-    uint64 collateralID;
-    uint64 borrowID;
-  }
-
-  function vAssets() external view returns (VaultAssets memory);
-}
-
-contract Controller is Ownable {
-  using SafeMath for uint256;
-
+contract Controller is Claimable {
   IFujiAdmin private _fujiAdmin;
+  mapping(address => bool) public isExecutor;
 
   modifier isValidVault(address _vaultAddr) {
     require(_fujiAdmin.validVault(_vaultAddr), "Invalid vault!");
+    _;
+  }
+
+  modifier onlyOwnerOrExecutor() {
+    require(msg.sender == owner() || isExecutor[msg.sender], "Not executor!");
     _;
   }
 
@@ -56,15 +47,17 @@ contract Controller is Ownable {
     uint256 _ratioA,
     uint256 _ratioB,
     uint8 _flashNum
-  ) external isValidVault(_vaultAddr) onlyOwner {
+  ) external isValidVault(_vaultAddr) onlyOwnerOrExecutor {
     IVault vault = IVault(_vaultAddr);
-    IVaultExt.VaultAssets memory vAssets = IVaultExt(_vaultAddr).vAssets();
+    IVaultControl.VaultAssets memory vAssets = IVaultControl(_vaultAddr).vAssets();
     vault.updateF1155Balances();
 
     // Check Vault borrowbalance and apply ratio (consider compound or not)
-    uint256 debtPosition =
-      IProvider(vault.activeProvider()).getBorrowBalanceOf(vAssets.borrowAsset, _vaultAddr);
-    uint256 applyRatiodebtPosition = debtPosition.mul(_ratioA).div(_ratioB);
+    uint256 debtPosition = IProvider(vault.activeProvider()).getBorrowBalanceOf(
+      vAssets.borrowAsset,
+      _vaultAddr
+    );
+    uint256 applyRatiodebtPosition = (debtPosition * _ratioA) / _ratioB;
 
     // Check Ratio Input and Vault Balance at ActiveProvider
     require(
@@ -73,21 +66,26 @@ contract Controller is Ownable {
     );
 
     //Initiate Flash Loan Struct
-    FlashLoan.Info memory info =
-      FlashLoan.Info({
-        callType: FlashLoan.CallType.Switch,
-        asset: vAssets.borrowAsset,
-        amount: applyRatiodebtPosition,
-        vault: _vaultAddr,
-        newProvider: _newProvider,
-        userAddrs: new address[](0),
-        userBalances: new uint256[](0),
-        userliquidator: address(0),
-        fliquidator: address(0)
-      });
+    FlashLoan.Info memory info = FlashLoan.Info({
+      callType: FlashLoan.CallType.Switch,
+      asset: vAssets.borrowAsset,
+      amount: applyRatiodebtPosition,
+      vault: _vaultAddr,
+      newProvider: _newProvider,
+      userAddrs: new address[](0),
+      userBalances: new uint256[](0),
+      userliquidator: address(0),
+      fliquidator: address(0)
+    });
 
     Flasher(payable(_fujiAdmin.getFlasher())).initiateFlashloan(info, _flashNum);
 
     IVault(_vaultAddr).setActiveProvider(_newProvider);
+  }
+
+  function setExecutors(address[] calldata _executors, bool _isExecutor) external onlyOwner {
+    for (uint256 i = 0; i < _executors.length; i++) {
+      isExecutor[_executors[i]] = _isExecutor;
+    }
   }
 }

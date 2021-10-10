@@ -3,6 +3,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { infoIcons } from 'assets/images';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -74,7 +75,7 @@ function Infos() {
         </Grid>
       </Grid>
 
-      <Grid container justify="center" alignItems="center" className={classes.section}>
+      <Grid container justifyContent="center" alignItems="center" className={classes.section}>
         <Grid item md={5} className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             Protocol Architecture
@@ -100,15 +101,20 @@ function Infos() {
           <img
             alt="architecture"
             className={classes.demoImg}
-            src="/step1.png"
+            src={infoIcons.step1}
             title="Protocol Architecture"
           />
         </Grid>
       </Grid>
 
-      <Grid container justify="center" alignItems="center" className={classes.section}>
+      <Grid container justifyContent="center" alignItems="center" className={classes.section}>
         <Grid item md={6}>
-          <img alt="flashloan" className={classes.demoImg} src="/step2.png" title="Flashloan" />
+          <img
+            alt="flashloan"
+            className={classes.demoImg}
+            src={infoIcons.step2}
+            title="Flashloan"
+          />
         </Grid>
         <Grid item md={1} />
         <Grid item md={5} className={classes.item}>

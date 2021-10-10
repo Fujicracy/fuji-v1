@@ -1,0 +1,82 @@
+.bg-effect {
+  z-index: -1;
+  position: fixed;
+  top: 35rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  width: 800px;
+  height: 800px;
+  background: linear-gradient(180deg, #f0014f 0%, #111111 100%);
+  opacity: 0.52;
+  box-shadow: 0px -90px 50px rgba(238, 2, 70, 0.08);
+  filter: blur(16px);
+}
+
+.container:not(.home-container) ~ .bg-effect {
+  display: block;
+}
+
+@media screen and (max-width: 710px) {
+  header,
+  footer,
+  .ohno {
+    display: flex;
+  }
+}
+
+/* ------------------------------ */
+/*   Customize bnc-notify styles  */
+/* ------------------------------ */
+
+.bn-notify-custom .bn-notify-notification {
+  color: #f5f5fd;
+  background: transparent;
+}
+
+.bn-notify-custom .bn-notify-notification:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -2;
+  margin: -1px; /* !importanté */
+  border-radius: inherit; /* !importanté */
+  background: linear-gradient(to right, #fe3477, #f0014f);
+}
+
+.bn-notify-custom .bn-notify-notification:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: inherit; /* !importanté */
+  background: linear-gradient(to top, #191919, #292929);
+}
+
+.bn-notify-custom .bn-notify-notification-status-icon {
+  width: 31px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ----------------------------- */
+/*   Customize web3modal styles  */
+/* ----------------------------- */
+.web3modal-modal-card {
+  padding: 12px 20px;
+  display: flex;
+}
+
+.web3modal-modal-card .web3modal-provider-wrapper {
+  margin: 10px;
+  border-radius: 8px;
+  width: auto;
+  padding: 0;
+}

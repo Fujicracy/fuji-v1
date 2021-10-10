@@ -1,62 +1,29 @@
-import { DAI_ADDRESS, USDC_ADDRESS } from 'constants/providers';
-
+import { VAULTS } from 'consts';
 import useContractReader from './ContractReader';
 
+const formatRate = rate => {
+  const r = (parseFloat(`${rate}`) / 1e27) * 100;
+  return rate ? r : undefined;
+};
+
 export default function useRates(contracts) {
-  const aaveDai = useContractReader(contracts, 'ProviderAave', 'getBorrowRateFor', [DAI_ADDRESS]);
-  const aaveUsdc = useContractReader(contracts, 'ProviderAave', 'getBorrowRateFor', [USDC_ADDRESS]);
+  const rates = {};
+  const vaults = Object.values(VAULTS);
 
-  const compoundDai = useContractReader(contracts, 'ProviderCompound', 'getBorrowRateFor', [
-    DAI_ADDRESS,
-  ]);
-  const compoundUsdc = useContractReader(contracts, 'ProviderCompound', 'getBorrowRateFor', [
-    USDC_ADDRESS,
-  ]);
+  for (let i = 0; i < vaults.length; i += 1) {
+    const vault = vaults[i];
+    for (let p = 0; p < vault.providers.length; p += 1) {
+      const provider = vault.providers[p];
+      /* eslint-disable react-hooks/rules-of-hooks */
+      const rate = useContractReader(contracts, provider.name, 'getBorrowRateFor', [
+        vault.borrowAsset.address,
+      ]);
+      rates[provider.id] = {
+        ...rates[provider.id],
+        [vault.borrowAsset.id]: formatRate(rate),
+      };
+    }
+  }
 
-  const dydxDai = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [DAI_ADDRESS]);
-  const dydxUsdc = useContractReader(contracts, 'ProviderDYDX', 'getBorrowRateFor', [USDC_ADDRESS]);
-
-  const ironbankDai = useContractReader(contracts, 'ProviderIronBank', 'getBorrowRateFor', [
-    DAI_ADDRESS,
-  ]);
-  const ironbankUsdc = useContractReader(contracts, 'ProviderIronBank', 'getBorrowRateFor', [
-    USDC_ADDRESS,
-  ]);
-
-  const formatRate = rate => {
-    const r = (parseFloat(`${rate}`) / 1e27) * 100;
-    return rate ? r : undefined;
-  };
-
-  // TODO fetch real Fuji APY
-  const formatFujiRate = rate => {
-    const r = ((parseFloat(`${rate}`) / 1e27) * 100) / 1.15;
-    return rate ? r : undefined;
-  };
-
-  const minDaiRate = Math.min(aaveDai, compoundDai, dydxDai);
-  const minUsdcRate = Math.min(aaveUsdc, compoundUsdc, dydxUsdc);
-
-  return {
-    aave: {
-      dai: formatRate(aaveDai),
-      usdc: formatRate(aaveUsdc),
-    },
-    compound: {
-      dai: formatRate(compoundDai),
-      usdc: formatRate(compoundUsdc),
-    },
-    dydx: {
-      dai: formatRate(dydxDai),
-      usdc: formatRate(dydxUsdc),
-    },
-    ironbank: {
-      dai: formatRate(ironbankDai),
-      usdc: formatRate(ironbankUsdc),
-    },
-    fuji: {
-      dai: formatFujiRate(minDaiRate),
-      usdc: formatFujiRate(minUsdcRate),
-    },
-  };
+  return rates;
 }

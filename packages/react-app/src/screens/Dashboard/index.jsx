@@ -1,45 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import map from 'lodash/map';
+import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
-import { DAI_ADDRESS, DAI_ABI, USDC_ADDRESS, USDC_ABI } from 'constants/providers';
 import { Loader, Header } from 'components';
-import { useContractLoader, useExternalContractLoader, useContractReader, useAuth } from 'hooks';
-import { getCollateralId } from 'helpers';
+import { BackgroundEffect } from 'components/UI';
+import { useContractLoader, useContractReader, useAuth } from 'hooks';
+import { COLLATERAL_IDS } from 'consts';
 
 import Error from '../Error';
 
 import MyPositions from './MyPositions';
 import ManagePosition from './ManagePosition';
 import InitBorrow from './InitBorrow';
-import Simulation from './Simulation';
-
-const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
 function Dashboard() {
   const { path } = useRouteMatch();
   const { address, provider } = useAuth();
+
   const [loader, setLoader] = useState(true);
 
   const contracts = useContractLoader(provider);
-  const DAIContract = useExternalContractLoader(provider, DAI_ADDRESS, DAI_ABI);
-  const USDCContract = useExternalContractLoader(provider, USDC_ADDRESS, USDC_ABI);
-  if (contracts) {
-    contracts.DAI = DAIContract;
-    contracts.USDC = USDCContract;
-  }
 
-  const collateralBalanceDai = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getCollateralId('DAI'),
+  const collateralBals = useContractReader(contracts, 'FujiERC1155', 'balanceOfBatch', [
+    map(Object.values(COLLATERAL_IDS), () => address),
+    Object.values(COLLATERAL_IDS),
   ]);
-
-  const collateralBalanceUsdc = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-    address,
-    getCollateralId('USDC'),
-  ]);
-
-  useEffect(() => {
-    if (collateralBalanceDai && collateralBalanceUsdc) setLoader(false);
-  }, [collateralBalanceUsdc, collateralBalanceDai]);
 
   useEffect(() => {
     setTimeout(() => setLoader(false), 5000);
@@ -53,16 +38,13 @@ function Dashboard() {
       ) : (
         <Switch>
           <ProtectedRoute exact path={`${path}`}>
-            {!collateralBalanceDai || !collateralBalanceUsdc ? (
+            {!collateralBals ? (
               <Loader />
-            ) : collateralBalanceDai.gt(0) || collateralBalanceUsdc.gt(0) ? (
+            ) : find(collateralBals, balance => balance.gt(0)) ? (
               <Redirect to="/dashboard/my-positions" />
             ) : (
               <Redirect to="/dashboard/init-borrow" />
             )}
-          </ProtectedRoute>
-          <ProtectedRoute path={`${path}/simulation`}>
-            <Simulation contracts={contracts} address={address} />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
             <InitBorrow contracts={contracts} provider={provider} address={address} />
@@ -85,34 +67,25 @@ function Dashboard() {
 function ProtectedRoute({ children, ...rest }) {
   const { address } = useAuth();
 
-  const [chainId, setChainId] = useState(Number(window.ethereum ? window.ethereum.chainId : null));
-
-  useEffect(() => {
-    if (window.ethereum && window.ethereum.on) {
-      window.ethereum.on('chainChanged', chainID => {
-        setChainId(Number(chainID));
-      });
-    }
-  }, [chainId]);
-
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        chainId !== Number(CHAIN_ID) ? (
-          <Redirect to="/dashboard/wrong-network" />
-        ) : address ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/dashboard/not-connected',
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    <>
+      <Route
+        {...rest}
+        render={({ location }) =>
+          address ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: '/dashboard/not-connected',
+                state: { from: location },
+              }}
+            />
+          )
+        }
+      />
+      <BackgroundEffect />
+    </>
   );
 }
 

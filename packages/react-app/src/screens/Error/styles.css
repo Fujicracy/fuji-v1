@@ -1,7 +1,7 @@
 .error-page {
   position: relative;
   padding: 32px;
-  width: calc(100vw - 64px);
+  width: 100%;
   height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
@@ -88,9 +88,20 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 768px) {
   .error-page .error-title {
     font-size: 20px;
+    line-height: 150%;
+  }
+
+  .error-page img {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .error-page .error-title {
+    font-size: 24px;
   }
 
   .error-page img {

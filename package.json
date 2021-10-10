@@ -10,8 +10,8 @@
   ],
   "private": true,
   "engines": {
-    "node": "12.13.1",
-    "npm": "6.12.1"
+    "node": ">=14.17.1",
+    "npm": ">=6.12.1"
   },
   "scripts": {
     "lint": "yarn workspaces run lint",
@@ -27,22 +27,11 @@
     "fork": "yarn workspace @fuji/hardhat fork",
     "fork2": "yarn workspace @fuji/hardhat fork2",
     "node": "yarn workspace @fuji/hardhat chain",
-    "contracts:publish": "node tasks/publish",
-    "contracts:download": "node tasks/downloadContractsData",
-    "contracts:upload": "node tasks/uploadContractsData",
+    "contracts:download": "yarn contracts:sync",
     "contracts:size": "yarn workspace @fuji/hardhat contracts:size",
-    "test:alpha-controller": "yarn workspace @fuji/hardhat test:alpha-controller",
-    "test:alpha-fliquidator": "yarn workspace @fuji/hardhat test:alpha-fliquidator",
-    "test:alpha-vaultext": "yarn workspace @fuji/hardhat test:alpha-vaultext",
-    "test:alpha-whitelisting": "yarn workspace @fuji/hardhat test:alpha-whitelisting",
-    "test:alpha-compound": "yarn workspace @fuji/hardhat test:alpha-compound",
-    "test:alpha-aave": "yarn workspace @fuji/hardhat test:alpha-aave",
-    "test:alpha-dydx": "yarn workspace @fuji/hardhat test:alpha-dydx",
-    "test:alpha-ironbank": "yarn workspace @fuji/hardhat test:alpha-ironbank",
-    "test:alpha-f1155": "yarn workspace @fuji/hardhat test:alpha-f1155",
+    "sync": "yarn workspace @fuji/hardhat sync",
     "compile": "yarn workspace @fuji/hardhat compile",
-    "deploy": "yarn workspace @fuji/hardhat deploy && yarn contracts:publish",
-    "watch": "yarn workspace @fuji/hardhat watch",
+    "deploy": "yarn workspace @fuji/hardhat deploy",
     "accounts": "yarn workspace @fuji/hardhat accounts",
     "balance": "yarn workspace @fuji/hardhat balance",
     "send": "yarn workspace @fuji/hardhat send",
@@ -70,8 +59,9 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*",
-      "tasks"
+      "packages/bots",
+      "packages/hardhat",
+      "packages/react-app"
     ],
     "nohoist": []
   },

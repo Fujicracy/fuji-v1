@@ -1,140 +1,159 @@
-import React from 'react';
-import { useSpring, animated, config } from 'react-spring';
+import React, { useState, useEffect } from 'react';
+// import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Typography from '@material-ui/core/Typography';
+import { find } from 'lodash';
+import { Image, Box, Text, Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { useContractReader, useRates } from '../../hooks';
+import { DropDown } from '../UI';
+import { SectionTitle, BlackBoxContainer } from '../Blocks';
+import AnimatedCounter from '../UI/AnimatedCounter';
 
 import './styles.css';
+import { ProviderContainer, AssetContainer } from './styles';
 
-function AnimatedCounter({ countTo }) {
-  const { number } = useSpring({
-    from: { number: 0 },
-    number: Number(countTo || 0),
-    config: config.stiff,
+const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true }) => {
+  const vault = find(VAULTS, v => v.borrowAsset.name === market);
+  const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
+  const [defaultOption, setDefaultOption] = useState({});
+  const [options, setOptions] = useState([]);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
+  useEffect(() => {
+    let tmpDefaultOption;
+    const tmpOptions = vault.providers.map(provider => {
+      const option = {
+        title: provider.title,
+        rate: Number(rates?.[provider.id]?.[vault.borrowAsset.id] || 0).toFixed(2),
+      };
+      if (contracts?.[provider.name]?.address === activeProvider) tmpDefaultOption = option;
+      return option;
+    });
+    setOptions(tmpOptions);
+    setDefaultOption(tmpDefaultOption);
+  }, [rates, activeProvider, vault.providers, vault.borrowAsset.id, contracts]);
+
+  return (
+    <ProviderContainer isMobile={isMobile}>
+      {isMobile || isTablet ? (
+        <Box
+          width={1 / 1}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+          color="#42FF00"
+          fontSize="28px"
+          fontWeight="700"
+        >
+          <AnimatedCounter countTo={defaultOption?.rate} /> %
+        </Box>
+      ) : isDropDown ? (
+        <Flex flexDirection="column" width={1}>
+          <Flex alignItems="center" mb={3}>
+            <AssetContainer hasBottomBorder>
+              <Image
+                alt={vault.borrowAsset.name}
+                src={vault.borrowAsset.icon}
+                width="24px"
+                height="24px"
+              />
+              <Text fontSize={2} fontWeight="bold" ml={2}>
+                {vault.borrowAsset.name}
+              </Text>
+            </AssetContainer>
+          </Flex>
+          <Flex>
+            <DropDown options={options} defaultOption={defaultOption} isSelectable={isSelectable} />
+          </Flex>
+        </Flex>
+      ) : (
+        <Flex flexDirection="column" width={1}>
+          <AssetContainer hasBottomBorder>
+            <Image
+              alt={vault.borrowAsset.name}
+              src={vault.borrowAsset.icon}
+              width="32px"
+              height="32px"
+            />
+            <Text fontSize={2} fontWeight="bold" ml={2}>
+              {vault.borrowAsset.name}
+            </Text>
+          </AssetContainer>
+          {options?.map(option => (
+            <AssetContainer flexDirection="row" hasBottomBorder key={Math.random()}>
+              <Box width={5 / 7} cursor="pointer">
+                {option.title}
+              </Box>
+              <Box
+                width={2 / 7}
+                display="flex"
+                alignItems="center"
+                justifyContent="flex-end"
+                color={option.title === defaultOption?.title && '#42FF00'}
+              >{`${option.rate} %`}</Box>
+            </AssetContainer>
+          ))}
+        </Flex>
+      )}
+    </ProviderContainer>
+  );
+};
+
+function ProvidersList({
+  contracts,
+  markets,
+  title = 'Borrow APR',
+  isDropDown = true,
+  hasBlackContainer = true,
+  isSelectable = true,
+}) {
+  const rates = useRates(contracts);
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
   return (
-    <animated.span>
-      {countTo
-        ? number.to(n => {
-            return n.toFixed(2);
-          })
-        : '...'}
-    </animated.span>
-  );
-}
-
-function ProvidersList({ contracts, markets }) {
-  const activeProviderDai = useContractReader(contracts, 'VaultETHDAI', 'activeProvider');
-  const activeProviderUsdc = useContractReader(contracts, 'VaultETHUSDC', 'activeProvider');
-
-  const providerAave = contracts && contracts.ProviderAave;
-  const providerCompound = contracts && contracts.ProviderCompound;
-  const providerDYDX = contracts && contracts.ProviderDYDX;
-  const providerIronBank = contracts && contracts.ProviderIronBank;
-
-  const rates = useRates(contracts);
-
-  return (
-    <div className="dark-block providers-block">
-      <div className="section-title">
-        <Typography variant="h3">Borrow APR</Typography>
-        <div className="tooltip-info">
-          <InfoOutlinedIcon />
-          <span className="tooltip">
-            Live fetching borrow rates from underlying protocols that provide liquidity.
-          </span>
-        </div>
-      </div>
-
-      <div className="providers">
-        {markets && markets.includes('DAI') && (
-          <div className="provider">
-            <div className="title">
-              <img alt="dai" src="/DAI.png" />
-              <Typography variant="h3">DAI</Typography>
-            </div>
-            <div className="stats">
-              <div className={providerAave?.address === activeProviderDai ? 'stat best' : 'stat'}>
-                <span className="name">Aave</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.aave.dai} /> %
-                </span>
-              </div>
-
-              <div
-                className={providerCompound?.address === activeProviderDai ? 'stat best' : 'stat'}
-              >
-                <span className="name">Compound</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.compound.dai} /> %
-                </span>
-              </div>
-
-              <div className={providerDYDX?.address === activeProviderDai ? 'stat best' : 'stat'}>
-                <span className="name">dYdX</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.dydx.dai} /> %
-                </span>
-              </div>
-
-              <div
-                className={providerIronBank?.address === activeProviderDai ? 'stat best' : 'stat'}
-              >
-                <span className="name">Iron Bank</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.ironbank.dai} /> %
-                </span>
-              </div>
-            </div>
+    <BlackBoxContainer
+      zIndex={1}
+      hasBlackContainer={hasBlackContainer}
+      padding={hasBlackContainer && '32px 28px'}
+    >
+      <SectionTitle
+        fontSize={isMobile ? '16px' : isTablet ? '18px' : '16px'}
+        mb={isMobile ? '16px' : isTablet ? '20px' : '-12px'}
+      >
+        {title}
+        {!isMobile && !isTablet && (
+          <div className="tooltip-info">
+            <InfoOutlinedIcon />
+            <span className="tooltip">
+              Live fetching borrow rates from underlying protocols that provide liquidity.
+            </span>
           </div>
         )}
+      </SectionTitle>
 
-        {markets && markets.includes('USDC') && (
-          <div className="provider">
-            <div className="title">
-              <img alt="usdc" src="/USDC.png" />
-              <Typography variant="h3">USDC</Typography>
-            </div>
-            <div className="stats">
-              <div className={providerAave?.address === activeProviderUsdc ? 'stat best' : 'stat'}>
-                <span className="name">Aave</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.aave.usdc} /> %
-                </span>
-              </div>
-
-              <div
-                className={providerCompound?.address === activeProviderUsdc ? 'stat best' : 'stat'}
-              >
-                <span className="name">Compound</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.compound.usdc} /> %
-                </span>
-              </div>
-
-              <div className={providerDYDX?.address === activeProviderUsdc ? 'stat best' : 'stat'}>
-                <span className="name">dYdX</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.dydx.usdc} /> %
-                </span>
-              </div>
-
-              <div
-                className={providerIronBank?.address === activeProviderUsdc ? 'stat best' : 'stat'}
-              >
-                <span className="name">Iron Bank</span>
-                <span className="number">
-                  <AnimatedCounter countTo={rates.ironbank.usdc} /> %
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      {markets &&
+        markets.map(market => (
+          <Provider
+            key={market}
+            contracts={contracts}
+            market={market}
+            rates={rates}
+            isDropDown={isDropDown}
+            isSelectable={isSelectable}
+          />
+        ))}
+    </BlackBoxContainer>
   );
 }
-
 export default ProvidersList;
