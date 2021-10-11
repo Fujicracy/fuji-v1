@@ -11,7 +11,7 @@ const {
   evmSnapshot,
   evmRevert,
   ZERO_ADDR,
-} = require("./utils-alpha");
+} = require("./helpers");
 const { fixture, ASSETS, VAULTS } = require("./fuse-utils.js");
 
 const fuseAddrs = {
@@ -463,7 +463,6 @@ describe("Rari Fuse", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse3.address]);
         await f[vault.name].setActiveProvider(f.fuse3.address);
       }
     });
@@ -491,7 +490,6 @@ describe("Rari Fuse", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse6.address]);
         await f[vault.name].setActiveProvider(f.fuse6.address);
       }
     });
@@ -527,7 +525,6 @@ describe("Rari Fuse", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse7.address]);
         await f[vault.name].setActiveProvider(f.fuse7.address);
       }
     });
@@ -558,7 +555,6 @@ describe("Rari Fuse", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse8.address]);
         await f[vault.name].setActiveProvider(f.fuse8.address);
       }
     });
@@ -586,7 +582,6 @@ describe("Rari Fuse", function () {
 
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await f[vault.name].setProviders([f.fuse18.address]);
         await f[vault.name].setActiveProvider(f.fuse18.address);
       }
     });

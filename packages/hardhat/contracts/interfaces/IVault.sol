@@ -36,7 +36,7 @@ interface IVault {
 
   function payback(int256 _repayAmount) external payable;
 
-  function paybackLiq(int256 _repayAmount) external payable;
+  function paybackLiq(address[] memory _users, uint256 _repayAmount) external payable;
 
   function executeSwitch(
     address _newProvider,
@@ -51,6 +51,12 @@ interface IVault {
   function borrowBalance(address _provider) external view returns (uint256);
 
   function depositBalance(address _provider) external view returns (uint256);
+
+  function userDebtBalance(address _user) external view returns (uint256);
+
+  function userProtocolFee(address _user) external view returns (uint256);
+
+  function userDepositBalance(address _user) external view returns (uint256);
 
   function getNeededCollateralFor(uint256 _amount, bool _withFactors)
     external
@@ -68,4 +74,6 @@ interface IVault {
   function setActiveProvider(address _provider) external;
 
   function updateF1155Balances() external;
+
+  function protocolFee() external view returns (uint64, uint64);
 }

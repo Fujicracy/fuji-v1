@@ -65,7 +65,6 @@ function MyPositions({ contracts, address }) {
     return false;
   };
 
-  console.log({ isMobile, isTablet });
   return (
     <Flex flex flexDirection="row" justifyContent="center">
       <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
