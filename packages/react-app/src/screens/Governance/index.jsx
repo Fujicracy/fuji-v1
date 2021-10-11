@@ -55,7 +55,7 @@ const Governance = () => {
     try {
       setIsClaiming(true);
       const proof = mtree.getHexProof(leaves[userIndex]);
-      const res = await tx(merkle.claim(address, proof));
+      const res = await tx(merkle.claim(address, proof, 1));
       if (res && res.hash) {
         const receipt = await res.wait();
         if (receipt) {
@@ -127,20 +127,24 @@ const Governance = () => {
           minWidth={isMobile ? '320px' : '448px'}
           width={isMobile ? '320px' : '448px'}
         >
-          <SectionTitle fontSize="16px">Governance</SectionTitle>
+          <SectionTitle fontSize="16px">FujiFlops</SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
-            As the first step of transitioning to a fully decentralized DAO, we released a model of
-            pre-governance for users to submit and vote on governance proposals.
+            We started together the first DeFi hiking back in May. We promised to provide the first
+            climbers with all the necessary equipment for this honorous endeavour and the time has
+            finally come.
           </SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
             <div>
-              The first 96 brave climbers who interacted with the protocol can claim the
-              <span>Genesis FujiFlops NFT.</span>
+              The first 96 brave climbers who interacted with the protocol can claim now the
+              <span>Genesis FujiFlops</span> NFT. This is a unique piece of art and the best gift
+              you can make to your toes on the quest to an absolute comfiness.
             </div>
           </SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
-            Prior to release of the Fuji token, the NFT acts as governance token for the protocol,
-            as well as the best gift you can make to your toes on the quest of absolute comfiness.
+            <div>
+              A pair of <span>FujiFlops</span> will serve another important role. In our ambition to
+              build a great community and DAO, it will act as an entry to a pre-governance system.
+            </div>
           </SectionTitle>
           <Flex marginTop="28px">
             <Grid container spacing={isMobile ? 2 : 3}>
@@ -156,10 +160,10 @@ const Governance = () => {
               <Grid item xs={6} md={6} sm={6}>
                 <NftButton
                   onClick={() => {
-                    window.open('https://snapshop.org', '_blank');
+                    window.open('https://snapshot.org/#/fuji-dao.org', '_blank');
                   }}
                 >
-                  Snapshot
+                  Vote
                 </NftButton>
               </Grid>
             </Grid>

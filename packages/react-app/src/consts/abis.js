@@ -538,6 +538,11 @@ const MERKLE_DIST_ABI = [
         name: 'proof',
         type: 'bytes32[]',
       },
+      {
+        internalType: 'uint256',
+        name: 'edition',
+        type: 'uint256',
+      },
     ],
     name: 'claim',
     outputs: [],
