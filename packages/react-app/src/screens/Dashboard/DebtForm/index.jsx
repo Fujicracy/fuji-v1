@@ -48,7 +48,6 @@ function DebtForm({ position, contracts, provider, address }) {
   const borrowPrice = useExchangePrice(vault.borrowAsset.name);
   const collateralPrice = useExchangePrice(vault.collateralAsset.name);
 
-  console.log({ borrowPrice, collateralPrice });
   const unFormattedBalance = useBalance(
     provider,
     address,
@@ -90,7 +89,6 @@ function DebtForm({ position, contracts, provider, address }) {
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
       const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
-      console.log({ diff });
       const left = (diff / 1.35 / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
