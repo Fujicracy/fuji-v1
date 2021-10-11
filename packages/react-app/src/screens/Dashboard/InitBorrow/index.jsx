@@ -125,10 +125,6 @@ function InitBorrow({ contracts, provider, address }) {
 
   useEffect(() => {
     async function fetchAllowance() {
-      console.log({
-        all: await getAllowance(contracts, collateralAsset, [address, vaultAddress]),
-        collateralAsset,
-      });
       setAllowance(await getAllowance(contracts, collateralAsset, [address, vaultAddress]));
     }
 
@@ -362,6 +358,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
+  console.log({ borrowAmount, collateralAmount });
   return (
     <Container>
       <Dialog
@@ -421,37 +418,38 @@ function InitBorrow({ contracts, provider, address }) {
             >
               <SelectVault onChangeVault={handleChangeVault} defaultOption={vault} />
               <form noValidate autoComplete="off">
-                <TextInput
-                  // placeholder={borrowAmount}
-                  id="borrowAmount"
-                  name="borrowAmount"
-                  type="number"
-                  step="any"
-                  defaultValue={borrowAmount}
-                  value={borrowAmount}
-                  onChange={value => {
-                    setBorrowAmount(value);
-                    clearErrors();
-                    console.log({ value });
-                  }}
-                  ref={register({
-                    required: { value: true, message: 'required-amount' },
-                    min: { value: 0, message: 'insufficient-borrow' },
-                  })}
-                  startAdornmentImage={ASSETS[borrowAsset].icon}
-                  endAdornment={{
-                    text: (borrowAmount * borrowAssetPrice).toFixed(2),
-                    type: 'currency',
-                  }}
-                  subTitle="Amount to borrow"
-                  description={
-                    errors?.borrowAmount?.message === 'required-amount'
-                      ? 'Please, type the amount you like to borrow'
-                      : errors?.borrowAmount?.message === 'insufficient-borrow' &&
-                        'Please, type the amount at least 1'
-                  }
-                />
                 <div className="borrow-inputs">
+                  <TextInput
+                    // placeholder={borrowAmount}
+                    id="borrowAmount"
+                    name="borrowAmount"
+                    type="number"
+                    step="any"
+                    value={borrowAmount}
+                    onChange={value => {
+                      if (Number(value) >= 0 && value.charAt(0) !== '-') {
+                        setBorrowAmount(value);
+                        clearErrors();
+                      } else {
+                        setBorrowAmount('');
+                      }
+                    }}
+                    ref={register({
+                      min: { value: 0, message: 'insufficient-borrow' },
+                    })}
+                    startAdornmentImage={ASSETS[borrowAsset].icon}
+                    endAdornment={{
+                      text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                      type: 'currency',
+                    }}
+                    subTitle="Amount to borrow"
+                    description={
+                      errors?.borrowAmount?.message === 'insufficient-borrow' &&
+                      'Please, type the amount at least 1'
+                    }
+                  />
+                </div>
+                <div className="collateral-inputs">
                   <TextInput
                     id="collateralAmount"
                     name="collateralAmount"
@@ -485,7 +483,8 @@ function InitBorrow({ contracts, provider, address }) {
                         <Typography className="error-input-msg" variant="body2">
                           Please, provide at least{' '}
                           <span className="brand-color">
-                            {neededCollateral.toFixed(3)} {vault.collateralAsset.name}
+                            {neededCollateral ? neededCollateral.toFixed(3) : '...'}{' '}
+                            {vault.collateralAsset.name}
                           </span>{' '}
                           as collateral!
                         </Typography>

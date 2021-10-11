@@ -64,9 +64,9 @@ const TextField = React.forwardRef(
             onFocus={onFocus}
             onBlur={onBlur}
             disabled={disabled}
-            ref={ref}
             autoComplete={autoComplete || 'off'}
             fontSize={isMobile ? '12px' : isTablet ? '18px' : '14px'}
+            ref={ref}
           />
           {endAdornment &&
             (endAdornment?.type === 'currency' ? (
