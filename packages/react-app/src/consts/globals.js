@@ -1,3 +1,5 @@
+import { generateMedia } from 'styled-media-query';
+
 export const BREAKPOINT_NAMES = {
   MOBILE: 'mobile',
   TABLET: 'tablet',
@@ -7,12 +9,17 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: { inString: '600px', inNumber: 600 },
-  [BREAKPOINT_NAMES.TABLET]: { inString: '768px', inNumber: 768 },
-  [BREAKPOINT_NAMES.DESKTOP]: { inString: '992px', inNumber: 992 },
-  [BREAKPOINT_NAMES.LARGE]: { inString: '1200px', inNumber: 1200 },
-  [BREAKPOINT_NAMES.XLARGE]: { inString: '1400px', inNumber: 1400 },
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '450px', inNumber: 450 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '768px', inNumber: 1120 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1280px', inNumber: 1170 },
+  [BREAKPOINT_NAMES.LARGE]: { inString: '1920px', inNumber: 1440 },
 };
+
+export const fujiMedia = generateMedia({
+  small: '450px',
+  medium: '1120px',
+  large: '1170px',
+});
 
 const NETWORKS = {
   1: 'Mainnet',

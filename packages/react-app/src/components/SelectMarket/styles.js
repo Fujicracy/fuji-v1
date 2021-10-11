@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Box } from 'rebass';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const RadioContainer = styled(Box).attrs({
   display: 'flex',
@@ -30,11 +30,11 @@ export const MarketButton = styled(Box)`
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: white;
   cursor: pointer;
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
   `}
 
-  ${media.between('medium', 'large')`
+  ${fujiMedia.between('medium', 'large')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
     height: 40px;
     font-size:16px;

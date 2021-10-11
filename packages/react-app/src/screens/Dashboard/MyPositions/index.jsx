@@ -65,6 +65,7 @@ function MyPositions({ contracts, address }) {
     return false;
   };
 
+  console.log({ isMobile, isTablet });
   return (
     <Flex flex flexDirection="row" justifyContent="center">
       <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
@@ -142,8 +143,9 @@ function MyPositions({ contracts, address }) {
                       item
                       className="one-position"
                       onClick={() => {
-                        return history.push(
-                          `/dashboard/position?vaultAddress=${position.vaultAddress}`,
+                        return (
+                          (isMobile || isTablet) &&
+                          history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`)
                         );
                       }}
                     >

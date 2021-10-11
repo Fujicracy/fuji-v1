@@ -63,7 +63,6 @@ function PositionElement({ position, actionType }) {
   }, [price, position]);
 
   const isShowManage = !isMobile && !isTablet && actionType === PositionActions.Manage;
-  console.log({ isShowManage });
   return (
     <Grid container>
       <Flex alignItems="center" justifyContent="flex-start" width={1 / 1}>

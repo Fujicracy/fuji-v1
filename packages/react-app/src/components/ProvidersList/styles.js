@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { themeGet } from '@styled-system/theme-get';
 import { Box, Flex } from 'rebass';
-import media from 'styled-media-query';
+import { fujiMedia } from 'consts';
 
 export const ProviderContainer = styled(Box).attrs(() => ({
   // bg: themeGet('colors.dark56')(props),
@@ -15,13 +15,12 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   color: ${themeGet('colors.text64')};
   cursor: pointer;
   padding-top: 32px;
-  ${media.lessThan('medium')`
+  ${fujiMedia.lessThan('medium')`
     height: 32px;
     padding-top: 0px;
   `}
-  ${media.between('medium', 'large')`
-    padding-top: 0px;
-    height: 40px;
+  ${fujiMedia.between('medium', 'large')`
+    padding-top: 32px;
   `}
 `;
 
