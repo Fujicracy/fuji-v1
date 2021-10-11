@@ -51,7 +51,7 @@ function InitBorrow({ contracts, provider, address }) {
   const defaultVault = Object.values(VAULTS)[0];
   const queries = new URLSearchParams(useLocation().search);
 
-  const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
+  const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const [checkedClaim, setCheckedClaim] = useState(false);
 
   const [borrowAmount, setBorrowAmount] = useState(queries.get('borrowAmount') || '1000');
@@ -284,6 +284,9 @@ function InitBorrow({ contracts, provider, address }) {
     setBorrowAsset(v.borrowAsset.name);
     setCollateralAsset(v.collateralAsset.name);
     setVault(v);
+
+    if (v.collateralAsset.isERC20) setBorrowAmount('1');
+    else setBorrowAmount('1000');
   };
 
   const getActiveProviderName = () => {
