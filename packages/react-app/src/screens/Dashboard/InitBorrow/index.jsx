@@ -29,8 +29,6 @@ import {
   SelectVault,
   BlackBoxContainer,
   SelectMarket,
-  SectionTitle,
-  // SectionTitle,
 } from 'components';
 import { TextInput } from 'components/UI';
 
@@ -51,7 +49,7 @@ function InitBorrow({ contracts, provider, address }) {
   const defaultVault = Object.values(VAULTS)[0];
   const queries = new URLSearchParams(useLocation().search);
 
-  const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
+  const { register, errors, handleSubmit, clearErrors } = useForm({ mode: 'all' });
   const [checkedClaim, setCheckedClaim] = useState(false);
 
   const [borrowAmount, setBorrowAmount] = useState(queries.get('borrowAmount') || '1000');
@@ -127,6 +125,10 @@ function InitBorrow({ contracts, provider, address }) {
 
   useEffect(() => {
     async function fetchAllowance() {
+      console.log({
+        all: await getAllowance(contracts, collateralAsset, [address, vaultAddress]),
+        collateralAsset,
+      });
       setAllowance(await getAllowance(contracts, collateralAsset, [address, vaultAddress]));
     }
 
@@ -188,8 +190,8 @@ function InitBorrow({ contracts, provider, address }) {
 
   const tx = Transactor(provider);
 
-  const borrow = async () => {
-    setDialog({ step: 'borrowing', withApproval: true });
+  const borrow = async withApproval => {
+    setDialog({ step: 'borrowing', withApproval });
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
       parseUnits(collateralAmount, ASSETS[collateralAsset].decimals),
@@ -245,7 +247,7 @@ function InitBorrow({ contracts, provider, address }) {
     if (res && res.hash) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
-        borrow();
+        borrow(infiniteApproval);
       }
     } else {
       // error
@@ -263,15 +265,19 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(true);
 
     if (vault.collateralAsset.isERC20) {
+      console.log({
+        pasedCollateral: parseUnits(collateralAmount, vault.collateralAsset.decimals),
+        allowance,
+      });
       if (parseUnits(collateralAmount, vault.collateralAsset.decimals).gt(allowance)) {
         setDialog({ step: 'approval', withApproval: true });
       } else {
-        await borrow();
+        await borrow(false);
       }
       return;
     }
 
-    await borrow();
+    await borrow(false);
   };
 
   // const handleChangeMarket = option => {
@@ -426,6 +432,7 @@ function InitBorrow({ contracts, provider, address }) {
                   onChange={value => {
                     setBorrowAmount(value);
                     clearErrors();
+                    console.log({ value });
                   }}
                   ref={register({
                     required: { value: true, message: 'required-amount' },
@@ -502,7 +509,7 @@ function InitBorrow({ contracts, provider, address }) {
                   className="main-button"
                   disabled={loading}
                   startIcon={
-                    loading ? (
+                    loading && (
                       <CircularProgress
                         style={{
                           width: 25,
@@ -511,14 +518,10 @@ function InitBorrow({ contracts, provider, address }) {
                           color: 'rgba(0, 0, 0, 0.26)',
                         }}
                       />
-                    ) : (
-                      ''
                     )
                   }
                 >
-                  <SectionTitle fontSize={isTablet ? '20px' : '16px'}>
-                    {getBorrowBtnContent()}
-                  </SectionTitle>
+                  {getBorrowBtnContent()}
                 </Button>
               </form>
             </BlackBoxContainer>
