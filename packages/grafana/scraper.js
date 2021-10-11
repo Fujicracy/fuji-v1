@@ -1,8 +1,9 @@
 require("dotenv").config();
-const { ethers } = require("ethers");
-const { getEvents } = require("./utils/fetch");
 
-const main = async (fromLast) => {
+const { ethers } = require("ethers");
+const { getEvents } = require("./utils/getEvents");
+
+const scraper = async (fromLast) => {
   let provider;
 
   if (process.env.PROJECT_ID) {
@@ -28,6 +29,4 @@ const main = async (fromLast) => {
   return stats;
 };
 
-module.exports = {
-  scraper: main,
-};
+module.exports = { scraper };

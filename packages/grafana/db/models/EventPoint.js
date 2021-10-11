@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const EventSchema = new Schema({
+  eventName: String,
   user: String,
-  vault: String,
-  type: String,
-  value: Number,
+  vaultName: String,
+  market: String,
+  amount: Number,
+  blockNumber: Number,
   timestamp: { type: Number, required: [true, "need timestamp"] },
-  blocknumber: Number,
 });
 
 const EventPoint = mongoose.model("eventPoint", EventSchema);

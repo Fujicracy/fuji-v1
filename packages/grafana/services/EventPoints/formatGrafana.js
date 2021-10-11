@@ -1,17 +1,25 @@
 const axios = require("axios");
 const { EventPoint } = require("../../db");
+const { VAULTS } = require("../../consts/vaults");
 
 const MAPPINGS = {
-  "ETHDAI-DEBT": "Debt (DAI)",
-  "ETHDAI-COLL": "Collateral (ETH)",
-  "ETHUSDC-DEBT": "Debt (USDC)",
-  "ETHUSDC-COLL": "Collateral (ETH)",
-  "ETHUSDT-DEBT": "Debt (USDT)",
-  "ETHUSDT-COLL": "Collateral (ETH)",
+  "DEBT": "Debt",
+  "COLL": "Collateral",
   "TOTAL-ADDR": "Total Addresses",
   "TVL": "Total Value Locked",
   "TVB": "Total Value Borrowed",
 };
+
+const getTargetName = ({ type, props }) => {
+  if (type === "vault") {
+    const vault = Object.values(VAULTS).find(v => v.name === props.name)
+    const assetName = vault.collateralAsset.name;
+    return `${MAPPINGS[props.assetType]} (${assetName})`;
+  } else if (type === "stats") {
+    return MAPPINGS[props.name];
+  }
+};
+
 const getETHPrice = async () => {
   return axios
     .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
@@ -19,35 +27,48 @@ const getETHPrice = async () => {
 };
 
 const formatGrafana = async (targets) => {
-  const events = await EventPoint.find({}).sort({ blocknumber: 1 });
+  const events = await EventPoint.find({}).sort({ blockNumber: 1 });
   const ethPrice = await getETHPrice();
 
   const response = [];
 
   targets.forEach((target, i) => {
     response[i] = {
-      target: MAPPINGS[target],
+      target: getTargetName(target),
       datapoints: []
     };
-    const [prefix, suffix] = target.split("-");
+    const { type, props } = target;
 
     let [totalColl, totalDebt, totalAddr] = [0, 0, 0];
     let users = [];
 
-    events.forEach(({ vault, type, user, value, timestamp }) => {
+    events.forEach(({ vaultName, market, eventName, user, amount, timestamp }) => {
       const ts = timestamp * 1000;
+      const vaultFilters = props.name === vaultName && props.market === market;
 
-      if ((prefix === vault && suffix === "COLL") || prefix === "TVL") {
-        if (type === "Deposit" || type === "Withdraw") {
-          totalColl += value * ethPrice;
+      if (
+        (type === "vault" && props.assetType === "COLL" && vaultFilters) ||
+        (type === "stats" && props.name === "TVL")
+      ) {
+        if (eventName === "Deposit") {
+          totalColl += amount * ethPrice;
+          response[i].datapoints.push([totalColl, ts]);
+        } else if (eventName === "Withdraw") {
+          totalColl -= amount * ethPrice;
           response[i].datapoints.push([totalColl, ts]);
         }
-      } else if ((prefix === vault && suffix === "DEBT" ) || prefix === "TVB") {
-        if (type === "Borrow" || type === "Payback") {
-          totalDebt += value;
+      } else if (
+        (type === "vault" && props.assetType === "DEBT" && vaultFilters) ||
+        (type === "stats" && props.name === "TVB")
+      ) {
+        if (eventName === "Borrow") {
+          totalDebt += amount;
+          response[i].datapoints.push([totalDebt, ts]);
+        } else if (type === "Payback") {
+          totalDebt -= amount;
           response[i].datapoints.push([totalDebt, ts]);
         }
-      } else if (prefix === "TOTAL" && suffix === "ADDR") {
+      } else if (type === "stats" && props.name === "TOTAL-ADDR") {
         if (!users.includes(user)) {
           totalAddr += 1;
           users.push(user);

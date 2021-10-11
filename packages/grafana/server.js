@@ -1,11 +1,12 @@
 const express = require("express");
-const { scraper } = require("./scraper");
-const EPService = require("./services/EventPoints");
-const RPService = require("./services/RatePoints");
+const { MongoClient } = require("mongodb");
 const parser = require("body-parser").json();
 const app = express();
 
-const { MongoClient } = require("mongodb");
+const { scraper } = require("./scraper");
+const EPService = require("./services/EventPoints");
+const RPService = require("./services/RatePoints");
+
 const uri =
   "mongodb+srv://angeldao:ImWSfT8h9IFfS9Nk@cluster0.nsht4.mongodb.net/data-fetch?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
@@ -46,19 +47,16 @@ client.connect(async (err, db) => {
       const eventPoints = await scraper(lastBlock);
       await EPService.addMany(eventPoints);
 
-      const data0 = await EPService.formatGrafana(targets);
-      res.send(data0);
+      const data = await EPService.formatGrafana(targets);
+      res.send(data);
     //}
   });
 
   app.post("/search", parser, async (req, res) => {
     console.log("search");
     res.send([
-      "ETHDAI",
-      "ETHUSDC",
-      "ETHUSDT",
-      "TOTAL-ADDR",
-      "TVL",
+      "VAULT",
+      "STATS",
     ]);
   });
 
