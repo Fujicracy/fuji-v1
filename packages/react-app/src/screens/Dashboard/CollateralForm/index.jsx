@@ -97,8 +97,8 @@ function CollateralForm({ position, contracts, provider, address }) {
     }
   }, [neededCollateral, collateralBalance, vault.collateralAsset.decimals]);
 
-  const supply = async () => {
-    setDialog({ step: 'doing', withApproval: true });
+  const supply = async withApproval => {
+    setDialog({ step: 'doing', withApproval });
 
     const parsedAmount = parseUnits(amount, vault.collateralAsset.decimals);
     const gasLimit = await GasEstimator(contracts[vault.name], 'deposit', [
@@ -127,8 +127,8 @@ function CollateralForm({ position, contracts, provider, address }) {
     setLoading(false);
   };
 
-  const withdraw = async () => {
-    setDialog({ step: 'doing', withApproval: false });
+  const withdraw = async withApproval => {
+    setDialog({ step: 'doing', withApproval });
 
     const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
     const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [
@@ -158,11 +158,11 @@ function CollateralForm({ position, contracts, provider, address }) {
     setLoading(false);
   };
 
-  const doAction = () => {
+  const doAction = withApproval => {
     if (action === Action.Withdraw) {
-      withdraw();
+      withdraw(withApproval);
     } else {
-      supply();
+      supply(withApproval);
     }
   };
 
@@ -189,7 +189,7 @@ function CollateralForm({ position, contracts, provider, address }) {
     if (res && res.hash) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
-        doAction();
+        doAction(true);
       }
     } else {
       // error
@@ -211,12 +211,12 @@ function CollateralForm({ position, contracts, provider, address }) {
       if (parseUnits(amount, collateralAsset.decimals).gt(allowance)) {
         setDialog({ step: 'approval', withApproval: true });
       } else {
-        doAction();
+        doAction(false);
       }
       return;
     }
 
-    doAction();
+    doAction(false);
   };
 
   const onConfirmation = () => {
@@ -295,6 +295,7 @@ function CollateralForm({ position, contracts, provider, address }) {
             <Button onClick={() => approve(true)} className="main-button">
               Infinite Approve
             </Button>
+            q
           </DialogActions>
         );
       },
