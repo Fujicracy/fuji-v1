@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useAuth, useBalance } from 'hooks';
+import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
@@ -33,13 +33,13 @@ import {
 } from './styles';
 
 function Header() {
-  // const [logout, setLogout] = useState(false);
   const [isOpenWallet, setIsOpenWallet] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
   const { address, onboard, provider } = useAuth();
-  const unFormattedBalance = useBalance(provider, address);
+  const contracts = useContractLoader(provider);
+
+  const unFormattedBalance = useBalance(provider, address, contracts);
 
   const balance = unFormattedBalance
     ? Number(formatUnits(unFormattedBalance, ASSETS[ASSET_NAME.ETH].decimals)).toFixed(2)
