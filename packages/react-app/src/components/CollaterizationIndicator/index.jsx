@@ -68,7 +68,6 @@ function CollaterizationIndicator({ position }) {
 
   useEffect(() => {
     const ratios = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
-
     setHealthFactor(ratios.healthFactor);
     setLiqPrice(ratios.liqPrice);
     setLtv(ratios.ltv);
@@ -144,7 +143,7 @@ function CollaterizationIndicator({ position }) {
               </ChartContainer>
             </div>
             <div className="percentage-chart">
-              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </div>
             <div className="bg-chart" />
           </div>
