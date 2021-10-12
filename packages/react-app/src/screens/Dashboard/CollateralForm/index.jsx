@@ -357,7 +357,7 @@ function CollateralForm({ position, contracts, provider, address }) {
   return (
     <Grid container direction="column">
       <Dialog
-        open={['dialog', 'capCollateral', 'deltaRatios', 'approval'].includes(dialog.step)}
+        open={['capCollateral', 'deltaRatios', 'approval', 'success'].includes(dialog.step)}
         aria-labelledby="form-dialog-title"
       >
         <div className="close" onClick={handleClose}>
