@@ -244,7 +244,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       }
     }
 
-    return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}${loading ? '...' : ''}`;
+    return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}${loading ? 'ing...' : ''}`;
   };
 
   const dialogContents = {
