@@ -16,7 +16,7 @@ import InitBorrow from './InitBorrow';
 
 function Dashboard() {
   const { path } = useRouteMatch();
-  const { address, provider } = useAuth();
+  const { address, provider, onboard } = useAuth();
 
   const [loader, setLoader] = useState(true);
 
@@ -35,8 +35,6 @@ function Dashboard() {
     }
 
     fetchCollateralBals();
-
-    setTimeout(() => setLoader(false), 5000);
   }, [contracts, address]);
 
   useEffect(() => {
@@ -45,7 +43,7 @@ function Dashboard() {
 
   return (
     <>
-      <Header />
+      <Header contracts={contracts} provider={provider} address={address} onboard={onboard} />
       {loader ? (
         <Loader />
       ) : (

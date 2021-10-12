@@ -3,8 +3,8 @@ import { formatUnits } from '@ethersproject/units';
 export default function PositionRatios(position, collateralPrice, borrowPrice) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
-  const debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
-  // if (debt < 1) debt = 0;
+  let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
+  if (debt.toFixed(8) <= 0.00000001) debt = 0;
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;
@@ -13,7 +13,8 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   // collateralization and healthy factor
   const factor = 1.33;
 
-  const healthFactor = (collateral * collateralPrice * liqThres) / (debt * borrowPrice);
+  const healthFactor =
+    debt === 0 ? Infinity : (collateral * collateralPrice * liqThres) / (debt * borrowPrice);
   const maxFactor = collateral * collateralPrice * liqThres;
   const liqPrice = (debt * borrowPrice) / (collateral * collateralPrice * liqThres);
   const ltv = (debt * borrowPrice) / (collateral * collateralPrice);

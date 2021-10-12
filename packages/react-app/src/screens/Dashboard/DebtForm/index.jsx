@@ -119,18 +119,24 @@ function DebtForm({ position, contracts, provider, address }) {
   const payback = async withApproval => {
     setDialog({ step: 'repaying', withApproval });
     // if amount is equal debt, user repays their whole debt (-1)
-    let unFormattedAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
+
+    // let unFormattedAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
+
     // another check when user wants to repay max
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
-    unFormattedAmount =
-      unFormattedAmount === '-1' && debtBalance.eq(unFormattedBalance)
+
+    // TODO ask Boyan
+    const unFormattedAmount =
+      parseUnits(amount, decimals).eq(debtBalance) && debtBalance.eq(unFormattedBalance)
         ? formatUnits(unFormattedBalance, decimals)
-        : unFormattedAmount;
+        : amount;
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
-      { value: vault.borrowAsset.isERC20 ? parseUnits(unFormattedAmount, decimals) : 0 },
+      parseUnits(unFormattedAmount, decimals),
+      { value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals) },
     ]);
+
     const res = await tx(
       contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
         value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),

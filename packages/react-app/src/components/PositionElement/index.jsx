@@ -172,7 +172,7 @@ function PositionElement({ position, actionType }) {
               fontWeight="500"
               sx={{ width: '40%' }}
             >
-              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </Flex>
           </Flex>
         </Grid>

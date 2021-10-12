@@ -243,7 +243,7 @@ function InitBorrow({ contracts, provider, address }) {
     if (res && res.hash) {
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(ev => ev.event === 'Approval')) {
-        borrow(infiniteApproval);
+        borrow(true);
       }
     } else {
       // error
@@ -261,10 +261,6 @@ function InitBorrow({ contracts, provider, address }) {
     setLoading(true);
 
     if (vault.collateralAsset.isERC20) {
-      console.log({
-        pasedCollateral: parseUnits(collateralAmount, vault.collateralAsset.decimals),
-        allowance,
-      });
       if (parseUnits(collateralAmount, vault.collateralAsset.decimals).gt(allowance)) {
         setDialog({ step: 'approval', withApproval: true });
       } else {
@@ -358,7 +354,6 @@ function InitBorrow({ contracts, provider, address }) {
     },
   };
 
-  console.log({ borrowAmount, collateralAmount });
   return (
     <Container>
       <Dialog
