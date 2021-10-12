@@ -199,11 +199,13 @@ function CollateralForm({ position, contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    // const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
-    // if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
-    //   setDialog({step:'capCollateral'});
-    //   return;
-    // }
+    if (!vault.collateralAsset.isERC20) {
+      const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
+      if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
+        setDialog({ step: 'capCollateral' });
+        return;
+      }
+    }
 
     setLoading(true);
 

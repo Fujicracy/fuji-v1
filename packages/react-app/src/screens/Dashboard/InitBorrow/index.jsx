@@ -132,7 +132,7 @@ function InitBorrow({ contracts, provider, address }) {
   }, [collateralAsset, address, contracts, vaultAddress]);
 
   useEffect(() => {
-    async function fetchNeededCollateral() {
+    async function fetchDatas() {
       const parsedBorrowAmount =
         borrowAmount !== '' ? parseUnits(borrowAmount, ASSETS[borrowAsset].decimals) : 0x0;
 
@@ -167,8 +167,8 @@ function InitBorrow({ contracts, provider, address }) {
       setBorrowAssetPrice(await getExchangePrice(provider, borrowAsset));
     }
 
-    fetchNeededCollateral();
-  }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider]);
+    fetchDatas();
+  }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider, loading]);
 
   const position = {
     borrowAsset: ASSETS[borrowAsset],
@@ -253,11 +253,14 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    // const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-    // if (totalCollateral > ETH_CAP_VALUE) {
-    //   setDialog({step:'capCollateral'});
-    //   return;
-    // }
+    if (!vault.collateralAsset.isERC20) {
+      const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
+      if (totalCollateral > ETH_CAP_VALUE) {
+        setDialog({ step: 'capCollateral' });
+        return;
+      }
+    }
+
     setLoading(true);
 
     if (vault.collateralAsset.isERC20) {
