@@ -13,7 +13,9 @@ const MAPPINGS = {
 const getTargetName = ({ type, props }) => {
   if (type === "vault") {
     const vault = Object.values(VAULTS).find(v => v.name === props.name)
-    const assetName = vault.collateralAsset.name;
+    const assetName = props.assetType === "COLL"
+      ? vault.collateralAsset.name
+      : vault.borrowAsset.name;
     return `${MAPPINGS[props.assetType]} (${assetName})`;
   } else if (type === "stats") {
     return MAPPINGS[props.name];
