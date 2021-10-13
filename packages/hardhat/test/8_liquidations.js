@@ -116,17 +116,23 @@ describe("Core Fuji Instance", function () {
 
   describe("Testing Liquidation Functions in Fliquidator", () => {
 
+    /*
     testBatchLiquidate1(
-      [vaultethdai,vaultethusdc,vaultethusdt],
+      [vaultethdai, vaultethusdc, vaultethusdt],
       "aave",
       BORROW_STABLE
     );
-    /*
     testBatchLiquidate1(
       [vaultethwbtc],
-      fujiProviders,
-      BORROW_STABLE
+      "aave",
+      BORROW_WBTC
     );
     */
+    testBatchLiquidate1(
+      [vaultwbtceth, vaultwbtcdai, vaultwbtcusdc, vaultwbtcusdt],
+      "aave",
+      BORROW_WBTC
+    );
+
   });
 });

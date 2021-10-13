@@ -148,6 +148,7 @@ const fixture = async ([wallet]) => {
   await fujiadmin.setSwapper(fujiSwapper.address);
   await fliquidator.setFujiAdmin(fujiadmin.address);
   await fliquidator.setSwapper(SUSHI_ROUTER_ADDR);
+  await fliquidator.setFujiOracle(oracle.address);
   await flasher.setFujiAdmin(fujiadmin.address);
   await controller.setFujiAdmin(fujiadmin.address);
   await f1155.setPermit(fliquidator.address, true);

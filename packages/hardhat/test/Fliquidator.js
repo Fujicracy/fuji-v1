@@ -1,7 +1,9 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
-const { formatUnitsToNum, parseUnits, timeTravel } = require("./helpers");
+const { formatUnitsToNum, parseUnits, timeTravel, toBN } = require("./helpers");
 const { provider } = ethers;
+
+const { ASSETS } = require("./core-utils");
 
 function testFlashClose1(vaults, amountToDeposit, amountToBorrow, flashLoanProvider) {
   for (let i = 0; i < vaults.length; i += 1) {
@@ -128,18 +130,21 @@ function testBatchLiquidate1(vaults, providerName, amountToBorrow) {
           const asset = this.f[vault.debt.name];
           const borrowAmount = parseUnits(amountToBorrow, vault.debt.decimals);
           const depositAmount = await this.f[vault.name].getNeededCollateralFor(
-            borrowAmount.mul(ethers.BigNumber.from(1025)).div(ethers.BigNumber.from(1000)), true
+            borrowAmount.mul(toBN(1025)).div(toBN(1000)), true
           );
 
           // Perform boostrap, then deposit and borrow for all users to be liquidated
           // Conditional to check for nativetoken Vault or not
-          for (var k = 0; k < this.carelessUsers.length; k++) {
+          for (let k = 0; k < this.carelessUsers.length; k++) {
             if(vault.collateral.name == this.nativeToken) {
               await this.f[vault.name].connect(this.owner).deposit(depositAmount, {value: depositAmount});
               await this.f[vault.name].connect(this.carelessUsers[k]).depositAndBorrow(
                 depositAmount, borrowAmount, { value: depositAmount }
               );
             } else {
+              await asset
+                .connect(this.carelessUsers[k])
+                .approve(this.f[vault.name].address, depositAmount);
               await this.f[vault.name].connect(this.owner).deposit(depositAmount);
               await this.f[vault.name].connect(this.carelessUsers[k]).depositAndBorrow(
                 depositAmount, borrowAmount
@@ -148,14 +153,27 @@ function testBatchLiquidate1(vaults, providerName, amountToBorrow) {
           }
 
           // Change LTV from 75% to ~60% (including 5% safety factor)
-          await this.f[vault.name].setFactor(1587,1000,"collatF");
+          await this.f[vault.name].connect(this.owner).setFactor(1587,1000,"collatF");
 
-          // Record Balance of Liquidator prior to liquidations, and approve ERC20 if required
-            // Conditional to check for nativetoken Vault or not
-          if(vault.collateral.name == this.nativeToken) {
-            const liqBalAtStart = await this.liquidatorUser.getBalance();
+          // Load Liquidator with debt Asset
+          const block = await provider.getBlock();
+          await this.f.swapper
+            .connect(this.liquidatorUser)
+            .swapETHForExactTokens(
+              borrowAmount.mul(3),
+              [ASSETS.WETH.address, vault.debt.address],
+              this.liquidatorUser.address,
+              block.timestamp + 60,
+              { value: parseUnits(10) }
+            );
+
+          // Record Balance of Liquidator debtAsset prior to liquidations, and approve ERC20 if required
+            // Conditional to check if debtAsset is nativetoken or not
+          let liqBalAtStart;
+          if(vault.debt.name == this.nativeToken) {
+            liqBalAtStart = await this.liquidatorUser.getBalance();
           } else {
-            const liqBalAtStart = await asset.balanceOf(this.liquidatorUser.address);
+            liqBalAtStart = await asset.balanceOf(this.liquidatorUser.address);
             await asset
               .connect(this.liquidatorUser)
               .approve(this.f.fliquidator.address, liqBalAtStart);
@@ -163,23 +181,24 @@ function testBatchLiquidate1(vaults, providerName, amountToBorrow) {
 
           // liquidate!
           await this.f.fliquidator.connect(this.liquidatorUser).batchLiquidate(
-            [this.carelessUsers],
+            this.carelessUsers.map( carelessUser => carelessUser.address),
             this.f[vault.name].address
           );
 
-          // Record Balance of Liquidator after liquidations,
+          // Record Balance of debtAsset of Liquidator after liquidations,
             // Conditional to check for nativetoken Vault or not
-          if(vault.collateral.name == this.nativeToken) {
-            const liqBalAtEnd = await this.liquidatorUser.getBalance();
+          let liqBalAtEnd;
+          if(vault.debt.name == this.nativeToken) {
+            liqBalAtEnd = await this.liquidatorUser.getBalance();
           } else {
-            const liqBalAtEnd = await asset.balanceOf(this.liquidatorUser.address);
+            liqBalAtEnd = await asset.balanceOf(this.liquidatorUser.address);
           }
 
           // Test Checks
           await expect(liqBalAtEnd).to.be.gt(liqBalAtStart);
 
           for (var k = 0; k < this.carelessUsers.length; k++) {
-            const carelessUser1155debtbal = await f1155.balanceOf(
+            const carelessUser1155debtbal = await this.f.f1155.balanceOf(
               this.carelessUsers[k].address,
               vAssets.borrowID
             );
