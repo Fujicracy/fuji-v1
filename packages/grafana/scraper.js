@@ -6,10 +6,10 @@ const { getEvents } = require("./utils/getEvents");
 const scraper = async (fromLast) => {
   let provider;
 
-  if (process.env.PROJECT_ID) {
+  if (process.env.INFURA_ID) {
     provider = new ethers.providers.InfuraProvider(
       "homestead",
-      process.env.PROJECT_ID
+      process.env.INFURA_ID
     );
   }
 
