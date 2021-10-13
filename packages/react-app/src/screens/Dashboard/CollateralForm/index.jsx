@@ -145,14 +145,8 @@ function CollateralForm({ position, contracts, provider, address }) {
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (
-        receipt &&
-        receipt.events &&
-        receipt.events.find(e => {
-          return e.event === 'Withdraw';
-        })
-      ) {
-        setDialog('success');
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Withdraw')) {
+        setDialog({ step: 'success' });
       }
     }
     setLoading(false);
@@ -307,7 +301,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       content: (
         <DialogContentText>
           You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount}{' '}
-          ETH.
+          {vault.collateralAsset.name}.
         </DialogContentText>
       ),
       actions: () => {

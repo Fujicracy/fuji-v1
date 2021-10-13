@@ -146,7 +146,7 @@ function DebtForm({ position, contracts, provider, address }) {
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Repay')) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Payback')) {
         setDialog({ step: 'success', withApproval });
       }
     } else {
