@@ -10,6 +10,7 @@ import SelectVault from './SelectVault';
 import SelectMarket from './SelectMarket';
 
 export * from './Blocks';
+export * from './UI';
 export {
   AlphaWarning,
   CollaterizationIndicator,

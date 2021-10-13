@@ -55,6 +55,7 @@ function Dashboard() {
           <ProtectedRoute path={`${path}/position`}>
             <ManagePosition contracts={contracts} provider={provider} address={address} />
           </ProtectedRoute>
+
           <Route path={`${path}/:errorType`}>
             <Error />
           </Route>

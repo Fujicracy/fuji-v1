@@ -21,8 +21,10 @@ const Button = styled(Box).attrs({
   font-weight: bold;
   z-index: 0;
   color: ${mapToTheme('buttons.color')};
-  border: ${props => (props.outline ? mapToTheme('buttons.border') : 'none')};
-  background: ${props => (props.outline ? 'none' : mapToTheme('buttons.bg'))};
+  border: ${props =>
+    props.border ? props.border : props.outline ? mapToTheme('buttons.border') : 'none'};
+  background: ${props =>
+    props.background ? props.background : props.outline ? 'none' : mapToTheme('buttons.bg')};
   transition: all ${themeGet('transitionTime')} ease;
   box-shadow: ${props => !props.outline && mapToTheme('buttons.shadow')};
   cursor: pointer;
@@ -32,12 +34,6 @@ const Button = styled(Box).attrs({
     css`
       width: 100%;
     `}
-  svg {
-    position: absolute;
-    left: 8px;
-    top: 10px;
-  }
-
   &:disabled {
     box-shadow: none;
   }
