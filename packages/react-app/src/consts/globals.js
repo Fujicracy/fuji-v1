@@ -24,12 +24,14 @@ export const fujiMedia = generateMedia({
 const NETWORKS = {
   1: 'Mainnet',
   42: 'Kovan',
+  250: 'Fantom',
   31337: 'Local',
 };
 
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
   FUSE: 'fuse',
+  FANTOM: 'fantom',
 };
 
 const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;

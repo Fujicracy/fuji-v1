@@ -32,7 +32,15 @@ import {
 } from 'components';
 import { TextInput } from 'components/UI';
 
-import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import {
+  VAULTS,
+  ASSETS,
+  PROVIDERS,
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  DEPLOYMENT,
+  DEPLOYMENT_TYPES,
+} from 'consts';
 import {
   Transactor,
   GasEstimator,
@@ -392,9 +400,13 @@ function InitBorrow({ contracts, provider, address }) {
                 padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
-                  <Grid item xs={8} sm={8} md={12}>
-                    <SelectMarket hasBlackContainer={false} />
-                  </Grid>
+                  {DEPLOYMENT !== DEPLOYMENT_TYPES.FANTOM && (
+                    <Grid item xs={8} sm={8} md={12}>
+                      <SelectMarket
+                        /* handleChange={handleChangeMarket} */ hasBlackContainer={false}
+                      />
+                    </Grid>
+                  )}
                   <Grid item xs={4} sm={4} md={12}>
                     <ProvidersList
                       contracts={contracts}
