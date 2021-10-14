@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import { Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -29,8 +30,8 @@ const TextField = React.forwardRef(
       description,
       subTitleInfo,
       errorComponent,
-      defaultValue,
       autoComplete,
+      value,
     },
     ref,
   ) => {
@@ -57,15 +58,15 @@ const TextField = React.forwardRef(
           <StyledInput
             name={name}
             type={type}
-            defaultValue={defaultValue}
+            value={value}
             placeholder={placeholder}
-            onChange={onChange}
+            onChange={e => onChange(e.target.value || '')}
             onFocus={onFocus}
             onBlur={onBlur}
             disabled={disabled}
-            ref={ref}
             autoComplete={autoComplete || 'off'}
             fontSize={isMobile ? '12px' : isTablet ? '18px' : '14px'}
+            ref={ref}
           />
           {endAdornment &&
             (endAdornment?.type === 'currency' ? (

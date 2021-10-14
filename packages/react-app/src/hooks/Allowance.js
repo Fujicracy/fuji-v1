@@ -1,17 +1,10 @@
 import { useState, useEffect } from 'react';
+import { ASSETS } from 'consts';
 import usePoller from './Poller';
 
 const DEBUG = false;
 
-export default function useContractReader(
-  contracts,
-  contractName,
-  functionName,
-  args,
-  pollTime,
-  formatter,
-  onChange,
-) {
+export default function useAllowance(contracts, assetName, args, pollTime, formatter, onChange) {
   let adjustPollTime = 4000;
   if (pollTime) {
     adjustPollTime = pollTime;
@@ -20,7 +13,7 @@ export default function useContractReader(
     adjustPollTime = args;
   }
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState();
   useEffect(() => {
     if (typeof onChange === 'function') {
       setTimeout(onChange.bind(this, value), 1);
@@ -29,25 +22,15 @@ export default function useContractReader(
 
   usePoller(
     async () => {
-      if (contracts && contracts[contractName]) {
+      if (contracts && contracts[assetName] && ASSETS[assetName].isERC20) {
         try {
           let newValue;
-          if (DEBUG) console.log('CALLING ', contractName, functionName, 'with args', args);
+          if (DEBUG) console.log('CALLING ', assetName, 'allowance', 'with args', args);
           if (args && args.length > 0 && args.indexOf('') === -1) {
-            newValue = await contracts[contractName][functionName](...args);
-            if (DEBUG)
-              console.log(
-                'contractName',
-                contractName,
-                'functionName',
-                functionName,
-                'args',
-                args,
-                'RESULT:',
-                newValue,
-              );
+            newValue = await contracts[assetName].allowance(...args);
+            if (DEBUG) console.log('contractName', assetName, 'args', args, 'RESULT:', newValue);
           } else if (!args || (args && args.length === 0)) {
-            newValue = await contracts[contractName][functionName]();
+            newValue = await contracts[assetName].allowance();
           }
           if (formatter && typeof formatter === 'function') {
             newValue = formatter(newValue);
@@ -57,7 +40,7 @@ export default function useContractReader(
             setValue(newValue);
           }
         } catch (e) {
-          console.log(contractName);
+          console.log(assetName);
           console.log(e);
         }
       }

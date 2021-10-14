@@ -37,7 +37,7 @@ function PositionElement({ position, actionType }) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
   const history = useHistory();
-  const price = useExchangePrice();
+  const collateralAssetPrice = useExchangePrice(collateralAsset.name);
   const borrowAssetPrice = useExchangePrice(borrowAsset.name);
 
   const [healthFactor, setHealthFactor] = useState(0);
@@ -55,12 +55,12 @@ function PositionElement({ position, actionType }) {
   });
 
   useEffect(() => {
-    const ratios = PositionRatios(position, price);
+    const ratios = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
 
     setHealthFactor(ratios.healthFactor);
     const hr = logslider(ratios.healthFactor);
     setHealthRatio(hr);
-  }, [price, position]);
+  }, [collateralAssetPrice, borrowAssetPrice, position]);
 
   const isShowManage = !isMobile && !isTablet && actionType === PositionActions.Manage;
   return (
@@ -123,7 +123,10 @@ function PositionElement({ position, actionType }) {
               </Flex>
               {!isMobile && !isTablet && (
                 <SectionTitle mt={2}>
-                  ≈ ${collateral && price ? (collateral * price).toFixed(2) : '...'}
+                  ≈ $
+                  {collateral && collateralAssetPrice
+                    ? (collateral * collateralAssetPrice).toFixed(2)
+                    : '...'}
                 </SectionTitle>
               )}
             </Flex>
@@ -169,7 +172,7 @@ function PositionElement({ position, actionType }) {
               fontWeight="500"
               sx={{ width: '40%' }}
             >
-              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </Flex>
           </Flex>
         </Grid>

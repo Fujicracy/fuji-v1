@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useAuth } from 'hooks';
+import { useBalance } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
@@ -13,8 +13,13 @@ import { Label, NavImageLink, Button } from 'components/UI';
 
 import { CONTACTS } from 'consts/contacts';
 import map from 'lodash/map';
+import { formatUnits } from '@ethersproject/units';
+import { ASSETS, ASSET_NAME } from 'consts';
 
 import { LANDING_URL, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts/globals';
+
+import { getUserBalance } from 'helpers';
+
 import {
   Container,
   Logo,
@@ -30,13 +35,26 @@ import {
   MenuNavigationContainer,
 } from './styles';
 
-function Header() {
-  // const [logout, setLogout] = useState(false);
+function Header({ contracts, provider, address, onboard }) {
   const [isOpenWallet, setIsOpenWallet] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const pollUnformattedBalance = useBalance(provider, address, contracts);
 
-  // const { address, loadWeb3Modal, onboard, wallet } = useAuth();
-  const { address, onboard, balance } = useAuth();
+  useEffect(() => {
+    async function fetchBalance() {
+      const unFormattedBalance = await getUserBalance(provider, address, contracts);
+
+      const formattedBalance = unFormattedBalance
+        ? Number(formatUnits(unFormattedBalance, ASSETS[ASSET_NAME.ETH].decimals)).toFixed(6)
+        : null;
+
+      setBalance(Number(formattedBalance).toFixed(2));
+    }
+
+    fetchBalance();
+  }, [address, provider, contracts, pollUnformattedBalance]);
+
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
