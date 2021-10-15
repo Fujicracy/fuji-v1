@@ -10,6 +10,8 @@ const PROVIDER_TYPE = {
   FUSE7: 'FusePool7',
   FUSE8: 'FusePool8',
   FUSE18: 'FusePool18',
+  SCREAM: 'Scream',
+  CREAM: 'Cream',
 };
 
 const PROVIDERS = {
@@ -66,6 +68,19 @@ const PROVIDERS = {
     name: 'ProviderFuse18',
     title: 'Olympus Pool',
     address: getContractAddress('ProviderFuse18'),
+  },
+
+  [PROVIDER_TYPE.SCREAM]: {
+    id: 'scream',
+    name: 'ProviderScream',
+    title: 'Fantom',
+    address: getContractAddress('ProviderScream'),
+  },
+  [PROVIDER_TYPE.CREAM]: {
+    id: 'cream',
+    name: 'ProviderCream',
+    title: 'Fantom',
+    address: getContractAddress('ProviderCream'),
   },
 };
 

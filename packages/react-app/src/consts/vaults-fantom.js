@@ -1,66 +1,40 @@
 import { getContractAddress } from 'helpers';
-import { ASSETS, ASSET_NAME } from './assets';
+import { ASSETS, ASSET_NAME } from './assets-fantom';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 const VAULTS_ADDRESS = {
-  VaultETHDAI: getContractAddress('VaultETHDAI'),
-  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
-  VaultETHUSDT: getContractAddress('VaultETHUSDT'),
+  VaultFTMDAI: getContractAddress('VaultFTMDAI'),
+  VaultFTMUSDC: getContractAddress('VaultFTMUSDC'),
 };
 
 const COLLATERAL_IDS = {
-  [VAULTS_ADDRESS.VaultETHDAI]: 0,
-  [VAULTS_ADDRESS.VaultETHUSDC]: 2,
-  [VAULTS_ADDRESS.VaultETHUSDT]: 4,
+  [VAULTS_ADDRESS.VaultFTMDAI]: 0,
+  [VAULTS_ADDRESS.VaultFTMUSDC]: 2,
 };
 
 const BORROW_IDS = {
-  [VAULTS_ADDRESS.VaultETHDAI]: 1,
-  [VAULTS_ADDRESS.VaultETHUSDC]: 3,
-  [VAULTS_ADDRESS.VaultETHUSDT]: 5,
+  [VAULTS_ADDRESS.VaultFTMDAI]: 1,
+  [VAULTS_ADDRESS.VaultFTMUSDC]: 3,
 };
 
 const VAULTS = {
-  [VAULTS_ADDRESS.VaultETHDAI]: {
+  [VAULTS_ADDRESS.VaultFTMDAI]: {
     borrowAsset: ASSETS[ASSET_NAME.DAI],
     collateralAsset: ASSETS[ASSET_NAME.FTM],
-    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultETHDAI],
-    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultETHDAI],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
-    name: 'VaultETHDAI',
-    title: 'ETH-DAI',
+    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultFTMDAI],
+    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultFTMDAI],
+    providers: [PROVIDERS[PROVIDER_TYPE.SCREAM], PROVIDERS[PROVIDER_TYPE.CREAM]],
+    name: 'VaultFTMDAI',
+    title: 'FTM-DAI',
   },
-  [VAULTS_ADDRESS.VaultETHUSDC]: {
+  [VAULTS_ADDRESS.VaultFTMUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.FTM],
-    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultETHUSDC],
-    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultETHUSDC],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
-    name: 'VaultETHUSDC',
-    title: 'ETH-USDC',
-  },
-  [VAULTS_ADDRESS.VaultETHUSDT]: {
-    borrowAsset: ASSETS[ASSET_NAME.USDT],
-    collateralAsset: ASSETS[ASSET_NAME.FTM],
-    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultETHUSDT],
-    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultETHUSDT],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE],
-      PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.IRONBANK],
-    ],
-    name: 'VaultETHUSDT',
-    title: 'ETH-USDT',
+    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultFTMUSDC],
+    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultFTMUSDC],
+    providers: [PROVIDERS[PROVIDER_TYPE.SCREAM], PROVIDERS[PROVIDER_TYPE.CREAM]],
+    name: 'VaultFTMUSDC',
+    title: 'FTM-USDC',
   },
 };
 

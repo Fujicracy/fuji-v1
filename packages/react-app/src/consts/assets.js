@@ -7,7 +7,6 @@ export const ASSET_NAME = {
   ETH: 'ETH',
   BTC: 'BTC',
   FEI: 'FEI',
-  FTM: 'FTM',
 };
 
 export const ASSETS = {
@@ -49,14 +48,6 @@ export const ASSETS = {
   [ASSET_NAME.FEI]: {
     id: ASSET_NAME.FEI.toLowerCase(),
     name: ASSET_NAME.FEI,
-    icon: feiIcon.toString(),
-    decimals: 18,
-    address: '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
-    oracle: '0x31e0a88fecB6eC0a411DBe0e9E76391498296EE9',
-  },
-  [ASSET_NAME.FTM]: {
-    id: ASSET_NAME.FTM.toLowerCase(),
-    name: ASSET_NAME.FTM,
     icon: feiIcon.toString(),
     decimals: 18,
     address: '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
