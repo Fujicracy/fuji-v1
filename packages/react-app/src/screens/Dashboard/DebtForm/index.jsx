@@ -19,7 +19,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { Transactor, GasEstimator } from '../../../helpers';
-import { useContractReader, useExchangePrice } from '../../../hooks';
+import { useContractReader, useExchangePrice, useBalance, useAllowance } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -32,7 +32,7 @@ const Action = {
 
 function DebtForm({ position, contracts, provider, address }) {
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
-  const price = useExchangePrice();
+  // const price = useExchangePrice();
   const tx = Transactor(provider);
 
   const [action, setAction] = useState(Action.Repay);
@@ -45,13 +45,23 @@ function DebtForm({ position, contracts, provider, address }) {
   const vault = VAULTS[position.vaultAddress];
   const { decimals } = vault.borrowAsset;
 
-  const unFormattedBalance = useContractReader(contracts, vault.borrowAsset.name, 'balanceOf', [
+  const borrowPrice = useExchangePrice(vault.borrowAsset.name);
+  const collateralPrice = useExchangePrice(vault.collateralAsset.name);
+
+  const unFormattedBalance = useBalance(
+    provider,
     address,
-  ]);
+    contracts,
+    vault.borrowAsset.name,
+    vault.borrowAsset.isERC20,
+    1000,
+  );
+
   const balance = unFormattedBalance
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
-  const allowance = useContractReader(contracts, vault.borrowAsset.name, 'allowance', [
+
+  const allowance = useAllowance(contracts, vault.borrowAsset.name, [
     address,
     position.vaultAddress,
   ]);
@@ -79,10 +89,10 @@ function DebtForm({ position, contracts, provider, address }) {
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
       const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
-      const left = (diff / 1.35) * price;
+      const left = (diff / 1.35 / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, price]);
+  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice]);
 
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
@@ -109,27 +119,34 @@ function DebtForm({ position, contracts, provider, address }) {
   const payback = async withApproval => {
     setDialog({ step: 'repaying', withApproval });
     // if amount is equal debt, user repays their whole debt (-1)
-    let unFormattedAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
+
+    // let unFormattedAmount = parseUnits(amount, decimals).eq(debtBalance) ? '-1' : amount;
+
     // another check when user wants to repay max
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
-    unFormattedAmount =
-      unFormattedAmount === '-1' && debtBalance.eq(unFormattedBalance)
+
+    // TODO ask Boyan
+    const unFormattedAmount =
+      parseUnits(amount, decimals).eq(debtBalance) && debtBalance.eq(unFormattedBalance)
         ? formatUnits(unFormattedBalance, decimals)
-        : unFormattedAmount;
+        : amount;
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
       parseUnits(unFormattedAmount, decimals),
+      { value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals) },
     ]);
+
     const res = await tx(
       contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
+        value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),
         gasLimit,
       }),
     );
 
     if (res && res.hash) {
       const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Repay')) {
+      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Payback')) {
         setDialog({ step: 'success', withApproval });
       }
     } else {
@@ -177,8 +194,12 @@ function DebtForm({ position, contracts, provider, address }) {
   const onSubmit = async () => {
     setLoading(true);
     if (action === Action.Repay) {
-      if (parseUnits(amount, decimals).gt(allowance)) {
-        setDialog({ step: 'approval', withApproval: true });
+      if (vault.borrowAsset.isERC20) {
+        if (parseUnits(amount, decimals).gt(allowance)) {
+          setDialog({ step: 'approval', withApproval: true });
+        } else {
+          payback(false);
+        }
       } else {
         payback(false);
       }
@@ -208,6 +229,7 @@ function DebtForm({ position, contracts, provider, address }) {
               ? debtBalance.sub(parseUnits(amount, decimals))
               : debtBalance.add(parseUnits(amount, decimals))
           }
+          provider={provider}
         />
       ),
       actions: () => (
@@ -301,7 +323,7 @@ function DebtForm({ position, contracts, provider, address }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}> Debt</SectionTitle>
+        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
 
         {!isMobile && !isTablet && (
           <div className="tooltip-info">
@@ -335,7 +357,7 @@ function DebtForm({ position, contracts, provider, address }) {
           name="amount"
           type="number"
           step="any"
-          onChange={({ target }) => setAmount(target.value)}
+          onChange={value => setAmount(value)}
           onFocus={() => setFocus(true)}
           onBlur={() => clearErrors()}
           ref={register({
