@@ -21,20 +21,33 @@ export const fujiMedia = generateMedia({
   large: '1170px',
 });
 
+const NETWORK_ID = {
+  FANTOM: 250,
+  MAINNET: 1,
+  KOVAN: 42,
+  LOCAL: 31337,
+};
+
 const NETWORKS = {
-  1: 'Mainnet',
-  42: 'Kovan',
-  250: 'Fantom',
-  31337: 'Local',
+  [NETWORK_ID.MAINNET]: 'Mainnet',
+  [NETWORK_ID.KOVAN]: 'Kovan',
+  [NETWORK_ID.FANTOM]: 'Fantom',
+  [NETWORK_ID.LOCAL]: 'Local',
 };
 
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
   FUSE: 'fuse',
-  FANTOM: 'fantom',
 };
 
 const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
+
+const CHAIN_NAMES = {
+  ETHEREUM: 'ethereum',
+  FANTOM: 'fantom',
+};
+
+const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.ETHEREUM;
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID || 31337;
 const NETWORK = NETWORKS[CHAIN_ID];
@@ -48,6 +61,8 @@ const FUJIFLOPS_NFT_ADDR = '0x376C0AA9150095cB36AdcD472bE390D31C6BeF8F';
 
 export {
   CHAIN_ID,
+  CHAIN_NAME,
+  CHAIN_NAMES,
   NETWORK,
   APP_URL,
   LANDING_URL,

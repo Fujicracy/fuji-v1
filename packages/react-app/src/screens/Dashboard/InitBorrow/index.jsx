@@ -38,8 +38,8 @@ import {
   PROVIDERS,
   BREAKPOINTS,
   BREAKPOINT_NAMES,
-  DEPLOYMENT,
-  DEPLOYMENT_TYPES,
+  CHAIN_NAMES,
+  CHAIN_NAME,
 } from 'consts';
 import {
   Transactor,
@@ -400,7 +400,7 @@ function InitBorrow({ contracts, provider, address }) {
                 padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
-                  {DEPLOYMENT !== DEPLOYMENT_TYPES.FANTOM && (
+                  {CHAIN_NAME !== CHAIN_NAMES.FANTOM && (
                     <Grid item xs={8} sm={8} md={12}>
                       <SelectMarket
                         /* handleChange={handleChangeMarket} */ hasBlackContainer={false}

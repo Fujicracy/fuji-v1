@@ -14,7 +14,7 @@ import { Label, NavImageLink, Button } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
 import map from 'lodash/map';
 import { formatUnits } from '@ethersproject/units';
-import { ASSETS, ASSET_NAME } from 'consts';
+import { ASSETS, DEFAULT_BALANCE_ASSET } from 'consts';
 
 import { LANDING_URL, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts/globals';
 
@@ -46,7 +46,7 @@ function Header({ contracts, provider, address, onboard }) {
       const unFormattedBalance = await getUserBalance(provider, address, contracts);
 
       const formattedBalance = unFormattedBalance
-        ? Number(formatUnits(unFormattedBalance, ASSETS[ASSET_NAME.ETH].decimals)).toFixed(6)
+        ? Number(formatUnits(unFormattedBalance, ASSETS[DEFAULT_BALANCE_ASSET].decimals)).toFixed(6)
         : null;
 
       setBalance(Number(formattedBalance).toFixed(2));

@@ -1,4 +1,4 @@
-import { DEPLOYMENT, DEPLOYMENT_TYPES } from 'consts/globals';
+import { DEPLOYMENT, DEPLOYMENT_TYPES, CHAIN_NAME, CHAIN_NAMES } from 'consts/globals';
 import * as core from './vaults-core';
 import * as fuse from './vaults-fuse';
 import * as fantom from './vaults-fantom';
@@ -25,10 +25,12 @@ const VAULTS_ADDRESS =
     : fantom.VAULTS_ADDRESS;
 
 const VAULTS =
-  DEPLOYMENT === DEPLOYMENT_TYPES.CORE
-    ? core.VAULTS
-    : DEPLOYMENT === DEPLOYMENT_TYPES.FUSE
-    ? fuse.VAULTS
+  CHAIN_NAME === CHAIN_NAMES.ETHEREUM
+    ? DEPLOYMENT === DEPLOYMENT_TYPES.CORE
+      ? core.VAULTS
+      : fuse.VAULTS
     : fantom.VAULTS;
+
+console.log({ CHAIN_NAME, VAULTS });
 
 export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
