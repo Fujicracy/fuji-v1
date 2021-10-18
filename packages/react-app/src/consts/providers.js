@@ -73,13 +73,13 @@ const PROVIDERS = {
   [PROVIDER_TYPE.SCREAM]: {
     id: 'scream',
     name: 'ProviderScream',
-    title: 'Fantom',
+    title: 'Scream',
     address: getContractAddress('ProviderScream'),
   },
   [PROVIDER_TYPE.CREAM]: {
     id: 'cream',
     name: 'ProviderCream',
-    title: 'Fantom',
+    title: 'Cream',
     address: getContractAddress('ProviderCream'),
   },
 };
