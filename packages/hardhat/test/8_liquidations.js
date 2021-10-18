@@ -13,7 +13,8 @@ const {
 
 const {
   testBatchLiquidate1,
-  testBatchLiquidate2
+  testBatchLiquidate2,
+  testflashBatchLiquidate1
 } = require("./Fliquidator.js");
 
 const { fixture, VAULTS, ASSETS } = require("./core-utils");
@@ -137,10 +138,28 @@ describe("Core Fuji Instance", function () {
       "compound",
       BORROW_ETH
     );
-    */
     testBatchLiquidate2(
-      [vaultethdai/*, vaultethusdc, vaultethusdt*/],
+      [vaultethdai, vaultethusdc, vaultethusdt],
       "compound",
+      BORROW_STABLE
+    );
+    */
+
+    testflashBatchLiquidate1(
+      [vaultwbtceth],
+      "aave",
+      BORROW_ETH
+    );
+
+    testflashBatchLiquidate1(
+      [vaultwbtcusdc],
+      "compound",
+      BORROW_STABLE
+    );
+
+    testflashBatchLiquidate1(
+      [vaultethdai, vaultethusdc],
+      "dydx",
       BORROW_STABLE
     );
 

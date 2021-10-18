@@ -41,6 +41,30 @@ const FLASHLOAN = {
 
 const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
+function flashLoanDecider(providerName, debtAssetName) {
+  const dydxFlashAssets = ["dai","usdc","eth"];
+  const creamFlashAssets = ["dai","usdc","wbtc","usdt"];
+  const aaveFlashAssets = ["dai","usdc","eth","wbtc","usdt"];
+  if(providerName == 'dydx' && debtAssetName != "eth") {
+    return FLASHLOAN.CREAM;
+  } else if (providerName == 'dydx' && debtAssetName == "eth") {
+    return FLASHLOAN.AAVE;
+  } else if (
+    (providerName == 'compound' || providerName == 'aave' || providerName == 'ironBank') &&
+    dydxFlashAssets.includes(debtAssetName)
+  ) {
+    return FLASHLOAN.DYDX;
+  } else if (
+    (providerName == 'compound' || providerName == 'aave' || providerName == 'ironBank') &&
+    !dydxFlashAssets.includes(debtAssetName) &&
+    debtAssetName != "eth"
+  ) {
+    return FLASHLOAN.CREAM;
+  } else {
+    return FLASHLOAN.AAVE;
+  }
+}
+
 module.exports = {
   timeTravel,
   advanceBlocks,
@@ -52,5 +76,6 @@ module.exports = {
   evmSnapshot,
   evmRevert,
   FLASHLOAN,
+  flashLoanDecider,
   ZERO_ADDR,
 };
