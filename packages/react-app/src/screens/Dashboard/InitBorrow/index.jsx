@@ -40,6 +40,7 @@ import {
   BREAKPOINT_NAMES,
   CHAIN_NAMES,
   CHAIN_NAME,
+  ASSET_NAME,
 } from 'consts';
 import {
   Transactor,
@@ -120,7 +121,6 @@ function InitBorrow({ contracts, provider, address }) {
         vault.collateralAsset.name,
         vault.collateralAsset.isERC20,
       );
-
       const formattedBalance = unFormattedBalance
         ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
         : null;
@@ -263,7 +263,7 @@ function InitBorrow({ contracts, provider, address }) {
   const onSubmit = async () => {
     if (!vault.collateralAsset.isERC20) {
       const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-      if (totalCollateral > ETH_CAP_VALUE) {
+      if (totalCollateral > ETH_CAP_VALUE && vault.collateralAsset.name === ASSET_NAME.ETH) {
         setDialog({ step: 'capCollateral' });
         return;
       }

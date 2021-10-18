@@ -31,6 +31,4 @@ const VAULTS =
       : fuse.VAULTS
     : fantom.VAULTS;
 
-console.log({ CHAIN_NAME, VAULTS });
-
 export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
