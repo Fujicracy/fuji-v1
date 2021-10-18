@@ -97,7 +97,7 @@ const Governance = () => {
     } else if (isEligible) {
       await claimNFT();
     } else {
-      window.open(`https://opensea.io/collection/fujidao`, '_blank');
+      window.open(`https://opensea.io/collection/fuji-dao`, '_blank');
     }
   };
 
@@ -114,7 +114,7 @@ const Governance = () => {
 
   return (
     <>
-      <Header />
+      <Header provider={provider} address={address} />
       <Flex
         flex
         flexDirection={isMobile || isTablet ? 'column' : 'row'}
@@ -160,7 +160,7 @@ const Governance = () => {
               <Grid item xs={6} md={6} sm={6}>
                 <NftButton
                   onClick={() => {
-                    window.open('https://snapshot.org/#/fuji-dao.org', '_blank');
+                    window.open('https://snapshot.org/#/fuji-dao.eth', '_blank');
                   }}
                 >
                   Vote
