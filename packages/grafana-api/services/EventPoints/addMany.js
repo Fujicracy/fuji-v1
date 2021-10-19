@@ -1,7 +1,12 @@
 const { EventPoint } = require("../../db");
 
-const isUnique = async (event) => {
-  const points = await EventPoint.find(event).exec();
+const isUnique = async ({ vaultName, eventName, blockNumber, user }) => {
+  const points = await EventPoint.find({
+    vaultName,
+    eventName,
+    blockNumber,
+    user
+  }).exec();
   return points.length === 0;
 };
 

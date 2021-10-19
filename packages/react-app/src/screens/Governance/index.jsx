@@ -97,7 +97,7 @@ const Governance = () => {
     } else if (isEligible) {
       await claimNFT();
     } else {
-      window.open(`https://opensea.io/collection/fujidao`, '_blank');
+      window.open(`https://opensea.io/collection/fuji-dao`, '_blank');
     }
   };
 
@@ -114,7 +114,7 @@ const Governance = () => {
 
   return (
     <>
-      <Header />
+      <Header provider={provider} address={address} />
       <Flex
         flex
         flexDirection={isMobile || isTablet ? 'column' : 'row'}
@@ -127,23 +127,23 @@ const Governance = () => {
           minWidth={isMobile ? '320px' : '448px'}
           width={isMobile ? '320px' : '448px'}
         >
-          <SectionTitle fontSize="16px">FujiFlops</SectionTitle>
+          <SectionTitle fontSize="16px">Hey Fuji Hikers,</SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
-            We started together the first DeFi hiking back in May. We promised to provide the first
-            climbers with all the necessary equipment for this honorous endeavour and the time has
-            finally come.
+            Back in May, we started together the first DeFi hiking and promised to provide all the
+            necessary equipment for this honorous endeavor. Finally, the time has come!
           </SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
             <div>
-              The first 96 brave climbers who interacted with the protocol can claim now the
-              <span>Genesis FujiFlops</span> NFT. This is a unique piece of art and the best gift
-              you can make to your toes on the quest to an absolute comfiness.
+              The first 96 brave climbers who interacted with the protocol can claim now their
+              FujiFlops:<span> Genesis Hiking Edition</span> NFT. This is a unique piece of art and
+              the best gift you can make to your toes on the quest to an absolute comfiness.
             </div>
           </SectionTitle>
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
             <div>
-              A pair of <span>FujiFlops</span> will serve another important role. In our ambition to
-              build a great community and DAO, it will act as an entry to a pre-governance system.
+              A pair of <span>FujiFlops</span> will play another important role, it will empower its
+              owner to participate in our pre-governance system. We aim to build a great community
+              and this NFT is the first step to make it grow into a DAO.
             </div>
           </SectionTitle>
           <Flex marginTop="28px">
@@ -160,7 +160,7 @@ const Governance = () => {
               <Grid item xs={6} md={6} sm={6}>
                 <NftButton
                   onClick={() => {
-                    window.open('https://snapshot.org/#/fuji-dao.org', '_blank');
+                    window.open('https://snapshot.org/#/fuji-dao.eth', '_blank');
                   }}
                 >
                   Vote

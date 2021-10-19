@@ -6,7 +6,7 @@ const { scraper } = require("./scraper");
 const EPService = require("./services/EventPoints");
 const RPService = require("./services/RatePoints");
 
-const uri = `imongodb+srv://${process.env.MONGODB_CONNECTION}/fuji-vaults-events?retryWrites=true&w=majority`;
+const uri = `imongodb+srv://${process.env.MONGODB_CONNECTION}/fuji-vaults?retryWrites=true&w=majority`;
 mongoose.connect(
   uri,
   { useNewUrlParser: true, useUnifiedTopology: true }
