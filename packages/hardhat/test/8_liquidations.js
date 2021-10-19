@@ -158,7 +158,7 @@ describe("Core Fuji Instance", function () {
         BORROW_STABLE
       );
       testBatchLiquidate2(
-        [vaultwbtceth, vaultdaieth, vaultusdteth],
+        [vaultwbtceth, vaultdaieth, vaultusdceth],
         specificProviders[i],
         BORROW_ETH
       );
@@ -168,7 +168,7 @@ describe("Core Fuji Instance", function () {
         BORROW_STABLE
       );
       testflashBatchLiquidate1(
-        [vaultwbtceth, vaultdaieth, vaultusdteth],
+        [vaultwbtceth, vaultdaieth, vaultusdceth],
         specificProviders[i],
         BORROW_ETH
       );

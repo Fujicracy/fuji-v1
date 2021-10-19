@@ -391,7 +391,6 @@ function testBatchLiquidate2(vaults, providerName, amountToBorrow) {
                 allAddresses,
                 Array(allAddresses.length).fill(vAssets.borrowID)
               ));
-            console.log(arrayOfDebtBalances);
             let sumofDebtBalances = toBN(0);
             for (let k = 0; k < arrayOfDebtBalances.length; k++) {
               sumofDebtBalances = sumofDebtBalances.add(arrayOfDebtBalances[k]);
