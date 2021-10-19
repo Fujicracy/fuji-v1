@@ -16,7 +16,13 @@ import map from 'lodash/map';
 import { formatUnits } from '@ethersproject/units';
 import { ASSETS, DEFAULT_BALANCE_ASSET } from 'consts';
 
-import { LANDING_URL, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts/globals';
+import {
+  LANDING_URL,
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  CHAIN_NAMES,
+  CHAIN_NAME,
+} from 'consts/globals';
 
 import { getUserBalance } from 'helpers';
 
@@ -128,14 +134,16 @@ function Header({ contracts, provider, address, onboard }) {
                   Documentation
                 </MenuItem>
 
-                <NavLink to="/claim-nft">
-                  <MenuItem
-                    isSelected={currentPage.pathname === '/dashboard/claim-nft'}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Claim My NFT
-                  </MenuItem>
-                </NavLink>
+                {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                  <NavLink to="/claim-nft">
+                    <MenuItem
+                      isSelected={currentPage.pathname === '/dashboard/claim-nft'}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Claim My NFT
+                    </MenuItem>
+                  </NavLink>
+                )}
               </Flex>
             </MenuContainer>
             <MenuNavigationContainer>
@@ -187,25 +195,26 @@ function Header({ contracts, provider, address, onboard }) {
                   My positions
                 </NavLink>
               </li>
-
-              <li className="nav-item">
-                <NavLink to="/claim-nft" activeClassName="current">
-                  <Button
-                    block
-                    outline
-                    color="white"
-                    fontSize="16px"
-                    borderRadius="64"
-                    background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
-                  >
-                    Claim NFT
-                  </Button>
-                </NavLink>
-              </li>
+              {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                <li className="nav-item">
+                  <NavLink to="/claim-nft" activeClassName="current">
+                    <Button
+                      block
+                      outline
+                      color="white"
+                      fontSize="16px"
+                      borderRadius="64"
+                      background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
+                    >
+                      Claim NFT
+                    </Button>
+                  </NavLink>
+                </li>
+              )}
 
               <li>
                 <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWallet(false)}>
-                  <Label color="#f5f5f5">{`${balance} ETH`}</Label>
+                  <Label color="#f5f5f5">{`${balance} ${DEFAULT_BALANCE_ASSET}`}</Label>
                   <Box
                     ml={2}
                     sx={{ position: 'relative' }}
