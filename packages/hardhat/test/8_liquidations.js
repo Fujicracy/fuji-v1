@@ -9,6 +9,7 @@ const {
   evmSnapshot,
   evmRevert,
   FLASHLOAN,
+  removeItemOnce
 } = require("./helpers");
 
 const {
@@ -47,6 +48,13 @@ const [BORROW_STABLE, BORROW_ETH, BORROW_WBTC] = [
   DEPOSIT_STABLE / 2,
   DEPOSIT_ETH / 2,
   DEPOSIT_WBTC / 2,
+];
+
+const PROVIDER_NAMES = [
+  'aave',
+  'compound',
+  'dydx',
+  'ironBank'
 ];
 
 describe("Core Fuji Instance", function () {
@@ -117,52 +125,54 @@ describe("Core Fuji Instance", function () {
   });
 
   describe("Testing Liquidation Functions in Fliquidator", () => {
-    /*
-    testBatchLiquidate1(
-      [vaultethdai, vaultethusdc, vaultethusdt],
-      "compound",
-      BORROW_STABLE
-    );
-    testBatchLiquidate1(
-      [vaultethwbtc],
-      "compound",
-      BORROW_WBTC
-    );
-    testBatchLiquidate1(
-      [vaultwbtcdai, vaultwbtcusdc, vaultwbtcusdt],
-      "compound",
-      BORROW_STABLE
-    );
-    testBatchLiquidate1(
-      [vaultwbtceth,vaultdaieth, vaultusdceth],
-      "compound",
-      BORROW_ETH
-    );
-    testBatchLiquidate2(
-      [vaultethdai, vaultethusdc, vaultethusdt],
-      "compound",
-      BORROW_STABLE
-    );
-    */
 
-    testflashBatchLiquidate1(
-      [vaultwbtceth],
-      "aave",
-      BORROW_ETH
-    );
+    for (var i = 0; i < PROVIDER_NAMES.length; i++) {
+      testBatchLiquidate1(
+        [vaultethdai, vaultethusdc],
+        PROVIDER_NAMES[i],
+        BORROW_STABLE
+      );
+      testBatchLiquidate1(
+        [vaultdaieth, vaultusdceth],
+        PROVIDER_NAMES[i],
+        BORROW_ETH
+      );
+      testflashBatchLiquidate1(
+        [vaultethdai, vaultethusdc],
+        PROVIDER_NAMES[i],
+        BORROW_STABLE
+      );
+      testflashBatchLiquidate1(
+        [vaultdaieth, vaultusdceth],
+        PROVIDER_NAMES[i],
+        BORROW_STABLE
+      );
+    }
 
-    testflashBatchLiquidate1(
-      [vaultwbtcusdc],
-      "compound",
-      BORROW_STABLE
-    );
+    const specificProviders = removeItemOnce(PROVIDER_NAMES, 'dydx');
 
-    testflashBatchLiquidate1(
-      [vaultethdai, vaultethusdc],
-      "dydx",
-      BORROW_STABLE
-    );
-
+    for (var i = 0; i < specificProviders.length; i++) {
+      testBatchLiquidate1(
+        [vaultwbtcdai, vaultwbtcusdc, vaultwbtcusdt],
+        specificProviders[i],
+        BORROW_STABLE
+      );
+      testBatchLiquidate1(
+        [vaultwbtceth, vaultdaieth, vaultusdteth],
+        specificProviders[i],
+        BORROW_ETH
+      );
+      testflashBatchLiquidate1(
+        [vaultwbtcdai, vaultwbtcusdc, vaultwbtcusdt],
+        specificProviders[i],
+        BORROW_STABLE
+      );
+      testflashBatchLiquidate1(
+        [vaultwbtceth, vaultdaieth, vaultusdteth],
+        specificProviders[i],
+        BORROW_ETH
+      );
+    }
 
   });
 });

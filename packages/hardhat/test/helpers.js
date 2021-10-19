@@ -41,6 +41,14 @@ const FLASHLOAN = {
 
 const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
+function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
 function flashLoanDecider(providerName, debtAssetName) {
   const dydxFlashAssets = ["dai","usdc","eth"];
   const creamFlashAssets = ["dai","usdc","wbtc","usdt"];
@@ -76,6 +84,7 @@ module.exports = {
   evmSnapshot,
   evmRevert,
   FLASHLOAN,
+  removeItemOnce,
   flashLoanDecider,
   ZERO_ADDR,
 };
