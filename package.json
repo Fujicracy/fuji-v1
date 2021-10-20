@@ -61,6 +61,7 @@
     "packages": [
       "packages/bots",
       "packages/hardhat",
+      "packages/grafana-api",
       "packages/react-app"
     ],
     "nohoist": []

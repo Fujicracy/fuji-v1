@@ -4,8 +4,9 @@ import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
-import { useContractLoader, useContractReader, useAuth } from 'hooks';
+import { useContractLoader, useAuth } from 'hooks';
 import { COLLATERAL_IDS } from 'consts';
+import { CallContractFunction } from 'helpers';
 
 import Error from '../Error';
 
@@ -15,16 +16,26 @@ import InitBorrow from './InitBorrow';
 
 function Dashboard() {
   const { path } = useRouteMatch();
-  const { address, provider } = useAuth();
+  const { address, provider, onboard } = useAuth();
 
   const [loader, setLoader] = useState(true);
 
   const contracts = useContractLoader(provider);
 
-  const collateralBals = useContractReader(contracts, 'FujiERC1155', 'balanceOfBatch', [
-    map(Object.values(COLLATERAL_IDS), () => address),
-    Object.values(COLLATERAL_IDS),
-  ]);
+  const [collateralBals, setCollateralBals] = useState();
+
+  useEffect(() => {
+    async function fetchCollateralBals() {
+      const bals = await CallContractFunction(contracts, 'FujiERC1155', 'balanceOfBatch', [
+        map(Object.values(COLLATERAL_IDS), () => address),
+        Object.values(COLLATERAL_IDS),
+      ]);
+
+      setCollateralBals(bals);
+    }
+
+    fetchCollateralBals();
+  }, [contracts, address]);
 
   useEffect(() => {
     setTimeout(() => setLoader(false), 5000);
@@ -32,7 +43,7 @@ function Dashboard() {
 
   return (
     <>
-      <Header />
+      <Header contracts={contracts} provider={provider} address={address} onboard={onboard} />
       {loader ? (
         <Loader />
       ) : (

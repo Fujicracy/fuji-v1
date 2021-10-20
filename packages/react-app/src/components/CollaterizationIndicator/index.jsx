@@ -46,7 +46,10 @@ function logslider(value) {
 }
 
 function CollaterizationIndicator({ position }) {
-  const price = useExchangePrice();
+  const { borrowAsset, collateralAsset } = position;
+
+  const collateralAssetPrice = useExchangePrice(collateralAsset.name);
+  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
 
   const [more, setMore] = useState(false);
   const [healthFactor, setHealthFactor] = useState(0);
@@ -64,8 +67,7 @@ function CollaterizationIndicator({ position }) {
   });
 
   useEffect(() => {
-    const ratios = PositionRatios(position, price);
-
+    const ratios = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
     setHealthFactor(ratios.healthFactor);
     setLiqPrice(ratios.liqPrice);
     setLtv(ratios.ltv);
@@ -74,7 +76,7 @@ function CollaterizationIndicator({ position }) {
     const hr = logslider(ratios.healthFactor);
     setOldHealthRatio(healthRatio);
     setHealthRatio(hr);
-  }, [price, position, healthRatio]);
+  }, [collateralAssetPrice, borrowAssetPrice, position, healthRatio]);
 
   const props = useSpring({
     to: {
@@ -141,7 +143,7 @@ function CollaterizationIndicator({ position }) {
               </ChartContainer>
             </div>
             <div className="percentage-chart">
-              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '..'}
+              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
             </div>
             <div className="bg-chart" />
           </div>
@@ -179,11 +181,13 @@ function CollaterizationIndicator({ position }) {
           <div className="number">75 %</div>
         </div>
         <div className="position-details">
-          <div className="title">Current ETH price</div>
-          <div className="number">$ {price ? price.toFixed(2) : '...'}</div>
+          <div className="title">Current {collateralAsset.name} price</div>
+          <div className="number">
+            $ {collateralAssetPrice ? collateralAssetPrice.toFixed(2) : '...'}
+          </div>
         </div>
         <div className="position-details">
-          <div className="title">ETH liquidation price</div>
+          <div className="title">{collateralAsset.name} liquidation price</div>
           <div className="number">
             $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
           </div>
