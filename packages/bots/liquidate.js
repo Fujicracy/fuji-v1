@@ -51,7 +51,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts) => {
   const gasPrice = await getGasPrice();
   const ethPrice = await getETHPrice();
 
-  let gasLimit = await contracts.Fliquidator.estimateGas.flashBatchLiquidate(
+  let gasLimit = await contracts.Fliquidator.connect(signer).estimateGas.flashBatchLiquidate(
     positions.map(p => p.account),
     vault.address,
     index,
@@ -93,19 +93,20 @@ const getAllBorrowers = async vault => {
   if (process.env.REDIS) {
     console.log('---> using redis');
     const client = await connectRedis();
-    borrowers = await client.get('borrowers');
+    const vaultAddr = vault.address.toLowerCase();
+    borrowers = await client.get(`borrowers-${vaultAddr}`);
 
     if (!borrowers) {
       console.log('---> no cached borrowers');
       borrowers = await getBorrowers(vault);
-      await client.set('borrowers', JSON.stringify(borrowers));
+      await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     } else {
       borrowers = JSON.parse(borrowers);
       console.log('---> cached borrowers, fetch only new');
       const newBorrowers = await getBorrowers(vault, 10);
       borrowers = pushNew(newBorrowers, borrowers);
 
-      await client.set('borrowers', JSON.stringify(borrowers));
+      await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     }
   } else {
     console.log('---> not using redis');

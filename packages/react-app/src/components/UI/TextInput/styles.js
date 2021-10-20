@@ -101,9 +101,6 @@ export const AdornmentText = styled.label`
 `;
 
 export const StyledInput = styled.input`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   background: none;
   border: none;
   font-size: ${props => (props.fontSize ? props.fontSize : '1rem')};

@@ -6,6 +6,7 @@
 packages/subgraph
 packages/*/artifacts/*
 !packages/*/artifacts/1-*.deploy
+!packages/*/artifacts/250-*.deploy
 packages/*/cache
 packages/*/*.txt
 packages/hardhat/.openzeppelin/unknown-31337.json

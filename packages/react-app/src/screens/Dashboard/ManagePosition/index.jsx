@@ -63,14 +63,15 @@ function ManagePosition({ contracts, provider, address }) {
         margin={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
       >
         <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
-          <Flex width={1 / 1} margin="0px 0px 16px">
-            <Link to="my-positions" className="back-to-link">
+          <Link to="my-positions" className="back-to-link">
+            <Flex width={1 / 1} margin="0px 0px 16px">
               <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
               <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
                 Back
               </SectionTitle>
-            </Link>
-          </Flex>
+            </Flex>
+          </Link>
+
           <Grid container spacing={isMobile ? 3 : isTablet ? 4 : 6}>
             <Grid item md={8} sm={12} xs={12}>
               <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
