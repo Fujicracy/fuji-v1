@@ -135,7 +135,7 @@ const Governance = () => {
           <SectionTitle fontSize="16px" marginTop="20px" fontWeight="normal" lineHeight="24px">
             <div>
               The first 96 brave climbers who interacted with the protocol can claim now their
-              FujiFlops:<span> Genesis Hiking Edition</span> NFT. This is a unique piece of art and
+              FujiFlops:<span> Genesis Hiking Edition</span> NFT. This is an unique piece of art and
               the best gift you can make to your toes on the quest to an absolute comfiness.
             </div>
           </SectionTitle>
