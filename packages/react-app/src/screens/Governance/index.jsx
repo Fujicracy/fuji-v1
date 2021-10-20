@@ -93,7 +93,10 @@ const Governance = () => {
 
   const handleNftButton = async () => {
     if (isClaimed) {
-      window.open(`https://opensea.io/asset/${FUJIFLOPS_NFT_ADDR}/${tokenId}`, '_blank');
+      window.open(
+        `https://opensea.io/assets/${FUJIFLOPS_NFT_ADDR.toLowerCase()}/${tokenId}`,
+        '_blank',
+      );
     } else if (isEligible) {
       await claimNFT();
     } else {
