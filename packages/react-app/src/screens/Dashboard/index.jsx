@@ -30,7 +30,6 @@ function Dashboard() {
   useEffect(() => {
     setTimeout(() => setLoader(false), 5000);
   }, []);
-  console.log({ provider, onboard, loader, path });
 
   return (
     <>
