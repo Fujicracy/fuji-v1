@@ -14,6 +14,7 @@ function useProvideAuth() {
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
   const [balance, setBalance] = useState(0);
+  const [network, setNetwork] = useState(null);
 
   const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
@@ -77,12 +78,13 @@ function useProvideAuth() {
             localStorage.removeItem('selectedAddress');
           }
         },
+        network: setNetwork,
         address: onboardAddress => {
           localStorage.setItem('selectedAddress', onboardAddress || '');
           setAddress(onboardAddress || '');
         },
         balance: onboardBalance => {
-          if (onboardBalance) {
+          if (onboardBalance !== null) {
             const fBalance = parseFloat(formatUnits(onboardBalance));
             setBalance(fBalance.toFixed(2));
           }
@@ -104,17 +106,24 @@ function useProvideAuth() {
     async function connectWalletAccount() {
       const previouslySelectedWallet = localStorage.getItem('selectedWallet');
       const previouslySelectedAddress = localStorage.getItem('selectedAddress');
-      if (previouslySelectedWallet && previouslySelectedAddress && onboard) {
-        await onboard.walletSelect(previouslySelectedWallet);
-        await onboard.walletCheck(previouslySelectedAddress);
+      setProvider(null);
+      if (onboard) {
+        const isSelected = await onboard.walletSelect(previouslySelectedWallet);
+        if (isSelected) {
+          const isChecked = await onboard.walletCheck(previouslySelectedAddress);
+          if (isChecked) {
+            setWallet(previouslySelectedWallet);
+            setAddress(previouslySelectedAddress);
 
-        setWallet(previouslySelectedWallet);
-        setAddress(previouslySelectedAddress);
+            const state = onboard.getState();
+            setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
+          }
+        }
       }
     }
 
     connectWalletAccount();
-  }, [onboard]);
+  }, [onboard, network]);
 
   // Return the user object and auth methods
   return {
