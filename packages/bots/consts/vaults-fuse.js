@@ -1,14 +1,8 @@
-import { getContractAddress } from '../utils/index.js';
 import { ASSETS, ASSET_NAME } from './assets.js';
 import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
 
-const VAULTS_ADDRESS = {
-  VaultETHFEI: getContractAddress('VaultETHFEI'),
-  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
-};
-
 const VAULTS = {
-  [VAULTS_ADDRESS.VaultETHFEI]: {
+  VaultETHFEI: {
     borrowAsset: ASSETS[ASSET_NAME.FEI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHFEI',
@@ -20,7 +14,7 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.FUSE18],
     ],
   },
-  [VAULTS_ADDRESS.VaultETHUSDC]: {
+  VaultETHUSDC: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDC',

@@ -1,0 +1,22 @@
+{
+  "local": {
+    "networkName": "local",
+    "chainId": 31337,
+    "privateKey": "",
+    "providerUrl": ""
+  },
+  "mainnet": {
+    "networkName": "mainnet",
+    "chainId": 1,
+    "infuraId": "",
+    "relayerApiKey": "",
+    "relayerApiSecret": ""
+  },
+  "fantom": {
+    "networkName": "fantom",
+    "chainId": 250,
+    "infuraId": "",
+    "relayerApiKey": "",
+    "relayerApiSecret": ""
+  }
+}

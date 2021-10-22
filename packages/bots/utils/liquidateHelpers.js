@@ -6,8 +6,7 @@ const { formatEther, formatUnits, parseUnits } = ethers.utils;
 
 const signer = getSigner();
 
-const getBorrowers = async (vault, searchLength) => {
-  const currentBlock = await signer.provider.getBlockNumber();
+const getBorrowers = async (vault, currentBlock, searchLength) => {
 
   const startBlock = VAULTS[vault.address.toLowerCase()].deployBlockNumber;
   const filterBorrowers = vault.filters.Borrow();
