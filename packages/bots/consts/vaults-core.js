@@ -1,15 +1,8 @@
-import { getContractAddress } from '../utils/index.js';
 import { ASSETS, ASSET_NAME } from './assets.js';
 import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
 
-const VAULTS_ADDRESS = {
-  VaultETHDAI: getContractAddress('VaultETHDAI'),
-  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
-  VaultETHUSDT: getContractAddress('VaultETHUSDT'),
-};
-
 const VAULTS = {
-  [VAULTS_ADDRESS.VaultETHDAI]: {
+  VaultETHDAI: {
     borrowAsset: ASSETS[ASSET_NAME.DAI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHDAI',
@@ -22,7 +15,7 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
   },
-  [VAULTS_ADDRESS.VaultETHUSDC]: {
+  VaultETHUSDC: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDC',
@@ -35,9 +28,10 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
   },
-  [VAULTS_ADDRESS.VaultETHUSDT]: {
+  VaultETHUSDT: {
     borrowAsset: ASSETS[ASSET_NAME.USDT],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
+    name: 'VaultETHUSDT',
     title: 'ETH-USDT',
     deployBlockNumber: 12694137,
     providers: [

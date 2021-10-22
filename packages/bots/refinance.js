@@ -1,19 +1,18 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { VAULTS, VAULTS_ADDRESS, PROVIDERS } from './consts/index.js';
+import { VAULTS, PROVIDERS } from './consts/index.js';
 import { loadContracts, getSigner, getFlashloanProvider } from './utils/index.js';
+import configs from './config.json';
 
 const { utils } = ethers;
-
-const signer = getSigner();
 
 function getProviderName(providerAddr) {
   const provider = Object.values(PROVIDERS).find(p => p.address === providerAddr.toLowerCase());
   return provider.name;
 }
 
-async function switchProviders(contracts, vault, newProviderAddr) {
+async function switchProviders(contracts, signer, vault, newProviderAddr) {
   const index = await getFlashloanProvider(vault);
   let gasLimit = await contracts.Controller.connect(signer).estimateGas.doRefinancing(
     vault.address,
@@ -35,7 +34,7 @@ async function switchProviders(contracts, vault, newProviderAddr) {
   );
 }
 
-async function shouldChange(currentRate, newRate, lastSwitch) {
+async function shouldChange(currentRate, currentBlock, newRate, lastSwitch) {
   // current provider is still the best
   if (!newRate) {
     return false;
@@ -44,19 +43,17 @@ async function shouldChange(currentRate, newRate, lastSwitch) {
   // change when difference in APRs is more than 4%
   const APR_THRESHOLD = utils.parseUnits('4', 25);
 
-  const currentBlockNumber = await signer.provider.getBlockNumber();
   const timeCheck = !lastSwitch
     ? true // first switch
     : // check if last switch was at least 1h ago
-      currentBlockNumber - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
+      currentBlock - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
 
   return currentRate.sub(newRate).gte(APR_THRESHOLD) && timeCheck;
 }
 
-async function checkRates(vaultName, contracts) {
-  console.log('Checking', chalk.yellow(`${vaultName} ...`));
-  const vaultContract = contracts[vaultName];
-  const vault = VAULTS[vaultContract.address.toLowerCase()];
+async function checkRates(contracts, signer, vault) {
+  console.log('Checking', chalk.yellow(`${vault.name} ...`));
+  const vaultContract = contracts[vault.name];
   const borrowAsset = vault.borrowAsset;
 
   const activeProviderAddr = await vaultContract.activeProvider();
@@ -82,12 +79,13 @@ async function checkRates(vaultName, contracts) {
   // Filter all Switch events
   const events = await vaultContract.queryFilter(filterSwitches);
   const lastSwitch = events[events.length - 1];
-  const toChange = await shouldChange(currentRate, bestRate, lastSwitch);
+  const currentBlock = await signer.provider.getBlockNumber();
+  const toChange = await shouldChange(currentRate, currentBlock, bestRate, lastSwitch);
 
   if (toChange) {
     console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
 
-    const res = await switchProviders(contracts, vaultContract, bestProviderAddr);
+    const res = await switchProviders(contracts, signer, vaultContract, bestProviderAddr);
 
     if (res && res.hash) {
       console.log(`TX submited: ${res.hash}`);
@@ -101,11 +99,10 @@ async function checkRates(vaultName, contracts) {
   }
 }
 
-async function checkForRefinance(contracts) {
-  const vaultsList = Object.keys(VAULTS_ADDRESS);
-  for (let v = 0; v < vaultsList.length; v++) {
-    const vaultName = vaultsList[v];
-    await checkRates(vaultName, contracts);
+async function checkForRefinance(contracts, signer, config, deployment) {
+  const vaults = Object.values(VAULTS[config.networkName][deployment])
+  for (let v = 0; v < vaults.length; v++) {
+    await checkRates(contracts, signer, vaults[i]);
   }
 }
 
@@ -115,15 +112,18 @@ function delay(s) {
 
 async function main() {
   console.log('Start checking for refinancing...');
+  // TODO argv networkName and deployment
+  const config = configs[networkName];
+  const signer = getSigner(config);
 
-  const contracts = await loadContracts(signer.provider);
+  const contracts = await loadContracts(signer.provider, config.chainId, deployment);
 
   // eslint-disable-next-line
   while (true) {
     try {
       await retry(
         async () => {
-          await checkForRefinance(contracts);
+          await checkForRefinance(contracts, signer, config, deployment);
         },
         {
           retries: process.env.RETRIES_COUNT || 2, // default 2 retries
