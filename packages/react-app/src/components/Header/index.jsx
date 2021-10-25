@@ -9,31 +9,33 @@ import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/imag
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
-import { Label, NavImageLink, Button } from 'components/UI';
+import { Label, NavImageLink } from 'components/UI';
 
 import { CONTACTS } from 'consts/contacts';
 import map from 'lodash/map';
 import { formatUnits } from '@ethersproject/units';
-import { ASSETS, DEFAULT_BALANCE_ASSET } from 'consts';
-
 import {
   LANDING_URL,
   BREAKPOINTS,
   BREAKPOINT_NAMES,
   CHAIN_NAMES,
+  ASSETS,
+  DEFAULT_BALANCE_ASSET,
+  CHAINS,
   CHAIN_NAME,
-} from 'consts/globals';
+} from 'consts';
 
 import { getUserBalance } from 'helpers';
+import { flow } from 'lodash';
 
 import {
   Container,
   Logo,
   Navigation,
   BallanceContainer,
-  WalletItemContainer,
-  WalletHeader,
-  WalletItem,
+  DropDownItemContainer,
+  DropDownHeader,
+  DropDownItem,
   MenuContainer,
   HeaderContainer,
   MenuItem,
@@ -42,10 +44,18 @@ import {
 } from './styles';
 
 function Header({ contracts, provider, address, onboard }) {
-  const [isOpenWallet, setIsOpenWallet] = useState(false);
+  const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
+  const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
   const pollUnformattedBalance = useBalance(provider, address, contracts);
+
+  const chains = flow([
+    Object.entries,
+    arr => arr.filter(([key]) => CHAINS[key].isDeployed && CHAINS[key].id !== CHAIN_NAME),
+    Object.fromEntries,
+  ])(CHAINS);
 
   useEffect(() => {
     async function fetchBalance() {
@@ -198,50 +208,90 @@ function Header({ contracts, provider, address, onboard }) {
               {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
-                    <Button
-                      block
-                      outline
-                      color="white"
-                      fontSize="16px"
-                      borderRadius="64"
-                      background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
-                    >
-                      Claim NFT
-                    </Button>
+                    NFT
                   </NavLink>
                 </li>
               )}
 
               <li>
-                <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWallet(false)}>
+                <Box
+                  ml={2}
+                  sx={{ position: 'relative' }}
+                  tabIndex="0"
+                  onBlur={() => setIsOpenNetworkDropDown(false)}
+                >
+                  <DropDownHeader
+                    onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
+                    isClicked={isOpenNetworkDropDown}
+                    hasBorder
+                  >
+                    <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
+                    <Label ml={2} color="#f5f5f5">
+                      {CHAINS[CHAIN_NAME].name}
+                    </Label>
+                    <Image
+                      src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon}
+                      ml={2}
+                      width={11}
+                    />
+                  </DropDownHeader>
+                  {isOpenNetworkDropDown && (
+                    <DropDownItemContainer>
+                      {Object.keys(chains).map(key => (
+                        <DropDownItem
+                          onClick={() => {
+                            window.open(chains[key].dashboardUrl, '_self');
+                          }}
+                        >
+                          <Flex width={1 / 5}>
+                            <Image src={chains[key].icon} width={16} />
+                          </Flex>
+                          <Flex width={4 / 5}>
+                            <Label ml={2} color="#f5f5f5">
+                              {chains[key].name}
+                            </Label>
+                          </Flex>
+                        </DropDownItem>
+                      ))}
+                    </DropDownItemContainer>
+                  )}
+                </Box>
+              </li>
+
+              <li>
+                <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWalletDropDown(false)}>
                   <Label color="#f5f5f5">{`${balance} ${DEFAULT_BALANCE_ASSET}`}</Label>
                   <Box
                     ml={2}
                     sx={{ position: 'relative' }}
                     tabIndex="0"
-                    onBlur={() => setIsOpenWallet(false)}
+                    onBlur={() => setIsOpenWalletDropDown(false)}
                   >
-                    <WalletHeader
-                      onClick={() => setIsOpenWallet(!isOpenWallet)}
-                      isClicked={isOpenWallet}
+                    <DropDownHeader
+                      onClick={() => setIsOpenWalletDropDown(!isOpenWalletDropDown)}
+                      isClicked={isOpenWalletDropDown}
                     >
                       <Label color="#f5f5f5">{ellipsedAddress}</Label>
-                      <Image src={isOpenWallet ? upArrowIcon : downArrowIcon} ml={2} width={11} />
-                    </WalletHeader>
-                    {isOpenWallet && (
-                      <WalletItemContainer>
-                        <WalletItem onClick={() => onboard.walletSelect()}>
+                      <Image
+                        src={isOpenWalletDropDown ? upArrowIcon : downArrowIcon}
+                        ml={2}
+                        width={11}
+                      />
+                    </DropDownHeader>
+                    {isOpenWalletDropDown && (
+                      <DropDownItemContainer>
+                        <DropDownItem onClick={() => onboard.walletSelect()}>
                           Change Wallet
-                        </WalletItem>
-                        <WalletItem
+                        </DropDownItem>
+                        <DropDownItem
                           onClick={() => {
-                            setIsOpenWallet(false);
+                            setIsOpenWalletDropDown(false);
                             onboard.walletReset();
                           }}
                         >
                           Disconnect
-                        </WalletItem>
-                      </WalletItemContainer>
+                        </DropDownItem>
+                      </DropDownItemContainer>
                     )}
                   </Box>
                 </BallanceContainer>

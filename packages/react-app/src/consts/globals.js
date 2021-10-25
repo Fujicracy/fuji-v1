@@ -1,4 +1,6 @@
 import { generateMedia } from 'styled-media-query';
+import { ftmIcon, maticIcon, ethIcons } from 'assets/images';
+import { capitalizeFirstLetter } from 'helpers/Utils';
 
 export const BREAKPOINT_NAMES = {
   MOBILE: 'mobile',
@@ -45,6 +47,30 @@ const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
 const CHAIN_NAMES = {
   ETHEREUM: 'ethereum',
   FANTOM: 'fantom',
+  POLYGON: 'polygon',
+};
+
+const CHAINS = {
+  [CHAIN_NAMES.ETHEREUM]: {
+    id: CHAIN_NAMES.ETHEREUM,
+    name: capitalizeFirstLetter(CHAIN_NAMES.ETHEREUM),
+    icon: ethIcons.BLUE.toString(),
+    isDeployed: true,
+    dashboardUrl: 'https://app.fujidao.org/#/dashboard',
+  },
+  [CHAIN_NAMES.FANTOM]: {
+    id: CHAIN_NAMES.FANTOM,
+    name: capitalizeFirstLetter(CHAIN_NAMES.FANTOM),
+    icon: ftmIcon.toString(),
+    isDeployed: true,
+    dashboardUrl: 'https://fantom.fujidao.org/#/dashboard',
+  },
+  [CHAIN_NAMES.POLYGON]: {
+    id: CHAIN_NAMES.POLYGON,
+    name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
+    icon: maticIcon.toString(),
+    isDeployed: false,
+  },
 };
 
 const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.ETHEREUM;
@@ -63,6 +89,7 @@ export {
   CHAIN_ID,
   CHAIN_NAME,
   CHAIN_NAMES,
+  CHAINS,
   NETWORK,
   APP_URL,
   LANDING_URL,
