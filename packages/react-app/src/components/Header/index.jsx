@@ -224,6 +224,7 @@ function Header({ contracts, provider, address, onboard }) {
                     onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
                     isClicked={isOpenNetworkDropDown}
                     hasBorder
+                    width="160px"
                   >
                     <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
                     <Label ml={2} color="#f5f5f5">
@@ -236,21 +237,17 @@ function Header({ contracts, provider, address, onboard }) {
                     />
                   </DropDownHeader>
                   {isOpenNetworkDropDown && (
-                    <DropDownItemContainer>
+                    <DropDownItemContainer width="128px">
                       {Object.keys(chains).map(key => (
                         <DropDownItem
                           onClick={() => {
                             window.open(chains[key].dashboardUrl, '_self');
                           }}
                         >
-                          <Flex width={1 / 5}>
-                            <Image src={chains[key].icon} width={16} />
-                          </Flex>
-                          <Flex width={4 / 5}>
-                            <Label ml={2} color="#f5f5f5">
-                              {chains[key].name}
-                            </Label>
-                          </Flex>
+                          <Image src={chains[key].icon} width={16} />
+                          <Label color="#f5f5f5" ml="8px">
+                            {chains[key].name}
+                          </Label>
                         </DropDownItem>
                       ))}
                     </DropDownItemContainer>
