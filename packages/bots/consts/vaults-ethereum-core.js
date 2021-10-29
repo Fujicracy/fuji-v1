@@ -6,7 +6,6 @@ const VAULTS = {
     borrowAsset: ASSETS[ASSET_NAME.DAI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHDAI',
-    title: 'ETH-DAI',
     deployBlockNumber: 12386446,
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
@@ -19,7 +18,6 @@ const VAULTS = {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDC',
-    title: 'ETH-USDC',
     deployBlockNumber: 12418746,
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
@@ -32,7 +30,6 @@ const VAULTS = {
     borrowAsset: ASSETS[ASSET_NAME.USDT],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDT',
-    title: 'ETH-USDT',
     deployBlockNumber: 12694137,
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
@@ -42,4 +39,4 @@ const VAULTS = {
   },
 };
 
-export { VAULTS_ADDRESS, VAULTS };
+export { VAULTS };

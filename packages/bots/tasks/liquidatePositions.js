@@ -1,7 +1,7 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { ASSETS, VAULTS_ADDRESS } from './consts/index.js';
+import { ASSETS, VAULTS } from '../consts/index.js';
 import {
   loadContracts,
   getSigner,
@@ -13,11 +13,9 @@ import {
   pushNew,
   buildPositions,
   logStatus,
-} from './utils/index.js';
+} from '../utils/index.js';
 
 const { utils } = ethers;
-
-const signer = getSigner();
 
 const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   let totalDebt = BigNumber.from(0);
@@ -86,7 +84,7 @@ const liquidateAll = async (toLiq, vault, decimals, contracts, signer) => {
   }
 };
 
-const getAllBorrowers = async (vault, currentBlock) => {
+const getAllBorrowers = async (vault, startBlock, currentBlock) => {
   console.log('---> find borrowers');
 
   let borrowers;
@@ -98,35 +96,36 @@ const getAllBorrowers = async (vault, currentBlock) => {
 
     if (!borrowers) {
       console.log('---> no cached borrowers');
-      borrowers = await getBorrowers(vault, currentBlock);
+      borrowers = await getBorrowers(vault, startBlock, currentBlock);
       await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     } else {
       borrowers = JSON.parse(borrowers);
       console.log('---> cached borrowers, fetch only new');
-      const newBorrowers = await getBorrowers(vault, currentBlock, 10);
+      const newBorrowers = await getBorrowers(vault, startBlock, currentBlock, 10);
       borrowers = pushNew(newBorrowers, borrowers);
 
       await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     }
   } else {
     console.log('---> not using redis');
-    borrowers = await getBorrowers(vault, currentBlock);
+    borrowers = await getBorrowers(vault, startBlock, currentBlock);
   }
   return borrowers;
 };
 
-const checkForLiquidations = async (signer, contracts) => {
-  const vaultsList = Object.keys(VAULTS_ADDRESS);
-  for (let v = 0; v < vaultsList.length; v++) {
-    const vaultName = vaultsList[v];
+const checkForLiquidations = async (contracts, signer, networkName, deployment) => {
+  const vaults = Object.values(VAULTS[networkName][deployment].VAULTS);
+  for (let v = 0; v < vaults.length; v++) {
+    const vaultName = vaults[v].name;
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
     const { borrowAsset } = await vault.vAssets();
     const decimals = Object.values(ASSETS).find(a => a.address === borrowAsset).decimals;
 
+    const startBlock = await vaults[v].deployBlockNumber;
     const currentBlock = await signer.provider.getBlockNumber();
-    const borrowers = await getAllBorrowers(vault, currentBlock);
+    const borrowers = await getAllBorrowers(vault, startBlock, currentBlock);
     const [toLiq, stats] = await buildPositions(borrowers, vault, decimals, contracts.FujiERC1155);
 
     logStatus(toLiq, stats, decimals);
@@ -143,9 +142,10 @@ const delay = s => {
   return new Promise(r => setTimeout(r, s * 1000));
 };
 
-const main = async () => {
-  console.log('Start checking for liquidations...');
-  const config = configs[networkName];
+const liquidatePositions = async (config, deployment) => {
+  console.log(
+    `Start checking for liquidations in ${config.networkName} NETWORK for ${deployment} deployment...`,
+  );
   const signer = getSigner(config);
 
   const contracts = await loadContracts(signer.provider, config.chainId, deployment);
@@ -155,7 +155,7 @@ const main = async () => {
     try {
       await retry(
         async () => {
-          await checkForLiquidations(signer, contracts);
+          await checkForLiquidations(contracts, signer, config.networkName, deployment);
         },
         {
           retries: process.env.RETRIES_COUNT || 2, // default 2 retries
@@ -174,4 +174,4 @@ const main = async () => {
   }
 };
 
-main();
+export { liquidatePositions };

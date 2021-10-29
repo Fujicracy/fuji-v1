@@ -28,4 +28,4 @@ const VAULTS = {
   },
 };
 
-export { VAULTS_ADDRESS, VAULTS };
+export { VAULTS };

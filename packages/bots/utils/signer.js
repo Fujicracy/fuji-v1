@@ -4,7 +4,7 @@ import {
   DefenderRelaySigner,
 } from 'defender-relay-client/lib/ethers/index.js';
 
-const getProvider = (config) => {
+const getProvider = config => {
   if (config.infuraId) {
     const url = `https://${config.networkName}.infura.io/v3/${config.infuraId}`;
     return new ethers.providers.JsonRpcProvider(url);
@@ -13,14 +13,14 @@ const getProvider = (config) => {
   return new ethers.providers.JsonRpcProvider(config.providerUrl);
 };
 
-export const getSigner = (config) => {
+export const getSigner = config => {
   if (config.relayerApiKey && config.relayerApiSecret) {
     // use Open Zeppelin relayer in production
     // to avoid storing private keys
     // https://docs.openzeppelin.com/defender/relay
     const credentials = {
       apiKey: config.relayerApiKey,
-      apiSecret: config.relayerApiSecret
+      apiSecret: config.relayerApiSecret,
     };
     const provider = new DefenderRelayProvider(credentials);
 

@@ -1,14 +1,8 @@
 import { ethers, BigNumber } from 'ethers';
-import { VAULTS } from '../consts/index.js';
-import { getSigner } from './signer.js';
 
 const { formatEther, formatUnits, parseUnits } = ethers.utils;
 
-const signer = getSigner();
-
-const getBorrowers = async (vault, currentBlock, searchLength) => {
-
-  const startBlock = VAULTS[vault.address.toLowerCase()].deployBlockNumber;
+const getBorrowers = async (vault, startBlock, currentBlock, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
   const events = await vault.queryFilter(
     filterBorrowers,
