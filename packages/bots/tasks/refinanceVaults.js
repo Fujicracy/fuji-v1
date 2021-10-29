@@ -1,14 +1,15 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { VAULTS, PROVIDERS } from './consts/index.js';
-import { loadContracts, getSigner, getFlashloanProvider } from './utils/index.js';
-import configs from './config.json';
+import { VAULTS, PROVIDERS } from '../consts/index.js';
+import { loadContracts, getSigner, getFlashloanProvider } from '../utils/index.js';
 
 const { utils } = ethers;
 
-function getProviderName(providerAddr) {
-  const provider = Object.values(PROVIDERS).find(p => p.address === providerAddr.toLowerCase());
+function getProviderName(contracts, addr) {
+  const provider = Object.values(PROVIDERS).find(
+    p => contracts[p.name].address.toLowerCase() === addr.toLowerCase(),
+  );
   return provider.name;
 }
 
@@ -45,7 +46,7 @@ async function shouldChange(currentRate, currentBlock, newRate, lastSwitch) {
 
   const timeCheck = !lastSwitch
     ? true // first switch
-    : // check if last switch was at least 1h ago
+    : // check if last switch was at least 2h ago
       currentBlock - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
 
   return currentRate.sub(newRate).gte(APR_THRESHOLD) && timeCheck;
@@ -57,7 +58,7 @@ async function checkRates(contracts, signer, vault) {
   const borrowAsset = vault.borrowAsset;
 
   const activeProviderAddr = await vaultContract.activeProvider();
-  const activeProviderName = getProviderName(activeProviderAddr);
+  const activeProviderName = getProviderName(contracts, activeProviderAddr);
 
   const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset.address);
 
@@ -71,7 +72,7 @@ async function checkRates(contracts, signer, vault) {
     // determine provider with best rate
     if (rate.lt(bestRate)) {
       bestRate = rate;
-      bestProviderAddr = providers[i].address;
+      bestProviderAddr = contracts[providers[i].name].address;
     }
   }
 
@@ -83,7 +84,7 @@ async function checkRates(contracts, signer, vault) {
   const toChange = await shouldChange(currentRate, currentBlock, bestRate, lastSwitch);
 
   if (toChange) {
-    console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
+    console.log(`-> proceed to swtich activeProvider of ${vault.name}`);
 
     const res = await switchProviders(contracts, signer, vaultContract, bestProviderAddr);
 
@@ -91,7 +92,7 @@ async function checkRates(contracts, signer, vault) {
       console.log(`TX submited: ${res.hash}`);
       const receipt = await res.wait();
       if (receipt && receipt.events && receipt.events.find(e => e.event === 'Switch')) {
-        console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`));
+        console.log(chalk.blue(`---> successfully switched provider of ${vault.name}`));
       }
     }
   } else {
@@ -99,9 +100,9 @@ async function checkRates(contracts, signer, vault) {
   }
 }
 
-async function checkForRefinance(contracts, signer, config, deployment) {
-  const vaults = Object.values(VAULTS[config.networkName][deployment])
-  for (let v = 0; v < vaults.length; v++) {
+async function checkForRefinance(contracts, signer, networkName, deployment) {
+  const vaults = Object.values(VAULTS[networkName][deployment].VAULTS);
+  for (let i = 0; i < vaults.length; i++) {
     await checkRates(contracts, signer, vaults[i]);
   }
 }
@@ -110,10 +111,10 @@ function delay(s) {
   return new Promise(r => setTimeout(r, s * 1000));
 }
 
-async function main() {
-  console.log('Start checking for refinancing...');
-  // TODO argv networkName and deployment
-  const config = configs[networkName];
+async function refinanceVaults(config, deployment) {
+  console.log(
+    `Start checking for refinancing in ${config.networkName} NETWORK for ${deployment} deployment...`,
+  );
   const signer = getSigner(config);
 
   const contracts = await loadContracts(signer.provider, config.chainId, deployment);
@@ -123,7 +124,7 @@ async function main() {
     try {
       await retry(
         async () => {
-          await checkForRefinance(contracts, signer, config, deployment);
+          await checkForRefinance(contracts, signer, config.networkName, deployment);
         },
         {
           retries: process.env.RETRIES_COUNT || 2, // default 2 retries
@@ -142,4 +143,4 @@ async function main() {
   }
 }
 
-main();
+export { refinanceVaults };

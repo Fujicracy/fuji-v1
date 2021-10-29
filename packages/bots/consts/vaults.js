@@ -1,11 +1,11 @@
-import * as mainnetCore from './vaults-mainnet-core.js';
-import * as mainnetFuse from './vaults-mainnet-fuse.js';
+import * as ethereumCore from './vaults-ethereum-core.js';
+import * as ethereumFuse from './vaults-ethereum-fuse.js';
 
-export { 
-  VAULTS: {
-    mainnet: {
-      core: mainnetCore,
-      fuse: mainnetFuse
-    }
-  }
+const VAULTS = {
+  ethereum: {
+    core: ethereumCore,
+    fuse: ethereumFuse,
+  },
 };
+
+export { VAULTS };
