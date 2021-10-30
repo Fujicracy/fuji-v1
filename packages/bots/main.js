@@ -4,7 +4,7 @@ import { hideBin } from 'yargs/helpers';
 
 import { refinanceVaults, liquidatePositions, saveBorrowers, saveRepayers } from './tasks/index.js';
 
-const configs = JSON.parse(fs.readFileSync('./config.json'));
+const configs = JSON.parse(fs.readFileSync('./.config.json'));
 
 yargs(hideBin(process.argv))
   .usage('Usage: $0 COMMAND --network [networkName] --deployment [deployment]')
