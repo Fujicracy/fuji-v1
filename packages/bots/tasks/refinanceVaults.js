@@ -13,7 +13,7 @@ function getProviderName(contracts, addr) {
   return provider.name;
 }
 
-async function switchProviders(contracts, signer, vault, newProviderAddr) {
+async function executeSwitch(contracts, signer, vault, newProviderAddr) {
   const index = await getFlashloanProvider(vault);
   let gasLimit = await contracts.Controller.connect(signer).estimateGas.doRefinancing(
     vault.address,
@@ -35,21 +35,41 @@ async function switchProviders(contracts, signer, vault, newProviderAddr) {
   );
 }
 
-async function shouldChange(currentRate, currentBlock, newRate, lastSwitch) {
+function shouldSwitch(vault, rates, blocks) {
+
+  const { thresholdAPR, hoursSinceLast } = vault.refinanceConfig;
+
   // current provider is still the best
-  if (!newRate) {
+  if (rates.best.eq(rates.current)) {
     return false;
   }
-  const BLOCKS_IN_HOUR = 269; // approx.
-  // change when difference in APRs is more than 4%
-  const APR_THRESHOLD = utils.parseUnits('4', 25);
+  // difference in APRs
+  const thresholdBN = utils.parseUnits(thresholdAPR.toString(), 25);
+  const isGreater = rates.current.sub(rates.best).gte(thresholdBN);
 
-  const timeCheck = !lastSwitch
-    ? true // first switch
-    : // check if last switch was at least 2h ago
-      currentBlock - lastSwitch.blockNumber > BLOCKS_IN_HOUR;
+  // approx. blocks in hour
+  const BLOCKS_IN_HOUR = 269;
 
-  return currentRate.sub(newRate).gte(APR_THRESHOLD) && timeCheck;
+  if (isGreater) {
+    // is first switch or
+    // if last switch meets hoursSinceLast criteria
+    return !blocks.last || blocks.current - blocks.last > BLOCKS_IN_HOUR * hoursSinceLast;
+  }
+  return false;
+}
+
+async function switchProviders(contracts, signer, vault, vaultContract, bestProviderAddr) {
+  console.log(`-> proceed to swtich activeProvider of ${vault.name}`);
+
+  const res = await executeSwitch(contracts, signer, vaultContract, bestProviderAddr);
+
+  if (res && res.hash) {
+    console.log(`TX submited: ${res.hash}`);
+    const receipt = await res.wait();
+    if (receipt && receipt.events && receipt.events.find(e => e.event === 'Switch')) {
+      console.log(chalk.blue(`---> successfully switched provider of ${vault.name}`));
+    }
+  }
 }
 
 async function checkRates(contracts, signer, vault) {
@@ -61,17 +81,20 @@ async function checkRates(contracts, signer, vault) {
   const activeProviderName = getProviderName(contracts, activeProviderAddr);
 
   const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset.address);
+  const rates = {
+    best: currentRate,
+    current: currentRate
+  };
 
   const providers = vault.providers;
 
-  let bestRate = currentRate;
   let bestProviderAddr;
   for (let i = 0; i < providers.length; i++) {
     const rate = await contracts[providers[i].name].getBorrowRateFor(borrowAsset.address);
 
     // determine provider with best rate
-    if (rate.lt(bestRate)) {
-      bestRate = rate;
+    if (rate.lt(rates.best)) {
+      rates.best = rate;
       bestProviderAddr = contracts[providers[i].name].address;
     }
   }
@@ -80,21 +103,14 @@ async function checkRates(contracts, signer, vault) {
   // Filter all Switch events
   const events = await vaultContract.queryFilter(filterSwitches);
   const lastSwitch = events[events.length - 1];
-  const currentBlock = await signer.provider.getBlockNumber();
-  const toChange = await shouldChange(currentRate, currentBlock, bestRate, lastSwitch);
+  const blocks = {
+    last: lastSwitch ? lastSwitch.blockNumber : null,
+    current: await signer.provider.getBlockNumber(),
+  };
+  const toChange = shouldSwitch(vault, rates, blocks);
 
   if (toChange) {
-    console.log(`-> proceed to swtich activeProvider of ${vault.name}`);
-
-    const res = await switchProviders(contracts, signer, vaultContract, bestProviderAddr);
-
-    if (res && res.hash) {
-      console.log(`TX submited: ${res.hash}`);
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Switch')) {
-        console.log(chalk.blue(`---> successfully switched provider of ${vault.name}`));
-      }
-    }
+    await switchProviders(contracts, signer, vault, vaultContract, bestProviderAddr);
   } else {
     console.log(chalk.cyan('-> not due for refinance'));
   }

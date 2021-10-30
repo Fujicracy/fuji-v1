@@ -7,6 +7,10 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHDAI',
     deployBlockNumber: 12386446,
+    refinanceConfig: {
+      thresholdAPR: 1.5,
+      hoursSinceLast: 4,
+    },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
@@ -19,6 +23,10 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDC',
     deployBlockNumber: 12418746,
+    refinanceConfig: {
+      thresholdAPR: 1.5,
+      hoursSinceLast: 4,
+    },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
@@ -31,6 +39,10 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     name: 'VaultETHUSDT',
     deployBlockNumber: 12694137,
+    refinanceConfig: {
+      thresholdAPR: 2,
+      hoursSinceLast: 4,
+    },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
