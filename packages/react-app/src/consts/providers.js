@@ -12,6 +12,7 @@ const PROVIDER_TYPE = {
   FUSE18: 'FusePool18',
   SCREAM: 'Scream',
   CREAM: 'Cream',
+  GEIST: 'Geist',
 };
 
 const PROVIDERS = {
@@ -79,8 +80,14 @@ const PROVIDERS = {
   [PROVIDER_TYPE.CREAM]: {
     id: 'cream',
     name: 'ProviderCream',
-    title: 'Cream',
+    title: 'IronBank',
     address: getContractAddress('ProviderCream'),
+  },
+  [PROVIDER_TYPE.GEIST]: {
+    id: 'geist',
+    name: 'ProviderGeist',
+    title: 'Geist',
+    address: getContractAddress('ProviderGeist'),
   },
 };
 

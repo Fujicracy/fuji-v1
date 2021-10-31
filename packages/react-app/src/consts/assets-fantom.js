@@ -1,9 +1,10 @@
-import { daiIcon, usdcIcon, ftmIcon } from 'assets/images';
+import { daiIcon, usdcIcon, ftmIcon, btcIcon } from 'assets/images';
 
 export const ASSET_NAME = {
   DAI: 'DAI',
   USDC: 'USDC',
   FTM: 'FTM',
+  BTC: 'BTC',
 };
 
 export const ASSETS = {
@@ -32,5 +33,14 @@ export const ASSETS = {
     decimals: 18,
     address: '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF',
     oracle: '0xf4766552D15AE4d256Ad41B6cf2933482B0680dc',
+  },
+  [ASSET_NAME.BTC]: {
+    id: ASSET_NAME.BTC.toLowerCase(),
+    name: ASSET_NAME.BTC,
+    icon: btcIcon.toString(),
+    decimals: 8,
+    address: '0x321162Cd933E2Be498Cd2267a90534A804051b11',
+    oracle: '0x8e94C22142F4A64b99022ccDd994f4e9EC86E4B4',
+    isERC20: true,
   },
 };
