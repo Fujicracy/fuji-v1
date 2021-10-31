@@ -1,7 +1,6 @@
 /* eslint-disable import/no-dynamic-require */
-import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
 
-const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+const contractsData = require(`../contracts/250-core.deployment.json`);
 
 export function getContractAddress(name) {
   let address = '0x';
