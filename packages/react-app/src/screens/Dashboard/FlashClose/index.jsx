@@ -12,7 +12,15 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { VAULTS, ASSET_NAME, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import {
+  VAULTS,
+  ASSET_NAME,
+  PROVIDERS,
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  CHAIN_NAMES,
+  CHAIN_NAME,
+} from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
 import { SectionTitle } from '../../../components/Blocks';
@@ -57,19 +65,18 @@ function FlashClose({ position, contracts, provider }) {
   const onFlashClose = async () => {
     setLoading(true);
     const providerIndex = await getLiquidationProviderIndex(vault, contracts);
+    const fliquidator =
+      CHAIN_NAME === CHAIN_NAMES.ETHEREUM ? contracts.Fliquidator : contracts.FliquidatorFTM;
 
-    const gasLimit = await GasEstimator(contracts.Fliquidator, 'flashClose', [
+    const gasLimit = await GasEstimator(fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
       position.vaultAddress,
       providerIndex,
     ]);
     const res = await tx(
-      contracts.Fliquidator.flashClose(
-        parseUnits(amount, decimals),
-        position.vaultAddress,
-        providerIndex,
-        { gasLimit },
-      ),
+      fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
+        gasLimit,
+      }),
     );
 
     if (res && res.hash) {
