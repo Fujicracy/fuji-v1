@@ -8,7 +8,7 @@ import Notify from 'bnc-notify';
 
 const BLOCKNATIVE_KEY = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
-export default function Transactor(provider, etherscan) {
+export default function Transactor(provider) {
   if (typeof provider !== 'undefined') {
     // eslint-disable-next-line consistent-return
     return async tx => {
@@ -26,14 +26,9 @@ export default function Transactor(provider, etherscan) {
       };
       const notify = Notify(options);
 
-      let etherscanNetwork = '';
-      if (network.name && network.chainId > 1) {
-        etherscanNetwork = network.name + '.';
-      }
-
-      let etherscanTxUrl = 'https://' + etherscanNetwork + 'etherscan.io/tx/';
-      if (network.chainId === 100) {
-        etherscanTxUrl = 'https://blockscout.com/poa/xdai/tx/';
+      let etherscanTxUrl = 'https://etherscan.io/tx/';
+      if (network.chainId === 250) {
+        etherscanTxUrl = 'https://ftmscan.com/tx/';
       }
 
       let dismissPendingWallet;
@@ -63,13 +58,17 @@ export default function Transactor(provider, etherscan) {
           const { emitter } = notify.hash(result.hash);
           emitter.on('all', transaction => {
             return {
-              link: (etherscan || etherscanTxUrl) + transaction.hash,
+              link: `${etherscanTxUrl}${transaction.hash}`,
+              autoDismiss: 10000,
             };
           });
         } else {
+          const txHash = result.hash;
           notify.notification({
             type: 'success',
-            message: `Local Transaction Sent: ${result.hash}`,
+            message: `Transaction submitted:\n${txHash.slice(0, 8)}...${txHash.slice(-8)}`,
+            onclick: () => window.open(`${etherscanTxUrl}${txHash}`, '_blank'),
+            autoDismiss: 10000,
           });
         }
 
@@ -79,12 +78,15 @@ export default function Transactor(provider, etherscan) {
         dismissPendingWallet();
 
         let msg = e.message;
-        if (e.message.startsWith('cannot estimate gas')) {
+        if (e.data && e.data.message) {
+          msg = e.data.message;
+        } else if (e.message.startsWith('cannot estimate gas')) {
           msg = 'Insufficient ETH balance to pay for gas!';
         }
         notify.notification({
           type: 'error',
           message: `Transaction error: ${msg}`,
+          autoDismiss: 10000,
         });
       }
     };
