@@ -286,7 +286,7 @@ function CollateralForm({ position, contracts, provider, address }) {
         return (
           <DialogActions>
             <Button onClick={() => approve(false)} className="main-button">
-              Approve {Number(amount).toFixed(2)} {collateralAsset.name}
+              Approve {Number(amount).toFixed(0)} {collateralAsset.name}
             </Button>
             <Button onClick={() => approve(true)} className="main-button">
               Infinite Approve
@@ -297,7 +297,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       },
     },
     success: {
-      title: 'Transactor successful',
+      title: 'Transaction successful',
       content: (
         <DialogContentText>
           You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount}{' '}

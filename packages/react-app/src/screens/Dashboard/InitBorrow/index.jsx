@@ -283,10 +283,6 @@ function InitBorrow({ contracts, provider, address }) {
     await borrow(false);
   };
 
-  // const handleChangeMarket = option => {
-  //   setMarket(option);
-  // };
-
   const handleChangeVault = v => {
     setNeededCollateral(null);
 
@@ -323,8 +319,7 @@ function InitBorrow({ contracts, provider, address }) {
   const dialogContents = {
     success: {
       title: 'Success',
-      content:
-        'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
+      content: 'Your transaction has been processed, you can check now your position.',
       actions: () => (
         <DialogActions>
           <Button component={Link} to="/dashboard/my-positions" className="main-button">
@@ -339,7 +334,7 @@ function InitBorrow({ contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(collateralAmount).toFixed(2)} {collateralAsset}
+            Approve {Number(collateralAmount).toFixed(0)} {collateralAsset}
           </Button>
           <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
