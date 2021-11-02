@@ -81,12 +81,13 @@ export default function Transactor(provider) {
         if (e.data && e.data.message) {
           msg = e.data.message;
         } else if (e.message.startsWith('cannot estimate gas')) {
-          msg = 'Insufficient ETH balance to pay for gas!';
+          msg = 'Transaction cannot be executed!';
         }
         notify.notification({
           type: 'error',
-          message: `Transaction error: ${msg}`,
+          message: `${msg}\nClick here to report this issue!`,
           autoDismiss: 10000,
+          onclick: () => window.open('https://discord.gg/YbUX2vn7Vn', '_blank'),
         });
       }
     };
