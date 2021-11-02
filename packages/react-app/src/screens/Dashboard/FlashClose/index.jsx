@@ -12,29 +12,52 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { VAULTS, ASSET_NAME, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import {
+  VAULTS,
+  ASSET_NAME,
+  PROVIDER_TYPE,
+  PROVIDERS,
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  CHAIN_NAMES,
+  CHAIN_NAME,
+} from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
 import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
 
-async function getLiquidationProviderIndex(vault, contracts) {
-  const providerIndex = {
-    aave: '0',
-    dydx: '1',
-    cream: '2',
-  };
-  const activeProvider = await contracts[vault.name].activeProvider();
-  const dydxProviderAddr = PROVIDERS.DYDX.address;
+const providerIndexes = {
+  AAVE: '0', // on fantom it's Geist
+  DYDX: '1',
+  CREAM: '2',
+};
 
-  if (
-    [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
-    activeProvider !== dydxProviderAddr
-  ) {
-    return providerIndex.dydx;
+async function getProviderIndex(vault, contracts) {
+  const activeProvider = await contracts[vault.name].activeProvider();
+
+  const ibankAddr = PROVIDERS[PROVIDER_TYPE.IRONBANK].address;
+  const creamAddr = PROVIDERS[PROVIDER_TYPE.CREAM].address;
+  const dydxAddr = PROVIDERS[PROVIDER_TYPE.DYDX].address;
+
+  let index = providerIndexes.AAVE;
+
+  if (CHAIN_NAME === CHAIN_NAMES.ETHEREUM) {
+    if (
+      [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
+      activeProvider.toLowerCase() !== dydxAddr
+    ) {
+      index = providerIndexes.DYDX;
+    } else if (activeProvider.toLowerCase() !== ibankAddr) {
+      index = providerIndexes.CREAM;
+    }
+  } else if (CHAIN_NAME === CHAIN_NAMES.FANTOM) {
+    index =
+      activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
   }
-  return providerIndex.cream;
+
+  return index;
 }
 
 function FlashClose({ position, contracts, provider }) {
@@ -56,20 +79,19 @@ function FlashClose({ position, contracts, provider }) {
   const decimals = vault.borrowAsset.decimals;
   const onFlashClose = async () => {
     setLoading(true);
-    const providerIndex = await getLiquidationProviderIndex(vault, contracts);
+    const providerIndex = await getProviderIndex(vault, contracts);
+    const fliquidator =
+      CHAIN_NAME === CHAIN_NAMES.ETHEREUM ? contracts.Fliquidator : contracts.FliquidatorFTM;
 
-    const gasLimit = await GasEstimator(contracts.Fliquidator, 'flashClose', [
+    const gasLimit = await GasEstimator(fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
       position.vaultAddress,
       providerIndex,
     ]);
     const res = await tx(
-      contracts.Fliquidator.flashClose(
-        parseUnits(amount, decimals),
-        position.vaultAddress,
-        providerIndex,
-        { gasLimit },
-      ),
+      fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
+        gasLimit,
+      }),
     );
 
     if (res && res.hash) {

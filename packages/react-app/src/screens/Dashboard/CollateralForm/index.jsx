@@ -21,7 +21,7 @@ import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -193,7 +193,7 @@ function CollateralForm({ position, contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    if (!vault.collateralAsset.isERC20) {
+    if (!vault.collateralAsset.isERC20 && vault.collateralAsset.name === ASSET_NAME.ETH) {
       const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
       if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
         setDialog({ step: 'capCollateral' });

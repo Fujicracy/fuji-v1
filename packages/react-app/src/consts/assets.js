@@ -1,56 +1,12 @@
-import { daiIcon, usdcIcon, usdtIcon, feiIcon, ethIcons } from 'assets/images';
+import { CHAIN_NAME, CHAIN_NAMES } from 'consts/globals';
+import * as core from './assets-core';
+import * as fantom from './assets-fantom';
 
-export const ASSET_NAME = {
-  DAI: 'DAI',
-  USDC: 'USDC',
-  USDT: 'USDT',
-  ETH: 'ETH',
-  BTC: 'BTC',
-  FEI: 'FEI',
-};
+const ASSET_NAME = CHAIN_NAME === CHAIN_NAMES.FANTOM ? fantom.ASSET_NAME : core.ASSET_NAME;
 
-export const ASSETS = {
-  [ASSET_NAME.DAI]: {
-    id: ASSET_NAME.DAI.toLowerCase(),
-    name: ASSET_NAME.DAI,
-    icon: daiIcon.toString(),
-    decimals: 18,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    oracle: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
-    isERC20: true,
-  },
-  [ASSET_NAME.USDC]: {
-    id: ASSET_NAME.USDC.toLowerCase(),
-    name: ASSET_NAME.USDC,
-    icon: usdcIcon.toString(),
-    decimals: 6,
-    address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    oracle: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6',
-    isERC20: true,
-  },
-  [ASSET_NAME.USDT]: {
-    id: ASSET_NAME.USDT.toLowerCase(),
-    name: ASSET_NAME.USDT,
-    icon: usdtIcon.toString(),
-    decimals: 6,
-    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    oracle: '0x3E7d1eAB13ad0104d2750B8863b489D65364e32D',
-    isERC20: true,
-  },
-  [ASSET_NAME.ETH]: {
-    id: ASSET_NAME.ETH.toLowerCase(),
-    name: ASSET_NAME.ETH,
-    icon: ethIcons.BLUE.toString(),
-    decimals: 18,
-    address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-    oracle: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-  },
-  [ASSET_NAME.FEI]: {
-    id: ASSET_NAME.FEI.toLowerCase(),
-    name: ASSET_NAME.FEI,
-    icon: feiIcon.toString(),
-    decimals: 18,
-    address: '0x956F47F50A910163D8BF957Cf5846D573E7f87CA',
-    oracle: '0x31e0a88fecB6eC0a411DBe0e9E76391498296EE9',
-  },
-};
+const ASSETS = CHAIN_NAME === CHAIN_NAMES.FANTOM ? fantom.ASSETS : core.ASSETS;
+
+const DEFAULT_BALANCE_ASSET =
+  CHAIN_NAME === CHAIN_NAMES.FANTOM ? fantom.ASSET_NAME.FTM : core.ASSET_NAME.ETH;
+
+export { ASSETS, ASSET_NAME, DEFAULT_BALANCE_ASSET };
