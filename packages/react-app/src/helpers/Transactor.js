@@ -26,9 +26,11 @@ export default function Transactor(provider) {
       };
       const notify = Notify(options);
 
-      let etherscanTxUrl = 'https://etherscan.io/tx/';
+      let explorerUrl = 'https://etherscan.io/tx/';
+      let explorerName = 'Etherscan';
       if (network.chainId === 250) {
-        etherscanTxUrl = 'https://ftmscan.com/tx/';
+        explorerUrl = 'https://ftmscan.com/tx/';
+        explorerName = 'Ftmscan';
       }
 
       let dismissPendingWallet;
@@ -58,7 +60,7 @@ export default function Transactor(provider) {
           const { emitter } = notify.hash(result.hash);
           emitter.on('all', transaction => {
             return {
-              link: `${etherscanTxUrl}${transaction.hash}`,
+              link: `${explorerUrl}${transaction.hash}`,
               autoDismiss: 10000,
             };
           });
@@ -66,8 +68,8 @@ export default function Transactor(provider) {
           const txHash = result.hash;
           notify.notification({
             type: 'success',
-            message: `Transaction submitted:\n${txHash.slice(0, 8)}...${txHash.slice(-8)}`,
-            onclick: () => window.open(`${etherscanTxUrl}${txHash}`, '_blank'),
+            message: `Transaction submitted: Click here to view on ${explorerName}!`,
+            onclick: () => window.open(`${explorerUrl}${txHash}`, '_blank'),
             autoDismiss: 10000,
           });
         }
@@ -78,17 +80,25 @@ export default function Transactor(provider) {
         dismissPendingWallet();
 
         let msg = e.message;
-        if (e.data && e.data.message) {
-          msg = e.data.message;
-        } else if (e.message.startsWith('cannot estimate gas')) {
-          msg = 'Transaction cannot be executed!';
+        if (msg === 'MetaMask Tx Signature: User denied transaction signature.') {
+          notify.notification({
+            type: 'error',
+            message: msg,
+            autoDismiss: 100000,
+          });
+        } else {
+          if (e.data && e.data.message) {
+            msg = e.data.message;
+          } else if (e.message.startsWith('cannot estimate gas')) {
+            msg = 'Transaction cannot be executed!';
+          }
+          notify.notification({
+            type: 'error',
+            message: `${msg} \n Click here to report this issue!`,
+            autoDismiss: 10000,
+            onclick: () => window.open('https://discord.gg/YbUX2vn7Vn', '_blank'),
+          });
         }
-        notify.notification({
-          type: 'error',
-          message: `${msg}\nClick here to report this issue!`,
-          autoDismiss: 10000,
-          onclick: () => window.open('https://discord.gg/YbUX2vn7Vn', '_blank'),
-        });
       }
     };
   }
