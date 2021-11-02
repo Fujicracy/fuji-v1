@@ -119,11 +119,11 @@ function FlashClose({ position, contracts, provider }) {
         <DialogTitle id="form-dialog-title">{confirmation ? 'Success' : 'Flash Close'}</DialogTitle>
         <DialogContent>
           {confirmation ? (
-            <DialogContentText>Your transaction have been processed.</DialogContentText>
+            <DialogContentText>Your transaction has been processed.</DialogContentText>
           ) : (
             <DialogContentText>
-              You are about to repay your debt position with your collateral. We are going to use a
-              flash loan for that purpose. <br />
+              You are about to repay your debt by selling part of your collateral. We are going to
+              use a flash loan for that purpose. <br />
               <br />
               <span className="bold">Fee: 1%</span>
             </DialogContentText>
