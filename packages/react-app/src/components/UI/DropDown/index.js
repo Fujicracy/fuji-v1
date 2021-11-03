@@ -22,14 +22,18 @@ const DropDown = ({ options, defaultOption, isSelectable }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultOption]);
-  const toggling = () => setIsOpen(!isOpen);
+
+  const filteredOptions = options.filter(option => option.title !== selectedOption?.title);
+
+  const toggling = () => {
+    if (filteredOptions.length > 0) setIsOpen(!isOpen);
+  };
 
   const onOptionClicked = value => () => {
     setSelectedOption(value);
     setIsOpen(false);
   };
 
-  const filteredOptions = options.filter(option => option.title !== selectedOption?.title);
   return (
     <DropDownContainer>
       <DropDownHeader isOpened={isOpen} onClick={toggling}>

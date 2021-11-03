@@ -178,7 +178,7 @@ export const BallanceContainer = styled(Box)`
   ${size}
 `;
 
-export const WalletHeader = styled(Box)`
+export const DropDownHeader = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -196,7 +196,13 @@ export const WalletHeader = styled(Box)`
     props.isClicked
       ? 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.07) 100%)'
       : 'rgba(255, 255, 255, 0.1)'};
-  border: 1px solid ${props => (props.isClicked ? themeGet('colors.primary') : 'transparent')};
+  border: 1px solid
+    ${props =>
+      props.isClicked
+        ? themeGet('colors.primary')
+        : props.hasBorder
+        ? 'rgba(255, 255, 255, 0.1)'
+        : 'transparent'};
 
   &:hover {
     background: ${props =>
@@ -209,7 +215,7 @@ export const WalletHeader = styled(Box)`
   ${size}
 `;
 
-export const WalletItemContainer = styled(Box)`
+export const DropDownItemContainer = styled(Box)`
   position: absolute;
   width: max-content;
   left: 50%;
@@ -219,7 +225,7 @@ export const WalletItemContainer = styled(Box)`
   color: #3faffa;
 `;
 
-export const WalletItem = styled(Box)`
+export const DropDownItem = styled(Box)`
   height: 28px;
   font-weight: 500;
   font-size: 12px;
@@ -236,6 +242,8 @@ export const WalletItem = styled(Box)`
   }
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
   }
   cursor: pointer;
 `;
