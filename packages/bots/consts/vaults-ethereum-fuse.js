@@ -1,10 +1,13 @@
 import { ASSETS, ASSET_NAME } from './assets.js';
 import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
 
+const assets = ASSETS.ethereum;
+const assetName = ASSET_NAME.ethereum;
+
 const VAULTS = {
   VaultETHFEI: {
-    borrowAsset: ASSETS[ASSET_NAME.FEI],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.FEI],
     name: 'VaultETHFEI',
     deployBlockNumber: 13107920,
     refinanceConfig: {
@@ -19,8 +22,8 @@ const VAULTS = {
     ],
   },
   VaultETHUSDC: {
-    borrowAsset: ASSETS[ASSET_NAME.USDC],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.USDC],
     name: 'VaultETHUSDC',
     deployBlockNumber: 13107987,
     refinanceConfig: {

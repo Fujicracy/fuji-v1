@@ -38,14 +38,16 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   return cost * 1.5 < bonus;
 };
 
-const liquidateAll = async (toLiq, vault, decimals, contracts, signer) => {
+const liquidateAll = async (setup, toLiq, vault, decimals) => {
+  const { contracts, signer } = setup;
+
   const positions = toLiq.filter(p => p.solvent);
   if (positions.length === 0) {
     console.log('---> All liquidatable positions are unsolvent.');
     return;
   }
 
-  const index = await getFlashloanProvider(vault);
+  const index = await getFlashloanProvider(setup, vault);
   const gasPrice = await getGasPrice();
   const ethPrice = await getETHPrice();
 
@@ -113,15 +115,19 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
   return borrowers;
 };
 
-const checkForLiquidations = async (contracts, signer, networkName, deployment) => {
-  const vaults = Object.values(VAULTS[networkName][deployment].VAULTS);
+const checkForLiquidations = async setup => {
+  const { contracts, signer, config, deployment } = setup;
+
+  const vaults = Object.values(VAULTS[config.networkName][deployment].VAULTS);
   for (let v = 0; v < vaults.length; v++) {
     const vaultName = vaults[v].name;
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
     const { borrowAsset } = await vault.vAssets();
-    const decimals = Object.values(ASSETS).find(a => a.address === borrowAsset).decimals;
+    const decimals = Object.values(ASSETS[config.networkName]).find(
+      a => a.address === borrowAsset,
+    ).decimals;
 
     const startBlock = await vaults[v].deployBlockNumber;
     const currentBlock = await signer.provider.getBlockNumber();
@@ -131,7 +137,7 @@ const checkForLiquidations = async (contracts, signer, networkName, deployment) 
     logStatus(toLiq, stats, decimals);
 
     if (toLiq.length > 0) {
-      await liquidateAll(toLiq, vault, decimals, contracts, signer);
+      await liquidateAll(setup, toLiq, vault, decimals);
     }
 
     console.log('\n===============\n');
@@ -149,13 +155,14 @@ const liquidatePositions = async (config, deployment) => {
   const signer = getSigner(config);
 
   const contracts = await loadContracts(signer.provider, config.chainId, deployment);
+  const setup = { config, signer, contracts, deployment };
 
   // eslint-disable-next-line
   while (true) {
     try {
       await retry(
         async () => {
-          await checkForLiquidations(contracts, signer, config.networkName, deployment);
+          await checkForLiquidations(setup);
         },
         {
           retries: process.env.RETRIES_COUNT || 2, // default 2 retries

@@ -1,10 +1,13 @@
 import { ASSETS, ASSET_NAME } from './assets.js';
 import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
 
+const assets = ASSETS.ethereum;
+const assetName = ASSET_NAME.ethereum;
+
 const VAULTS = {
   VaultETHDAI: {
-    borrowAsset: ASSETS[ASSET_NAME.DAI],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.DAI],
     name: 'VaultETHDAI',
     deployBlockNumber: 12386446,
     refinanceConfig: {
@@ -14,13 +17,12 @@ const VAULTS = {
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
   },
   VaultETHUSDC: {
-    borrowAsset: ASSETS[ASSET_NAME.USDC],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.USDC],
     name: 'VaultETHUSDC',
     deployBlockNumber: 12418746,
     refinanceConfig: {
@@ -30,13 +32,12 @@ const VAULTS = {
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
       PROVIDERS[PROVIDER_TYPE.COMPOUND],
-      PROVIDERS[PROVIDER_TYPE.DYDX],
       PROVIDERS[PROVIDER_TYPE.IRONBANK],
     ],
   },
   VaultETHUSDT: {
-    borrowAsset: ASSETS[ASSET_NAME.USDT],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.USDT],
     name: 'VaultETHUSDT',
     deployBlockNumber: 12694137,
     refinanceConfig: {
