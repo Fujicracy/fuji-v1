@@ -8,13 +8,15 @@ const { utils } = ethers;
 
 function getProviderName(contracts, addr) {
   const provider = Object.values(PROVIDERS).find(
-    p => contracts[p.name].address.toLowerCase() === addr.toLowerCase(),
+    p => contracts[p.name] && contracts[p.name].address.toLowerCase() === addr.toLowerCase(),
   );
   return provider.name;
 }
 
-async function executeSwitch(contracts, signer, vault, newProviderAddr) {
-  const index = await getFlashloanProvider(vault);
+async function executeSwitch(setup, vault, newProviderAddr) {
+  const { contracts, signer } = setup;
+
+  const index = await getFlashloanProvider(setup, vault);
   let gasLimit = await contracts.Controller.connect(signer).estimateGas.doRefinancing(
     vault.address,
     newProviderAddr,
@@ -36,7 +38,6 @@ async function executeSwitch(contracts, signer, vault, newProviderAddr) {
 }
 
 function shouldSwitch(vault, rates, blocks) {
-
   const { thresholdAPR, hoursSinceLast } = vault.refinanceConfig;
 
   // current provider is still the best
@@ -58,21 +59,23 @@ function shouldSwitch(vault, rates, blocks) {
   return false;
 }
 
-async function switchProviders(contracts, signer, vault, vaultContract, bestProviderAddr) {
-  console.log(`-> proceed to swtich activeProvider of ${vault.name}`);
+async function switchProviders(setup, vaultName, vaultContract, bestProviderAddr) {
+  console.log(`-> proceed to swtich activeProvider of ${vaultName}`);
 
-  const res = await executeSwitch(contracts, signer, vaultContract, bestProviderAddr);
+  const res = await executeSwitch(setup, vaultContract, bestProviderAddr);
 
   if (res && res.hash) {
     console.log(`TX submited: ${res.hash}`);
     const receipt = await res.wait();
     if (receipt && receipt.events && receipt.events.find(e => e.event === 'Switch')) {
-      console.log(chalk.blue(`---> successfully switched provider of ${vault.name}`));
+      console.log(chalk.blue(`---> successfully switched provider of ${vaultName}`));
     }
   }
 }
 
-async function checkRates(contracts, signer, vault) {
+async function checkRates(setup, vault) {
+  const { contracts, signer } = setup;
+
   console.log('Checking', chalk.yellow(`${vault.name} ...`));
   const vaultContract = contracts[vault.name];
   const borrowAsset = vault.borrowAsset;
@@ -83,7 +86,7 @@ async function checkRates(contracts, signer, vault) {
   const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset.address);
   const rates = {
     best: currentRate,
-    current: currentRate
+    current: currentRate,
   };
 
   const providers = vault.providers;
@@ -110,16 +113,18 @@ async function checkRates(contracts, signer, vault) {
   const toChange = shouldSwitch(vault, rates, blocks);
 
   if (toChange) {
-    await switchProviders(contracts, signer, vault, vaultContract, bestProviderAddr);
+    await switchProviders(setup, vault.name, vaultContract, bestProviderAddr);
   } else {
     console.log(chalk.cyan('-> not due for refinance'));
   }
 }
 
-async function checkForRefinance(contracts, signer, networkName, deployment) {
-  const vaults = Object.values(VAULTS[networkName][deployment].VAULTS);
+async function checkForRefinance(setup) {
+  const { config, deployment } = setup;
+
+  const vaults = Object.values(VAULTS[config.networkName][deployment].VAULTS);
   for (let i = 0; i < vaults.length; i++) {
-    await checkRates(contracts, signer, vaults[i]);
+    await checkRates(setup, vaults[i]);
   }
 }
 
@@ -134,13 +139,14 @@ async function refinanceVaults(config, deployment) {
   const signer = getSigner(config);
 
   const contracts = await loadContracts(signer.provider, config.chainId, deployment);
+  const setup = { config, signer, contracts, deployment };
 
   // eslint-disable-next-line
   while (true) {
     try {
       await retry(
         async () => {
-          await checkForRefinance(contracts, signer, config.networkName, deployment);
+          await checkForRefinance(setup);
         },
         {
           retries: process.env.RETRIES_COUNT || 2, // default 2 retries
