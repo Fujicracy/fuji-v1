@@ -3,7 +3,6 @@ import { getContractAddress } from 'helpers';
 const PROVIDER_TYPE = {
   AAVE: 'AAVE',
   COMPOUND: 'Compound',
-  DYDX: 'DYDX',
   IRONBANK: 'IronBank',
   FUSE3: 'FusePool3',
   FUSE6: 'FusePool6',
@@ -27,12 +26,6 @@ const PROVIDERS = {
     name: 'ProviderCompound',
     title: 'Compound',
     address: getContractAddress('ProviderCompound'),
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'DyDx',
-    address: getContractAddress('ProviderDYDX'),
   },
   [PROVIDER_TYPE.IRONBANK]: {
     id: 'ironbank',
