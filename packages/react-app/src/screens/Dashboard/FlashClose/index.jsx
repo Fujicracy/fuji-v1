@@ -14,6 +14,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {
   VAULTS,
+  ASSET_NAME,
   PROVIDER_TYPE,
   PROVIDERS,
   BREAKPOINTS,
@@ -29,6 +30,7 @@ import './styles.css';
 
 const providerIndexes = {
   AAVE: '0', // on fantom it's Geist
+  DYDX: '1',
   CREAM: '2',
 };
 
@@ -37,11 +39,17 @@ async function getProviderIndex(vault, contracts) {
 
   const ibankAddr = PROVIDERS[PROVIDER_TYPE.IRONBANK].address;
   const creamAddr = PROVIDERS[PROVIDER_TYPE.CREAM].address;
+  const dydxAddr = PROVIDERS[PROVIDER_TYPE.DYDX].address;
 
   let index = providerIndexes.AAVE;
 
   if (CHAIN_NAME === CHAIN_NAMES.ETHEREUM) {
-    if (activeProvider.toLowerCase() !== ibankAddr) {
+    if (
+      [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
+      activeProvider.toLowerCase() !== dydxAddr
+    ) {
+      index = providerIndexes.DYDX;
+    } else if (activeProvider.toLowerCase() !== ibankAddr) {
       index = providerIndexes.CREAM;
     }
   } else if (CHAIN_NAME === CHAIN_NAMES.FANTOM) {
