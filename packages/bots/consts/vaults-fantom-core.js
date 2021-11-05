@@ -12,7 +12,7 @@ const VAULTS = {
     deployBlockNumber: 19246494,
     refinanceConfig: {
       thresholdAPR: 3,
-      hoursSinceLast: 4,
+      hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
@@ -27,7 +27,7 @@ const VAULTS = {
     deployBlockNumber: 19246736,
     refinanceConfig: {
       thresholdAPR: 3,
-      hoursSinceLast: 4,
+      hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
@@ -35,21 +35,21 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.CREAM],
     ],
   },
-  // VaultWBTCDAI: {
-  // collateralAsset: assets[assetName.BTC],
-  // borrowAsset: assets[assetName.DAI],
-  // name: 'VaultWBTCDAI',
-  // deployBlockNumber: 19428442,
-  // refinanceConfig: {
-  // thresholdAPR: 3,
-  // hoursSinceLast: 4,
-  // },
-  // providers: [
-  // PROVIDERS[PROVIDER_TYPE.GEIST],
-  // PROVIDERS[PROVIDER_TYPE.SCREAM],
-  // PROVIDERS[PROVIDER_TYPE.CREAM],
-  // ]
-  // },
+  VaultWBTCDAI: {
+    collateralAsset: assets[assetName.BTC],
+    borrowAsset: assets[assetName.DAI],
+    name: 'VaultWBTCDAI',
+    deployBlockNumber: 19428442,
+    refinanceConfig: {
+      thresholdAPR: 3,
+      hoursSinceLast: 24,
+    },
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.GEIST],
+      PROVIDERS[PROVIDER_TYPE.SCREAM],
+      PROVIDERS[PROVIDER_TYPE.CREAM],
+    ]
+  },
 };
 
 export { VAULTS };
