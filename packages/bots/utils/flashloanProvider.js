@@ -1,22 +1,43 @@
-import { ASSETS, PROVIDERS, PROVIDER_TYPE } from '../consts/index.js';
+import { ASSETS } from '../consts/index.js';
 
-export const getFlashloanProvider = async vault => {
-  const providerIndex = {
-    aave: 0,
-    dydx: 1,
-    cream: 2,
-  };
-  const { borrowAsset } = await vault.vAssets();
-  const activeProvider = await vault.activeProvider();
-  const dydxProviderAddr = PROVIDERS[PROVIDER_TYPE.DYDX].address;
+const providerIndexes = {
+  AAVE: '0', // on fantom it's Geist
+  DYDX: '1',
+  CREAM: '2',
+};
+
+const getForEthereum = (contracts, activeProvider, borrowAsset) => {
+  const assets = ASSETS.ethereum;
 
   if (
-    [ASSETS.DAI.address, ASSETS.USDC.address].includes(borrowAsset) &&
-    activeProvider !== dydxProviderAddr
+    [assets.DAI.address, assets.USDC.address].includes(borrowAsset) &&
+    activeProvider !== contracts.ProviderDYDX.address
   ) {
     // use dydx flashloans when underlying asset is DAI or USDC and
     // current activeProvider is not dYdX
-    return providerIndex.dydx;
+    return providerIndexes.DYDX;
   }
-  return providerIndex.cream;
+  if (contracts.ProviderIronBank.address !== activeProvider) {
+    return providerIndexes.CREAM;
+  }
+  return providerIndexes.AAVE;
+};
+
+export const getFlashloanProvider = async (setup, vault) => {
+  const { contracts, config } = setup;
+
+  const { borrowAsset } = await vault.vAssets();
+  const activeProvider = await vault.activeProvider();
+
+  let index = providerIndexes.AAVE;
+  if (config.networkName === 'ethereum') {
+    index = getForEthereum(contracts, activeProvider, borrowAsset);
+  } else if (config.networkName === 'fantom') {
+    index =
+      contracts.ProviderCream.address === activeProvider
+        ? providerIndexes.AAVE
+        : providerIndexes.CREAM;
+  }
+
+  return index;
 };

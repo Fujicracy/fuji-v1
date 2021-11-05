@@ -72,22 +72,5 @@ yarn start
 
 > ATTENTION! Please, keep in mind that if you have already done some transactions on your local fork and you restart it, you will have to reset your Metamask account (to reset the nonce and the current block number).
 
-### 4. _(optional)_ Run service bots
-> Execute liquidations for undercollaterized positions
-
-4.1. Create `packages/bots/.env` and set the following variables:
-```
-ETHEREUM_PROVIDER_URL=
-PRIVATE_KEY=
-```
-The address that is behind `PRIVATE_KEY` needs to contain some ETH in order to pay for gas. If you are running a local fork, you can send to your address some local ETH: `yarn send --from 0 --to YOUR_ADDRESS --amount 10`.
-
-*If you don't set `ETHEREUM_PROVIDER_URL`, it will connect by default to http://localhost:8545 where is runnig you local fork.*
-
-
-4.2. Run the bot
-```
-# in another terminal window
-cd fuji
-yarn bots:liquidate
-```
+### 4. Run service bots
+_check `packages/bots/README.md` for more details_

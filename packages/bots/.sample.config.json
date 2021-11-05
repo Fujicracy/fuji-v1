@@ -1,0 +1,26 @@
+{
+  "local": {
+    "networkName": "ethereum",
+    "chainId": 31337,
+    "privateKey": "",
+    "providerUrl": "http://localhost:8545",
+    "relayerApiKey": null,
+    "relayerApiSecret": null
+  },
+  "ethereum": {
+    "networkName": "ethereum",
+    "chainId": 1,
+    "infuraId": null,
+    "providerUrl": "",
+    "relayerApiKey": "",
+    "relayerApiSecret": ""
+  },
+  "fantom": {
+    "networkName": "fantom",
+    "chainId": 250,
+    "infuraId": null,
+    "providerUrl": "",
+    "relayerApiKey": "",
+    "relayerApiSecret": ""
+  }
+}

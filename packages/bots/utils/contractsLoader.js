@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { Contract } from 'ethers';
-import { CHAIN_ID, DEPLOYMENT } from '../consts/index.js';
 
 const loadContractFrom = (contracts, contractName, signer) => {
   const address = contracts[contractName].address;
@@ -13,7 +12,7 @@ const loadContractFrom = (contracts, contractName, signer) => {
   return contract;
 };
 
-export const loadContracts = async providerOrSigner => {
+export const loadContracts = async (providerOrSigner, chainId, deployment) => {
   let newContracts;
 
   try {
@@ -31,7 +30,7 @@ export const loadContracts = async providerOrSigner => {
     }
 
     const contractsData = JSON.parse(
-      fs.readFileSync(`./contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`),
+      fs.readFileSync(`./contracts/${chainId}-${deployment}.deployment.json`),
     );
     const contractList = Object.keys(contractsData);
 
