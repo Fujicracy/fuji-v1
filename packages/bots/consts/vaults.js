@@ -1,10 +1,15 @@
-import { DEPLOYMENT, DEPLOYMENT_TYPES } from './globals.js';
-import * as core from './vaults-core.js';
-import * as fuse from './vaults-fuse.js';
+import * as ethereumCore from './vaults-ethereum-core.js';
+import * as ethereumFuse from './vaults-ethereum-fuse.js';
+import * as fantomCore from './vaults-fantom-core.js';
 
-const VAULTS_ADDRESS =
-  DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.VAULTS_ADDRESS : fuse.VAULTS_ADDRESS;
+const VAULTS = {
+  ethereum: {
+    core: ethereumCore,
+    fuse: ethereumFuse,
+  },
+  fantom: {
+    core: fantomCore,
+  },
+};
 
-const VAULTS = DEPLOYMENT === DEPLOYMENT_TYPES.CORE ? core.VAULTS : fuse.VAULTS;
-
-export { VAULTS_ADDRESS, VAULTS };
+export { VAULTS };
