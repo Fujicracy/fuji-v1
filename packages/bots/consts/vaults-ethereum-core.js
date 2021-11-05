@@ -12,7 +12,7 @@ const VAULTS = {
     deployBlockNumber: 12386446,
     refinanceConfig: {
       thresholdAPR: 1.5,
-      hoursSinceLast: 4,
+      hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
@@ -27,7 +27,7 @@ const VAULTS = {
     deployBlockNumber: 12418746,
     refinanceConfig: {
       thresholdAPR: 1.5,
-      hoursSinceLast: 4,
+      hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
@@ -42,7 +42,7 @@ const VAULTS = {
     deployBlockNumber: 12694137,
     refinanceConfig: {
       thresholdAPR: 2,
-      hoursSinceLast: 4,
+      hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.AAVE],
