@@ -2,7 +2,7 @@ Service scripts for:
   - refinance operations
   - liquidations
   - save borrowers in csv file
-  - save repyers in csv file
+  - save repayers in csv file
 
 1. Rename `packages/bots/.sample.config.json` to `packages/bots/.sample.json` and set values of desired networks
   - set one of `infuraId` and `providerUrl`
