@@ -39,15 +39,11 @@ async function getProviderIndex(vault, contracts) {
 
   const ibankAddr = PROVIDERS[PROVIDER_TYPE.IRONBANK].address;
   const creamAddr = PROVIDERS[PROVIDER_TYPE.CREAM].address;
-  const dydxAddr = PROVIDERS[PROVIDER_TYPE.DYDX].address;
 
   let index = providerIndexes.AAVE;
 
   if (CHAIN_NAME === CHAIN_NAMES.ETHEREUM) {
-    if (
-      [ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name) &&
-      activeProvider.toLowerCase() !== dydxAddr
-    ) {
+    if ([ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name)) {
       index = providerIndexes.DYDX;
     } else if (activeProvider.toLowerCase() !== ibankAddr) {
       index = providerIndexes.CREAM;
