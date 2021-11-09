@@ -185,7 +185,7 @@ button:focus {
   --blocks: rgba(25, 25, 25, 0.9);
   --blocks56: rgba(25, 25, 25, 0.56);
   --green: rgba(23, 203, 73, 1);
-  --fujiColor: #F5F5FD;
+  --fujiColor: #f5f5fd;
 }
 
 .light-theme {
@@ -234,6 +234,7 @@ input[type='number'] {
 }
 
 .bold {
+  margin: 0;
   font-weight: 600;
 }
 
