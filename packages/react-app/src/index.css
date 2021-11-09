@@ -258,12 +258,12 @@ input[type='number'] {
 
 @media screen and (max-width: 768px) {
   .main-button {
-    height: 40px !important;
+    height: 44px !important;
     border-radius: 6px;
   }
 }
 
-@media screen and (min-width: 450px) and (max-width: 1120px) {
+@media screen and (min-width: 1120px) and (max-width: 1170px) {
   .main-button {
     height: 56px !important;
     font-size: 20px;

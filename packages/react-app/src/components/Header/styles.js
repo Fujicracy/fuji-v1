@@ -226,7 +226,7 @@ export const DropDownItemContainer = styled(Box)`
 `;
 
 export const DropDownItem = styled(Box)`
-  height: 28px;
+  height: 36px;
   font-weight: 500;
   font-size: 12px;
   display: flex;
