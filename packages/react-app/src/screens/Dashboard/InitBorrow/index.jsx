@@ -152,7 +152,7 @@ function InitBorrow({ contracts, provider, address }) {
       );
       const collateral = unFormattedNeededCollateral
         ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
-        : null;
+        : 0;
       setNeededCollateral(collateral);
 
       setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
@@ -261,6 +261,10 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
+    if (Number(collateralAmount) <= 0) {
+      return;
+    }
+
     if (!vault.collateralAsset.isERC20) {
       const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
       if (totalCollateral > ETH_CAP_VALUE && vault.collateralAsset.name === ASSET_NAME.ETH) {
@@ -284,7 +288,7 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const handleChangeVault = v => {
-    setNeededCollateral(null);
+    setNeededCollateral(0);
 
     setBorrowAsset(v.borrowAsset.name);
     setCollateralAsset(v.collateralAsset.name);
