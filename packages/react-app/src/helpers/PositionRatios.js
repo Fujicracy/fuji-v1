@@ -4,7 +4,9 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
 
   let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
-  if (debt.toFixed(8) <= 0.00000001) debt = 0;
+
+  if (debt.toFixed(5) <= 0.00001) debt = 0;
+
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;
