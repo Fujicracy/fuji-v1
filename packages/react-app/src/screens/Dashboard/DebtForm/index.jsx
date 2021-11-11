@@ -88,11 +88,12 @@ function DebtForm({ position, contracts, provider, address }) {
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
+      const colDecimals = vault.collateralAsset.decimals;
+      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral), colDecimals));
       const left = (diff / 1.35 / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice]);
+  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, vault]);
 
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
