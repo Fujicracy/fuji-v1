@@ -482,7 +482,7 @@ function InitBorrow({ contracts, provider, address }) {
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
                       balance ? Number(balance).toFixed(3) : '...'
-                    } Ξ`}
+                    }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
                         <Typography className="error-input-msg" variant="body2">

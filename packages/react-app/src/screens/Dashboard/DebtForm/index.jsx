@@ -371,10 +371,10 @@ function DebtForm({ position, contracts, provider, address }) {
           subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
           subTitleInfo={
             action === Action.Repay
-              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name} Ξ`
+              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name}`
               : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${
                   vault.borrowAsset.name
-                } Ξ`
+                }`
           }
           startAdornmentImage={vault.borrowAsset.icon}
           endAdornment={{
