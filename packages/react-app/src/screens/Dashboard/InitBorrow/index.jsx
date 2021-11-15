@@ -190,6 +190,7 @@ function InitBorrow({ contracts, provider, address }) {
         ? 0
         : // : collateralBalance.add(parseEther(collateralAmount)),
           collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
+    threshold: vault.threshold || 75,
   };
 
   const tx = Transactor(provider);

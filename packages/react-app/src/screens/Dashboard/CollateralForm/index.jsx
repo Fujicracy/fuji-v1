@@ -261,6 +261,7 @@ function CollateralForm({ position, contracts, provider, address }) {
               : collateralBalance.add(parseUnits(amount, vault.collateralAsset.decimals))
           }
           provider={provider}
+          threshold={vault.threshold}
         />
       ),
       actions: () => {
