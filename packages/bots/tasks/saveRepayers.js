@@ -4,10 +4,8 @@
 
 import chalk from 'chalk';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
-import { VAULTS_ADDRESS } from './consts/index.js';
-import { getSigner, loadContracts } from './utils/index.js';
-
-const signer = getSigner();
+import { VAULTS } from '../consts/index.js';
+import { getSigner, loadContracts } from '../utils/index.js';
 
 const searchRepayers = async (vault, searchLength) => {
   const filterRepayers = vault.filters.Payback();
@@ -57,14 +55,16 @@ const saveFile = (transactors, name) => {
     .then(() => console.log(`Successfully saved ${(transactors.length, name)}`));
 };
 
-const getRepayers = async () => {
-  const contracts = await loadContracts(signer.provider);
+const saveRepayers = async (config, deployment) => {
+  const signer = getSigner(config);
+
+  const contracts = await loadContracts(signer.provider, config.chainId, deployment);
 
   let repayers = [];
 
-  const vaultsList = Object.keys(VAULTS_ADDRESS);
-  for (let v = 0; v < vaultsList.length; v++) {
-    const vaultName = vaultsList[v];
+  const vaults = Object.values(VAULTS[config.networkName][deployment].VAULTS);
+  for (let v = 0; v < vaults.length; v++) {
+    const vaultName = vaults[v].name;
     console.log('Searching PAYBACK positions in', chalk.blue(vaultName));
 
     const vault = contracts[vaultName];
@@ -77,4 +77,4 @@ const getRepayers = async () => {
   saveFile(repayers, 'repayers');
 };
 
-getRepayers();
+export { saveRepayers };

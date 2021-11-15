@@ -1,18 +1,19 @@
-import { getContractAddress } from '../utils/index.js';
 import { ASSETS, ASSET_NAME } from './assets.js';
 import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
 
-const VAULTS_ADDRESS = {
-  VaultETHFEI: getContractAddress('VaultETHFEI'),
-  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
-};
+const assets = ASSETS.ethereum;
+const assetName = ASSET_NAME.ethereum;
 
 const VAULTS = {
-  [VAULTS_ADDRESS.VaultETHFEI]: {
-    borrowAsset: ASSETS[ASSET_NAME.FEI],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+  VaultETHFEI: {
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.FEI],
     name: 'VaultETHFEI',
     deployBlockNumber: 13107920,
+    refinanceConfig: {
+      thresholdAPR: 4,
+      hoursSinceLast: 24,
+    },
     providers: [
       PROVIDERS[PROVIDER_TYPE.FUSE6],
       PROVIDERS[PROVIDER_TYPE.FUSE7],
@@ -20,11 +21,15 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.FUSE18],
     ],
   },
-  [VAULTS_ADDRESS.VaultETHUSDC]: {
-    borrowAsset: ASSETS[ASSET_NAME.USDC],
-    collateralAsset: ASSETS[ASSET_NAME.ETH],
+  VaultETHUSDC: {
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.USDC],
     name: 'VaultETHUSDC',
     deployBlockNumber: 13107987,
+    refinanceConfig: {
+      thresholdAPR: 4,
+      hoursSinceLast: 24,
+    },
     providers: [
       PROVIDERS[PROVIDER_TYPE.FUSE3],
       PROVIDERS[PROVIDER_TYPE.FUSE6],
@@ -34,4 +39,4 @@ const VAULTS = {
   },
 };
 
-export { VAULTS_ADDRESS, VAULTS };
+export { VAULTS };

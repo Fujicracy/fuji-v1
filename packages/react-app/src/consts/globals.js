@@ -1,4 +1,6 @@
 import { generateMedia } from 'styled-media-query';
+import { ftmIcon, maticIcon, ethIcons } from 'assets/images';
+import { capitalizeFirstLetter } from 'helpers/Utils';
 
 export const BREAKPOINT_NAMES = {
   MOBILE: 'mobile',
@@ -21,10 +23,18 @@ export const fujiMedia = generateMedia({
   large: '1170px',
 });
 
+const NETWORK_ID = {
+  FANTOM: 250,
+  MAINNET: 1,
+  KOVAN: 42,
+  LOCAL: 31337,
+};
+
 const NETWORKS = {
-  1: 'Mainnet',
-  42: 'Kovan',
-  31337: 'Local',
+  [NETWORK_ID.MAINNET]: 'Mainnet',
+  [NETWORK_ID.KOVAN]: 'Kovan',
+  [NETWORK_ID.FANTOM]: 'Fantom',
+  [NETWORK_ID.LOCAL]: 'Local',
 };
 
 const DEPLOYMENT_TYPES = {
@@ -33,6 +43,37 @@ const DEPLOYMENT_TYPES = {
 };
 
 const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
+
+const CHAIN_NAMES = {
+  ETHEREUM: 'ethereum',
+  FANTOM: 'fantom',
+  POLYGON: 'polygon',
+};
+
+const CHAINS = {
+  [CHAIN_NAMES.ETHEREUM]: {
+    id: CHAIN_NAMES.ETHEREUM,
+    name: capitalizeFirstLetter(CHAIN_NAMES.ETHEREUM),
+    icon: ethIcons.BLUE.toString(),
+    isDeployed: true,
+    dashboardUrl: 'https://app.fujidao.org/#/dashboard',
+  },
+  [CHAIN_NAMES.FANTOM]: {
+    id: CHAIN_NAMES.FANTOM,
+    name: capitalizeFirstLetter(CHAIN_NAMES.FANTOM),
+    icon: ftmIcon.toString(),
+    isDeployed: true,
+    dashboardUrl: 'https://fantom.fujidao.org/#/dashboard',
+  },
+  [CHAIN_NAMES.POLYGON]: {
+    id: CHAIN_NAMES.POLYGON,
+    name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
+    icon: maticIcon.toString(),
+    isDeployed: false,
+  },
+};
+
+const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.ETHEREUM;
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID || 31337;
 const NETWORK = NETWORKS[CHAIN_ID];
@@ -46,6 +87,9 @@ const FUJIFLOPS_NFT_ADDR = '0x376C0AA9150095cB36AdcD472bE390D31C6BeF8F';
 
 export {
   CHAIN_ID,
+  CHAIN_NAME,
+  CHAIN_NAMES,
+  CHAINS,
   NETWORK,
   APP_URL,
   LANDING_URL,

@@ -3,13 +3,15 @@ import { getContractAddress } from 'helpers';
 const PROVIDER_TYPE = {
   AAVE: 'AAVE',
   COMPOUND: 'Compound',
-  DYDX: 'DYDX',
   IRONBANK: 'IronBank',
   FUSE3: 'FusePool3',
   FUSE6: 'FusePool6',
   FUSE7: 'FusePool7',
   FUSE8: 'FusePool8',
   FUSE18: 'FusePool18',
+  SCREAM: 'Scream',
+  CREAM: 'Cream',
+  GEIST: 'Geist',
 };
 
 const PROVIDERS = {
@@ -24,12 +26,6 @@ const PROVIDERS = {
     name: 'ProviderCompound',
     title: 'Compound',
     address: getContractAddress('ProviderCompound'),
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'DyDx',
-    address: getContractAddress('ProviderDYDX'),
   },
   [PROVIDER_TYPE.IRONBANK]: {
     id: 'ironbank',
@@ -66,6 +62,25 @@ const PROVIDERS = {
     name: 'ProviderFuse18',
     title: 'Olympus Pool',
     address: getContractAddress('ProviderFuse18'),
+  },
+
+  [PROVIDER_TYPE.SCREAM]: {
+    id: 'scream',
+    name: 'ProviderScream',
+    title: 'Scream',
+    address: getContractAddress('ProviderScream'),
+  },
+  [PROVIDER_TYPE.CREAM]: {
+    id: 'cream',
+    name: 'ProviderCream',
+    title: 'IronBank',
+    address: getContractAddress('ProviderCream'),
+  },
+  [PROVIDER_TYPE.GEIST]: {
+    id: 'geist',
+    name: 'ProviderGeist',
+    title: 'Geist',
+    address: getContractAddress('ProviderGeist'),
   },
 };
 

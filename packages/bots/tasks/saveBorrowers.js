@@ -4,10 +4,8 @@
 
 import chalk from 'chalk';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
-import { VAULTS_ADDRESS } from './consts/index.js';
-import { getSigner, loadContracts } from './utils/index.js';
-
-const signer = getSigner();
+import { VAULTS } from '../consts/index.js';
+import { getSigner, loadContracts } from '../utils/index.js';
 
 const searchBorrowers = async (vault, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
@@ -29,6 +27,7 @@ const searchBorrowers = async (vault, searchLength) => {
 
   return borrowers;
 };
+
 const filterAndSort = borrowers => {
   return borrowers
     .sort((a, b) => Number(a.blockNumber) - Number(b.blockNumber))
@@ -37,6 +36,7 @@ const filterAndSort = borrowers => {
       return acc;
     }, []);
 };
+
 const saveFile = borrowers => {
   const csvWriter = createCsvWriter({
     path: 'fuji-borrowers.csv',
@@ -52,14 +52,17 @@ const saveFile = borrowers => {
     .writeRecords(borrowers)
     .then(() => console.log(`Successfully saved ${borrowers.length} borrowers`));
 };
-const getBorrowers = async () => {
-  const contracts = await loadContracts(signer.provider);
+
+const saveBorrowers = async (config, deployment) => {
+  const signer = getSigner(config);
+
+  const contracts = await loadContracts(signer.provider, config.chainId, deployment);
 
   let borrowers = [];
 
-  const vaultsList = Object.keys(VAULTS_ADDRESS);
-  for (let v = 0; v < vaultsList.length; v++) {
-    const vaultName = vaultsList[v];
+  const vaults = Object.values(VAULTS[config.networkName][deployment].VAULTS);
+  for (let v = 0; v < vaults.length; v++) {
+    const vaultName = vaults[v].name;
     console.log('Searching BORROW positions in', chalk.blue(vaultName));
     const vault = contracts[vaultName];
     const found = await searchBorrowers(vault);
@@ -68,4 +71,5 @@ const getBorrowers = async () => {
   borrowers = filterAndSort(borrowers);
   saveFile(borrowers);
 };
-getBorrowers();
+
+export { saveBorrowers };
