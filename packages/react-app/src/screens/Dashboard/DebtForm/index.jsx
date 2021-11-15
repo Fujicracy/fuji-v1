@@ -230,6 +230,7 @@ function DebtForm({ position, contracts, provider, address }) {
               : debtBalance.add(parseUnits(amount, decimals))
           }
           provider={provider}
+          threshold={vault.threshold}
         />
       ),
       actions: () => (
