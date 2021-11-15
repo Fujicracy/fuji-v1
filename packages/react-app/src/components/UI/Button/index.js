@@ -12,6 +12,8 @@ const Button = styled(Box).attrs({
   typography,
 })`
   height: ${props => (props.height ? `${props.height}px` : '40px')};
+  width: ${props => (props.width ? `${props.width}px` : '40px')};
+
   border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '4px')};
   position: relative;
   user-select: none;
@@ -28,7 +30,6 @@ const Button = styled(Box).attrs({
   transition: all ${themeGet('transitionTime')} ease;
   box-shadow: ${props => !props.outline && mapToTheme('buttons.shadow')};
   cursor: pointer;
-  width: ${props => props.width && props.width};
   ${props =>
     props.block &&
     css`

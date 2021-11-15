@@ -15,9 +15,14 @@ import upArrowIcon from './icons/up_arrow.svg';
 import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
 // App Images
-import fujiLanding from './images/home/fujiLanding.svg';
+import fujiLanding1 from './images/home/fujiLanding1.svg';
 import fujiLandingMobile from './images/home/fujiLandingMobile.svg';
 import fujiLandingTablet from './images/home/fujiLandingTablet.svg';
+
+import fujiAlice1 from './images/home/fujiAlice1.svg';
+import fujiLanding2 from './images/home/fujiLanding2.svg';
+import fujiAlice2 from './images/home/fujiAlice2.svg';
+
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
@@ -83,10 +88,14 @@ export {
   downArrowIcon,
   upArrowIcon,
   barIcon,
-  // Images
-  fujiLanding,
+  // Landing Images
+  fujiLanding1,
   fujiLandingMobile,
   fujiLandingTablet,
+  fujiAlice1,
+  fujiLanding2,
+  fujiAlice2,
+  // Images
   partnerDelphi,
   partnerMaven,
   partnerCapital,
