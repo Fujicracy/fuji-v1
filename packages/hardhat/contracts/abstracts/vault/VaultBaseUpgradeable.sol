@@ -7,11 +7,17 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import "../../interfaces/IVaultControl.sol";
 
+/**
+ * @dev Contract that is inherited by FujiVaults
+ * contains delegate call functions to providers and {Pausable} guards
+ *
+ */
+
 abstract contract VaultControlUpgradeable is OwnableUpgradeable, PausableUpgradeable {
-  //Vault Struct for Managed Assets
+  // Vault Struct for Managed Assets
   IVaultControl.VaultAssets public vAssets;
 
-  //Pause Functions
+  // Pause Functions
 
   /**
    * @dev Emergency Call to stop all basic money flow functions.
