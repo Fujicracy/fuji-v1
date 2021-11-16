@@ -32,11 +32,6 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
   address public constant FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
-  struct Factor {
-    uint64 a;
-    uint64 b;
-  }
-
   // Safety factor
   Factor public safetyF;
 
@@ -364,10 +359,10 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
    * @dev Set Factors "a" and "b" for a Struct Factor.
    * @param _newFactorA: Nominator
    * @param _newFactorB: Denominator
-   * @param _type: "safetyF" or "collatF" or "bonusLiqF" or "protocolFee"
+   * @param _type: 0 for "safetyF", 1 for "collatF", 2 for "protocolFee", 3 for "bonusLiqF"
    * Emits a {FactorChanged} event.
    * Requirements:
-   * - '_newFactorA' and '_newFactorB' should be non-zero values.
+   * - _newFactorA and _newFactorB should be non-zero values.
    * - For safetyF;  a/b, should be > 1.
    * - For collatF; a/b, should be > 1.
    * - For bonusLiqF; a/b should be < 1.
@@ -376,35 +371,29 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   function setFactor(
     uint64 _newFactorA,
     uint64 _newFactorB,
-    string calldata _type
+    FactorType _type
   ) external isAuthorized {
-
-    require(
-      _newFactorA > 0 &&
-      _newFactorA > 0,
-      Errors.RF_INVALID_RATIO_VALUES
-    );
-
-    bytes32 typeHash = keccak256(abi.encode(_type));
-
-    if (typeHash == keccak256(abi.encode("collatF"))) {
-      require( _newFactorA > _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
-      collatF.a = _newFactorA;
-      collatF.b = _newFactorB;
-    } else if (typeHash == keccak256(abi.encode("safetyF"))) {
-      require( _newFactorA > _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
+    if (_type == FactorType.Safety) {
+      require(_newFactorA > _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
       safetyF.a = _newFactorA;
       safetyF.b = _newFactorB;
-    } else if (typeHash == keccak256(abi.encode("bonusLiqF"))) {
-      require( _newFactorA < _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
-      bonusLiqF.a = _newFactorA;
-      bonusLiqF.b = _newFactorB;
-    } else if (typeHash == keccak256(abi.encode("protocolFee"))) {
-      require( _newFactorA < _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
+    } else if (_type == FactorType.Collateralization) {
+      require(_newFactorA > _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
+      collatF.a = _newFactorA;
+      collatF.b = _newFactorB;
+    } else if (_type == FactorType.ProtocolFee) {
+      require(_newFactorA < _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
       protocolFee.a = _newFactorA;
       protocolFee.b = _newFactorB;
+    } else if (_type == FactorType.BonusLiquidation) {
+      require(_newFactorA < _newFactorB, Errors.RF_INVALID_RATIO_VALUES);
+      bonusLiqF.a = _newFactorA;
+      bonusLiqF.b = _newFactorB;
+    } else {
+      revert(Errors.VL_INVALID_FACTOR);
     }
-    emit FactorChanged(typeHash, _newFactorA, _newFactorB);
+
+    emit FactorChanged(_type, _newFactorA, _newFactorB);
   }
 
   /**
