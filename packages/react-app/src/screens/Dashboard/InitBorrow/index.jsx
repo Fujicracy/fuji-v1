@@ -261,7 +261,8 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    if (Number(collateralAmount) <= 0) {
+    if (Number(collateralAmount) <= 0 || Number(borrowAmount) <= 0) {
+      setDialog({ step: 'validateInput' });
       return;
     }
 
@@ -362,12 +363,28 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogActions>
       ),
     },
+    validateInput: {
+      title: 'Input Validation',
+      content: `Please input correctly. One of collateral and borrow amount is below 0.`,
+      actions: () => (
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialog({ step: null });
+            }}
+            className="main-button"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      ),
+    },
   };
 
   return (
     <Container>
       <Dialog
-        open={['success', 'capCollateral', 'approval'].includes(dialog.step)}
+        open={['success', 'capCollateral', 'approval', 'validateInput'].includes(dialog.step)}
         aria-labelledby="form-dialog-title"
       >
         <div
