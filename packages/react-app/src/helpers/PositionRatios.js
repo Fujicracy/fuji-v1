@@ -27,7 +27,7 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   // }
 
   return {
-    healthFactor: healthFactor > MAX_HEALTH_FACTOR ? Infinity : healthFactor,
+    healthFactor: healthFactor > MAX_HEALTH_FACTOR || !healthFactor ? Infinity : healthFactor,
     maxFactor,
     liqPrice,
     ltv,
