@@ -365,7 +365,7 @@ function InitBorrow({ contracts, provider, address }) {
     },
     validateInput: {
       title: 'Input Validation',
-      content: `Please input correctly. One of collateral and borrow amount is below 0.`,
+      content: `Incorect amount of collateral and/or borrow amount!`,
       actions: () => (
         <DialogActions>
           <Button
