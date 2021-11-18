@@ -20,7 +20,7 @@ export const InputContainer = styled.div`
   }
 
   ${fujiMedia.lessThan('medium')`
-    height: 40px;
+    height: 44px;
     border-radius: 4px;
   `}
 

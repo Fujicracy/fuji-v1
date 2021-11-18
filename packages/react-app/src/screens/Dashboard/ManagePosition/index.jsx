@@ -50,6 +50,7 @@ function ManagePosition({ contracts, provider, address }) {
     ]),
     borrowAsset: vault.borrowAsset,
     collateralAsset: vault.collateralAsset,
+    threshold: vault.threshold || 75,
   };
 
   return (

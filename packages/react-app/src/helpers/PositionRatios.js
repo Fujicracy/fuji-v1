@@ -1,15 +1,18 @@
 import { formatUnits } from '@ethersproject/units';
+import { MAX_HEALTH_FACTOR } from 'consts';
 
 export default function PositionRatios(position, collateralPrice, borrowPrice) {
-  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
+  const { debtBalance, collateralBalance, borrowAsset, collateralAsset, threshold } = position;
 
   let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
+
   if (debt.toFixed(8) <= 0.00000001) debt = 0;
+
   const collateral = collateralBalance
     ? Number(formatUnits(collateralBalance, collateralAsset.decimals))
     : 0;
   // liquidation threshold
-  const liqThres = 0.75;
+  const liqThres = threshold ? threshold / 100 : 0.75;
   // collateralization and healthy factor
   const factor = 1.33;
 
@@ -24,7 +27,7 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   // }
 
   return {
-    healthFactor: healthFactor || 0,
+    healthFactor: healthFactor > MAX_HEALTH_FACTOR || !healthFactor ? Infinity : healthFactor,
     maxFactor,
     liqPrice,
     ltv,
