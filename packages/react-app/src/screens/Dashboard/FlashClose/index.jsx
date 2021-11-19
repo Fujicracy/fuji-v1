@@ -45,7 +45,7 @@ async function getProviderIndex(vault, contracts) {
 
   let index = providerIndexes.AAVE;
 
-  if (CHAIN_NAME === CHAIN_NAMES.CORE) {
+  if (CHAIN_NAME === CHAIN_NAMES.ETHEREUM) {
     if ([ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name)) {
       index = providerIndexes.DYDX;
     } else if (activeProvider.toLowerCase() !== ibankAddr) {
@@ -83,7 +83,7 @@ function FlashClose({ position }) {
     setLoading(true);
     const providerIndex = await getProviderIndex(vault, contracts);
     const fliquidator =
-      CHAIN_NAME === CHAIN_NAMES.CORE ? contracts.Fliquidator : contracts.FliquidatorFTM;
+      CHAIN_NAME === CHAIN_NAMES.ETHEREUM ? contracts.Fliquidator : contracts.FliquidatorFTM;
 
     const gasLimit = await GasEstimator(fliquidator, 'flashClose', [
       parseUnits(amount, decimals),

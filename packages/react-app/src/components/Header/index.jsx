@@ -147,7 +147,7 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                {CHAIN_NAME === CHAIN_NAMES.CORE && (
+                {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -208,7 +208,7 @@ function Header() {
                   My positions
                 </NavLink>
               </li>
-              {CHAIN_NAME === CHAIN_NAMES.CORE && (
+              {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
                     NFT
