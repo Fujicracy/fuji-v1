@@ -16,6 +16,7 @@ function DeltaPositionRatios({
   newCollateral,
   newDebt,
   provider,
+  threshold,
 }) {
   const [healthFactor, setHealthFactor] = useState([]);
   const [borrowLimit, setLimit] = useState([]);
@@ -32,6 +33,7 @@ function DeltaPositionRatios({
         collateralBalance: currentCollateral,
         debtBalance: currentDebt,
         decimals: borrowAsset.decimals,
+        threshold,
       };
       const {
         healthFactor: oldHf,
@@ -64,6 +66,7 @@ function DeltaPositionRatios({
     newDebt,
     collateralAsset,
     provider,
+    threshold,
   ]);
 
   const formatValue = (value, precision) =>

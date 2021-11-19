@@ -261,6 +261,7 @@ function CollateralForm({ position, contracts, provider, address }) {
               : collateralBalance.add(parseUnits(amount, vault.collateralAsset.decimals))
           }
           provider={provider}
+          threshold={vault.threshold}
         />
       ),
       actions: () => {
@@ -420,10 +421,10 @@ function CollateralForm({ position, contracts, provider, address }) {
             action === Action.Supply
               ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${
                   vault.collateralAsset.name
-                } Ξ`
+                }`
               : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ${
                   vault.collateralAsset.name
-                } Ξ`
+                }`
           }
           startAdornmentImage={vault.collateralAsset.icon}
           endAdornment={{

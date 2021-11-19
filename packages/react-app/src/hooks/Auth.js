@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/globals';
+import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
 
 const AuthContext = createContext();
 const localStorage = window.localStorage;
@@ -32,8 +32,8 @@ function useProvideAuth() {
 
   useEffect(() => {
     const tmpOnboard = Onboard({
-      dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
-      networkId: Number(CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
+      dappId: BLOCKNATIVE_KEY,
+      networkId: Number(CHAIN_ID),
       darkMode: true,
       walletSelect: {
         // Metamask, WalletConnect, Ledger, Trezor, Coinbase, Formatic as stated in the card
@@ -42,6 +42,7 @@ function useProvideAuth() {
           {
             walletName: 'walletConnect',
             infuraKey: INFURA_ID,
+            preferred: true,
           },
           { walletName: 'coinbase' },
           {
@@ -77,11 +78,11 @@ function useProvideAuth() {
         },
         network: setNetwork,
         address: onboardAddress => {
-          localStorage.setItem('selectedAddress', onboardAddress || '');
-          setAddress(onboardAddress || '');
+          localStorage.setItem('selectedAddress', onboardAddress);
+          setAddress(onboardAddress);
         },
         balance: onboardBalance => {
-          if (onboardBalance !== null) {
+          if (onboardBalance) {
             const fBalance = parseFloat(formatUnits(onboardBalance));
             setBalance(fBalance.toFixed(2));
           }
@@ -92,7 +93,6 @@ function useProvideAuth() {
         { checkName: 'connect' },
         { checkName: 'accounts' },
         { checkName: 'network' },
-        { checkName: 'balance', minimumBalance: '100000' },
       ],
     });
 
@@ -101,17 +101,12 @@ function useProvideAuth() {
 
   useEffect(() => {
     async function connectWalletAccount() {
-      const previouslySelectedWallet = localStorage.getItem('selectedWallet');
-      const previouslySelectedAddress = localStorage.getItem('selectedAddress');
-      setProvider(null);
+      const selectedWallet = localStorage.getItem('selectedWallet');
       if (onboard) {
-        const isSelected = await onboard.walletSelect(previouslySelectedWallet);
+        const isSelected = await onboard.walletSelect(selectedWallet);
         if (isSelected) {
-          const isChecked = await onboard.walletCheck(previouslySelectedAddress);
+          const isChecked = await onboard.walletCheck();
           if (isChecked) {
-            setWallet(previouslySelectedWallet);
-            setAddress(previouslySelectedAddress);
-
             const state = onboard.getState();
             setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
           }
