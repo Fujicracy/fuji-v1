@@ -15,7 +15,7 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   // liquidation threshold
   const liqThres = threshold ? threshold / 100 : 0.75;
   // collateralization and healthy factor
-  const factor = 1.33;
+  const factor = 1 / threshold;
 
   const healthFactor =
     debt === 0 ? Infinity : (collateral * collateralPrice * liqThres) / (debt * borrowPrice);
