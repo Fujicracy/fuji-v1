@@ -50,11 +50,14 @@ import {
   getExchangePrice,
   getAllowance,
 } from 'helpers';
-import { useBalance } from 'hooks';
+import { useAuth, useBalance, useContractLoader } from 'hooks';
 
 import { Container, Helper } from './style';
 
-function InitBorrow({ contracts, provider, address }) {
+function InitBorrow() {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const defaultVault = Object.values(VAULTS)[0];
   const queries = new URLSearchParams(useLocation().search);
 
@@ -426,7 +429,6 @@ function InitBorrow({ contracts, provider, address }) {
                   )}
                   <Grid item xs={4} sm={4} md={12}>
                     <ProvidersList
-                      contracts={contracts}
                       markets={[borrowAsset]}
                       title="APR"
                       isDropDown

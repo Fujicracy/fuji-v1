@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useContractReader } from 'hooks';
+import { useAuth, useContractLoader, useContractReader } from 'hooks';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
@@ -17,7 +17,10 @@ import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import './styles.css';
 
-function MyPositions({ contracts, address }) {
+function MyPositions() {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -174,7 +177,7 @@ function MyPositions({ contracts, address }) {
         </Grid>
         {!isMobile && !isTablet && (
           <Grid item md={4} sm={4}>
-            <ProvidersList contracts={contracts} markets={markets} isSelectable={false} />
+            <ProvidersList markets={markets} isSelectable={false} />
           </Grid>
         )}
       </Grid>

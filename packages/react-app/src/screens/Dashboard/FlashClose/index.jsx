@@ -24,6 +24,9 @@ import {
 } from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
+
+import { useAuth, useContractLoader } from 'hooks';
+
 import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
@@ -56,7 +59,10 @@ async function getProviderIndex(vault, contracts) {
   return index;
 }
 
-function FlashClose({ position, contracts, provider }) {
+function FlashClose({ position }) {
+  const { provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const tx = Transactor(provider);
 
   const [dialog, setDialog] = useState(false);

@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-
+import { useAuth } from 'hooks';
 import { PositionRatios, getExchangePrice } from '../../../helpers';
 
 function DeltaPositionRatios({
@@ -15,9 +15,9 @@ function DeltaPositionRatios({
   currentDebt,
   newCollateral,
   newDebt,
-  provider,
   threshold,
 }) {
+  const { provider } = useAuth();
   const [healthFactor, setHealthFactor] = useState([]);
   const [borrowLimit, setLimit] = useState([]);
   const [ltv, setLtv] = useState([]);

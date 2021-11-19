@@ -21,10 +21,14 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { VAULTS } from 'consts';
 import { ethIcons } from 'assets/images';
-import { Transactor } from '../../../helpers';
-import { useContractReader } from '../../../hooks';
+import { useAuth, useContractLoader, useContractReader } from 'hooks';
 
-function RepayAndWithdrawForm({ position, contracts, provider, address }) {
+import { Transactor } from '../../../helpers';
+
+function RepayAndWithdrawForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 

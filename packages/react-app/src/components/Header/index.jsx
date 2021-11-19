@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useBalance } from 'hooks';
+import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
@@ -43,7 +43,10 @@ import {
   MenuNavigationContainer,
 } from './styles';
 
-function Header({ contracts, provider, address, onboard }) {
+function Header() {
+  const { address, provider, onboard } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
   const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
 

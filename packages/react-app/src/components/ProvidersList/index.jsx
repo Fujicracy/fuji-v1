@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-import { useContractReader, useRates } from '../../hooks';
+import { useAuth, useContractLoader, useContractReader, useRates } from 'hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
 import AnimatedCounter from '../UI/AnimatedCounter';
@@ -107,13 +107,15 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
 };
 
 function ProvidersList({
-  contracts,
   markets,
   title = 'Borrow APR',
   isDropDown = true,
   hasBlackContainer = true,
   isSelectable = true,
 }) {
+  const { provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const rates = useRates(contracts);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({

@@ -19,12 +19,15 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { Transactor } from 'helpers';
-import { useBalance, useContractReader } from 'hooks';
+import { useAuth, useBalance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { VAULTS } from 'consts';
 import { ethIcons } from 'assets/images';
 
-function SupplyAndBorrowForm({ position, contracts, provider, address }) {
+function SupplyAndBorrowForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const { register, errors, handleSubmit } = useForm();
   const tx = Transactor(provider);
 
