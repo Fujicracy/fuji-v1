@@ -1,5 +1,6 @@
 import { formatUnits } from '@ethersproject/units';
-import { MAX_HEALTH_FACTOR } from 'consts';
+
+const MAX_HEALTH_FACTOR = 1000;
 
 export default function PositionRatios(position, collateralPrice, borrowPrice) {
   const { debtBalance, collateralBalance, borrowAsset, collateralAsset, threshold } = position;
