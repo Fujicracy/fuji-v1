@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/globals';
+import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
 
 const AuthContext = createContext();
 const localStorage = window.localStorage;
@@ -32,8 +32,8 @@ function useProvideAuth() {
 
   useEffect(() => {
     const tmpOnboard = Onboard({
-      dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
-      networkId: Number(CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
+      dappId: BLOCKNATIVE_KEY,
+      networkId: Number(CHAIN_ID),
       darkMode: true,
       walletSelect: {
         // Metamask, WalletConnect, Ledger, Trezor, Coinbase, Formatic as stated in the card
