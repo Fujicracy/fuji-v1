@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, CHAIN_ID, APP_URL } from 'consts/globals';
+import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
+
+const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
 const AuthContext = createContext();
 const localStorage = window.localStorage;
@@ -14,8 +16,7 @@ function useProvideAuth() {
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
   const [balance, setBalance] = useState(0);
-
-  const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
+  const [network, setNetwork] = useState(null);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -31,11 +32,10 @@ function useProvideAuth() {
 
   useEffect(() => {
     const tmpOnboard = Onboard({
-      dappId: process.env.REACT_APP_BNC_API_KEY, // [String] The API key created by step one above
-      networkId: Number(CHAIN_ID), // [Integer] The Ethereum network ID your Dapp uses.
+      dappId: BLOCKNATIVE_KEY,
+      networkId: Number(CHAIN_ID),
       darkMode: true,
       walletSelect: {
-        // Metamask, WalletConnect, Ledger, Trezor, Coinbase, Formatic as stated in the card
         wallets: [
           { walletName: 'metamask', preferred: true },
           {
@@ -47,17 +47,11 @@ function useProvideAuth() {
           {
             walletName: 'ledger',
             rpcUrl: RPC_URL,
-            preferred: true,
           },
           {
             walletName: 'trezor',
             appUrl: APP_URL,
             rpcUrl: RPC_URL,
-            preferred: true,
-          },
-          {
-            walletName: 'fortmatic',
-            apiKey: process.env.REACT_APP_FORTMATIC_API_KEY,
           },
         ],
       },
@@ -77,9 +71,10 @@ function useProvideAuth() {
             localStorage.removeItem('selectedAddress');
           }
         },
+        network: setNetwork,
         address: onboardAddress => {
           localStorage.setItem('selectedAddress', onboardAddress || '');
-          setAddress(onboardAddress || '');
+          setAddress(onboardAddress);
         },
         balance: onboardBalance => {
           if (onboardBalance) {
@@ -88,26 +83,34 @@ function useProvideAuth() {
           }
         },
       },
+      walletCheck: [
+        { checkName: 'derivationPath' },
+        { checkName: 'connect' },
+        { checkName: 'accounts' },
+        { checkName: 'network' },
+      ],
     });
 
     setOnboard(tmpOnboard);
-  }, [RPC_URL]);
+  }, []);
 
   useEffect(() => {
     async function connectWalletAccount() {
-      const previouslySelectedWallet = localStorage.getItem('selectedWallet');
-      const previouslySelectedAddress = localStorage.getItem('selectedAddress');
-      if (previouslySelectedWallet && previouslySelectedAddress && onboard) {
-        await onboard.walletSelect(previouslySelectedWallet);
-        await onboard.walletCheck(previouslySelectedAddress);
-
-        setWallet(previouslySelectedWallet);
-        setAddress(previouslySelectedAddress);
+      const selectedWallet = localStorage.getItem('selectedWallet');
+      if (onboard) {
+        const isSelected = await onboard.walletSelect(selectedWallet);
+        if (isSelected) {
+          const isChecked = await onboard.walletCheck();
+          if (isChecked) {
+            const state = onboard.getState();
+            setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
+          }
+        }
       }
     }
 
     connectWalletAccount();
-  }, [onboard]);
+  }, [onboard, network]);
 
   // Return the user object and auth methods
   return {

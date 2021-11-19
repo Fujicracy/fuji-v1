@@ -4,6 +4,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 **/node_modules
 packages/subgraph
+packages/strapi
 packages/*/artifacts/*
 !packages/*/artifacts/1-*.deploy
 !packages/*/artifacts/250-*.deploy
@@ -12,8 +13,10 @@ packages/*/*.txt
 packages/hardhat/.openzeppelin/unknown-31337.json
 packages/react-app/src/contracts/*
 !packages/react-app/src/contracts/1-*.deployment.json
+!packages/react-app/src/contracts/250-*.deployment.json
 packages/bots/contracts/*
 !packages/bots/contracts/1-*.deployment.json
+!packages/bots/contracts/250-*.deployment.json
 
 docker
 # docker/**/data

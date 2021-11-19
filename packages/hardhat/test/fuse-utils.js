@@ -91,6 +91,9 @@ const fixture = async ([wallet]) => {
   const F1155 = await getContractFactory("FujiERC1155");
   const f1155 = await upgrades.deployProxy(F1155, []);
 
+  const WFTMUnwrapper = await getContractFactory("WETHUnwrapper");
+  const unwrapper = await WFTMUnwrapper.deploy([]);
+
   const FujiOracle = await getContractFactory("FujiOracle");
   const oracle = await FujiOracle.deploy(
     Object.values(ASSETS).map((asset) => asset.address),

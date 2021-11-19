@@ -20,11 +20,12 @@ const mainnetUrl = process.env.ALCHEMY_ID
   : `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`;
 
 const network = process.env.NETWORK;
-const forkUrl = network === "fantom"
-  ? 'https://rpc.ftm.tools/'
-  : network === "bsc"
-  ? 'https://bsc-dataseed.binance.org/'
-  : mainnetUrl;
+const forkUrl =
+  network === "fantom"
+    ? "https://rpc.ftm.tools/"
+    : network === "bsc"
+    ? "https://bsc-dataseed.binance.org/"
+    : mainnetUrl;
 
 //
 // Select the network you want to deploy to here:
@@ -122,7 +123,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.0",
+        version: "0.8.2",
         settings: {
           optimizer: {
             enabled: true,
@@ -169,30 +170,22 @@ task("publish", "Publish deployment data to other packages")
     writeFiles(network.chainId, market, deployData);
   });
 
-task("sync", "Sync mainnet deployment data to be used in current network").setAction(
-  async (_, { ethers, config }) => {
+task("sync", "Sync mainnet deployment data to be used in current network")
+  .addOptionalParam("cid", "ChainId: 1, 250", "1")
+  .addOptionalParam("market", "Markets: fuse, core", "core")
+  .setAction(async ({ cid, market }, { ethers, config }) => {
     const network = await ethers.provider.getNetwork();
 
     try {
       const deployDataCore = JSON.parse(
-        fs.readFileSync(`${config.paths.artifacts}/1-core.deploy`).toString()
+        fs.readFileSync(`${config.paths.artifacts}/${cid}-${market}.deploy`).toString()
       );
-      writeFiles(network.chainId, "core", deployDataCore);
-      console.log("1-core deploy: synced");
+      writeFiles(network.chainId, market, deployDataCore);
+      console.log(`${cid}-${market}.deploy: synced`);
     } catch (e) {
-      console.log("1-core deploy: not synced");
+      console.log(`${cid}-${market}.deploy: not synced`);
     }
-    try {
-      const deployDataFuse = JSON.parse(
-        fs.readFileSync(`${config.paths.artifacts}/1-fuse.deploy`).toString()
-      );
-      writeFiles(network.chainId, "fuse", deployDataFuse);
-      console.log("1-core deploy: synced");
-    } catch (e) {
-      console.log("1-fuse deploy: not synced");
-    }
-  }
-);
+  });
 
 task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom();

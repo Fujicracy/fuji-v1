@@ -7,7 +7,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import { PositionRatios, getExchangePrice } from '../../../helpers';
-import { useExchangePrice } from '../../../hooks';
 
 function DeltaPositionRatios({
   borrowAsset,
@@ -17,9 +16,8 @@ function DeltaPositionRatios({
   newCollateral,
   newDebt,
   provider,
+  threshold,
 }) {
-  const price = useExchangePrice();
-
   const [healthFactor, setHealthFactor] = useState([]);
   const [borrowLimit, setLimit] = useState([]);
   const [ltv, setLtv] = useState([]);
@@ -35,6 +33,7 @@ function DeltaPositionRatios({
         collateralBalance: currentCollateral,
         debtBalance: currentDebt,
         decimals: borrowAsset.decimals,
+        threshold,
       };
       const {
         healthFactor: oldHf,
@@ -60,7 +59,6 @@ function DeltaPositionRatios({
 
     fetchValues();
   }, [
-    price,
     borrowAsset,
     currentCollateral,
     currentDebt,
@@ -68,6 +66,7 @@ function DeltaPositionRatios({
     newDebt,
     collateralAsset,
     provider,
+    threshold,
   ]);
 
   const formatValue = (value, precision) =>

@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../../interfaces/IProvider.sol";
+import "../../interfaces/IUnwrapper.sol";
+import "../../interfaces/IVault.sol";
 import "../../interfaces/IWETH.sol";
 import "../../interfaces/IFujiMappings.sol";
 import "../../interfaces/compound/IGenCToken.sol";
@@ -22,6 +24,10 @@ contract HelperFunct {
 
   function _getComptrollerAddress() internal pure returns (address) {
     return 0xAB1c342C7bf5Ec5F02ADEA1c2270670bCa144CbB;
+  }
+
+  function _getUnwrapper() internal pure returns(address) {
+    return 0x9e2B7c84EbC915F848bA69ba44Cf75044cF10951;
   }
 
   //IronBank functions
@@ -57,7 +63,7 @@ contract ProviderIronBank is IProvider, HelperFunct {
   //Provider Core Functions
 
   /**
-   * @dev Deposit ETH/ERC20_Token.
+   * @dev Deposit '_asset'.
    * @param _asset: token address to deposit. (For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount: token amount to deposit.
    */
@@ -91,7 +97,7 @@ contract ProviderIronBank is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Withdraw ETH/ERC20_Token.
+   * @dev Withdraw '_asset'.
    * @param _asset: token address to withdraw. (For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount: token amount to withdraw.
    */
@@ -106,13 +112,15 @@ contract ProviderIronBank is IProvider, HelperFunct {
     require(cyToken.redeemUnderlying(_amount) == 0, "Withdraw-failed");
 
     if (_isETH(_asset)) {
-      // Transform ETH to WETH
-      IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2).withdraw(_amount);
+      // Transform WETH to ETH
+      address unwrapper = _getUnwrapper();
+      IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
     }
   }
 
   /**
-   * @dev Borrow ETH/ERC20_Token.
+   * @dev Borrow '_asset'.
    * @param _asset token address to borrow.(For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount: token amount to borrow.
    */
@@ -127,13 +135,15 @@ contract ProviderIronBank is IProvider, HelperFunct {
     require(cyToken.borrow(_amount) == 0, "borrow-failed");
 
     if (_isETH(_asset)) {
-      // Transform ETH to WETH
-      IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2).withdraw(_amount);
+      // Transform WETH to ETH
+      address unwrapper = _getUnwrapper();
+      IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
     }
   }
 
   /**
-   * @dev Payback borrowed ETH/ERC20_Token.
+   * @dev Payback borrowed '_asset'.
    * @param _asset token address to payback.(For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount: token amount to payback.
    */
@@ -160,7 +170,7 @@ contract ProviderIronBank is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Returns the current borrowing rate (APR) of a ETH/ERC20_Token, in ray(1e27).
+   * @dev Returns the current borrowing rate (APR) of '_asset', in ray(1e27).
    * @param _asset: token address to query the current borrowing rate.
    */
   function getBorrowRateFor(address _asset) external view override returns (uint256) {
@@ -175,7 +185,8 @@ contract ProviderIronBank is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Returns the borrow balance of a ETH/ERC20_Token.
+   * @dev Returns the borrow balance of '_asset' of caller.
+   * NOTE: Returned value is at the last update state of provider.
    * @param _asset: token address to query the balance.
    */
   function getBorrowBalance(address _asset) external view override returns (uint256) {
@@ -185,8 +196,8 @@ contract ProviderIronBank is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Return borrow balance of ETH/ERC20_Token.
-   * This function is the accurate way to get IronBank borrow balance.
+   * @dev Return borrow balance of '_asset' of caller.
+   * This function updates the state of provider contract to return latest borrow balance.
    * It costs ~84K gas and is not a view function.
    * @param _asset token address to query the balance.
    * @param _who address of the account.
@@ -198,7 +209,7 @@ contract ProviderIronBank is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Returns the deposit balance of a ETH/ERC20_Token.
+   * @dev Returns the deposit balance of '_asset' of caller.
    * @param _asset: token address to query the balance.
    */
   function getDepositBalance(address _asset) external view override returns (uint256) {

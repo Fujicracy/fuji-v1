@@ -8,7 +8,7 @@ import Notify from 'bnc-notify';
 
 const BLOCKNATIVE_KEY = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
-export default function Transactor(provider, etherscan) {
+export default function Transactor(provider) {
   if (typeof provider !== 'undefined') {
     // eslint-disable-next-line consistent-return
     return async tx => {
@@ -26,14 +26,11 @@ export default function Transactor(provider, etherscan) {
       };
       const notify = Notify(options);
 
-      let etherscanNetwork = '';
-      if (network.name && network.chainId > 1) {
-        etherscanNetwork = network.name + '.';
-      }
-
-      let etherscanTxUrl = 'https://' + etherscanNetwork + 'etherscan.io/tx/';
-      if (network.chainId === 100) {
-        etherscanTxUrl = 'https://blockscout.com/poa/xdai/tx/';
+      let explorerUrl = 'https://etherscan.io/tx/';
+      let explorerName = 'Etherscan';
+      if (network.chainId === 250) {
+        explorerUrl = 'https://ftmscan.com/tx/';
+        explorerName = 'Ftmscan';
       }
 
       let dismissPendingWallet;
@@ -63,13 +60,17 @@ export default function Transactor(provider, etherscan) {
           const { emitter } = notify.hash(result.hash);
           emitter.on('all', transaction => {
             return {
-              link: (etherscan || etherscanTxUrl) + transaction.hash,
+              link: `${explorerUrl}${transaction.hash}`,
+              autoDismiss: 10000,
             };
           });
         } else {
+          const txHash = result.hash;
           notify.notification({
             type: 'success',
-            message: `Local Transaction Sent: ${result.hash}`,
+            message: `Transaction submitted: Click here to view on ${explorerName}!`,
+            onclick: () => window.open(`${explorerUrl}${txHash}`, '_blank'),
+            autoDismiss: 10000,
           });
         }
 
@@ -79,13 +80,25 @@ export default function Transactor(provider, etherscan) {
         dismissPendingWallet();
 
         let msg = e.message;
-        if (e.message.startsWith('cannot estimate gas')) {
-          msg = 'Insufficient ETH balance to pay for gas!';
+        if (msg === 'MetaMask Tx Signature: User denied transaction signature.') {
+          notify.notification({
+            type: 'error',
+            message: msg,
+            autoDismiss: 100000,
+          });
+        } else {
+          if (e.data && e.data.message) {
+            msg = e.data.message;
+          } else if (e.message.startsWith('cannot estimate gas')) {
+            msg = 'Transaction cannot be executed!';
+          }
+          notify.notification({
+            type: 'error',
+            message: `${msg} \n Click here to report this issue!`,
+            autoDismiss: 10000,
+            onclick: () => window.open('https://discord.gg/YbUX2vn7Vn', '_blank'),
+          });
         }
-        notify.notification({
-          type: 'error',
-          message: `Transaction error: ${msg}`,
-        });
       }
     };
   }

@@ -88,11 +88,12 @@ function DebtForm({ position, contracts, provider, address }) {
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
+      const colDecimals = vault.collateralAsset.decimals;
+      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral), colDecimals));
       const left = (diff / 1.35 / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice]);
+  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, vault]);
 
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
@@ -230,6 +231,7 @@ function DebtForm({ position, contracts, provider, address }) {
               : debtBalance.add(parseUnits(amount, decimals))
           }
           provider={provider}
+          threshold={vault.threshold}
         />
       ),
       actions: () => (
@@ -371,10 +373,10 @@ function DebtForm({ position, contracts, provider, address }) {
           subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
           subTitleInfo={
             action === Action.Repay
-              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name} Ξ`
+              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name}`
               : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${
                   vault.borrowAsset.name
-                } Ξ`
+                }`
           }
           startAdornmentImage={vault.borrowAsset.icon}
           endAdornment={{

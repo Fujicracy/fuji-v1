@@ -32,7 +32,16 @@ import {
 } from 'components';
 import { TextInput } from 'components/UI';
 
-import { VAULTS, ASSETS, PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import {
+  VAULTS,
+  ASSETS,
+  PROVIDERS,
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  CHAIN_NAMES,
+  CHAIN_NAME,
+  ASSET_NAME,
+} from 'consts';
 import {
   Transactor,
   GasEstimator,
@@ -112,7 +121,6 @@ function InitBorrow({ contracts, provider, address }) {
         vault.collateralAsset.name,
         vault.collateralAsset.isERC20,
       );
-
       const formattedBalance = unFormattedBalance
         ? Number(formatUnits(unFormattedBalance, ASSETS[collateralAsset].decimals)).toFixed(6)
         : null;
@@ -144,7 +152,7 @@ function InitBorrow({ contracts, provider, address }) {
       );
       const collateral = unFormattedNeededCollateral
         ? Number(formatUnits(unFormattedNeededCollateral, ASSETS[collateralAsset].decimals))
-        : null;
+        : 0;
       setNeededCollateral(collateral);
 
       setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
@@ -182,6 +190,7 @@ function InitBorrow({ contracts, provider, address }) {
         ? 0
         : // : collateralBalance.add(parseEther(collateralAmount)),
           collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
+    threshold: vault.threshold || 75,
   };
 
   const tx = Transactor(provider);
@@ -253,9 +262,14 @@ function InitBorrow({ contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
+    if (Number(collateralAmount) <= 0 || Number(borrowAmount) <= 0) {
+      setDialog({ step: 'validateInput' });
+      return;
+    }
+
     if (!vault.collateralAsset.isERC20) {
       const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-      if (totalCollateral > ETH_CAP_VALUE) {
+      if (totalCollateral > ETH_CAP_VALUE && vault.collateralAsset.name === ASSET_NAME.ETH) {
         setDialog({ step: 'capCollateral' });
         return;
       }
@@ -275,12 +289,8 @@ function InitBorrow({ contracts, provider, address }) {
     await borrow(false);
   };
 
-  // const handleChangeMarket = option => {
-  //   setMarket(option);
-  // };
-
   const handleChangeVault = v => {
-    setNeededCollateral(null);
+    setNeededCollateral(0);
 
     setBorrowAsset(v.borrowAsset.name);
     setCollateralAsset(v.collateralAsset.name);
@@ -315,8 +325,7 @@ function InitBorrow({ contracts, provider, address }) {
   const dialogContents = {
     success: {
       title: 'Success',
-      content:
-        'Your transaction has been processed, you can now check your position and follow the evolution of your debt position.',
+      content: 'Your transaction has been processed, you can check now your position.',
       actions: () => (
         <DialogActions>
           <Button component={Link} to="/dashboard/my-positions" className="main-button">
@@ -331,7 +340,7 @@ function InitBorrow({ contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(collateralAmount).toFixed(2)} {collateralAsset}
+            Approve {Number(collateralAmount).toFixed(0)} {collateralAsset}
           </Button>
           <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
@@ -355,12 +364,28 @@ function InitBorrow({ contracts, provider, address }) {
         </DialogActions>
       ),
     },
+    validateInput: {
+      title: 'Input Validation',
+      content: `Incorect amount of collateral and/or borrow amount!`,
+      actions: () => (
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialog({ step: null });
+            }}
+            className="main-button"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      ),
+    },
   };
 
   return (
     <Container>
       <Dialog
-        open={['success', 'capCollateral', 'approval'].includes(dialog.step)}
+        open={['success', 'capCollateral', 'approval', 'validateInput'].includes(dialog.step)}
         aria-labelledby="form-dialog-title"
       >
         <div
@@ -392,9 +417,13 @@ function InitBorrow({ contracts, provider, address }) {
                 padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
-                  <Grid item xs={8} sm={8} md={12}>
-                    <SelectMarket hasBlackContainer={false} />
-                  </Grid>
+                  {CHAIN_NAME !== CHAIN_NAMES.FANTOM && (
+                    <Grid item xs={8} sm={8} md={12}>
+                      <SelectMarket
+                        /* handleChange={handleChangeMarket} */ hasBlackContainer={false}
+                      />
+                    </Grid>
+                  )}
                   <Grid item xs={4} sm={4} md={12}>
                     <ProvidersList
                       contracts={contracts}
@@ -471,7 +500,7 @@ function InitBorrow({ contracts, provider, address }) {
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
                       balance ? Number(balance).toFixed(3) : '...'
-                    } Ξ`}
+                    }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
                         <Typography className="error-input-msg" variant="body2">

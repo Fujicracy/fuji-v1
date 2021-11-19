@@ -5,6 +5,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../../interfaces/IProvider.sol";
+import "../../interfaces/IUnwrapper.sol";
+import "../../interfaces/IVault.sol";
 import "../../interfaces/IWETH.sol";
 import "../../interfaces/aave/IAaveDataProvider.sol";
 import "../../interfaces/aave/IAaveLendingPool.sol";
@@ -30,8 +32,12 @@ contract ProviderAave is IProvider {
     return 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
   }
 
+  function _getUnwrapper() internal pure returns(address) {
+    return 0x9e2B7c84EbC915F848bA69ba44Cf75044cF10951;
+  }
+
   /**
-   * @dev Return the borrowing rate of ETH/ERC20_Token.
+   * @dev Return the borrowing rate of '_asset'.
    * @param _asset to query the borrowing rate.
    */
   function getBorrowRateFor(address _asset) external view override returns (uint256) {
@@ -45,7 +51,7 @@ contract ProviderAave is IProvider {
   }
 
   /**
-   * @dev Return borrow balance of ETH/ERC20_Token.
+   * @dev Return borrow balance of '_asset'.
    * @param _asset token address to query the balance.
    */
   function getBorrowBalance(address _asset) external view override returns (uint256) {
@@ -60,7 +66,7 @@ contract ProviderAave is IProvider {
   }
 
   /**
-   * @dev Return borrow balance of ETH/ERC20_Token.
+   * @dev Return borrow balance of '_asset'.
    * @param _asset token address to query the balance.
    * @param _who address of the account.
    */
@@ -81,7 +87,7 @@ contract ProviderAave is IProvider {
   }
 
   /**
-   * @dev Return deposit balance of ETH/ERC20_Token.
+   * @dev Return deposit balance of '_asset'.
    * @param _asset token address to query the balance.
    */
   function getDepositBalance(address _asset) external view override returns (uint256) {
@@ -96,7 +102,7 @@ contract ProviderAave is IProvider {
   }
 
   /**
-   * @dev Deposit ETH/ERC20_Token.
+   * @dev Deposit '_asset'.
    * @param _asset token address to deposit.(For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount token amount to deposit.
    */
@@ -117,7 +123,7 @@ contract ProviderAave is IProvider {
   }
 
   /**
-   * @dev Borrow ETH/ERC20_Token.
+   * @dev Borrow '_asset'.
    * @param _asset token address to borrow.(For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
    * @param _amount token amount to borrow.
    */
@@ -130,11 +136,15 @@ contract ProviderAave is IProvider {
     aave.borrow(_tokenAddr, _amount, 2, 0, address(this));
 
     // convert WETH to ETH
-    if (isEth) IWETH(_tokenAddr).withdraw(_amount);
+    if (isEth)  {
+      address unwrapper = _getUnwrapper();
+      IERC20(_tokenAddr).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
+    }
   }
 
   /**
-   * @dev Withdraw ETH/ERC20_Token.
+   * @dev Withdraw '_asset'.
    * @param _asset token address to withdraw.
    * @param _amount token amount to withdraw.
    */
@@ -147,11 +157,15 @@ contract ProviderAave is IProvider {
     aave.withdraw(_tokenAddr, _amount, address(this));
 
     // convert WETH to ETH
-    if (isEth) IWETH(_tokenAddr).withdraw(_amount);
+    if (isEth)  {
+      address unwrapper = _getUnwrapper();
+      IERC20(_tokenAddr).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
+    }
   }
 
   /**
-   * @dev Payback borrowed ETH/ERC20_Token.
+   * @dev Payback borrowed '_asset'.
    * @param _asset token address to payback.
    * @param _amount token amount to payback.
    */

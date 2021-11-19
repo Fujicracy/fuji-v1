@@ -7,7 +7,7 @@ export const DropDownContainer = styled('div')`
 `;
 
 export const DropDownHeader = styled('div')`
-  height: 56px;
+  height: 44px;
   background: rgba(255, 255, 255, 0.1);
   font-size: 16px;
   margin: 0;
@@ -25,7 +25,7 @@ export const DropDownHeader = styled('div')`
 
   ${fujiMedia.lessThan('medium')`
     font-size: 12px;
-    height: 40px;
+    height: 44px;
   `}
   ${fujiMedia.between('medium', 'large')`
     height: 56px;

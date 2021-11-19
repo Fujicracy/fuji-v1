@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "../../interfaces/IProvider.sol";
+import "../../interfaces/IUnwrapper.sol";
+import "../../interfaces/IVault.sol";
 import "../../interfaces/IWETH.sol";
 import "../../interfaces/IFujiMappings.sol";
 import "../../interfaces/compound/IGenCToken.sol";
@@ -22,6 +24,10 @@ contract HelperFunct {
 
   function _getComptrollerAddress() internal pure returns (address) {
     return 0x4250A6D3BD57455d7C6821eECb6206F507576cD2; // Cream fantom
+  }
+
+  function _getUnwrapper() internal pure returns(address) {
+    return 0xee94A39D185329d8c46dEA726E01F91641E57346;
   }
 
   //fantomCream functions
@@ -57,7 +63,7 @@ contract ProviderCream is IProvider, HelperFunct {
   //Provider Core Functions
 
   /**
-   * @dev Deposit ETH/ERC20_Token.
+   * @dev Deposit '_asset'.
    * @param _asset: token address to deposit. (For FTM: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF)
    * @param _amount: token amount to deposit.
    */
@@ -91,7 +97,7 @@ contract ProviderCream is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Withdraw ETH/ERC20_Token.
+   * @dev Withdraw '_asset'.
    * @param _asset: token address to withdraw. (For FTM: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF)
    * @param _amount: token amount to withdraw.
    */
@@ -106,13 +112,15 @@ contract ProviderCream is IProvider, HelperFunct {
     require(cyToken.redeemUnderlying(_amount) == 0, "Withdraw-failed");
 
     if (_isFTM(_asset)) {
-      // Transform FTM to WFTM
-      IWETH(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).withdraw(_amount);
+      // Transform WFTM to FTM
+      address unwrapper = _getUnwrapper();
+      IERC20(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
     }
   }
 
   /**
-   * @dev Borrow ETH/ERC20_Token.
+   * @dev Borrow '_asset'.
    * @param _asset token address to borrow.(For FTM: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF)
    * @param _amount: token amount to borrow.
    */
@@ -131,13 +139,15 @@ contract ProviderCream is IProvider, HelperFunct {
 
     if (_isFTM(_asset)) {
       // Transform WFTM to FTM
-      IWETH(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).withdraw(_amount);
+      address unwrapper = _getUnwrapper();
+      IERC20(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83).univTransfer(payable(unwrapper), _amount);
+      IUnwrapper(unwrapper).withdraw(_amount);
     }
   }
 
   /**
-   * @dev Payback borrowed ETH/ERC20_Token.
-   * @param _asset token address to payback.(For ETH: 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE)
+   * @dev Payback borrowed '_asset'.
+   * @param _asset token address to payback.(For FTM: 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF)
    * @param _amount: token amount to payback.
    */
   function payback(address _asset, uint256 _amount) external payable override {
@@ -163,22 +173,24 @@ contract ProviderCream is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Returns the current borrowing rate (APR) of a ETH/ERC20_Token, in ray(1e27).
+   * @dev Returns the current borrowing rate (APR) of '_asset', in ray(1e27).
    * @param _asset: token address to query the current borrowing rate.
    */
   function getBorrowRateFor(address _asset) external view override returns (uint256) {
     address cyTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
 
-    //Block Rate transformed for common mantissa for Fuji in ray (1e27), Note: fantomCream uses base 1e18
+    // Block Rate transformed for common mantissa for Fuji in ray (1e27)
+    // Note: Cream uses base 1e18
     uint256 bRateperBlock = IGenCToken(cyTokenAddr).borrowRatePerBlock() * 10**9;
 
-    // The approximate number of blocks per year that is assumed by the fantomCream interest rate model
-    uint256 blocksperYear = 2102400;
-    return bRateperBlock * blocksperYear;
+    // The approximate number of blocks per year that is assumed by the Cream interest rate model
+    // ~60 blocks per min in fantom
+    return bRateperBlock * 60 * 60 * 24 * 365;
   }
 
   /**
-   * @dev Returns the borrow balance of a ETH/ERC20_Token.
+   * @dev Returns the borrow balance of '_asset' of caller.
+   * NOTE: Returned value is at the last update state of provider.
    * @param _asset: token address to query the balance.
    */
   function getBorrowBalance(address _asset) external view override returns (uint256) {
@@ -188,8 +200,8 @@ contract ProviderCream is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Return borrow balance of ETH/ERC20_Token.
-   * This function is the accurate way to get fantomCream borrow balance.
+   * @dev Return borrow balance of '_asset' of caller.
+   * This function updates the state of provider contract to return latest borrow balance.
    * It costs ~84K gas and is not a view function.
    * @param _asset token address to query the balance.
    * @param _who address of the account.
@@ -201,7 +213,7 @@ contract ProviderCream is IProvider, HelperFunct {
   }
 
   /**
-   * @dev Returns the deposit balance of a ETH/ERC20_Token.
+   * @dev Returns the deposit balance of '_asset' of caller.
    * @param _asset: token address to query the balance.
    */
   function getDepositBalance(address _asset) external view override returns (uint256) {

@@ -39,6 +39,7 @@ function MyPositions({ contracts, address }) {
       ]),
       borrowAsset: vault.borrowAsset,
       collateralAsset: vault.collateralAsset,
+      threshold: vault.threshold || 75,
     };
   });
 
