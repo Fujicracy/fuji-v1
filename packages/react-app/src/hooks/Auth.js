@@ -4,6 +4,8 @@ import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
 import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
 
+const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
+
 const AuthContext = createContext();
 const localStorage = window.localStorage;
 
@@ -15,8 +17,6 @@ function useProvideAuth() {
   const [onboard, setOnboard] = useState(null);
   const [balance, setBalance] = useState(0);
   const [network, setNetwork] = useState(null);
-
-  const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -36,7 +36,6 @@ function useProvideAuth() {
       networkId: Number(CHAIN_ID),
       darkMode: true,
       walletSelect: {
-        // Metamask, WalletConnect, Ledger, Trezor, Coinbase, Formatic as stated in the card
         wallets: [
           { walletName: 'metamask', preferred: true },
           {
@@ -53,10 +52,6 @@ function useProvideAuth() {
             walletName: 'trezor',
             appUrl: APP_URL,
             rpcUrl: RPC_URL,
-          },
-          {
-            walletName: 'fortmatic',
-            apiKey: process.env.REACT_APP_FORTMATIC_API_KEY,
           },
         ],
       },
@@ -78,7 +73,7 @@ function useProvideAuth() {
         },
         network: setNetwork,
         address: onboardAddress => {
-          localStorage.setItem('selectedAddress', onboardAddress);
+          localStorage.setItem('selectedAddress', onboardAddress || '');
           setAddress(onboardAddress);
         },
         balance: onboardBalance => {
@@ -97,7 +92,7 @@ function useProvideAuth() {
     });
 
     setOnboard(tmpOnboard);
-  }, [RPC_URL]);
+  }, []);
 
   useEffect(() => {
     async function connectWalletAccount() {
