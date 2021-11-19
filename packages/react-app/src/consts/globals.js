@@ -1,5 +1,6 @@
 import { generateMedia } from 'styled-media-query';
 import { ftmIcon, maticIcon, ethIcons } from 'assets/images';
+import { capitalizeFirstLetter } from 'helpers/Utils';
 
 export const BREAKPOINT_NAMES = {
   MOBILE: 'mobile',
@@ -38,21 +39,21 @@ const CHAIN_NAMES = {
 const CHAINS = {
   [CHAIN_NAMES.ETHEREUM]: {
     id: CHAIN_NAMES.ETHEREUM,
-    name: 'Ethereum',
+    name: capitalizeFirstLetter(CHAIN_NAMES.ETHEREUM),
     icon: ethIcons.BLUE.toString(),
     isDeployed: true,
     dashboardUrl: 'https://app.fujidao.org/#/dashboard',
   },
   [CHAIN_NAMES.FANTOM]: {
     id: CHAIN_NAMES.FANTOM,
-    name: 'Fantom',
+    name: capitalizeFirstLetter(CHAIN_NAMES.FANTOM),
     icon: ftmIcon.toString(),
     isDeployed: true,
     dashboardUrl: 'https://fantom.fujidao.org/#/dashboard',
   },
   [CHAIN_NAMES.POLYGON]: {
     id: CHAIN_NAMES.POLYGON,
-    name: 'Polygon',
+    name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
     icon: maticIcon.toString(),
     isDeployed: true,
     dashboardUrl: 'https://polygon.fujidao.org/#/dashboard',
