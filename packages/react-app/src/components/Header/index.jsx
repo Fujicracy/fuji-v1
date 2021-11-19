@@ -144,7 +144,7 @@ function Header({ contracts, provider, address, onboard }) {
                   Documentation
                 </MenuItem>
 
-                {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                {CHAIN_NAME === CHAIN_NAMES.CORE && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -205,7 +205,7 @@ function Header({ contracts, provider, address, onboard }) {
                   My positions
                 </NavLink>
               </li>
-              {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+              {CHAIN_NAME === CHAIN_NAMES.CORE && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
                     NFT
@@ -240,6 +240,7 @@ function Header({ contracts, provider, address, onboard }) {
                     <DropDownItemContainer width="128px">
                       {Object.keys(chains).map(key => (
                         <DropDownItem
+                          key={key}
                           onClick={() => {
                             window.open(chains[key].dashboardUrl, '_self');
                           }}

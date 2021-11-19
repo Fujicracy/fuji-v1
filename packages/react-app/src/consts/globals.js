@@ -1,6 +1,5 @@
 import { generateMedia } from 'styled-media-query';
 import { ftmIcon, maticIcon, ethIcons } from 'assets/images';
-import { capitalizeFirstLetter } from 'helpers/Utils';
 
 export const BREAKPOINT_NAMES = {
   MOBILE: 'mobile',
@@ -25,55 +24,59 @@ export const fujiMedia = generateMedia({
 
 const NETWORK_ID = {
   FANTOM: 250,
-  MAINNET: 1,
+  CORE: 1,
   KOVAN: 42,
   LOCAL: 31337,
+  POLYGON: 137,
 };
 
 const NETWORKS = {
-  [NETWORK_ID.MAINNET]: 'Mainnet',
+  [NETWORK_ID.CORE]: 'Etherum',
   [NETWORK_ID.KOVAN]: 'Kovan',
   [NETWORK_ID.FANTOM]: 'Fantom',
   [NETWORK_ID.LOCAL]: 'Local',
+  [NETWORK_ID.POLYGON]: 'Polygon',
 };
 
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
   FUSE: 'fuse',
+  POLYGON: 'polygon',
 };
 
 const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
 
 const CHAIN_NAMES = {
-  ETHEREUM: 'ethereum',
+  CORE: 'core',
   FANTOM: 'fantom',
   POLYGON: 'polygon',
 };
 
 const CHAINS = {
-  [CHAIN_NAMES.ETHEREUM]: {
-    id: CHAIN_NAMES.ETHEREUM,
-    name: capitalizeFirstLetter(CHAIN_NAMES.ETHEREUM),
+  [CHAIN_NAMES.CORE]: {
+    id: CHAIN_NAMES.CORE,
+    name: 'Ethereum',
     icon: ethIcons.BLUE.toString(),
     isDeployed: true,
     dashboardUrl: 'https://app.fujidao.org/#/dashboard',
   },
   [CHAIN_NAMES.FANTOM]: {
     id: CHAIN_NAMES.FANTOM,
-    name: capitalizeFirstLetter(CHAIN_NAMES.FANTOM),
+    name: 'Fantom',
     icon: ftmIcon.toString(),
     isDeployed: true,
     dashboardUrl: 'https://fantom.fujidao.org/#/dashboard',
   },
   [CHAIN_NAMES.POLYGON]: {
     id: CHAIN_NAMES.POLYGON,
-    name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
+    name: 'Polygon',
     icon: maticIcon.toString(),
-    isDeployed: false,
+    isDeployed: true,
+    dashboardUrl: 'https://polygon.fujidao.org/#/dashboard',
   },
 };
 
-const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.ETHEREUM;
+const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.CORE;
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID || 31337;
 const NETWORK = NETWORKS[CHAIN_ID];
