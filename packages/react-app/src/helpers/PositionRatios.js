@@ -15,7 +15,7 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   // liquidation threshold
   const liqThres = threshold ? threshold / 100 : 0.75;
   // collateralization and healthy factor
-  const factor = 1 / threshold;
+  const factor = 1 / liqThres;
 
   const healthFactor =
     debt === 0 ? Infinity : (collateral * collateralPrice * liqThres) / (debt * borrowPrice);
@@ -23,9 +23,6 @@ export default function PositionRatios(position, collateralPrice, borrowPrice) {
   const liqPrice = (debt * borrowPrice) / (collateral * liqThres);
   const ltv = (debt * borrowPrice) / (collateral * collateralPrice);
   const borrowLimit = Math.min(ltv * factor, 1);
-  // if (price > 0) {
-  //   debugger;
-  // }
 
   return {
     healthFactor: healthFactor > MAX_HEALTH_FACTOR || !healthFactor ? Infinity : healthFactor,
