@@ -118,7 +118,7 @@ function PositionElement({ position, actionType }) {
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >
-                  {collateral ? collateral.toFixed(2) : '...'}
+                  {collateral ? collateral.toFixed(3) : '...'}
                 </SectionTitle>
               </Flex>
               {!isMobile && !isTablet && (
@@ -153,7 +153,7 @@ function PositionElement({ position, actionType }) {
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >
-                  {debt ? debt.toFixed(2) : '...'}
+                  {debt ? debt.toFixed(3) : '...'}
                 </SectionTitle>
               </Flex>
               {!isMobile && !isTablet && (
