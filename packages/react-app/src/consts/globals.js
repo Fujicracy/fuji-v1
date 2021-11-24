@@ -23,18 +23,20 @@ export const fujiMedia = generateMedia({
   large: '1170px',
 });
 
-const NETWORK_ID = {
+const CHAIN_IDS = {
   FANTOM: 250,
   MAINNET: 1,
   KOVAN: 42,
   LOCAL: 31337,
+  POLYGON: 137,
 };
 
 const NETWORKS = {
-  [NETWORK_ID.MAINNET]: 'Mainnet',
-  [NETWORK_ID.KOVAN]: 'Kovan',
-  [NETWORK_ID.FANTOM]: 'Fantom',
-  [NETWORK_ID.LOCAL]: 'Local',
+  [CHAIN_IDS.MAINNET]: 'Mainnet',
+  [CHAIN_IDS.KOVAN]: 'Kovan',
+  [CHAIN_IDS.FANTOM]: 'Fantom',
+  [CHAIN_IDS.LOCAL]: 'Local',
+  [CHAIN_IDS.POLYGON]: 'Polygon',
 };
 
 const DEPLOYMENT_TYPES = {
@@ -48,6 +50,7 @@ const CHAIN_NAMES = {
   ETHEREUM: 'ethereum',
   FANTOM: 'fantom',
   POLYGON: 'polygon',
+  LOCAL: 'local',
 };
 
 const CHAINS = {
@@ -64,19 +67,51 @@ const CHAINS = {
     icon: ftmIcon.toString(),
     isDeployed: true,
     dashboardUrl: 'https://fantom.fujidao.org/#/dashboard',
+    isCustomNetwork: true,
+    rpcUrls: ['https://rpcapi.fantom.network'],
+    nativeCurrency: {
+      name: 'Fantom',
+      symbol: 'FTM',
+      decimals: 18,
+    },
+    blockExplorerUrls: ['https://ftmscan.com'],
   },
   [CHAIN_NAMES.POLYGON]: {
     id: CHAIN_NAMES.POLYGON,
     name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
     icon: maticIcon.toString(),
     isDeployed: false,
+    isCustomNetwork: true,
+    rpcUrls: [
+      'https://polygon-rpc.com/',
+      'https://rpc-mainnet.matic.network',
+      'https://matic-mainnet.chainstacklabs.com',
+      'https://rpc-mainnet.maticvigil.com',
+      'https://rpc-mainnet.matic.quiknode.pro',
+      'https://matic-mainnet-full-rpc.bwarelabs.com',
+    ],
+    nativeCurrency: {
+      name: 'MATIC',
+      symbol: 'MATIC',
+      decimals: 18,
+    },
+    blockExplorerUrls: ['https://polygonscan.com'],
+  },
+  [CHAIN_NAMES.LOCAL]: {
+    id: CHAIN_NAMES.LOCAL,
+    name: capitalizeFirstLetter(CHAIN_NAMES.LOCAL),
+    icon: ethIcons.BLUE.toString(),
+    isDeployed: false,
+    isCustomNetwork: false,
+    rpcUrl: 'http://localhost:8545',
   },
 };
 
 const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME || CHAIN_NAMES.ETHEREUM;
-
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID || 31337;
-const NETWORK = NETWORKS[CHAIN_ID];
+const CHAIN = CHAINS[CHAIN_NAME];
+
+const NETWORK_NAME = NETWORKS[CHAIN_ID];
 const APP_URL = process.env.REACT_APP_APP_URL || 'http://localhost:3000';
 const LANDING_URL = process.env.REACT_APP_LANDING_URL || 'http://localhost:3000';
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
@@ -87,11 +122,12 @@ const MERKLE_DIST_ADDR = '0x51407A073fb7C703185f47c3FBB1B915678221b8';
 const FUJIFLOPS_NFT_ADDR = '0x376C0AA9150095cB36AdcD472bE390D31C6BeF8F';
 
 export {
+  CHAIN,
   CHAIN_ID,
   CHAIN_NAME,
   CHAIN_NAMES,
   CHAINS,
-  NETWORK,
+  NETWORK_NAME,
   APP_URL,
   LANDING_URL,
   INFURA_ID,

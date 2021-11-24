@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
+import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL, CHAIN, NETWORK_NAME } from 'consts/globals';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
@@ -30,68 +30,114 @@ function useProvideAuth() {
     }
   }
 
+  const addNetworkToWallet = async () => {
+    if (!CHAIN.isCustomNetwork) return;
+
+    if (window.ethereum) {
+      const hexedChainId = '0x' + Number(CHAIN_ID).toString(16);
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: hexedChainId }],
+        });
+      } catch (error) {
+        if (error.code === 4902) {
+          console.log('Adding new chain');
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: hexedChainId,
+                  chainName: CHAIN.name,
+                  rpcUrls: CHAIN.rpcUrls,
+                  nativeCurrency: CHAIN.nativeCurrency,
+                  blockExplorerUrls: CHAIN.blockExplorerUrls,
+                },
+              ],
+            });
+          } catch (addError) {
+            console.error({ addError });
+          }
+        }
+        console.error(error);
+      }
+    } else {
+      // if no window.ethereum then MetaMask is not installed
+      console.error(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
+
   useEffect(() => {
-    const tmpOnboard = Onboard({
-      dappId: BLOCKNATIVE_KEY,
-      networkId: Number(CHAIN_ID),
-      darkMode: true,
-      walletSelect: {
-        wallets: [
-          { walletName: 'metamask', preferred: true },
-          {
-            walletName: 'walletConnect',
-            infuraKey: INFURA_ID,
-            preferred: true,
+    async function intialize() {
+      await addNetworkToWallet();
+
+      const tmpOnboard = Onboard({
+        dappId: BLOCKNATIVE_KEY,
+        networkId: Number(CHAIN_ID),
+        networkName: NETWORK_NAME,
+        darkMode: true,
+        walletSelect: {
+          wallets: [
+            { walletName: 'metamask', preferred: true },
+            {
+              walletName: 'walletConnect',
+              infuraKey: INFURA_ID,
+            },
+            { walletName: 'coinbase' },
+            {
+              walletName: 'ledger',
+              rpcUrl: RPC_URL,
+            },
+            {
+              walletName: 'trezor',
+              appUrl: APP_URL,
+              rpcUrl: RPC_URL,
+            },
+          ],
+        },
+        subscriptions: {
+          wallet: onboardWallet => {
+            if (onboardWallet.provider) {
+              setWallet(onboardWallet);
+              const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
+              setProvider(ethersProvider);
+              localStorage.setItem('selectedWallet', onboardWallet.name);
+            } else {
+              setAddress('');
+              setProvider(undefined);
+              setWallet('');
+
+              localStorage.removeItem('selectedWallet');
+              localStorage.removeItem('selectedAddress');
+            }
           },
-          { walletName: 'coinbase' },
-          {
-            walletName: 'ledger',
-            rpcUrl: RPC_URL,
+          network: setNetwork,
+          address: onboardAddress => {
+            localStorage.setItem('selectedAddress', onboardAddress || '');
+            setAddress(onboardAddress);
           },
-          {
-            walletName: 'trezor',
-            appUrl: APP_URL,
-            rpcUrl: RPC_URL,
+          balance: onboardBalance => {
+            if (onboardBalance) {
+              const fBalance = parseFloat(formatUnits(onboardBalance));
+              setBalance(fBalance.toFixed(2));
+            }
           },
+        },
+        walletCheck: [
+          { checkName: 'derivationPath' },
+          { checkName: 'connect' },
+          { checkName: 'accounts' },
+          { checkName: 'network' },
         ],
-      },
-      subscriptions: {
-        wallet: onboardWallet => {
-          if (onboardWallet.provider) {
-            setWallet(onboardWallet);
-            const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
-            setProvider(ethersProvider);
-            localStorage.setItem('selectedWallet', onboardWallet.name);
-          } else {
-            setAddress('');
-            setProvider(undefined);
-            setWallet('');
+      });
+      setOnboard(tmpOnboard);
+    }
 
-            localStorage.removeItem('selectedWallet');
-            localStorage.removeItem('selectedAddress');
-          }
-        },
-        network: setNetwork,
-        address: onboardAddress => {
-          localStorage.setItem('selectedAddress', onboardAddress || '');
-          setAddress(onboardAddress);
-        },
-        balance: onboardBalance => {
-          if (onboardBalance) {
-            const fBalance = parseFloat(formatUnits(onboardBalance));
-            setBalance(fBalance.toFixed(2));
-          }
-        },
-      },
-      walletCheck: [
-        { checkName: 'derivationPath' },
-        { checkName: 'connect' },
-        { checkName: 'accounts' },
-        { checkName: 'network' },
-      ],
-    });
-
-    setOnboard(tmpOnboard);
+    intialize();
   }, []);
 
   useEffect(() => {
