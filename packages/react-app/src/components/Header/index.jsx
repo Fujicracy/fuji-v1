@@ -41,6 +41,7 @@ import {
   MenuItem,
   MenuBackContainer,
   MenuNavigationContainer,
+  DropDownBackContainer,
 } from './styles';
 
 function Header() {
@@ -91,6 +92,57 @@ function Header() {
 
   const currentPage = useLocation();
 
+  const NetworkDropdown = () => {
+    return (
+      <Box
+        ml={2}
+        sx={{ position: 'relative' }}
+        tabIndex="0"
+        onBlur={() => setIsOpenNetworkDropDown(false)}
+      >
+        <DropDownHeader
+          onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
+          isClicked={isOpenNetworkDropDown}
+          hasBorder
+          width={!isMobile ? '160px' : '80px'}
+        >
+          <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
+          {!isMobile && (
+            <Label ml={2} color="#f5f5f5">
+              {CHAINS[CHAIN_NAME].name}
+            </Label>
+          )}
+          <Image src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
+        </DropDownHeader>
+        {isOpenNetworkDropDown && (
+          <DropDownBackContainer onClick={() => setIsOpenNetworkDropDown(false)}>
+            <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
+              {Object.keys(chains).map(key => (
+                <DropDownItem
+                  key={key}
+                  onClick={() => {
+                    window.open(chains[key].dashboardUrl, '_self');
+                  }}
+                >
+                  <Image src={chains[key].icon} width={16} />
+                  <Label color="#f5f5f5" ml="8px">
+                    {chains[key].name}
+                  </Label>
+                </DropDownItem>
+              ))}
+            </DropDownItemContainer>
+          </DropDownBackContainer>
+        )}
+      </Box>
+    );
+  };
+
+  const menuIconStyle = {
+    color: 'white',
+    fontSize: 40,
+    padding: 0,
+    marginLeft: isTablet ? 40 : 20,
+  };
   return (
     <Container>
       {isMenuOpen && (
@@ -178,23 +230,26 @@ function Header() {
 
         {address &&
           (isMobile || isTablet ? (
-            isMenuOpen ? (
-              <MenuOutlinedIcon
-                style={{ color: 'white', fontSize: 40, padding: 0, margin: 0 }}
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsMenuOpen(false);
-                }}
-              />
-            ) : (
-              <MenuOpenOutlinedIcon
-                style={{ color: '#F5F5FD', fontSize: 40, padding: 0, margin: 0 }}
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsMenuOpen(!isMenuOpen);
-                }}
-              />
-            )
+            <Flex flexDirection="row" alignItems="center">
+              <NetworkDropdown />
+              {isMenuOpen ? (
+                <MenuOutlinedIcon
+                  style={menuIconStyle}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setIsMenuOpen(false);
+                  }}
+                />
+              ) : (
+                <MenuOpenOutlinedIcon
+                  style={menuIconStyle}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+            </Flex>
           ) : (
             <Navigation>
               <li className="nav-item">
@@ -217,46 +272,7 @@ function Header() {
               )}
 
               <li>
-                <Box
-                  ml={2}
-                  sx={{ position: 'relative' }}
-                  tabIndex="0"
-                  onBlur={() => setIsOpenNetworkDropDown(false)}
-                >
-                  <DropDownHeader
-                    onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
-                    isClicked={isOpenNetworkDropDown}
-                    hasBorder
-                    width="160px"
-                  >
-                    <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
-                    <Label ml={2} color="#f5f5f5">
-                      {CHAINS[CHAIN_NAME].name}
-                    </Label>
-                    <Image
-                      src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon}
-                      ml={2}
-                      width={11}
-                    />
-                  </DropDownHeader>
-                  {isOpenNetworkDropDown && (
-                    <DropDownItemContainer width="128px">
-                      {Object.keys(chains).map(key => (
-                        <DropDownItem
-                          key={key}
-                          onClick={() => {
-                            window.open(chains[key].dashboardUrl, '_self');
-                          }}
-                        >
-                          <Image src={chains[key].icon} width={16} />
-                          <Label color="#f5f5f5" ml="8px">
-                            {chains[key].name}
-                          </Label>
-                        </DropDownItem>
-                      ))}
-                    </DropDownItemContainer>
-                  )}
-                </Box>
+                <NetworkDropdown />
               </li>
 
               <li>
