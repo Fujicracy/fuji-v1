@@ -7,6 +7,7 @@ import { Grid } from '@material-ui/core';
 
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+import { useAuth, useContractLoader, useContractReader } from 'hooks';
 
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
@@ -17,12 +18,12 @@ import PositionElement, { PositionActions } from '../../../components/PositionEl
 import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
 import ProvidersList from '../../../components/ProvidersList';
 
-import { useContractReader } from '../../../hooks';
-
 import './styles.css';
 
-function ManagePosition({ contracts, provider, address }) {
+function ManagePosition() {
   // const defaultVault = Object.values(VAULTS)[0];
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
 
   const queries = new URLSearchParams(useLocation().search);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -124,49 +125,22 @@ function ManagePosition({ contracts, provider, address }) {
                   <Grid container className="manage-content" spacing={4}>
                     <Grid item md={6} xs={12}>
                       {actionsType === 'single' ? (
-                        <CollateralForm
-                          contracts={contracts}
-                          provider={provider}
-                          address={address}
-                          position={position}
-                        />
+                        <CollateralForm position={position} />
                       ) : (
-                        <SupplyAndBorrowForm
-                          contracts={contracts}
-                          provider={provider}
-                          address={address}
-                          position={position}
-                        />
+                        <SupplyAndBorrowForm position={position} />
                       )}
                     </Grid>
                     <Grid item md={6} xs={12}>
                       {actionsType === 'single' ? (
-                        <DebtForm
-                          contracts={contracts}
-                          provider={provider}
-                          address={address}
-                          position={position}
-                        />
+                        <DebtForm position={position} />
                       ) : (
-                        <RepayAndWithdrawForm
-                          contracts={contracts}
-                          provider={provider}
-                          address={address}
-                          position={position}
-                        />
+                        <RepayAndWithdrawForm position={position} />
                       )}
                     </Grid>
                   </Grid>
                 </form>
               </BlackBoxContainer>
-              {!isMobile && !isTablet && (
-                <FlashClose
-                  position={position}
-                  contracts={contracts}
-                  provider={provider}
-                  address={address}
-                />
-              )}
+              {!isMobile && !isTablet && <FlashClose position={position} />}
             </Grid>
             <Grid item md={4} sm={12} xs={12}>
               <Grid container direction="column" spacing={isMobile ? 4 : 6}>
@@ -175,23 +149,14 @@ function ManagePosition({ contracts, provider, address }) {
                 </Grid>
                 {!isMobile && !isTablet && (
                   <Grid item>
-                    <ProvidersList
-                      contracts={contracts}
-                      markets={[borrowAssetName]}
-                      isSelectable={false}
-                    />
+                    <ProvidersList markets={[borrowAssetName]} isSelectable={false} />
                   </Grid>
                 )}
               </Grid>
             </Grid>
             {(isMobile || isTablet) && (
               <Grid item md={4} sm={12} xs={12}>
-                <FlashClose
-                  position={position}
-                  contracts={contracts}
-                  provider={provider}
-                  address={address}
-                />
+                <FlashClose position={position} />
               </Grid>
             )}
           </Grid>

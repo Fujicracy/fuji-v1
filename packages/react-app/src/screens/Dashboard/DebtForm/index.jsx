@@ -18,8 +18,16 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
+import {
+  useContractReader,
+  useExchangePrice,
+  useBalance,
+  useAllowance,
+  useAuth,
+  useContractLoader,
+} from 'hooks';
+
 import { Transactor, GasEstimator } from '../../../helpers';
-import { useContractReader, useExchangePrice, useBalance, useAllowance } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -30,7 +38,10 @@ const Action = {
   Borrow: 1,
 };
 
-function DebtForm({ position, contracts, provider, address }) {
+function DebtForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   // const price = useExchangePrice();
   const tx = Transactor(provider);
@@ -230,7 +241,6 @@ function DebtForm({ position, contracts, provider, address }) {
               ? debtBalance.sub(parseUnits(amount, decimals))
               : debtBalance.add(parseUnits(amount, decimals))
           }
-          provider={provider}
           threshold={vault.threshold}
         />
       ),

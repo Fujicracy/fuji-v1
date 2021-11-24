@@ -16,7 +16,7 @@ import {
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator, getAllowance } from 'helpers';
-import { useBalance, useContractReader } from 'hooks';
+import { useAuth, useBalance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -32,7 +32,10 @@ const Action = {
   Withdraw: 1,
 };
 
-function CollateralForm({ position, contracts, provider, address }) {
+function CollateralForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader(provider);
+
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
 
@@ -260,7 +263,6 @@ function CollateralForm({ position, contracts, provider, address }) {
               ? collateralBalance.sub(parseUnits(amount, vault.collateralAsset.decimals))
               : collateralBalance.add(parseUnits(amount, vault.collateralAsset.decimals))
           }
-          provider={provider}
           threshold={vault.threshold}
         />
       ),

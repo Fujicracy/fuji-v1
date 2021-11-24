@@ -16,7 +16,7 @@ import InitBorrow from './InitBorrow';
 
 function Dashboard() {
   const { path } = useRouteMatch();
-  const { address, provider, onboard } = useAuth();
+  const { address, provider } = useAuth();
 
   const [loader, setLoader] = useState(true);
 
@@ -33,7 +33,7 @@ function Dashboard() {
 
   return (
     <>
-      <Header contracts={contracts} provider={provider} address={address} onboard={onboard} />
+      <Header />
       {loader ? (
         <Loader />
       ) : (
@@ -48,13 +48,13 @@ function Dashboard() {
             )}
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
-            <InitBorrow contracts={contracts} provider={provider} address={address} />
+            <InitBorrow />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/my-positions`}>
-            <MyPositions contracts={contracts} address={address} />
+            <MyPositions />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/position`}>
-            <ManagePosition contracts={contracts} provider={provider} address={address} />
+            <ManagePosition />
           </ProtectedRoute>
 
           <Route path={`${path}/:errorType`}>

@@ -52,7 +52,6 @@ const CHAIN_NAMES = {
   POLYGON: 'polygon',
   LOCAL: 'local',
 };
-
 const CHAINS = {
   [CHAIN_NAMES.ETHEREUM]: {
     id: CHAIN_NAMES.ETHEREUM,
@@ -80,8 +79,9 @@ const CHAINS = {
     id: CHAIN_NAMES.POLYGON,
     name: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
     icon: maticIcon.toString(),
-    isDeployed: false,
     isCustomNetwork: true,
+    isDeployed: true,
+    dashboardUrl: 'https://polygon.fujidao.org/#/dashboard',
     rpcUrls: [
       'https://polygon-rpc.com/',
       'https://rpc-mainnet.matic.network',
