@@ -16,7 +16,7 @@ const SelectMarket = ({ handleChange, hasBlackContainer = true }) => {
   });
 
   const onClickMarket = option => {
-    window.open(MARKETS[option].dashboardUrl);
+    window.open(MARKETS[option].dashboardUrl, '_self');
     if (handleChange) handleChange(option);
   };
 
