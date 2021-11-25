@@ -10,7 +10,6 @@ import {
   getFlashloanProvider,
   getBorrowers,
   connectRedis,
-  pushNew,
   buildPositions,
   logStatus,
 } from '../utils/index.js';
@@ -44,7 +43,7 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
 
   const positions = toLiq.filter(p => p.solvent);
   if (positions.length === 0) {
-    console.log('---> All liquidatable positions are unsolvent.');
+    console.log('---> All liquidatable positions are insolvent.');
     return;
   }
 
@@ -111,7 +110,12 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
       borrowers = JSON.parse(borrowers);
       console.log('---> cached borrowers, fetch only new');
       const newBorrowers = await getBorrowers(vault, startBlock, currentBlock, 10);
-      borrowers = pushNew(newBorrowers, borrowers);
+      newBorrowers.forEach(b => {
+        if (!borrowers.includes(b)) {
+          console.log('new borrower:', b);
+          borrowers.push(b);
+        }
+      })
 
       await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     }
@@ -131,10 +135,6 @@ const checkForLiquidations = async setup => {
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
     const vaultContract = contracts[vaultName];
-    //const { borrowAsset } = await vaultContract.vAssets();
-    //const decimals = Object.values(ASSETS[config.networkName]).find(
-      //a => a.address === borrowAsset,
-    //).decimals;
 
     const startBlock = await vaults[v].deployBlockNumber;
     const currentBlock = await signer.provider.getBlockNumber();

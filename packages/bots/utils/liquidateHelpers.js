@@ -14,37 +14,30 @@ const getBorrowers = async (vault, startBlock, currentBlock, searchLength) => {
   return borrowers;
 };
 
-const pushNew = (newBorrowers, current) => {
-  newBorrowers.forEach(e => {
-    if (!current.includes(e)) {
-      console.log('new borrower:', e);
-      current.push(e);
-    }
+const getBalances = async (borrowers, vaultContract, f1155Contract) => {
+  const { borrowID, collateralID } = await vaultContract.vAssets();
+  const addrs = [];
+  const ids = [];
+
+  borrowers.forEach(addr => {
+    addrs.push(addr);
+    addrs.push(addr);
+    ids.push(collateralID);
+    ids.push(borrowID);
   });
-  return current;
-};
 
-const buildOne = async (addr, vault, f1155) => {
-  const { borrowID, collateralID } = await vault.vAssets();
+  return await f1155Contract.balanceOfBatch(addrs, ids);
+}
 
-  const collateralBalance = await f1155.balanceOf(addr, collateralID);
-  const borrowBalance = await f1155.balanceOf(addr, borrowID);
-
-  const neededCollateral = await vault.getNeededCollateralFor(borrowBalance, true);
-
-  // (debt + 43/1000 * debt) * price
-  const bonus = borrowBalance.mul(BigNumber.from(43)).div(BigNumber.from(1000));
-  let calcAmount = borrowBalance.add(bonus);
-  calcAmount = await vault.getNeededCollateralFor(calcAmount, false);
-
-  return {
-    debt: borrowBalance,
-    collateral: collateralBalance,
-    neededCollateral,
-    liquidatable: collateralBalance.lt(neededCollateral),
-    solvent: collateralBalance.gt(calcAmount),
-  };
-};
+const getNeededCollateralFor = (amount, collatF, safetyF, price, borrowDecimals) => {
+  // from FujiVault.sol:
+  //uint256 minimumReq = (_amount * price) / (10**uint256(_borrowAssetDecimals));
+  //return (minimumReq * (collatF.a) * (safetyF.a)) / (collatF.b) / (safetyF.b);
+  return amount.mul(price)
+    .div(BigNumber.from(`${Math.pow(10, borrowDecimals)}`))
+    .mul(collatF.a).mul(safetyF.a)
+    .div(collatF.b).div(safetyF.b);
+}
 
 const buildPositions = async (borrowers, vault, contracts) => {
   const toLiquidate = [];
@@ -53,16 +46,48 @@ const buildPositions = async (borrowers, vault, contracts) => {
     totalCollateral: BigNumber.from(0),
     totalNeeded: BigNumber.from(0),
   };
-  for (let i = 0; i < borrowers.length; i++) {
-    const borrower = borrowers[i];
-    let position = await buildOne(borrower, contracts[vault.name], contracts.FujiERC1155);
 
-    position = {
+  const vaultContract = contracts[vault.name];
+  const borrowDecimals = vault.borrowAsset.decimals;
+  const collateralDecimals = vault.collateralAsset.decimals;
+  const collatF = await vaultContract.collatF();
+  const safetyF = await vaultContract.safetyF();
+  const price = await contracts.FujiOracle.getPriceOf(
+    vault.collateralAsset.address,
+    vault.borrowAsset.address,
+    BigNumber.from(collateralDecimals)
+  );
+
+  const balances = await getBalances(borrowers, vaultContract, contracts.FujiERC1155);
+  for (let i = 0; i < balances.length; i = i + 2) {
+    const borrower = borrowers[i / 2];
+    const collateralBalance = balances[i];
+    const borrowBalance = balances[i + 1];
+
+    const neededCollateral = getNeededCollateralFor(
+      borrowBalance,
+      collatF,
+      safetyF,
+      price,
+      borrowDecimals
+    );
+
+    // (debt + 43/1000 * debt) * price
+    const bonus = borrowBalance.mul(BigNumber.from(43)).div(BigNumber.from(1000));
+    // as getNeededCollateralFor without factors
+    const calcAmount = borrowBalance.add(bonus).mul(price)
+      .div(BigNumber.from(`${Math.pow(10, borrowDecimals)}`));
+
+    const position = {
       account: borrower,
-      ...position,
+      debt: borrowBalance,
+      collateral: collateralBalance,
+      neededCollateral,
+      liquidatable: collateralBalance.lt(neededCollateral),
+      solvent: collateralBalance.gt(calcAmount),
     };
 
-    if (position.liquidatable && position.debt.gt(parseUnits('10', vault.borrowAsset.decimals))) {
+    if (position.liquidatable && position.debt.gt(parseUnits('10', borrowDecimals))) {
       toLiquidate.push(position);
     }
 
@@ -96,4 +121,4 @@ const logStatus = async (positions, stats, vault) => {
   });
 };
 
-export { getBorrowers, pushNew, logStatus, buildPositions };
+export { getBorrowers, logStatus, buildPositions };
