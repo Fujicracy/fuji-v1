@@ -1,6 +1,6 @@
 import { ethers, BigNumber } from 'ethers';
 
-const { formatEther, formatUnits, parseUnits } = ethers.utils;
+const { formatUnits, parseUnits } = ethers.utils;
 
 const getBorrowers = async (vault, startBlock, currentBlock, searchLength) => {
   const filterBorrowers = vault.filters.Borrow();
@@ -46,7 +46,7 @@ const buildOne = async (addr, vault, f1155) => {
   };
 };
 
-const buildPositions = async (borrowers, vault, decimals, f1155) => {
+const buildPositions = async (borrowers, vault, contracts) => {
   const toLiquidate = [];
   const stats = {
     totalDebt: BigNumber.from(0),
@@ -55,14 +55,14 @@ const buildPositions = async (borrowers, vault, decimals, f1155) => {
   };
   for (let i = 0; i < borrowers.length; i++) {
     const borrower = borrowers[i];
-    let position = await buildOne(borrower, vault, f1155);
+    let position = await buildOne(borrower, contracts[vault.name], contracts.FujiERC1155);
 
     position = {
       account: borrower,
       ...position,
     };
 
-    if (position.liquidatable && position.debt.gt(parseUnits('10', decimals))) {
+    if (position.liquidatable && position.debt.gt(parseUnits('10', vault.borrowAsset.decimals))) {
       toLiquidate.push(position);
     }
 
@@ -74,12 +74,15 @@ const buildPositions = async (borrowers, vault, decimals, f1155) => {
   return [toLiquidate, stats];
 };
 
-const logStatus = async (positions, stats, decimals) => {
+const logStatus = async (positions, stats, vault) => {
+  const borrowDecimals = vault.borrowAsset.decimals;
+  const collateralDecimals = vault.collateralAsset.decimals;
+
   const toLog = positions.map(pos => ({
     account: pos.account,
-    debt: Number(formatUnits(pos.debt, decimals)).toFixed(3),
-    collateral: Number(formatEther(pos.collateral)).toFixed(3),
-    neededCollateral: Number(formatEther(pos.neededCollateral)).toFixed(3),
+    debt: Number(formatUnits(pos.debt, borrowDecimals)).toFixed(3),
+    collateral: Number(formatUnits(pos.collateral, collateralDecimals)).toFixed(3),
+    neededCollateral: Number(formatUnits(pos.neededCollateral, collateralDecimals)).toFixed(3),
     liquidatable: pos.liquidatable,
     solvent: pos.solvent,
   }));
@@ -87,9 +90,9 @@ const logStatus = async (positions, stats, decimals) => {
   console.table(toLog);
   console.log('Total outstanding debt positions (exclude only-depositors)');
   console.table({
-    totalDebt: Number(formatUnits(stats.totalDebt, decimals)).toFixed(3),
-    totalCollateral: Number(formatEther(stats.totalCollateral)).toFixed(3),
-    totalNeeded: Number(formatEther(stats.totalNeeded)).toFixed(3),
+    totalDebt: Number(formatUnits(stats.totalDebt, borrowDecimals)).toFixed(3),
+    totalCollateral: Number(formatUnits(stats.totalCollateral, collateralDecimals)).toFixed(3),
+    totalNeeded: Number(formatUnits(stats.totalNeeded, collateralDecimals)).toFixed(3),
   });
 };
 
