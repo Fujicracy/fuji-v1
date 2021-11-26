@@ -67,8 +67,8 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
   }
   console.log(chalk.green('---> Proceed to liquidations'));
 
-  // increase by 10% to prevent outOfGas tx failing
-  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
+  // increase by 50% to prevent outOfGas tx failing
+  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('2')));
 
   try {
     const res = await contracts[fliquidatorName].connect(signer).flashBatchLiquidate(
