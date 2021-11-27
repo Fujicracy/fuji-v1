@@ -86,6 +86,7 @@ function useProvideAuth() {
             {
               walletName: 'walletConnect',
               infuraKey: INFURA_ID,
+              preferred: true,
             },
             { walletName: 'coinbase' },
             {
