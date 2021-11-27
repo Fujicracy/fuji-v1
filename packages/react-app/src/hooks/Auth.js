@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
-import { formatUnits } from '@ethersproject/units';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
 import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL, CHAIN, NETWORK_NAME } from 'consts/globals';
@@ -12,10 +11,8 @@ const localStorage = window.localStorage;
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [provider, setProvider] = useState(undefined);
-  const [wallet, setWallet] = useState(localStorage.getItem('selectedWallet'));
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
-  const [balance, setBalance] = useState(0);
   const [network, setNetwork] = useState(null);
 
   async function connectAccount() {
@@ -101,16 +98,14 @@ function useProvideAuth() {
           ],
         },
         subscriptions: {
-          wallet: onboardWallet => {
-            if (onboardWallet.provider) {
-              setWallet(onboardWallet);
-              const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
+          wallet: wallet => {
+            if (wallet.provider) {
+              const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
               setProvider(ethersProvider);
-              localStorage.setItem('selectedWallet', onboardWallet.name);
+              localStorage.setItem('selectedWallet', wallet.name);
             } else {
               setAddress('');
               setProvider(undefined);
-              setWallet('');
 
               localStorage.removeItem('selectedWallet');
               localStorage.removeItem('selectedAddress');
@@ -120,12 +115,6 @@ function useProvideAuth() {
           address: onboardAddress => {
             localStorage.setItem('selectedAddress', onboardAddress || '');
             setAddress(onboardAddress);
-          },
-          balance: onboardBalance => {
-            if (onboardBalance) {
-              const fBalance = parseFloat(formatUnits(onboardBalance));
-              setBalance(fBalance.toFixed(2));
-            }
           },
         },
         walletCheck: [
@@ -165,8 +154,6 @@ function useProvideAuth() {
     provider,
     connectAccount,
     onboard,
-    wallet,
-    balance,
   };
 }
 
