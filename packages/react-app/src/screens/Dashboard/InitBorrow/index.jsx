@@ -305,7 +305,8 @@ function InitBorrow() {
 
   const getActiveProviderName = () => {
     if (!activeProvider) return '...';
-    return find(Object.values(PROVIDERS), p => p.address === activeProvider.toLowerCase())?.title;
+    return find(Object.values(PROVIDERS), p => contracts[p.name]?.address === activeProvider)
+      ?.title;
   };
 
   const getBorrowBtnContent = () => {
