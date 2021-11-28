@@ -8,15 +8,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { useAuth } from 'hooks';
 import { PositionRatios, getExchangePrice } from '../../../helpers';
 
-function DeltaPositionRatios({
-  borrowAsset,
-  collateralAsset,
-  currentCollateral,
-  currentDebt,
-  newCollateral,
-  newDebt,
-  threshold,
-}) {
+function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollateral, newDebt }) {
   const { provider } = useAuth();
   const [healthFactor, setHealthFactor] = useState([]);
   const [borrowLimit, setLimit] = useState([]);
@@ -24,16 +16,13 @@ function DeltaPositionRatios({
 
   useEffect(() => {
     async function fetchValues() {
-      const collateralAssetPrice = await getExchangePrice(provider, collateralAsset.name);
-      const borrowAssetPrice = await getExchangePrice(provider, borrowAsset.name);
+      const collateralAssetPrice = await getExchangePrice(provider, vault.collateralAsset.name);
+      const borrowAssetPrice = await getExchangePrice(provider, vault.borrowAsset.name);
 
       let position = {
-        borrowAsset,
-        collateralAsset,
+        vault,
         collateralBalance: currentCollateral,
         debtBalance: currentDebt,
-        decimals: borrowAsset.decimals,
-        threshold,
       };
       const {
         healthFactor: oldHf,
@@ -58,16 +47,7 @@ function DeltaPositionRatios({
     }
 
     fetchValues();
-  }, [
-    borrowAsset,
-    currentCollateral,
-    currentDebt,
-    newCollateral,
-    newDebt,
-    collateralAsset,
-    provider,
-    threshold,
-  ]);
+  }, [vault, currentCollateral, currentDebt, newCollateral, newDebt, provider]);
 
   const formatValue = (value, precision) =>
     value !== undefined && value !== Infinity ? value.toFixed(precision) : '...';

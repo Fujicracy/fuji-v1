@@ -3,7 +3,7 @@ import { Image, Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import Collapse from '@material-ui/core/Collapse';
-import { VAULTS, VAULTS_ADDRESS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import map from 'lodash/map';
 import { SectionTitle } from 'components/Blocks';
 import { downArrowIcon, upArrowIcon, barIcon } from 'assets/images';
@@ -17,9 +17,8 @@ import {
 
 const SelectVault = ({ defaultOption, onChangeVault }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedVault, setSelectedVault] = useState(
-    defaultOption || VAULTS[VAULTS_ADDRESS.VaultETHDAI],
-  );
+  const [selectedVault, setSelectedVault] = useState(defaultOption || Object.values(VAULTS)[0]);
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,

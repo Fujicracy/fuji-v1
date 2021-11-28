@@ -1,4 +1,5 @@
 import React from 'react';
+import find from 'lodash/find';
 import { useLocation, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import { useMediaQuery } from 'react-responsive';
@@ -21,7 +22,6 @@ import ProvidersList from '../../../components/ProvidersList';
 import './styles.css';
 
 function ManagePosition() {
-  // const defaultVault = Object.values(VAULTS)[0];
   const { address, provider } = useAuth();
   const contracts = useContractLoader(provider);
 
@@ -34,12 +34,17 @@ function ManagePosition() {
   // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
 
-  const vaultAddress = queries?.get('vaultAddress')?.toLowerCase() || Object.keys(VAULTS)[0];
+  const vaultAddress = queries?.get('vaultAddress');
+  const vaultName = find(
+    Object.keys(contracts || {}),
+    name => contracts[name].address.toLowerCase() === vaultAddress?.toLowerCase(),
+  );
 
-  const vault = VAULTS[vaultAddress];
+  const vault = VAULTS[vaultName] ?? Object.values(VAULTS)[0];
   const borrowAssetName = vault?.borrowAsset.name;
 
   const position = {
+    vault,
     vaultAddress,
     debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
       address,
@@ -49,9 +54,6 @@ function ManagePosition() {
       address,
       vault.collateralId,
     ]),
-    borrowAsset: vault.borrowAsset,
-    collateralAsset: vault.collateralAsset,
-    threshold: vault.threshold || 75,
   };
 
   return (

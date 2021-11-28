@@ -70,7 +70,6 @@ function InitBorrow() {
   );
   // const [market, setMarket] = useState(MARKETS[MARKET_NAMES.CORE]);
   const [vault, setVault] = useState(defaultVault);
-  const [vaultAddress, setVaultAddress] = useState(Object.keys(VAULTS)[0]);
   const [collateralAsset, setCollateralAsset] = useState(defaultVault.collateralAsset.name);
   const [collateralAmount, setCollateralAmount] = useState('');
 
@@ -97,14 +96,13 @@ function InitBorrow() {
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
-      const vaultKey = find(
+      const vaultName = find(
         Object.keys(VAULTS),
         key =>
           VAULTS[key].borrowAsset.name === borrowAsset &&
           VAULTS[key].collateralAsset.name === collateralAsset,
       );
-      setVault(VAULTS[vaultKey]);
-      setVaultAddress(vaultKey);
+      setVault(VAULTS[vaultName]);
     }
   }, [borrowAsset, collateralAsset]);
 
@@ -136,11 +134,13 @@ function InitBorrow() {
 
   useEffect(() => {
     async function fetchAllowance() {
-      setAllowance(await getAllowance(contracts, collateralAsset, [address, vaultAddress]));
+      setAllowance(
+        await getAllowance(contracts, collateralAsset, [address, contracts[vault.name].address]),
+      );
     }
 
-    fetchAllowance();
-  }, [collateralAsset, address, contracts, vaultAddress]);
+    if (contracts) fetchAllowance();
+  }, [collateralAsset, address, contracts, vault]);
 
   useEffect(() => {
     async function fetchDatas() {
@@ -182,8 +182,7 @@ function InitBorrow() {
   }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider, loading]);
 
   const position = {
-    borrowAsset: ASSETS[borrowAsset],
-    collateralAsset: ASSETS[collateralAsset],
+    vault,
     debtBalance:
       !debtBalance || !borrowAmount
         ? 0
@@ -191,9 +190,7 @@ function InitBorrow() {
     collateralBalance:
       !collateralBalance || !collateralAmount
         ? 0
-        : // : collateralBalance.add(parseEther(collateralAmount)),
-          collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
-    threshold: vault.threshold || 75,
+        : collateralBalance.add(parseUnits(collateralAmount, ASSETS[collateralAsset].decimals)),
   };
 
   const tx = Transactor(provider);

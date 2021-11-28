@@ -13,7 +13,6 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {
-  VAULTS,
   ASSET_NAME,
   PROVIDER_TYPE,
   PROVIDERS,
@@ -77,7 +76,7 @@ function FlashClose({ position }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const vault = VAULTS[position.vaultAddress];
+  const vault = position.vault;
 
   const decimals = vault.borrowAsset.decimals;
   const onFlashClose = async () => {

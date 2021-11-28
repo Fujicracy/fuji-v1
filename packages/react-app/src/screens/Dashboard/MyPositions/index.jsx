@@ -2,7 +2,6 @@
 import React from 'react';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
-import find from 'lodash/find';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
@@ -31,7 +30,8 @@ function MyPositions() {
   const positions = map(Object.keys(VAULTS), key => {
     const vault = VAULTS[key];
     return {
-      vaultAddress: key,
+      vault,
+      vaultAddress: contracts?.[vault.name]?.address,
       debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
         address,
         vault.borrowId,
@@ -40,35 +40,25 @@ function MyPositions() {
         address,
         vault.collateralId,
       ]),
-      borrowAsset: vault.borrowAsset,
-      collateralAsset: vault.collateralAsset,
-      threshold: vault.threshold || 75,
     };
   });
 
   const markets = [...new Set(map(Object.values(VAULTS), vault => vault.borrowAsset.name))];
 
-  const hasPosition = (borrowAssetName, collateralAssetName) => {
-    if (borrowAssetName) {
-      const position = find(
-        positions,
-        item =>
-          item.borrowAsset.name === borrowAssetName &&
-          item.collateralAsset.name === collateralAssetName,
-      );
-
+  const hasPosition = position => {
+    if (position) {
+      const vault = position.vault;
       return (
-        position &&
         position.collateralBalance &&
-        Number(formatUnits(position.collateralBalance, position.collateralAsset.decimals)) > 0
+        Number(formatUnits(position.collateralBalance, vault.collateralAsset.decimals)) > 0
       );
     }
 
     for (let i = 0; i < positions.length; i += 1) {
+      const decimals = positions[i].vault.collateralAsset?.decimals;
       if (
-        positions[i].collateralBalance &&
-        Number(formatUnits(positions[i].collateralBalance, positions[i].collateralAsset.decimals)) >
-          0
+        positions[i]?.collateralBalance &&
+        Number(formatUnits(positions[i].collateralBalance, decimals)) > 0
       ) {
         return true;
       }
@@ -144,13 +134,15 @@ function MyPositions() {
                 orderBy(
                   positions,
                   item =>
-                    Number(formatUnits(item.collateralBalance || 0, item.borrowAsset.decimals)),
+                    Number(
+                      formatUnits(item?.collateralBalance || 0, item?.vault.borrowAsset.decimals),
+                    ),
                   'desc',
                 ),
                 position =>
-                  hasPosition(position.borrowAsset.name, position.collateralAsset.name) && (
+                  hasPosition(position) && (
                     <Grid
-                      key={`${position.borrowAsset.name}-${position.collateralAsset.name}`}
+                      key={`${position.vault.borrowAsset.name}-${position.vault.collateralAsset.name}`}
                       item
                       className="one-position"
                       onClick={() => {

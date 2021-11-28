@@ -34,7 +34,8 @@ function logslider(value) {
 }
 
 function PositionElement({ position, actionType }) {
-  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
+  const { vault, debtBalance, collateralBalance } = position;
+  const { borrowAsset, collateralAsset } = vault;
 
   const history = useHistory();
   const collateralAssetPrice = useExchangePrice(collateralAsset.name);

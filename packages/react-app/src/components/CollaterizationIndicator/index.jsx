@@ -46,7 +46,7 @@ function logslider(value) {
 }
 
 function CollaterizationIndicator({ position }) {
-  const { borrowAsset, collateralAsset } = position;
+  const { borrowAsset, collateralAsset, threshold } = position.vault;
 
   const collateralAssetPrice = useExchangePrice(collateralAsset.name);
   const borrowAssetPrice = useExchangePrice(borrowAsset.name);
@@ -165,8 +165,8 @@ function CollaterizationIndicator({ position }) {
                 <InfoOutlinedIcon />
                 <span className="tooltip">
                   The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                  <br />A max. LTV of {position.threshold}% means the user can borrow up to $
-                  {position.threshold} in the principal currency for every $100 worth of collateral.
+                  <br />A max. LTV of {threshold}% means the user can borrow up to $ {threshold} in
+                  the principal currency for every $100 worth of collateral.
                   <br />
                   <span className="bold">With LTV above 75% they risk a liquidation.</span>
                 </span>
@@ -177,7 +177,7 @@ function CollaterizationIndicator({ position }) {
         </div>
         <div className="position-details">
           <div className="title">LTV liquidation threshold</div>
-          <div className="number">{position.threshold} %</div>
+          <div className="number">{threshold} %</div>
         </div>
         <div className="position-details">
           <div className="title">Current {collateralAsset.name} price</div>
