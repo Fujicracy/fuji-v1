@@ -32,6 +32,7 @@ const VAULTS = {
     ],
     name: 'VaultETHDAI',
     title: 'ETH-DAI',
+    threshold: 75,
   },
   [VAULTS_NAMES.VaultETHUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
@@ -45,6 +46,7 @@ const VAULTS = {
     ],
     name: 'VaultETHUSDC',
     title: 'ETH-USDC',
+    threshold: 75,
   },
   [VAULTS_NAMES.VaultETHUSDT]: {
     borrowAsset: ASSETS[ASSET_NAME.USDT],
@@ -58,6 +60,7 @@ const VAULTS = {
     ],
     name: 'VaultETHUSDT',
     title: 'ETH-USDT',
+    threshold: 75,
   },
 };
 
