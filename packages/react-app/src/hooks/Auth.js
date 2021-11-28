@@ -8,6 +8,47 @@ const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 const AuthContext = createContext();
 const localStorage = window.localStorage;
 
+async function addNetworkToWallet() {
+  if (!CHAIN.isCustomNetwork) return;
+
+  if (window.ethereum) {
+    const hexedChainId = '0x' + Number(CHAIN_ID).toString(16);
+
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexedChainId }],
+      });
+    } catch (error) {
+      if (error.code === 4902) {
+        console.log('Adding new chain');
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: hexedChainId,
+                chainName: CHAIN.name,
+                rpcUrls: CHAIN.rpcUrls,
+                nativeCurrency: CHAIN.nativeCurrency,
+                blockExplorerUrls: CHAIN.blockExplorerUrls,
+              },
+            ],
+          });
+        } catch (addError) {
+          console.error({ addError });
+        }
+      }
+      console.error(error);
+    }
+  } else {
+    // if no window.ethereum then MetaMask is not installed
+    console.error(
+      'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+    );
+  }
+}
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [provider, setProvider] = useState(undefined);
@@ -26,47 +67,6 @@ function useProvideAuth() {
       }
     }
   }
-
-  const addNetworkToWallet = async () => {
-    if (!CHAIN.isCustomNetwork) return;
-
-    if (window.ethereum) {
-      const hexedChainId = '0x' + Number(CHAIN_ID).toString(16);
-
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: hexedChainId }],
-        });
-      } catch (error) {
-        if (error.code === 4902) {
-          console.log('Adding new chain');
-          try {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [
-                {
-                  chainId: hexedChainId,
-                  chainName: CHAIN.name,
-                  rpcUrls: CHAIN.rpcUrls,
-                  nativeCurrency: CHAIN.nativeCurrency,
-                  blockExplorerUrls: CHAIN.blockExplorerUrls,
-                },
-              ],
-            });
-          } catch (addError) {
-            console.error({ addError });
-          }
-        }
-        console.error(error);
-      }
-    } else {
-      // if no window.ethereum then MetaMask is not installed
-      console.error(
-        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
-      );
-    }
-  };
 
   useEffect(() => {
     async function intialize() {
