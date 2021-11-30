@@ -164,6 +164,18 @@ button:focus {
   font-weight: 400;
 }
 
+@font-face {
+  font-family: 'Nexa Bold';
+  src: local('Nexa Bold'), url('./assets/fonts/Nexa\ Bold.otf') format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Nexa Regular';
+  src: local('Nexa Regular'), url('./assets/fonts/Nexa\ Regular.otf') format('opentype');
+  font-weight: normal;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -185,7 +197,7 @@ button:focus {
   --blocks: rgba(25, 25, 25, 0.9);
   --blocks56: rgba(25, 25, 25, 0.56);
   --green: rgba(23, 203, 73, 1);
-  --fujiColor: #F5F5FD;
+  --fujiColor: #f5f5fd;
 }
 
 .light-theme {
