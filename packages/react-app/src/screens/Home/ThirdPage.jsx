@@ -2,7 +2,7 @@ import React from 'react';
 import { useSpring, config } from 'react-spring';
 // import { Button } from 'components/UI';
 // import { Grid } from '@material-ui/core';
-import { SectionTitle } from 'components';
+import { HomepageTitle, SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
@@ -12,7 +12,7 @@ import { fujiLanding2, fujiLandingMobile, fujiLandingTablet } from '../../assets
 
 import { HomeContainer } from './styles';
 
-function Home() {
+function ThirdPage() {
   const props = useSpring({
     from: {
       factor: 1,
@@ -35,15 +35,35 @@ function Home() {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <HomeContainer style={props}>
-        {isMobile && (
-          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
-            The first DeFi Borrowing Aggregator
-          </SectionTitle>
-        )}
-        <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding2} />
+        <Flex flexDirection="row" alignItems="center">
+          <Flex flexDirection="column" width="690px" marginRight="16px">
+            <HomepageTitle
+              firstWord="Fuji Constantly"
+              secondWord="Scans"
+              thirdWord="Borrow Markets"
+            />
+
+            <SectionTitle
+              fontWeight="normal"
+              fontSize="24px"
+              textAlign="left"
+              lineHeight="130%"
+              fontFamily="Nexa Regular"
+            >
+              <br />
+              Routing your loan through Fuji ensures you get
+              <br /> the best borrow rate, aggregated across all providers.
+              <br />
+              <br />
+              Better opportunity? The protocol automatically
+              <br /> refinances the whole pool of loans to the new lowest APR.
+            </SectionTitle>
+          </Flex>
+          <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding2} />
+        </Flex>
       </HomeContainer>
     </Flex>
   );
 }
 
-export default Home;
+export default ThirdPage;

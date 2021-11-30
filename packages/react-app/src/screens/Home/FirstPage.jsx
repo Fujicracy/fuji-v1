@@ -17,7 +17,7 @@ import {
 
 import { HomeContainer } from './styles';
 
-function Home() {
+function FirstPage() {
   const props = useSpring({
     from: {
       factor: 1,
@@ -40,23 +40,26 @@ function Home() {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <HomeContainer style={props}>
-        {isMobile && (
-          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
-            The first DeFi Borrowing Aggregator
-          </SectionTitle>
-        )}
         <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1} />
+        <SectionTitle
+          fontWeight="400"
+          fontSize="28px"
+          textAlign="center"
+          m="24px 0px 36px"
+          fontFamily="Nexa Regular"
+        >
+          The Auto-Refinancing Borrow Protocol
+        </SectionTitle>
         <Animation
           jsonAnimationData={scrollDownAnimation}
           isStopped={false}
           isPaused={false}
           width={46}
           height={80}
-          marginTop={44}
         />
       </HomeContainer>
     </Flex>
   );
 }
 
-export default Home;
+export default FirstPage;

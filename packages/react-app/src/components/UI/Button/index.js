@@ -21,6 +21,7 @@ const Button = styled(Box).attrs({
   box-shadow: none;
   display: inline-block;
   font-weight: bold;
+  font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
   z-index: 0;
   color: ${mapToTheme('buttons.color')};
   border: ${props =>

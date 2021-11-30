@@ -2,17 +2,17 @@ import React from 'react';
 import { useSpring, config } from 'react-spring';
 // import { Button } from 'components/UI';
 // import { Grid } from '@material-ui/core';
-import { SectionTitle } from 'components';
+import { HomepageTitle, SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-import { fujiAlice2, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
+import { fujiAlice2, fujiLandingMobile, fujiLandingTablet } from 'assets/images';
 
 import { HomeContainer } from './styles';
 
-function Home() {
+function FourthPage() {
   const props = useSpring({
     from: {
       factor: 1,
@@ -35,15 +35,31 @@ function Home() {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <HomeContainer style={props}>
-        {isMobile && (
-          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
-            The first DeFi Borrowing Aggregator
-          </SectionTitle>
-        )}
-        <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiAlice2} />
+        <Flex flexDirection="row" alignItems="center">
+          <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiAlice2} />
+
+          <Flex flexDirection="column" width="360px" marginLeft="-360px">
+            <HomepageTitle firstWord="All-in-One" secondWord="Smart" thirdWord="Borrow" />
+
+            <SectionTitle
+              fontWeight="normal"
+              fontSize="24px"
+              textAlign="left"
+              lineHeight="170%"
+              fontFamily="Nexa Regular"
+            >
+              <br />
+              &bull; Aggregated Borrow APR <br />
+              &bull; Automatic Loan Refinancing
+              <br />
+              &bull; Non-Custodial Loan Routing <br />
+              &bull; Rebates On Gas Costs
+            </SectionTitle>
+          </Flex>
+        </Flex>
       </HomeContainer>
     </Flex>
   );
 }
 
-export default Home;
+export default FourthPage;

@@ -4,10 +4,11 @@ import { Grid } from '@material-ui/core';
 
 export const HomeContainer = styled(animated.div)`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => (props.flexDirection ? props.flexDirection : 'column')};
   color: white;
-  font-family: sans-serif;
+  font-family: Poppins;
   text-align: center;
+  align-items: center;
   height: 100%;
 `;
 

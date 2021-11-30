@@ -9,7 +9,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 
 import { HomeContainer, VerticalLine } from './styles';
 
-function Home() {
+function FifthPage() {
   const props = useSpring({
     from: {
       factor: 1,
@@ -31,59 +31,55 @@ function Home() {
   console.log({ isMobile, isTablet });
 
   return (
-    <HomeContainer style={props}>
-      <Flex
-        flexDirection="row"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        marginTop="-50px"
-      >
-        <BlackBoxContainer hasBlackContainer width="424px" height="240px">
-          <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
-            <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
-              Learn more about the protocol with the full documentation.
-            </Label>
-            <Button
-              onClick={handleLearnClick}
-              outline
-              fontSize="18px"
-              width={168}
-              height={48}
-              mt={3}
-            >
-              Learn +
-            </Button>
-          </Flex>
-        </BlackBoxContainer>
+    <Flex flexDirection="column" justifyContent="center" alignItems="center" marginTop="104px">
+      <HomeContainer style={props}>
+        <Flex flexDirection="row" alignItems="center">
+          <BlackBoxContainer hasBlackContainer width="424px" height="240px">
+            <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
+              <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
+                Learn more about Fuji with our extensive documentation
+              </Label>
+              <Button
+                onClick={handleLearnClick}
+                outline
+                fontSize="18px"
+                width={168}
+                height={48}
+                mt={3}
+              >
+                Learn +
+              </Button>
+            </Flex>
+          </BlackBoxContainer>
 
-        <Flex height="240px" alignItems="center" justifyContent="center">
-          <VerticalLine />
+          <Flex height="240px" alignItems="center" justifyContent="center">
+            <VerticalLine />
+          </Flex>
+
+          <BlackBoxContainer hasBlackContainer width="424px" height="240px">
+            <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
+              <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
+                All clear? Time to up your borrow game to the next level
+              </Label>
+
+              <Button
+                color="white"
+                fontSize="18px"
+                width={168}
+                height={48}
+                mt={3}
+                onClick={() => {
+                  window.location = `${APP_URL}/#/dashboard`;
+                }}
+              >
+                App
+              </Button>
+            </Flex>
+          </BlackBoxContainer>
         </Flex>
-
-        <BlackBoxContainer hasBlackContainer width="424px" height="240px">
-          <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
-            <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
-              Time to meet the dashboard and it’s borrowing tools.
-            </Label>
-
-            <Button
-              color="white"
-              fontSize="18px"
-              width={168}
-              height={48}
-              mt={3}
-              onClick={() => {
-                window.location = `${APP_URL}/#/dashboard`;
-              }}
-            >
-              App
-            </Button>
-          </Flex>
-        </BlackBoxContainer>
-      </Flex>
-    </HomeContainer>
+      </HomeContainer>
+    </Flex>
   );
 }
 
-export default Home;
+export default FifthPage;
