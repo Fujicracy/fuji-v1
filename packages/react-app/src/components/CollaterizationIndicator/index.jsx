@@ -48,8 +48,8 @@ function logslider(value) {
 function CollaterizationIndicator({ position }) {
   const { borrowAsset, collateralAsset, threshold } = position.vault;
 
-  const collateralAssetPrice = useExchangePrice(collateralAsset.name);
-  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
+  const collateralAssetPrice = useExchangePrice(collateralAsset);
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
 
   const [more, setMore] = useState(false);
   const [healthFactor, setHealthFactor] = useState(0);

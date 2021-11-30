@@ -5,9 +5,9 @@ import { find } from 'lodash';
 import { Image, Box, Text, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-import { useAuth, useContractLoader, useContractReader, useRates } from 'hooks';
+import { useContractLoader, useContractReader, useResources, useRates } from 'hooks';
 import { DropDown } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
 import AnimatedCounter from '../UI/AnimatedCounter';
@@ -15,8 +15,8 @@ import AnimatedCounter from '../UI/AnimatedCounter';
 import './styles.css';
 import { ProviderContainer, AssetContainer } from './styles';
 
-const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true }) => {
-  const vault = find(VAULTS, v => v.borrowAsset.name === market);
+const Provider = ({ contracts, vaults, market, rates, isDropDown = true }) => {
+  const vault = find(vaults, v => v.borrowAsset.name === market);
   const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
@@ -70,7 +70,7 @@ const Provider = ({ contracts, market, rates, isSelectable, isDropDown = true })
             </AssetContainer>
           </Flex>
           <Flex>
-            <DropDown options={options} defaultOption={defaultOption} isSelectable={isSelectable} />
+            <DropDown options={options} defaultOption={defaultOption} />
           </Flex>
         </Flex>
       ) : (
@@ -111,10 +111,10 @@ function ProvidersList({
   title = 'Borrow APR',
   isDropDown = true,
   hasBlackContainer = true,
-  isSelectable = true,
 }) {
-  const { provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const contracts = useContractLoader();
+
+  const { vaults } = useResources();
 
   const rates = useRates(contracts);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -149,10 +149,10 @@ function ProvidersList({
           <Provider
             key={market}
             contracts={contracts}
+            vaults={vaults}
             market={market}
             rates={rates}
             isDropDown={isDropDown}
-            isSelectable={isSelectable}
           />
         ))}
     </BlackBoxContainer>

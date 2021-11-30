@@ -1,4 +1,4 @@
-import { ASSETS, ASSET_NAME } from './assets';
+import { ASSETS, ASSET_NAME } from './assets-ethereum';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 const VAULTS_NAMES = {

@@ -34,7 +34,7 @@ const Action = {
 
 function CollateralForm({ position }) {
   const { address, provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const contracts = useContractLoader();
 
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);

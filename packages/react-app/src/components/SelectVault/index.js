@@ -3,7 +3,7 @@ import { Image, Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import Collapse from '@material-ui/core/Collapse';
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import map from 'lodash/map';
 import { SectionTitle } from 'components/Blocks';
 import { downArrowIcon, upArrowIcon, barIcon } from 'assets/images';
@@ -15,9 +15,9 @@ import {
   ListItem,
 } from './style';
 
-const SelectVault = ({ defaultOption, onChangeVault }) => {
+const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedVault, setSelectedVault] = useState(defaultOption || Object.values(VAULTS)[0]);
+  const [selectedVault, setSelectedVault] = useState(defaultVault || vaults[0]);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
@@ -25,7 +25,7 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  useEffect(() => defaultOption && setSelectedVault(defaultOption), [defaultOption]);
+  useEffect(() => defaultVault && setSelectedVault(defaultVault), [defaultVault]);
   const toggling = () => setIsOpen(!isOpen);
 
   const onOptionClicked = value => () => {
@@ -100,10 +100,10 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
           <DropDownListContainer open={isOpen}>
             <DropDownList>
               {map(
-                Object.keys(VAULTS),
-                key =>
-                  VAULTS[key].name !== selectedVault.name && (
-                    <ListItem onClick={onOptionClicked(VAULTS[key])} key={Math.random()}>
+                vaults,
+                v =>
+                  v.name !== selectedVault.name && (
+                    <ListItem onClick={onOptionClicked(v)} key={Math.random()}>
                       <Box width={isTablet ? 3 / 7 : 1 / 2} display="flex" alignItems="center">
                         <Box
                           width={2 / 3}
@@ -112,10 +112,10 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                           justifyContent="flex-start"
                           alignItems="center"
                         >
-                          <Image src={VAULTS[key].borrowAsset.icon} width={isTablet ? 26 : 20} />
+                          <Image src={v.borrowAsset.icon} width={isTablet ? 26 : 20} />
 
                           <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
-                            {`${VAULTS[key].borrowAsset.name}`}
+                            {`${v.borrowAsset.name}`}
                           </SectionTitle>
                         </Box>
                         <Box
@@ -141,9 +141,9 @@ const SelectVault = ({ defaultOption, onChangeVault }) => {
                         alignItems="center"
                         ml={isTablet ? 3 : 2}
                       >
-                        <Image src={VAULTS[key].collateralAsset.icon} width={isTablet ? 26 : 20} />
+                        <Image src={v.collateralAsset.icon} width={isTablet ? 26 : 20} />
                         <SectionTitle ml={isTablet ? 3 : 2} fontWeight="500">
-                          {`${VAULTS[key].collateralAsset.name} `}
+                          {`${v.collateralAsset.name} `}
                         </SectionTitle>
                       </Box>
                     </ListItem>

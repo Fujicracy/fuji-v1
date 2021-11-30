@@ -16,8 +16,8 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
 
   useEffect(() => {
     async function fetchValues() {
-      const collateralAssetPrice = await getExchangePrice(provider, vault.collateralAsset.name);
-      const borrowAssetPrice = await getExchangePrice(provider, vault.borrowAsset.name);
+      const collateralAssetPrice = await getExchangePrice(provider, vault.collateralAsset);
+      const borrowAssetPrice = await getExchangePrice(provider, vault.borrowAsset);
 
       let position = {
         vault,

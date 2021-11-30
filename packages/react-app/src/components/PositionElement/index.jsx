@@ -38,8 +38,8 @@ function PositionElement({ position, actionType }) {
   const { borrowAsset, collateralAsset } = vault;
 
   const history = useHistory();
-  const collateralAssetPrice = useExchangePrice(collateralAsset.name);
-  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
+  const collateralAssetPrice = useExchangePrice(collateralAsset);
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
 
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);

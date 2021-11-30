@@ -61,7 +61,7 @@ async function getProviderIndex(vault, contracts) {
 
 function FlashClose({ position }) {
   const { provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const contracts = useContractLoader();
 
   const tx = Transactor(provider);
 

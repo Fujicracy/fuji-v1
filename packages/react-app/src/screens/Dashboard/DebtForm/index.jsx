@@ -40,10 +40,9 @@ const Action = {
 
 function DebtForm({ position }) {
   const { address, provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const contracts = useContractLoader();
 
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
-  // const price = useExchangePrice();
   const tx = Transactor(provider);
 
   const [action, setAction] = useState(Action.Repay);
@@ -57,8 +56,8 @@ function DebtForm({ position }) {
   const { collateralAsset, borrowAsset } = vault;
   const { decimals } = vault.borrowAsset;
 
-  const borrowPrice = useExchangePrice(borrowAsset.name);
-  const collateralPrice = useExchangePrice(collateralAsset.name);
+  const borrowPrice = useExchangePrice(borrowAsset);
+  const collateralPrice = useExchangePrice(collateralAsset);
 
   const unFormattedBalance = useBalance(
     provider,
@@ -73,7 +72,7 @@ function DebtForm({ position }) {
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
 
-  const allowance = useAllowance(contracts, borrowAsset.name, [address, vaultAddress]);
+  const allowance = useAllowance(contracts, borrowAsset, [address, vaultAddress]);
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,

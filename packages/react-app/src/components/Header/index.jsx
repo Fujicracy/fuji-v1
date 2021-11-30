@@ -19,13 +19,10 @@ import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
   CHAIN_NAMES,
-  ASSETS,
   DEFAULT_BALANCE_ASSET,
   CHAINS,
-  CHAIN_NAME,
 } from 'consts';
 
-import { getUserBalance } from 'helpers';
 import { flow } from 'lodash';
 
 import {
@@ -45,35 +42,35 @@ import {
 } from './styles';
 
 function Header() {
-  const { address, provider, onboard } = useAuth();
-  const contracts = useContractLoader(provider);
+  const { address, provider, onboard, networkName } = useAuth();
+  const contracts = useContractLoader();
+  const defaultAsset = DEFAULT_BALANCE_ASSET[networkName];
+
+  const chains = flow([
+    Object.entries,
+    arr => arr.filter(([key]) => CHAINS[key].isDeployed),
+    Object.fromEntries,
+  ])(CHAINS);
 
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
   const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const pollUnformattedBalance = useBalance(provider, address, contracts);
+  const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
-  const chains = flow([
-    Object.entries,
-    arr => arr.filter(([key]) => CHAINS[key].isDeployed && CHAINS[key].id !== CHAIN_NAME),
-    Object.fromEntries,
-  ])(CHAINS);
+  const userBalance = useBalance(provider, address, contracts);
+
+  useEffect(() => setSelectedChain(chains[networkName]), [chains, networkName]);
 
   useEffect(() => {
-    async function fetchBalance() {
-      const unFormattedBalance = await getUserBalance(provider, address, contracts);
-
-      const formattedBalance = unFormattedBalance
-        ? Number(formatUnits(unFormattedBalance, ASSETS[DEFAULT_BALANCE_ASSET].decimals)).toFixed(6)
-        : null;
-
-      setBalance(Number(formattedBalance).toFixed(2));
+    function formatBalance() {
+      const bal = Number(formatUnits(userBalance, defaultAsset.decimals)).toFixed(2);
+      setBalance(bal);
     }
 
-    fetchBalance();
-  }, [address, provider, contracts, pollUnformattedBalance]);
+    if (userBalance) formatBalance();
+  }, [defaultAsset, userBalance]);
 
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
@@ -92,6 +89,12 @@ function Header() {
 
   const currentPage = useLocation();
 
+  const onChangeChain = async chain => {
+    onboard.config({ networkId: chain.id });
+    await onboard.walletCheck();
+    setSelectedChain(chain);
+  };
+
   const NetworkDropdown = () => {
     return (
       <Box
@@ -106,10 +109,10 @@ function Header() {
           hasBorder
           width={!isMobile ? '160px' : '80px'}
         >
-          <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
+          <Image src={selectedChain.icon} width={20} />
           {!isMobile && (
             <Label ml={2} color="#f5f5f5">
-              {CHAINS[CHAIN_NAME].name}
+              {selectedChain.title}
             </Label>
           )}
           <Image src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
@@ -117,19 +120,16 @@ function Header() {
         {isOpenNetworkDropDown && (
           <DropDownBackContainer onClick={() => setIsOpenNetworkDropDown(false)}>
             <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
-              {Object.keys(chains).map(key => (
-                <DropDownItem
-                  key={key}
-                  onClick={() => {
-                    window.open(chains[key].dashboardUrl, '_self');
-                  }}
-                >
-                  <Image src={chains[key].icon} width={16} />
-                  <Label color="#f5f5f5" ml="8px">
-                    {chains[key].name}
-                  </Label>
-                </DropDownItem>
-              ))}
+              {Object.keys(chains)
+                .filter(key => key !== selectedChain.name)
+                .map(key => (
+                  <DropDownItem key={key} onClick={() => onChangeChain(chains[key])}>
+                    <Image src={chains[key].icon} width={16} />
+                    <Label color="#f5f5f5" ml="8px">
+                      {chains[key].title}
+                    </Label>
+                  </DropDownItem>
+                ))}
             </DropDownItemContainer>
           </DropDownBackContainer>
         )}
@@ -199,7 +199,7 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                {selectedChain.name === CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -263,7 +263,7 @@ function Header() {
                   My positions
                 </NavLink>
               </li>
-              {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+              {selectedChain.name === CHAIN_NAMES.ETHEREUM && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
                     NFT
@@ -277,7 +277,7 @@ function Header() {
 
               <li>
                 <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWalletDropDown(false)}>
-                  <Label color="#f5f5f5">{`${balance} ${DEFAULT_BALANCE_ASSET}`}</Label>
+                  <Label color="#f5f5f5">{`${balance} ${defaultAsset.name}`}</Label>
                   <Box
                     ml={2}
                     sx={{ position: 'relative' }}

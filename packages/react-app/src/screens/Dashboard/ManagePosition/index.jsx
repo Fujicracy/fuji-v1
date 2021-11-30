@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import find from 'lodash/find';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useHistory, Link } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
 import { Grid } from '@material-ui/core';
 
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
-import { useAuth, useContractLoader, useContractReader } from 'hooks';
+import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
 
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
@@ -22,10 +22,22 @@ import ProvidersList from '../../../components/ProvidersList';
 import './styles.css';
 
 function ManagePosition() {
-  const { address, provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const { vaults } = useResources();
 
+  const history = useHistory();
   const queries = new URLSearchParams(useLocation().search);
+  const vaultAddress = queries?.get('vaultAddress');
+
+  const [vault, setVault] = useState(vaults[0]);
+  const [position, setPosition] = useState({
+    vault,
+    vaultAddress,
+    debtBalance: 0,
+    collateralBalance: 0,
+  });
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -34,27 +46,34 @@ function ManagePosition() {
   // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
 
-  const vaultAddress = queries?.get('vaultAddress');
-  const vaultName = find(
-    Object.keys(contracts || {}),
-    name => contracts[name].address.toLowerCase() === vaultAddress?.toLowerCase(),
-  );
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    vault?.borrowId,
+  ]);
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    vault?.collateralId,
+  ]);
 
-  const vault = VAULTS[vaultName] ?? Object.values(VAULTS)[0];
-  const borrowAssetName = vault?.borrowAsset.name;
+  useEffect(() => {
+    function init() {
+      const vaultName = find(
+        Object.keys(contracts),
+        name => contracts[name].address.toLowerCase() === vaultAddress?.toLowerCase(),
+      );
+      const v = find(vaults, key => key.name === vaultName);
+      if (v) {
+        setVault(v);
+        const pos = { vault, vaultAddress, debtBalance, collateralBalance };
+        setPosition(pos);
+      } else {
+        // if cannot find vault by address, it means wrong network
+        history.replace('my-positions');
+      }
+    }
 
-  const position = {
-    vault,
-    vaultAddress,
-    debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-      address,
-      vault.borrowId,
-    ]),
-    collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-      address,
-      vault.collateralId,
-    ]),
-  };
+    if (contracts) init();
+  }, [vaultAddress, vault, vaults, contracts, collateralBalance, debtBalance, history]);
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
@@ -151,7 +170,7 @@ function ManagePosition() {
                 </Grid>
                 {!isMobile && !isTablet && (
                   <Grid item>
-                    <ProvidersList markets={[borrowAssetName]} isSelectable={false} />
+                    <ProvidersList markets={[vault?.borrowAsset.name]} isSelectable={false} />
                   </Grid>
                 )}
               </Grid>

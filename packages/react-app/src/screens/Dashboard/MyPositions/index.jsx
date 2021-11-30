@@ -6,19 +6,20 @@ import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useAuth, useContractLoader, useContractReader } from 'hooks';
+import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
 import { PositionElement, PositionActions, ProvidersList } from 'components';
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import './styles.css';
 
 function MyPositions() {
-  const { address, provider } = useAuth();
-  const contracts = useContractLoader(provider);
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const { vaults } = useResources();
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
@@ -27,8 +28,7 @@ function MyPositions() {
   });
 
   const history = useHistory();
-  const positions = map(Object.keys(VAULTS), key => {
-    const vault = VAULTS[key];
+  const positions = map(vaults, vault => {
     return {
       vault,
       vaultAddress: contracts?.[vault.name]?.address,
@@ -43,7 +43,7 @@ function MyPositions() {
     };
   });
 
-  const markets = [...new Set(map(Object.values(VAULTS), vault => vault.borrowAsset.name))];
+  const markets = [...new Set(map(vaults, v => v.borrowAsset.name))];
 
   const hasPosition = position => {
     if (position) {
@@ -169,7 +169,7 @@ function MyPositions() {
         </Grid>
         {!isMobile && !isTablet && (
           <Grid item md={4} sm={4}>
-            <ProvidersList markets={markets} isSelectable={false} />
+            <ProvidersList markets={markets} />
           </Grid>
         )}
       </Grid>

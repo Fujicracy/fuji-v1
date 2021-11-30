@@ -1,5 +1,4 @@
-import { VAULTS } from 'consts';
-import useContractReader from './ContractReader';
+import { useContractReader, useResources } from './index';
 
 const formatRate = rate => {
   const r = (parseFloat(`${rate}`) / 1e27) * 100;
@@ -7,8 +6,8 @@ const formatRate = rate => {
 };
 
 export default function useRates(contracts) {
+  const { vaults } = useResources();
   const rates = {};
-  const vaults = Object.values(VAULTS);
 
   for (let i = 0; i < vaults.length; i += 1) {
     const vault = vaults[i];

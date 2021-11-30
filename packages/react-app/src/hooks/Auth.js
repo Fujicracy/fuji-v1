@@ -1,7 +1,16 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import React, { useState, useEffect, useMemo, useContext, createContext } from 'react';
 import { ethers } from 'ethers';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL, CHAIN, NETWORK_NAME } from 'consts/globals';
+import {
+  INFURA_ID,
+  BLOCKNATIVE_KEY,
+  APP_URL,
+  CHAIN,
+  CHAIN_ID,
+  CHAIN_NAME,
+  CHAINS,
+  CHAIN_NAMES,
+} from 'consts/globals';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
@@ -49,12 +58,44 @@ async function addNetworkToWallet() {
   }
 }
 
+const onboardConfigs = {
+  dappId: BLOCKNATIVE_KEY,
+  darkMode: true,
+  walletSelect: {
+    wallets: [
+      { walletName: 'metamask', preferred: true },
+      {
+        walletName: 'walletConnect',
+        infuraKey: INFURA_ID,
+        preferred: true,
+      },
+      { walletName: 'coinbase' },
+      {
+        walletName: 'ledger',
+        rpcUrl: RPC_URL,
+      },
+      {
+        walletName: 'trezor',
+        appUrl: APP_URL,
+        rpcUrl: RPC_URL,
+      },
+    ],
+  },
+  walletCheck: [
+    { checkName: 'derivationPath' },
+    { checkName: 'connect' },
+    { checkName: 'accounts' },
+    { checkName: 'network' },
+  ],
+};
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [provider, setProvider] = useState(undefined);
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
-  const [network, setNetwork] = useState(null);
+  const [networkId, setNetworkId] = useState(null);
+  const [networkName, setNetworkName] = useState(CHAIN_NAMES.ETHEREUM);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -68,90 +109,84 @@ function useProvideAuth() {
     }
   }
 
+  const subscriptions = useMemo(() => {
+    return {
+      wallet: wallet => {
+        if (wallet.provider) {
+          const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+          setProvider(ethersProvider);
+          localStorage.setItem('selectedWallet', wallet.name);
+        } else {
+          setAddress('');
+          setProvider(undefined);
+
+          localStorage.removeItem('selectedWallet');
+          localStorage.removeItem('selectedAddress');
+        }
+      },
+      network: id => {
+        if (id) {
+          setNetworkId(id);
+          if (id === 31337) {
+            // when local, use what's stored in .env
+            setNetworkName(CHAIN_NAME);
+          } else {
+            const n = Object.values(CHAINS).find(v => v.id === id && v.isDeployed);
+            if (n) {
+              setNetworkName(n.name);
+            } else {
+              // unsupported network
+              console.log('Unsupported network');
+            }
+          }
+        }
+      },
+      address: onboardAddress => {
+        localStorage.setItem('selectedAddress', onboardAddress || '');
+        setAddress(onboardAddress);
+      },
+    };
+  }, []);
+
   useEffect(() => {
     async function intialize() {
       await addNetworkToWallet();
 
       const tmpOnboard = Onboard({
-        dappId: BLOCKNATIVE_KEY,
         networkId: Number(CHAIN_ID),
-        networkName: NETWORK_NAME,
-        darkMode: true,
-        walletSelect: {
-          wallets: [
-            { walletName: 'metamask', preferred: true },
-            {
-              walletName: 'walletConnect',
-              infuraKey: INFURA_ID,
-              preferred: true,
-            },
-            { walletName: 'coinbase' },
-            {
-              walletName: 'ledger',
-              rpcUrl: RPC_URL,
-            },
-            {
-              walletName: 'trezor',
-              appUrl: APP_URL,
-              rpcUrl: RPC_URL,
-            },
-          ],
-        },
-        subscriptions: {
-          wallet: wallet => {
-            if (wallet.provider) {
-              const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
-              setProvider(ethersProvider);
-              localStorage.setItem('selectedWallet', wallet.name);
-            } else {
-              setAddress('');
-              setProvider(undefined);
-
-              localStorage.removeItem('selectedWallet');
-              localStorage.removeItem('selectedAddress');
-            }
-          },
-          network: setNetwork,
-          address: onboardAddress => {
-            localStorage.setItem('selectedAddress', onboardAddress || '');
-            setAddress(onboardAddress);
-          },
-        },
-        walletCheck: [
-          { checkName: 'derivationPath' },
-          { checkName: 'connect' },
-          { checkName: 'accounts' },
-          { checkName: 'network' },
-        ],
+        networkName: CHAIN_NAME,
+        subscriptions,
+        ...onboardConfigs,
       });
       setOnboard(tmpOnboard);
     }
 
     intialize();
-  }, []);
+  }, [subscriptions]);
 
   useEffect(() => {
     async function connectWalletAccount() {
       const selectedWallet = localStorage.getItem('selectedWallet');
-      if (onboard) {
-        const isSelected = await onboard.walletSelect(selectedWallet);
-        if (isSelected) {
-          const isChecked = await onboard.walletCheck();
-          if (isChecked) {
-            const state = onboard.getState();
-            setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
-          }
-        }
+      const isSelected = await onboard.walletSelect(selectedWallet);
+      const state = onboard.getState();
+      if (networkId && networkId !== state.appNetworkID) {
+        onboard.config({ networkId });
+        await onboard.walletCheck();
+      }
+      if (isSelected) {
+        setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
       }
     }
 
-    connectWalletAccount();
-  }, [onboard, network]);
+    if (onboard) connectWalletAccount();
+  }, [onboard, networkId]);
 
   // Return the user object and auth methods
   return {
     address,
     provider,
+    networkId,
+    networkName,
     connectAccount,
     onboard,
   };
