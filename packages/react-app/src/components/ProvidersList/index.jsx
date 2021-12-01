@@ -17,7 +17,7 @@ import { ProviderContainer, AssetContainer } from './styles';
 
 const Provider = ({ contracts, vaults, market, rates, isDropDown = true }) => {
   const vault = find(vaults, v => v.borrowAsset.name === market);
-  const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
+  const activeProvider = useContractReader(contracts, vault?.name, 'activeProvider');
   const [defaultOption, setDefaultOption] = useState({});
   const [options, setOptions] = useState([]);
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });

@@ -30,13 +30,8 @@ function ManagePosition() {
   const queries = new URLSearchParams(useLocation().search);
   const vaultAddress = queries?.get('vaultAddress');
 
-  const [vault, setVault] = useState(vaults[0]);
-  const [position, setPosition] = useState({
-    vault,
-    vaultAddress,
-    debtBalance: 0,
-    collateralBalance: 0,
-  });
+  const [vault, setVault] = useState();
+  const [position, setPosition] = useState();
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
@@ -64,7 +59,7 @@ function ManagePosition() {
       const v = find(vaults, key => key.name === vaultName);
       if (v) {
         setVault(v);
-        const pos = { vault, vaultAddress, debtBalance, collateralBalance };
+        const pos = { vault: v, vaultAddress, debtBalance, collateralBalance };
         setPosition(pos);
       } else {
         // if cannot find vault by address, go back to my-positions
@@ -97,89 +92,93 @@ function ManagePosition() {
           </Link>
 
           <Grid container spacing={isMobile ? 3 : isTablet ? 4 : 6}>
-            <Grid item md={8} sm={12} xs={12}>
-              <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
-                <Grid container>
-                  <Grid item xs={4}>
-                    {' '}
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Flex width={1 / 1}>
-                      <SectionTitle
-                        fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
-                        justifyContent="center"
-                        alignItems="center"
-                        width="30%"
-                      >
-                        <>Collateral</>
-                      </SectionTitle>
-                      <SectionTitle
-                        fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
-                        justifyContent="center"
-                        alignItems="center"
-                        width="30%"
-                      >
-                        <>Debt</>
-                      </SectionTitle>
-                      <SectionTitle
-                        fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
-                        justifyContent="center"
-                        alignItems="center"
-                        width="40%"
-                      >
-                        <>Health Factor</>
-                      </SectionTitle>
-                    </Flex>
+            {position && (
+              <>
+                <Grid item md={8} sm={12} xs={12}>
+                  <BlackBoxContainer hasBlackContainer={false} ml={3} mb={3}>
+                    <Grid container>
+                      <Grid item xs={4}>
+                        {' '}
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Flex width={1 / 1}>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Collateral</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="30%"
+                          >
+                            <>Debt</>
+                          </SectionTitle>
+                          <SectionTitle
+                            fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
+                            justifyContent="center"
+                            alignItems="center"
+                            width="40%"
+                          >
+                            <>Health Factor</>
+                          </SectionTitle>
+                        </Flex>
+                      </Grid>
+                    </Grid>
+                  </BlackBoxContainer>
+                  {/* <span className="empty-button" /> */}
+                  <BlackBoxContainer
+                    hasBlackContainer
+                    noBottomBorderRadius
+                    noBottomBorder
+                    padding="12px 0px 12px 28px"
+                  >
+                    <PositionElement actionType={PositionActions.None} position={position} />
+                  </BlackBoxContainer>
+                  <BlackBoxContainer hasBlackContainer padding="28px" noTopBorderRadius>
+                    <form noValidate>
+                      <Grid container className="manage-content" spacing={4}>
+                        <Grid item md={6} xs={12}>
+                          {actionsType === 'single' ? (
+                            <CollateralForm position={position} />
+                          ) : (
+                            <SupplyAndBorrowForm position={position} />
+                          )}
+                        </Grid>
+                        <Grid item md={6} xs={12}>
+                          {actionsType === 'single' ? (
+                            <DebtForm position={position} />
+                          ) : (
+                            <RepayAndWithdrawForm position={position} />
+                          )}
+                        </Grid>
+                      </Grid>
+                    </form>
+                  </BlackBoxContainer>
+                  {!isMobile && !isTablet && <FlashClose position={position} />}
+                </Grid>
+                <Grid item md={4} sm={12} xs={12}>
+                  <Grid container direction="column" spacing={isMobile ? 4 : 6}>
+                    <Grid item>
+                      <CollaterizationIndicator position={position} />
+                    </Grid>
+                    {!isMobile && !isTablet && (
+                      <Grid item>
+                        <ProvidersList markets={[vault?.borrowAsset.name]} isSelectable={false} />
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
-              </BlackBoxContainer>
-              {/* <span className="empty-button" /> */}
-              <BlackBoxContainer
-                hasBlackContainer
-                noBottomBorderRadius
-                noBottomBorder
-                padding="12px 0px 12px 28px"
-              >
-                <PositionElement actionType={PositionActions.None} position={position} />
-              </BlackBoxContainer>
-              <BlackBoxContainer hasBlackContainer padding="28px" noTopBorderRadius>
-                <form noValidate>
-                  <Grid container className="manage-content" spacing={4}>
-                    <Grid item md={6} xs={12}>
-                      {actionsType === 'single' ? (
-                        <CollateralForm position={position} />
-                      ) : (
-                        <SupplyAndBorrowForm position={position} />
-                      )}
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      {actionsType === 'single' ? (
-                        <DebtForm position={position} />
-                      ) : (
-                        <RepayAndWithdrawForm position={position} />
-                      )}
-                    </Grid>
-                  </Grid>
-                </form>
-              </BlackBoxContainer>
-              {!isMobile && !isTablet && <FlashClose position={position} />}
-            </Grid>
-            <Grid item md={4} sm={12} xs={12}>
-              <Grid container direction="column" spacing={isMobile ? 4 : 6}>
-                <Grid item>
-                  <CollaterizationIndicator position={position} />
-                </Grid>
-                {!isMobile && !isTablet && (
-                  <Grid item>
-                    <ProvidersList markets={[vault?.borrowAsset.name]} isSelectable={false} />
+                {(isMobile || isTablet) && (
+                  <Grid item md={4} sm={12} xs={12}>
+                    <FlashClose position={position} />
                   </Grid>
                 )}
-              </Grid>
-            </Grid>
-            {(isMobile || isTablet) && (
-              <Grid item md={4} sm={12} xs={12}>
-                <FlashClose position={position} />
-              </Grid>
+              </>
             )}
           </Grid>
         </BlackBoxContainer>
