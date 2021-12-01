@@ -42,7 +42,7 @@ import {
 } from './styles';
 
 function Header() {
-  const { address, provider, onboard, networkName } = useAuth();
+  const { address, provider, onboard, networkName, networkId } = useAuth();
   const contracts = useContractLoader();
   const defaultAsset = DEFAULT_BALANCE_ASSET[networkName];
 
@@ -61,7 +61,13 @@ function Header() {
 
   const userBalance = useBalance(provider, address, contracts);
 
-  useEffect(() => setSelectedChain(chains[networkName]), [chains, networkName]);
+  useEffect(() => {
+    if (Object.values(chains).find(chain => chain.id === networkId)) {
+      setSelectedChain(chains[networkName]);
+    } else {
+      setSelectedChain(null);
+    }
+  }, [chains, networkName, networkId]);
 
   useEffect(() => {
     function formatBalance() {
@@ -109,10 +115,12 @@ function Header() {
           hasBorder
           width={!isMobile ? '160px' : '80px'}
         >
-          <Image src={selectedChain.icon} width={20} />
-          {!isMobile && (
+          <Image src={selectedChain?.icon} width={20} />
+          {isMobile ? (
+            <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
+          ) : (
             <Label ml={2} color="#f5f5f5">
-              {selectedChain.title}
+              {selectedChain?.title ?? 'Switch network'}
             </Label>
           )}
           <Image src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
@@ -121,7 +129,7 @@ function Header() {
           <DropDownBackContainer onClick={() => setIsOpenNetworkDropDown(false)}>
             <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
               {Object.keys(chains)
-                .filter(key => key !== selectedChain.name)
+                .filter(key => key !== selectedChain?.name)
                 .map(key => (
                   <DropDownItem key={key} onClick={() => onChangeChain(chains[key])}>
                     <Image src={chains[key].icon} width={16} />
@@ -199,7 +207,7 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                {selectedChain.name === CHAIN_NAMES.ETHEREUM && (
+                {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -252,18 +260,22 @@ function Header() {
             </Flex>
           ) : (
             <Navigation>
-              <li className="nav-item">
-                <NavLink to="/dashboard/init-borrow" activeClassName="current">
-                  Borrow
-                </NavLink>
-              </li>
+              {selectedChain && (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/dashboard/init-borrow" activeClassName="current">
+                      Borrow
+                    </NavLink>
+                  </li>
 
-              <li className="nav-item">
-                <NavLink to="/dashboard/my-positions" activeClassName="current">
-                  My positions
-                </NavLink>
-              </li>
-              {selectedChain.name === CHAIN_NAMES.ETHEREUM && (
+                  <li className="nav-item">
+                    <NavLink to="/dashboard/my-positions" activeClassName="current">
+                      My positions
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
                     NFT

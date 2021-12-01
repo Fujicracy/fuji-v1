@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext, createContext } from 'react';
 import { ethers } from 'ethers';
+import { useHistory } from 'react-router-dom';
 import Onboard from 'bnc-onboard';
 import {
   INFURA_ID,
@@ -91,6 +92,7 @@ const onboardConfigs = {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
+  const history = useHistory();
   const [provider, setProvider] = useState(undefined);
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
@@ -137,6 +139,7 @@ function useProvideAuth() {
             } else {
               // unsupported network
               console.log('Unsupported network');
+              history.replace('/dashboard/wrong-network');
             }
           }
         }
@@ -146,6 +149,7 @@ function useProvideAuth() {
         setAddress(onboardAddress);
       },
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -67,7 +67,8 @@ function ManagePosition() {
         const pos = { vault, vaultAddress, debtBalance, collateralBalance };
         setPosition(pos);
       } else {
-        // if cannot find vault by address, it means wrong network
+        // if cannot find vault by address, go back to my-positions
+        // reasons could be: wrong network, wrong vault address
         history.replace('my-positions');
       }
     }
