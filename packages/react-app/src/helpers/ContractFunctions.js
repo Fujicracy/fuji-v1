@@ -29,8 +29,7 @@ export async function CallContractFunction(contracts, contractName, functionName
         value = formatter(value);
       }
     } catch (e) {
-      console.log(contractName);
-      console.log(e);
+      console.log(`Unsuccessful call to ${contractName}`);
     }
   }
 
@@ -51,7 +50,7 @@ export async function getUserBalance(
         : await provider.getBalance(address);
       return newBalance;
     } catch (e) {
-      console.log(e);
+      console.log('Unsuccessful getUserBalance call');
     }
   }
 
@@ -95,7 +94,7 @@ export async function getExchangePrice(provider, asset) {
       const price = parseFloat(formatUnits(r.answer, 8));
       return price;
     } catch (e) {
-      console.log(e);
+      console.log('Unsuccessful getExchangePrice call');
     }
   }
 
@@ -117,7 +116,7 @@ export async function getAllowance(contracts, asset, args) {
       return newValue;
     } catch (e) {
       console.log(asset.name);
-      console.log(e);
+      console.log('Unsuccessful getAllowance call');
     }
   }
 

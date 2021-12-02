@@ -6,10 +6,11 @@ export default function useResources() {
   const { networkName, deployment } = useAuth();
 
   return useMemo(() => {
-    const vaults = VAULTS[networkName][deployment];
     const assets = ASSETS[networkName];
-    const collateralIds = COLLATERAL_IDS[networkName][deployment];
-    const borrowIds = BORROW_IDS[networkName][deployment];
+    const vaults = VAULTS[networkName][deployment] ?? VAULTS[networkName].core;
+    const collateralIds =
+      COLLATERAL_IDS[networkName][deployment] ?? COLLATERAL_IDS[networkName].core;
+    const borrowIds = BORROW_IDS[networkName][deployment] ?? BORROW_IDS[networkName].core;
     return {
       vaults: Object.values(vaults),
       collateralIds: Object.values(collateralIds),
