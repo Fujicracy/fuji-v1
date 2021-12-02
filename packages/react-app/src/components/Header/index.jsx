@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useBalance } from 'hooks';
+import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
@@ -19,13 +19,10 @@ import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
   CHAIN_NAMES,
-  ASSETS,
   DEFAULT_BALANCE_ASSET,
   CHAINS,
-  CHAIN_NAME,
 } from 'consts';
 
-import { getUserBalance } from 'helpers';
 import { flow } from 'lodash';
 
 import {
@@ -41,35 +38,45 @@ import {
   MenuItem,
   MenuBackContainer,
   MenuNavigationContainer,
+  DropDownBackContainer,
 } from './styles';
 
-function Header({ contracts, provider, address, onboard }) {
+function Header() {
+  const { address, provider, onboard, networkName, networkId, changeNetwork } = useAuth();
+  const contracts = useContractLoader();
+  const defaultAsset = DEFAULT_BALANCE_ASSET[networkName];
+
+  const chains = flow([
+    Object.entries,
+    arr => arr.filter(([key]) => CHAINS[key].isDeployed),
+    Object.fromEntries,
+  ])(CHAINS);
+
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
   const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const pollUnformattedBalance = useBalance(provider, address, contracts);
+  const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
-  const chains = flow([
-    Object.entries,
-    arr => arr.filter(([key]) => CHAINS[key].isDeployed && CHAINS[key].id !== CHAIN_NAME),
-    Object.fromEntries,
-  ])(CHAINS);
+  const userBalance = useBalance(provider, address, contracts);
 
   useEffect(() => {
-    async function fetchBalance() {
-      const unFormattedBalance = await getUserBalance(provider, address, contracts);
+    if (Object.values(chains).find(chain => chain.id === networkId)) {
+      setSelectedChain(chains[networkName]);
+    } else {
+      setSelectedChain(null);
+    }
+  }, [chains, networkName, networkId]);
 
-      const formattedBalance = unFormattedBalance
-        ? Number(formatUnits(unFormattedBalance, ASSETS[DEFAULT_BALANCE_ASSET].decimals)).toFixed(6)
-        : null;
-
-      setBalance(Number(formattedBalance).toFixed(2));
+  useEffect(() => {
+    function formatBalance() {
+      const bal = Number(formatUnits(userBalance, defaultAsset.decimals)).toFixed(2);
+      setBalance(bal);
     }
 
-    fetchBalance();
-  }, [address, provider, contracts, pollUnformattedBalance]);
+    if (userBalance) formatBalance();
+  }, [defaultAsset, userBalance]);
 
   const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
@@ -88,6 +95,61 @@ function Header({ contracts, provider, address, onboard }) {
 
   const currentPage = useLocation();
 
+  const onChangeChain = async chain => {
+    await changeNetwork(chain.id);
+    setSelectedChain(chain);
+  };
+
+  const NetworkDropdown = () => {
+    return (
+      <Box
+        ml={2}
+        sx={{ position: 'relative' }}
+        tabIndex="0"
+        onBlur={() => setIsOpenNetworkDropDown(false)}
+      >
+        <DropDownHeader
+          onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
+          isClicked={isOpenNetworkDropDown}
+          hasBorder
+          width={!isMobile ? '160px' : '80px'}
+        >
+          <Image src={selectedChain?.icon} width={20} />
+          {isMobile ? (
+            <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
+          ) : (
+            <Label ml={2} color="#f5f5f5">
+              {selectedChain?.title ?? 'Switch network'}
+            </Label>
+          )}
+          <Image src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
+        </DropDownHeader>
+        {isOpenNetworkDropDown && (
+          <DropDownBackContainer onClick={() => setIsOpenNetworkDropDown(false)}>
+            <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
+              {Object.keys(chains)
+                .filter(key => key !== selectedChain?.name)
+                .map(key => (
+                  <DropDownItem key={key} onClick={() => onChangeChain(chains[key])}>
+                    <Image src={chains[key].icon} width={16} />
+                    <Label color="#f5f5f5" ml="8px">
+                      {chains[key].title}
+                    </Label>
+                  </DropDownItem>
+                ))}
+            </DropDownItemContainer>
+          </DropDownBackContainer>
+        )}
+      </Box>
+    );
+  };
+
+  const menuIconStyle = {
+    color: 'white',
+    fontSize: 40,
+    padding: 0,
+    marginLeft: isTablet ? 40 : 20,
+  };
   return (
     <Container>
       {isMenuOpen && (
@@ -144,7 +206,7 @@ function Header({ contracts, provider, address, onboard }) {
                   Documentation
                 </MenuItem>
 
-                {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -175,37 +237,44 @@ function Header({ contracts, provider, address, onboard }) {
 
         {address &&
           (isMobile || isTablet ? (
-            isMenuOpen ? (
-              <MenuOutlinedIcon
-                style={{ color: 'white', fontSize: 40, padding: 0, margin: 0 }}
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsMenuOpen(false);
-                }}
-              />
-            ) : (
-              <MenuOpenOutlinedIcon
-                style={{ color: '#F5F5FD', fontSize: 40, padding: 0, margin: 0 }}
-                onClick={e => {
-                  e.stopPropagation();
-                  setIsMenuOpen(!isMenuOpen);
-                }}
-              />
-            )
+            <Flex flexDirection="row" alignItems="center">
+              <NetworkDropdown />
+              {isMenuOpen ? (
+                <MenuOutlinedIcon
+                  style={menuIconStyle}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setIsMenuOpen(false);
+                  }}
+                />
+              ) : (
+                <MenuOpenOutlinedIcon
+                  style={menuIconStyle}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setIsMenuOpen(!isMenuOpen);
+                  }}
+                />
+              )}
+            </Flex>
           ) : (
             <Navigation>
-              <li className="nav-item">
-                <NavLink to="/dashboard/init-borrow" activeClassName="current">
-                  Borrow
-                </NavLink>
-              </li>
+              {selectedChain && (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/dashboard/init-borrow" activeClassName="current">
+                      Borrow
+                    </NavLink>
+                  </li>
 
-              <li className="nav-item">
-                <NavLink to="/dashboard/my-positions" activeClassName="current">
-                  My positions
-                </NavLink>
-              </li>
-              {CHAIN_NAME === CHAIN_NAMES.ETHEREUM && (
+                  <li className="nav-item">
+                    <NavLink to="/dashboard/my-positions" activeClassName="current">
+                      My positions
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
                 <li className="nav-item">
                   <NavLink to="/claim-nft" activeClassName="current">
                     NFT
@@ -214,50 +283,12 @@ function Header({ contracts, provider, address, onboard }) {
               )}
 
               <li>
-                <Box
-                  ml={2}
-                  sx={{ position: 'relative' }}
-                  tabIndex="0"
-                  onBlur={() => setIsOpenNetworkDropDown(false)}
-                >
-                  <DropDownHeader
-                    onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
-                    isClicked={isOpenNetworkDropDown}
-                    hasBorder
-                    width="160px"
-                  >
-                    <Image src={CHAINS[CHAIN_NAME].icon} width={20} />
-                    <Label ml={2} color="#f5f5f5">
-                      {CHAINS[CHAIN_NAME].name}
-                    </Label>
-                    <Image
-                      src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon}
-                      ml={2}
-                      width={11}
-                    />
-                  </DropDownHeader>
-                  {isOpenNetworkDropDown && (
-                    <DropDownItemContainer width="128px">
-                      {Object.keys(chains).map(key => (
-                        <DropDownItem
-                          onClick={() => {
-                            window.open(chains[key].dashboardUrl, '_self');
-                          }}
-                        >
-                          <Image src={chains[key].icon} width={16} />
-                          <Label color="#f5f5f5" ml="8px">
-                            {chains[key].name}
-                          </Label>
-                        </DropDownItem>
-                      ))}
-                    </DropDownItemContainer>
-                  )}
-                </Box>
+                <NetworkDropdown />
               </li>
 
               <li>
                 <BallanceContainer rightPadding={0} onBlur={() => setIsOpenWalletDropDown(false)}>
-                  <Label color="#f5f5f5">{`${balance} ${DEFAULT_BALANCE_ASSET}`}</Label>
+                  <Label color="#f5f5f5">{`${balance} ${defaultAsset.name}`}</Label>
                   <Box
                     ml={2}
                     sx={{ position: 'relative' }}

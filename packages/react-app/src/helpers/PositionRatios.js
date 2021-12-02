@@ -3,7 +3,8 @@ import { formatUnits } from '@ethersproject/units';
 const MAX_HEALTH_FACTOR = 1000;
 
 export default function PositionRatios(position, collateralPrice, borrowPrice) {
-  const { debtBalance, collateralBalance, borrowAsset, collateralAsset, threshold } = position;
+  const { vault, debtBalance, collateralBalance } = position;
+  const { borrowAsset, collateralAsset, threshold } = vault;
 
   let debt = debtBalance ? Number(formatUnits(debtBalance, borrowAsset.decimals)) : 0;
 

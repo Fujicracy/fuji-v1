@@ -22,13 +22,13 @@ export const HeaderContainer = styled(Box)`
 
   ${fujiMedia.lessThan('medium')`
     height:64px;
-    background-color:  rgba(255, 255, 255, 0.05);
+    background-color:  #272727;
     padding: 16px 28px;
   `}
   ${fujiMedia.between('medium', 'large')`
     padding: 16px 40px;
     height: 88px;
-    background-color:  rgba(255, 255, 255, 0.05);
+    background-color:  #272727;
   `}
 `;
 
@@ -215,6 +215,26 @@ export const DropDownHeader = styled(Box)`
   ${size}
 `;
 
+export const DropDownBackContainer = styled(Box)`
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  left: 50%;
+  transform: translateX(-50%);
+  ${fujiMedia.lessThan('small')`
+    position: fixed;
+    width: 100vw;
+    top: 64px;
+    backdrop-filter: blur(0.25rem);
+  `}
+  ${fujiMedia.between('small', 'medium')`
+    position: fixed;
+    width: 496px !important;
+    top: 64px;
+    backdrop-filter: blur(0.25rem);
+  `}
+`;
+
 export const DropDownItemContainer = styled(Box)`
   position: absolute;
   width: max-content;
@@ -223,6 +243,23 @@ export const DropDownItemContainer = styled(Box)`
   border: none;
   box-sizing: border-box;
   color: #3faffa;
+  background-color: #1c1c1c;
+
+  ${fujiMedia.lessThan('small')`
+    width: 100vw;
+    border-bottom: 1px solid ${themeGet('colors.primary')};
+    color: #3faffa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  `}
+  ${fujiMedia.between('small', 'medium')`
+    width: 496px !important;
+    border: 1px solid ${themeGet('colors.primary')};
+    border-top: none;
+    color: #3faffa;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  `}
 `;
 
 export const DropDownItem = styled(Box)`
@@ -232,7 +269,6 @@ export const DropDownItem = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
   padding: 0px 16px 0px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: ${themeGet('colors.text64')};
