@@ -1,4 +1,5 @@
 /* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 import { Contract } from '@ethersproject/contracts';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from 'hooks';
