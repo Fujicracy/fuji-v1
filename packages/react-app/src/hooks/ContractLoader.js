@@ -18,7 +18,7 @@ const loadContractFrom = (contracts, contractName, signer) => {
 };
 
 export default function useContractLoader() {
-  const { provider: providerOrSigner, networkId, networkName } = useAuth();
+  const { provider: providerOrSigner, networkId, networkName, deployment } = useAuth();
   const isMounted = useRef(false);
 
   const [contracts, setContracts] = useState();
@@ -49,7 +49,7 @@ export default function useContractLoader() {
 
         const newContracts = {};
 
-        const contractsData = require(`../contracts/${networkId}-core.deployment.json`);
+        const contractsData = require(`../contracts/${networkId}-${deployment}.deployment.json`);
         const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
@@ -76,7 +76,7 @@ export default function useContractLoader() {
       }
     }
     if (providerOrSigner && networkId) loadContracts();
-  }, [providerOrSigner, networkId, networkName]);
+  }, [providerOrSigner, networkId, networkName, deployment]);
 
   return contracts;
 }

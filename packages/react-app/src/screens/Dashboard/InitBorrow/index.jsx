@@ -417,9 +417,7 @@ function InitBorrow() {
                 <Grid container spacing={isMobile ? 3 : 4}>
                   {networkName !== CHAIN_NAMES.FANTOM && (
                     <Grid item xs={8} sm={8} md={12}>
-                      <SelectMarket
-                        /* handleChange={handleChangeMarket} */ hasBlackContainer={false}
-                      />
+                      <SelectMarket />
                     </Grid>
                   )}
                   <Grid item xs={4} sm={4} md={12}>

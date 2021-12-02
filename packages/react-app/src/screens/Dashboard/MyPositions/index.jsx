@@ -1,23 +1,25 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import map from 'lodash/map';
 import orderBy from 'lodash/orderBy';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
+import { useAuth, useResources, useContractLoader } from 'hooks';
+import { CallContractFunction } from 'helpers';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
-import { PositionElement, PositionActions, ProvidersList } from 'components';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { PositionElement, PositionActions, ProvidersList, SelectMarket } from 'components';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES } from 'consts';
 
 import './styles.css';
 
 function MyPositions() {
-  const { address } = useAuth();
+  const history = useHistory();
+
+  const { address, networkName } = useAuth();
   const contracts = useContractLoader();
   const { vaults } = useResources();
 
@@ -27,21 +29,42 @@ function MyPositions() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const history = useHistory();
-  const positions = map(vaults, vault => {
-    return {
-      vault,
-      vaultAddress: contracts?.[vault.name]?.address,
-      debtBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-        address,
-        vault.borrowId,
-      ]),
-      collateralBalance: useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
-        address,
-        vault.collateralId,
-      ]),
+  const [positions, setPositions] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    async function setup() {
+      const tmpPositions = [];
+      for (let i = 0; i < vaults.length; i += 1) {
+        const vault = vaults[i];
+        // eslint-disable-next-line no-await-in-loop
+        const debtBalance = await CallContractFunction(contracts, 'FujiERC1155', 'balanceOf', [
+          address,
+          vault.borrowId,
+        ]);
+        // eslint-disable-next-line no-await-in-loop
+        const collateralBalance = await CallContractFunction(
+          contracts,
+          'FujiERC1155',
+          'balanceOf',
+          [address, vault.collateralId],
+        );
+        const position = {
+          vaultAddress: contracts?.[vault.name]?.address,
+          vault,
+          debtBalance,
+          collateralBalance,
+        };
+        tmpPositions.push(position);
+      }
+      if (mounted) setPositions(tmpPositions);
+    }
+
+    if (contracts && address) setup();
+    return () => {
+      mounted = false;
     };
-  });
+  }, [vaults, contracts, address]);
 
   const markets = [...new Set(map(vaults, v => v.borrowAsset.name))];
 
@@ -70,6 +93,20 @@ function MyPositions() {
   return (
     <Flex flex flexDirection="row" justifyContent="center">
       <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
+        {(isMobile || isTablet) && networkName !== CHAIN_NAMES.FANTOM && (
+          <Grid item xs={12} sm={12} md={4}>
+            <BlackBoxContainer
+              hasBlackContainer
+              padding={isMobile ? '32px 28px' : '44px 36px 40px'}
+            >
+              <Grid container spacing={12}>
+                <Grid item xs={12} sm={12} md={12}>
+                  <SelectMarket />
+                </Grid>
+              </Grid>
+            </BlackBoxContainer>
+          </Grid>
+        )}
         <Grid item md={8} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="center" className="positions">
             <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
@@ -79,7 +116,6 @@ function MyPositions() {
             <div className="position-board">
               {hasPosition() ? (
                 <Grid item>
-                  {/* <span className="empty-tab" /> */}
                   <BlackBoxContainer
                     hasBlackContainer={false}
                     ml="28px"
@@ -168,8 +204,24 @@ function MyPositions() {
           </Grid>
         </Grid>
         {!isMobile && !isTablet && (
-          <Grid item md={4} sm={4}>
-            <ProvidersList markets={markets} />
+          <Grid item xs={12} sm={12} md={4}>
+            <BlackBoxContainer hasBlackContainer padding="32px 28px">
+              <Grid container spacing={4}>
+                {networkName !== CHAIN_NAMES.FANTOM && (
+                  <Grid item xs={8} sm={8} md={12}>
+                    <SelectMarket />
+                  </Grid>
+                )}
+                <Grid item xs={4} sm={4} md={12}>
+                  <ProvidersList
+                    markets={markets}
+                    title="APR"
+                    isDropDown
+                    hasBlackContainer={false}
+                  />
+                </Grid>
+              </Grid>
+            </BlackBoxContainer>
           </Grid>
         )}
       </Grid>

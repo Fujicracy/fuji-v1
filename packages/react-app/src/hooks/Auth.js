@@ -11,6 +11,7 @@ import {
   CHAIN_NAME,
   CHAINS,
   CHAIN_NAMES,
+  DEPLOYMENT_TYPES,
 } from 'consts/globals';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
@@ -98,6 +99,7 @@ function useProvideAuth() {
   const [onboard, setOnboard] = useState(null);
   const [networkId, setNetworkId] = useState(null);
   const [networkName, setNetworkName] = useState(CHAIN_NAMES.ETHEREUM);
+  const [deployment, setDeployment] = useState(DEPLOYMENT_TYPES.CORE);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -191,6 +193,8 @@ function useProvideAuth() {
     provider,
     networkId,
     networkName,
+    deployment,
+    setDeployment,
     connectAccount,
     onboard,
   };
