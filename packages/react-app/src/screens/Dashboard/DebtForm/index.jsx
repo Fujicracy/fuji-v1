@@ -16,10 +16,18 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
+import {
+  useContractReader,
+  useExchangePrice,
+  useBalance,
+  useAllowance,
+  useAuth,
+  useContractLoader,
+} from 'hooks';
 
 import { Transactor, GasEstimator } from '../../../helpers';
-import { useContractReader, useExchangePrice, useBalance, useAllowance } from '../../../hooks';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -30,9 +38,11 @@ const Action = {
   Borrow: 1,
 };
 
-function DebtForm({ position, contracts, provider, address }) {
+function DebtForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader();
+
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
-  // const price = useExchangePrice();
   const tx = Transactor(provider);
 
   const [action, setAction] = useState(Action.Repay);
@@ -42,18 +52,19 @@ function DebtForm({ position, contracts, provider, address }) {
   const [leftToBorrow, setLeftToBorrow] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
-  const vault = VAULTS[position.vaultAddress];
+  const { vaultAddress, vault } = position;
+  const { collateralAsset, borrowAsset } = vault;
   const { decimals } = vault.borrowAsset;
 
-  const borrowPrice = useExchangePrice(vault.borrowAsset.name);
-  const collateralPrice = useExchangePrice(vault.collateralAsset.name);
+  const borrowPrice = useExchangePrice(borrowAsset);
+  const collateralPrice = useExchangePrice(collateralAsset);
 
   const unFormattedBalance = useBalance(
     provider,
     address,
     contracts,
-    vault.borrowAsset.name,
-    vault.borrowAsset.isERC20,
+    borrowAsset.name,
+    borrowAsset.isERC20,
     1000,
   );
 
@@ -61,10 +72,7 @@ function DebtForm({ position, contracts, provider, address }) {
     ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
     : null;
 
-  const allowance = useAllowance(contracts, vault.borrowAsset.name, [
-    address,
-    position.vaultAddress,
-  ]);
+  const allowance = useAllowance(contracts, borrowAsset, [address, vaultAddress]);
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
     address,
@@ -88,11 +96,12 @@ function DebtForm({ position, contracts, provider, address }) {
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral)));
+      const colDecimals = collateralAsset.decimals;
+      const diff = Number(formatUnits(collateralBalance.sub(neededCollateral), colDecimals));
       const left = (diff / 1.35 / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice]);
+  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, collateralAsset]);
 
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
@@ -134,12 +143,12 @@ function DebtForm({ position, contracts, provider, address }) {
 
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
       parseUnits(unFormattedAmount, decimals),
-      { value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals) },
+      { value: borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals) },
     ]);
 
     const res = await tx(
       contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
-        value: vault.borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),
+        value: borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),
         gasLimit,
       }),
     );
@@ -173,7 +182,7 @@ function DebtForm({ position, contracts, provider, address }) {
       : parseUnits(unFormattedAmount, decimals);
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
-      contracts[vault.borrowAsset.name].approve(
+      contracts[borrowAsset.name].approve(
         contracts[vault.name].address,
         BigNumber.from(approveAmount),
       ),
@@ -194,7 +203,7 @@ function DebtForm({ position, contracts, provider, address }) {
   const onSubmit = async () => {
     setLoading(true);
     if (action === Action.Repay) {
-      if (vault.borrowAsset.isERC20) {
+      if (borrowAsset.isERC20) {
         if (parseUnits(amount, decimals).gt(allowance)) {
           setDialog({ step: 'approval', withApproval: true });
         } else {
@@ -217,8 +226,7 @@ function DebtForm({ position, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
-          borrowAsset={vault.borrowAsset}
-          collateralAsset={vault.collateralAsset}
+          vault={vault}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newCollateral={collateralBalance}
@@ -229,7 +237,6 @@ function DebtForm({ position, contracts, provider, address }) {
               ? debtBalance.sub(parseUnits(amount, decimals))
               : debtBalance.add(parseUnits(amount, decimals))
           }
-          provider={provider}
         />
       ),
       actions: () => (
@@ -252,7 +259,7 @@ function DebtForm({ position, contracts, provider, address }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(amount).toFixed(0)} {vault.borrowAsset.name}
+            Approve {Number(amount).toFixed(0)} {borrowAsset.name}
           </Button>
           <Button onClick={() => approve(true)} className="main-button">
             Infinite Approve
@@ -265,7 +272,7 @@ function DebtForm({ position, contracts, provider, address }) {
       content: (
         <DialogContentText>
           You have successfully {action === Action.Repay ? 'repay' : 'borrow'}ed {amount}{' '}
-          {vault.borrowAsset.name}.
+          {borrowAsset.name}.
         </DialogContentText>
       ),
       actions: () => (
@@ -329,8 +336,7 @@ function DebtForm({ position, contracts, provider, address }) {
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip tooltip-top">
-              <span className="bold">Repay</span> {vault.borrowAsset.name} from your wallet balance
-              or
+              <span className="bold">Repay</span> {borrowAsset.name} from your wallet balance or
               <span className="bold"> borrow</span> more from it against your free collateral.
             </span>
           </div>
@@ -371,12 +377,10 @@ function DebtForm({ position, contracts, provider, address }) {
           subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
           subTitleInfo={
             action === Action.Repay
-              ? `${balance ? Number(balance).toFixed(2) : '...'} ${vault.borrowAsset.name} Ξ`
-              : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${
-                  vault.borrowAsset.name
-                } Ξ`
+              ? `${balance ? Number(balance).toFixed(2) : '...'} ${borrowAsset.name}`
+              : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${borrowAsset.name}`
           }
-          startAdornmentImage={vault.borrowAsset.icon}
+          startAdornmentImage={borrowAsset.icon}
           endAdornment={{
             type: 'component',
             component: (
@@ -398,7 +402,7 @@ function DebtForm({ position, contracts, provider, address }) {
                     max
                   </Button>
                 )}
-                <Label>{vault.borrowAsset.name}</Label>
+                <Label>{borrowAsset.name}</Label>
               </InputAdornment>
             ),
           }}
@@ -409,14 +413,13 @@ function DebtForm({ position, contracts, provider, address }) {
               </Typography>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
               <Typography className="error-input-msg" variant="body2">
-                Insufficient {vault.borrowAsset.name} balance
+                Insufficient {borrowAsset.name} balance
               </Typography>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
                 <Typography className="error-input-msg" variant="body2">
-                  You can borrow max. {leftToBorrow} {vault.borrowAsset.name}. Provide more
-                  collateral!
+                  You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
                 </Typography>
               )
             )

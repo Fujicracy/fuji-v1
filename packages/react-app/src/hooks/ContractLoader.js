@@ -1,8 +1,9 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 import { Contract } from '@ethersproject/contracts';
-import { useState, useEffect } from 'react';
-import { CHAIN_ID, DEPLOYMENT } from 'consts/globals';
+import { useState, useEffect, useRef } from 'react';
+import { useAuth } from 'hooks';
 import { ASSETS } from 'consts/assets';
 import { ERC20_ABI } from 'consts/abis';
 
@@ -17,11 +18,23 @@ const loadContractFrom = (contracts, contractName, signer) => {
   return contract;
 };
 
-export default function useContractLoader(providerOrSigner) {
+export default function useContractLoader() {
+  const { provider: providerOrSigner, networkId, networkName, deployment } = useAuth();
+  const isMounted = useRef(false);
+
   const [contracts, setContracts] = useState();
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   useEffect(() => {
     async function loadContracts() {
-      if (typeof providerOrSigner !== 'undefined') {
+      try {
         // we need to check to see if this providerOrSigner has a signer or not
         let signer;
         let accounts;
@@ -37,7 +50,7 @@ export default function useContractLoader(providerOrSigner) {
 
         const newContracts = {};
 
-        const contractsData = require(`../contracts/${CHAIN_ID}-${DEPLOYMENT}.deployment.json`);
+        const contractsData = require(`../contracts/${networkId}-${deployment}.deployment.json`);
         const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
@@ -47,22 +60,24 @@ export default function useContractLoader(providerOrSigner) {
             console.log(`ERROR: Contract ${contractName} cannot be loaded!`);
           }
         }
-        const assetList = Object.keys(ASSETS);
+        const assetList = Object.values(ASSETS[networkName]);
         for (let i = 0; i < assetList.length; i += 1) {
-          const assetName = assetList[i];
+          const asset = assetList[i];
           try {
-            newContracts[assetName] = new Contract(ASSETS[assetName].address, ERC20_ABI, signer);
+            newContracts[asset.name] = new Contract(asset.address, ERC20_ABI, signer);
           } catch (e) {
-            console.log(`ERROR: Contract ${assetName} cannot be loaded!`);
+            console.log(`ERROR: Contract ${asset.name} cannot be loaded!`);
           }
         }
-        setContracts(newContracts);
-      } else {
-        setContracts();
+        if (isMounted.current) {
+          setContracts(newContracts);
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
-    loadContracts();
-  }, [providerOrSigner]);
+    if (providerOrSigner && networkId) loadContracts();
+  }, [providerOrSigner, networkId, networkName, deployment]);
 
   return contracts;
 }

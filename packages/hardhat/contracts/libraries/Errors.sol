@@ -1,10 +1,10 @@
-// SPDX-License-Identifier: agpl-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 /**
  * @title Errors library
  * @author Fuji
- * @notice Defines the error messages emitted by the different contracts of the Aave protocol
+ * @notice Defines the error messages emitted by the different contracts
  * @dev Error messages prefix glossary:
  *  - VL = Validation Logic 100 series
  *  - MATH = Math libraries 200 series
@@ -45,12 +45,18 @@ library Errors {
   string public constant VL_ERC1155_NOT_TRANSFERABLE = "128"; // ERC1155: Not Transferable
   string public constant VL_SWAP_SLIPPAGE_LIMIT_EXCEED = "129"; // ERC1155: Not Transferable
   string public constant VL_ZERO_ADDR = "130"; // Zero Address
+  string public constant VL_INVALID_FLASH_NUMBER = "131"; // invalid flashloan number
+  string public constant VL_INVALID_HARVEST_PROTOCOL_NUMBER = "132"; // invalid flashloan number
+  string public constant VL_INVALID_HARVEST_TYPE = "133"; // invalid flashloan number
+  string public constant VL_INVALID_FACTOR = "134"; // invalid factor
+  string public constant VL_INVALID_NEW_PROVIDER ="135"; // invalid newProvider in executeSwitch
 
   string public constant MATH_DIVISION_BY_ZERO = "201";
   string public constant MATH_ADDITION_OVERFLOW = "202";
   string public constant MATH_MULTIPLICATION_OVERFLOW = "203";
 
   string public constant RF_INVALID_RATIO_VALUES = "301"; // Ratio Value provided is invalid, _ratioA/_ratioB <= 1, and > 0, or activeProvider borrowBalance = 0
+  string public constant RF_INVALID_NEW_ACTIVEPROVIDER = "302"; //Input '_newProvider' and vault's 'activeProvider' must be different
 
   string public constant VLT_CALLER_MUST_BE_VAULT = "401"; // The caller of this function must be a vault
 

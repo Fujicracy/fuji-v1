@@ -1,7 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import usePoller from './Poller';
 
 const DEBUG = false;
+
+function validArgs(args) {
+  if (!args || args.length === 0) {
+    return false;
+  }
+  if (args.find(a => Array.isArray(a))) {
+    return !args.find(a => a.includes('') || a.includes(null));
+  }
+  return !args.includes('') && !args.includes(null);
+}
 
 export default function useContractReader(
   contracts,
@@ -10,7 +20,6 @@ export default function useContractReader(
   args,
   pollTime,
   formatter,
-  onChange,
 ) {
   let adjustPollTime = 4000;
   if (pollTime) {
@@ -20,12 +29,16 @@ export default function useContractReader(
     adjustPollTime = args;
   }
 
+  const isMounted = useRef(false);
   const [value, setValue] = useState('');
+
   useEffect(() => {
-    if (typeof onChange === 'function') {
-      setTimeout(onChange.bind(this, value), 1);
-    }
-  }, [value, onChange]);
+    isMounted.current = true;
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   usePoller(
     async () => {
@@ -33,7 +46,7 @@ export default function useContractReader(
         try {
           let newValue;
           if (DEBUG) console.log('CALLING ', contractName, functionName, 'with args', args);
-          if (args && args.length > 0 && args.indexOf('') === -1) {
+          if (validArgs(args)) {
             newValue = await contracts[contractName][functionName](...args);
             if (DEBUG)
               console.log(
@@ -53,12 +66,11 @@ export default function useContractReader(
             newValue = formatter(newValue);
           }
           // console.log("GOT VALUE",newValue)
-          if (newValue !== value) {
+          if (isMounted.current && newValue !== value) {
             setValue(newValue);
           }
         } catch (e) {
-          console.log(contractName);
-          console.log(e);
+          console.log(`Unsuccessfull call to ${contractName}`);
         }
       }
     },

@@ -11,7 +11,7 @@ export default function useExternalContractLoader(provider, address, ABI, option
   const [contract, setContract] = useState();
   useEffect(() => {
     async function loadContract() {
-      if (typeof provider !== 'undefined' && address && ABI) {
+      if (provider && address && ABI) {
         try {
           // we need to check to see if this provider has a signer or not
           let signer;

@@ -4,8 +4,7 @@ import find from 'lodash/find';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
-import { useContractLoader, useAuth, useContractReader } from 'hooks';
-import { COLLATERAL_IDS } from 'consts';
+import { useContractLoader, useAuth, useResources, useContractReader } from 'hooks';
 // import { CallContractFunction } from 'helpers';
 
 import Error from '../Error';
@@ -16,15 +15,16 @@ import InitBorrow from './InitBorrow';
 
 function Dashboard() {
   const { path } = useRouteMatch();
-  const { address, provider, onboard } = useAuth();
+  const { address } = useAuth();
 
   const [loader, setLoader] = useState(true);
 
-  const contracts = useContractLoader(provider);
+  const contracts = useContractLoader();
+  const { collateralIds } = useResources();
 
   const collateralBals = useContractReader(contracts, 'FujiERC1155', 'balanceOfBatch', [
-    map(Object.values(COLLATERAL_IDS), () => address),
-    Object.values(COLLATERAL_IDS),
+    map(collateralIds, () => address),
+    collateralIds,
   ]);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ function Dashboard() {
 
   return (
     <>
-      <Header contracts={contracts} provider={provider} address={address} onboard={onboard} />
+      <Header />
       {loader ? (
         <Loader />
       ) : (
@@ -48,13 +48,13 @@ function Dashboard() {
             )}
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
-            <InitBorrow contracts={contracts} provider={provider} address={address} />
+            <InitBorrow />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/my-positions`}>
-            <MyPositions contracts={contracts} address={address} />
+            <MyPositions />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/position`}>
-            <ManagePosition contracts={contracts} provider={provider} address={address} />
+            <ManagePosition />
           </ProtectedRoute>
 
           <Route path={`${path}/:errorType`}>

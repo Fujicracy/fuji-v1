@@ -34,11 +34,12 @@ function logslider(value) {
 }
 
 function PositionElement({ position, actionType }) {
-  const { debtBalance, collateralBalance, borrowAsset, collateralAsset } = position;
+  const { vault, debtBalance, collateralBalance } = position;
+  const { borrowAsset, collateralAsset } = vault;
 
   const history = useHistory();
-  const collateralAssetPrice = useExchangePrice(collateralAsset.name);
-  const borrowAssetPrice = useExchangePrice(borrowAsset.name);
+  const collateralAssetPrice = useExchangePrice(collateralAsset);
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
 
   const [healthFactor, setHealthFactor] = useState(0);
   const [healthRatio, setHealthRatio] = useState(0);
@@ -118,7 +119,7 @@ function PositionElement({ position, actionType }) {
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >
-                  {collateral ? collateral.toFixed(2) : '...'}
+                  {collateral ? collateral.toFixed(3) : '...'}
                 </SectionTitle>
               </Flex>
               {!isMobile && !isTablet && (
@@ -153,7 +154,7 @@ function PositionElement({ position, actionType }) {
                   mt={isMobile || isTablet ? 2 : 0}
                   ml={!isMobile && !isTablet ? 2 : 0}
                 >
-                  {debt ? debt.toFixed(2) : '...'}
+                  {debt ? debt.toFixed(3) : '...'}
                 </SectionTitle>
               </Flex>
               {!isMobile && !isTablet && (
