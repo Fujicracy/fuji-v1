@@ -9,10 +9,10 @@ const getGasPrice = async speed => {
     .catch(error => console.log(error));
 };
 
-const getETHPrice = async () => {
+const getPriceOf = async (currency = 'ethereum') => {
   return axios
-    .get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd')
-    .then(({ data }) => data.ethereum.usd);
+    .get(`https://api.coingecko.com/api/v3/simple/price?ids=${currency}&vs_currencies=usd`)
+    .then(({ data }) => data[currency].usd);
 };
 
-export { getGasPrice, getETHPrice };
+export { getGasPrice, getPriceOf };
