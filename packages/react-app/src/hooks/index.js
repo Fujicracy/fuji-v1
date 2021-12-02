@@ -12,6 +12,6 @@ export { default as useBalance } from './Balance';
 export { default as useLocalStorage } from './LocalStorage';
 export { default as useResolveName } from './ResolveName';
 export { default as useNonce } from './Nonce';
-export { default as useRates } from './Rates';
 export { default as useAllowance } from './Allowance';
+export { default as useResources } from './Resources';
 export * from './Auth';

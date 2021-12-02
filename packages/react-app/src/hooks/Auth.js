@@ -1,22 +1,105 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
-import { formatUnits } from '@ethersproject/units';
+import React, { useState, useEffect, useMemo, useContext, createContext } from 'react';
 import { ethers } from 'ethers';
+import { useHistory } from 'react-router-dom';
 import Onboard from 'bnc-onboard';
-import { INFURA_ID, BLOCKNATIVE_KEY, CHAIN_ID, APP_URL } from 'consts/globals';
+import {
+  INFURA_ID,
+  BLOCKNATIVE_KEY,
+  APP_URL,
+  CHAIN,
+  CHAIN_ID,
+  CHAIN_NAME,
+  CHAINS,
+  CHAIN_NAMES,
+  DEPLOYMENT_TYPES,
+} from 'consts/globals';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
 const AuthContext = createContext();
 const localStorage = window.localStorage;
 
+async function addNetworkToWallet() {
+  if (!CHAIN.isCustomNetwork) return;
+
+  if (window.ethereum) {
+    const hexedChainId = '0x' + Number(CHAIN_ID).toString(16);
+
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexedChainId }],
+      });
+    } catch (error) {
+      if (error.code === 4902) {
+        console.log('Adding new chain');
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: hexedChainId,
+                chainName: CHAIN.name,
+                rpcUrls: CHAIN.rpcUrls,
+                nativeCurrency: CHAIN.nativeCurrency,
+                blockExplorerUrls: CHAIN.blockExplorerUrls,
+              },
+            ],
+          });
+        } catch (addError) {
+          console.error({ addError });
+        }
+      }
+      console.error(error);
+    }
+  } else {
+    // if no window.ethereum then MetaMask is not installed
+    console.error(
+      'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+    );
+  }
+}
+
+const onboardConfigs = {
+  dappId: BLOCKNATIVE_KEY,
+  darkMode: true,
+  walletSelect: {
+    wallets: [
+      { walletName: 'metamask', preferred: true },
+      {
+        walletName: 'walletConnect',
+        infuraKey: INFURA_ID,
+        preferred: true,
+      },
+      { walletName: 'coinbase' },
+      {
+        walletName: 'ledger',
+        rpcUrl: RPC_URL,
+      },
+      {
+        walletName: 'trezor',
+        appUrl: APP_URL,
+        rpcUrl: RPC_URL,
+      },
+    ],
+  },
+  walletCheck: [
+    { checkName: 'derivationPath' },
+    { checkName: 'connect' },
+    { checkName: 'accounts' },
+    { checkName: 'network' },
+  ],
+};
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
+  const history = useHistory();
   const [provider, setProvider] = useState(undefined);
-  const [wallet, setWallet] = useState(localStorage.getItem('selectedWallet'));
   const [address, setAddress] = useState(localStorage.getItem('selectedAddress'));
   const [onboard, setOnboard] = useState(null);
-  const [balance, setBalance] = useState(0);
-  const [network, setNetwork] = useState(null);
+  const [networkId, setNetworkId] = useState(null);
+  const [networkName, setNetworkName] = useState(CHAIN_NAMES.ETHEREUM);
+  const [deployment, setDeployment] = useState(DEPLOYMENT_TYPES.CORE);
 
   async function connectAccount() {
     const isSelected = await onboard.walletSelect();
@@ -30,96 +113,90 @@ function useProvideAuth() {
     }
   }
 
-  useEffect(() => {
-    const tmpOnboard = Onboard({
-      dappId: BLOCKNATIVE_KEY,
-      networkId: Number(CHAIN_ID),
-      darkMode: true,
-      walletSelect: {
-        wallets: [
-          { walletName: 'metamask', preferred: true },
-          {
-            walletName: 'walletConnect',
-            infuraKey: INFURA_ID,
-            preferred: true,
-          },
-          { walletName: 'coinbase' },
-          {
-            walletName: 'ledger',
-            rpcUrl: RPC_URL,
-          },
-          {
-            walletName: 'trezor',
-            appUrl: APP_URL,
-            rpcUrl: RPC_URL,
-          },
-        ],
+  const subscriptions = useMemo(() => {
+    return {
+      wallet: wallet => {
+        if (wallet.provider) {
+          const ethersProvider = new ethers.providers.Web3Provider(wallet.provider);
+          setProvider(ethersProvider);
+          localStorage.setItem('selectedWallet', wallet.name);
+        } else {
+          setAddress('');
+          setProvider(undefined);
+
+          localStorage.removeItem('selectedWallet');
+          localStorage.removeItem('selectedAddress');
+        }
       },
-      subscriptions: {
-        wallet: onboardWallet => {
-          if (onboardWallet.provider) {
-            setWallet(onboardWallet);
-            const ethersProvider = new ethers.providers.Web3Provider(onboardWallet.provider);
-            setProvider(ethersProvider);
-            localStorage.setItem('selectedWallet', onboardWallet.name);
+      network: id => {
+        if (id) {
+          setNetworkId(id);
+          if (id === 31337) {
+            // when local, use what's stored in .env
+            setNetworkName(CHAIN_NAME);
           } else {
-            setAddress('');
-            setProvider(undefined);
-            setWallet('');
-
-            localStorage.removeItem('selectedWallet');
-            localStorage.removeItem('selectedAddress');
+            const n = Object.values(CHAINS).find(v => v.id === id && v.isDeployed);
+            if (n) {
+              setNetworkName(n.name);
+            } else {
+              // unsupported network
+              console.log('Unsupported network');
+              history.replace('/dashboard/wrong-network');
+            }
           }
-        },
-        network: setNetwork,
-        address: onboardAddress => {
-          localStorage.setItem('selectedAddress', onboardAddress || '');
-          setAddress(onboardAddress);
-        },
-        balance: onboardBalance => {
-          if (onboardBalance) {
-            const fBalance = parseFloat(formatUnits(onboardBalance));
-            setBalance(fBalance.toFixed(2));
-          }
-        },
+        }
       },
-      walletCheck: [
-        { checkName: 'derivationPath' },
-        { checkName: 'connect' },
-        { checkName: 'accounts' },
-        { checkName: 'network' },
-      ],
-    });
-
-    setOnboard(tmpOnboard);
+      address: onboardAddress => {
+        localStorage.setItem('selectedAddress', onboardAddress || '');
+        setAddress(onboardAddress);
+      },
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    async function intialize() {
+      await addNetworkToWallet();
+
+      const tmpOnboard = Onboard({
+        networkId: Number(CHAIN_ID),
+        networkName: CHAIN_NAME,
+        subscriptions,
+        ...onboardConfigs,
+      });
+      setOnboard(tmpOnboard);
+    }
+
+    intialize();
+  }, [subscriptions]);
 
   useEffect(() => {
     async function connectWalletAccount() {
       const selectedWallet = localStorage.getItem('selectedWallet');
-      if (onboard) {
-        const isSelected = await onboard.walletSelect(selectedWallet);
-        if (isSelected) {
-          const isChecked = await onboard.walletCheck();
-          if (isChecked) {
-            const state = onboard.getState();
-            setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
-          }
-        }
+      const isSelected = await onboard.walletSelect(selectedWallet);
+      const state = onboard.getState();
+      if (networkId && networkId !== state.appNetworkID) {
+        onboard.config({ networkId });
+        await onboard.walletCheck();
+      }
+      if (isSelected) {
+        setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
       }
     }
 
-    connectWalletAccount();
-  }, [onboard, network]);
+    if (onboard) connectWalletAccount();
+  }, [onboard, networkId]);
 
   // Return the user object and auth methods
   return {
     address,
     provider,
+    networkId,
+    networkName,
+    deployment,
+    setDeployment,
     connectAccount,
     onboard,
-    wallet,
-    balance,
   };
 }
 
