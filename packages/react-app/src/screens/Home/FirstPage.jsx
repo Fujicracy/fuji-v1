@@ -33,12 +33,8 @@ function FirstPage() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  // const handleLearnClick = () => {
-  //   window.open('https://docs.fujidao.org/', '_blank');
-  // };
-
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
+    <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
       <HomeContainer style={props}>
         <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1} />
         <SectionTitle

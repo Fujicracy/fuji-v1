@@ -7,7 +7,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BlackBoxContainer, Label } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 
-import { HomeContainer, VerticalLine } from './styles';
+import { HomeContainer, VerticalLine, PageContainter } from './styles';
 
 function FifthPage() {
   const props = useSpring({
@@ -31,7 +31,7 @@ function FifthPage() {
   console.log({ isMobile, isTablet });
 
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center" marginTop="104px">
+    <PageContainter>
       <HomeContainer style={props}>
         <Flex flexDirection="row" alignItems="center">
           <BlackBoxContainer hasBlackContainer width="424px" height="240px">
@@ -78,7 +78,7 @@ function FifthPage() {
           </BlackBoxContainer>
         </Flex>
       </HomeContainer>
-    </Flex>
+    </PageContainter>
   );
 }
 

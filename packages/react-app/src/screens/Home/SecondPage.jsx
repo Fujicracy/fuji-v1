@@ -8,7 +8,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { fujiAlice1, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
 
-import { HomeContainer } from './styles';
+import { HomeContainer, PageContainter } from './styles';
 
 function SecondPage() {
   const props = useSpring({
@@ -27,7 +27,7 @@ function SecondPage() {
   });
 
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center" marginTop="104px">
+    <PageContainter>
       <HomeContainer style={props}>
         <Flex flexDirection="row" alignItems="center">
           <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiAlice1} />
@@ -55,7 +55,7 @@ function SecondPage() {
           </Flex>
         </Flex>
       </HomeContainer>
-    </Flex>
+    </PageContainter>
   );
 }
 

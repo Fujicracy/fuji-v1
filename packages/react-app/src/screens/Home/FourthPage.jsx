@@ -10,7 +10,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { fujiAlice2, fujiLandingMobile, fujiLandingTablet } from 'assets/images';
 
-import { HomeContainer } from './styles';
+import { HomeContainer, PageContainter } from './styles';
 
 function FourthPage() {
   const props = useSpring({
@@ -28,12 +28,8 @@ function FourthPage() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  // const handleLearnClick = () => {
-  //   window.open('https://docs.fujidao.org/', '_blank');
-  // };
-
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
+    <PageContainter>
       <HomeContainer style={props}>
         <Flex flexDirection="row" alignItems="center">
           <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiAlice2} />
@@ -58,7 +54,7 @@ function FourthPage() {
           </Flex>
         </Flex>
       </HomeContainer>
-    </Flex>
+    </PageContainter>
   );
 }
 

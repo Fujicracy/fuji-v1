@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { Grid } from '@material-ui/core';
+import { Flex } from 'rebass';
 
 export const HomeContainer = styled(animated.div)`
   display: flex;
@@ -9,7 +10,6 @@ export const HomeContainer = styled(animated.div)`
   font-family: Poppins;
   text-align: center;
   align-items: center;
-  height: 100%;
 `;
 
 export const HomeCta = styled(Grid)`
@@ -27,4 +27,14 @@ export const VerticalLine = styled.div`
   border-left: 2px dashed white;
   height: 95%;
   margin: 0px 72px 0px 72px;
+`;
+
+export const PageContainter = styled(Flex).attrs(() => ({
+  // bg: themeGet('colors.dark56')(props),
+  bg: 'transparent',
+}))`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 100px);
 `;
