@@ -1,16 +1,15 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
 import { ethers, BigNumber } from 'ethers';
-import { ASSETS, VAULTS } from '../consts/index.js';
+import { VAULTS } from '../consts/index.js';
 import {
   loadContracts,
   getSigner,
   getGasPrice,
-  getETHPrice,
+  getPriceOf,
   getFlashloanProvider,
   getBorrowers,
   connectRedis,
-  pushNew,
   buildPositions,
   logStatus,
 } from '../utils/index.js';
@@ -26,6 +25,7 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
 
   const formatUnits = utils.formatUnits;
 
+  // 4.3%
   let bonus = totalDebt.mul(BigNumber.from(43)).div(BigNumber.from(1000));
   bonus = formatUnits(bonus.toString(), decimals);
 
@@ -39,19 +39,23 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
 };
 
 const liquidateAll = async (setup, toLiq, vault, decimals) => {
-  const { contracts, signer } = setup;
+  const { config, contracts, signer } = setup;
 
   const positions = toLiq.filter(p => p.solvent);
   if (positions.length === 0) {
-    console.log('---> All liquidatable positions are unsolvent.');
+    console.log('---> All liquidatable positions are insolvent.');
     return;
   }
 
-  const index = await getFlashloanProvider(setup, vault);
-  const gasPrice = await getGasPrice();
-  const ethPrice = await getETHPrice();
+  const fliquidatorName = config.networkName === 'fantom' ? 'FliquidatorFTM' : 'Fliquidator';
+  const currency = config.networkName === 'fantom' ? 'fantom' : 'ethereum';
 
-  let gasLimit = await contracts.Fliquidator.connect(signer).estimateGas.flashBatchLiquidate(
+  const index = await getFlashloanProvider(setup, vault);
+  // only for Ethereum
+  const gasPrice = await getGasPrice();
+  const ethPrice = await getPriceOf(currency);
+
+  let gasLimit = await contracts[fliquidatorName].connect(signer).estimateGas.flashBatchLiquidate(
     positions.map(p => p.account),
     vault.address,
     index,
@@ -63,11 +67,11 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
   }
   console.log(chalk.green('---> Proceed to liquidations'));
 
-  // increase by 10% to prevent outOfGas tx failing
-  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('10')));
+  // increase by 50% to prevent outOfGas tx failing
+  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('2')));
 
   try {
-    const res = await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
+    const res = await contracts[fliquidatorName].connect(signer).flashBatchLiquidate(
       positions.map(p => p.account),
       vault.address,
       index,
@@ -77,7 +81,9 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
       console.log(`TX submited: ${res.hash}`);
       const receipt = await res.wait();
       if (receipt && receipt.events) {
-        const events = receipt.events.filter(e => e.event === 'FlashLiquidate');
+        // 'FlashLiquidate' gets emitted from alpha version Fliquidator
+        // 'Liquidate' from all subsequent versions
+        const events = receipt.events.filter(e => ['FlashLiquidate', 'Liquidate'].includes(e.event));
         console.log('Liquidated: ', chalk.blue(events.length), ' positions.');
       }
     }
@@ -104,7 +110,12 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
       borrowers = JSON.parse(borrowers);
       console.log('---> cached borrowers, fetch only new');
       const newBorrowers = await getBorrowers(vault, startBlock, currentBlock, 10);
-      borrowers = pushNew(newBorrowers, borrowers);
+      newBorrowers.forEach(b => {
+        if (!borrowers.includes(b)) {
+          console.log('new borrower:', b);
+          borrowers.push(b);
+        }
+      })
 
       await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     }
@@ -123,21 +134,17 @@ const checkForLiquidations = async setup => {
     const vaultName = vaults[v].name;
     console.log('Checking BORROW positions in', chalk.blue(vaultName));
 
-    const vault = contracts[vaultName];
-    const { borrowAsset } = await vault.vAssets();
-    const decimals = Object.values(ASSETS[config.networkName]).find(
-      a => a.address === borrowAsset,
-    ).decimals;
+    const vaultContract = contracts[vaultName];
 
     const startBlock = await vaults[v].deployBlockNumber;
     const currentBlock = await signer.provider.getBlockNumber();
-    const borrowers = await getAllBorrowers(vault, startBlock, currentBlock);
-    const [toLiq, stats] = await buildPositions(borrowers, vault, decimals, contracts.FujiERC1155);
+    const borrowers = await getAllBorrowers(vaultContract, startBlock, currentBlock);
+    const [toLiq, stats] = await buildPositions(borrowers, vaults[v], contracts);
 
-    logStatus(toLiq, stats, decimals);
+    logStatus(toLiq, stats, vaults[v]);
 
     if (toLiq.length > 0) {
-      await liquidateAll(setup, toLiq, vault, decimals);
+      await liquidateAll(setup, toLiq, vaultContract, vaults[v].borrowAsset.decimals);
     }
 
     console.log('\n===============\n');

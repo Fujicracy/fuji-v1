@@ -1,6 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
 import { CHAINLINK_ABI } from 'consts/abis';
-import { ASSETS } from 'consts/assets';
 import { Contract } from '@ethersproject/contracts';
 
 const DEBUG = false;
@@ -46,10 +45,14 @@ export async function getUserBalance(
   isERC20 = false,
 ) {
   if (address && provider) {
-    const newBalance = isERC20
-      ? await contracts[assetName].balanceOf(address)
-      : await provider.getBalance(address);
-    return newBalance;
+    try {
+      const newBalance = isERC20
+        ? await contracts[assetName].balanceOf(address)
+        : await provider.getBalance(address);
+      return newBalance;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return 0;
@@ -81,8 +84,8 @@ async function getExternalContractLoader(provider, address, ABI, optionalBytecod
   return null;
 }
 
-export async function getExchangePrice(provider, asset = 'ETH') {
-  const priceFeedProxy = ASSETS[asset].oracle;
+export async function getExchangePrice(provider, asset) {
+  const priceFeedProxy = asset.oracle;
 
   const oracle = await getExternalContractLoader(provider, priceFeedProxy, CHAINLINK_ABI);
 
@@ -99,21 +102,21 @@ export async function getExchangePrice(provider, asset = 'ETH') {
   return 0;
 }
 
-export async function getAllowance(contracts, assetName, args) {
-  if (contracts && contracts[assetName] && ASSETS[assetName].isERC20) {
+export async function getAllowance(contracts, asset, args) {
+  if (contracts && contracts[asset.name] && asset.isERC20) {
     try {
       let newValue;
-      if (DEBUG) console.log('CALLING ', assetName, 'allowance', 'with args', args);
+      if (DEBUG) console.log('CALLING ', asset.name, 'allowance', 'with args', args);
       if (args && args.length > 0 && args.indexOf('') === -1) {
-        newValue = await contracts[assetName].allowance(...args);
-        if (DEBUG) console.log('contractName', assetName, 'args', args, 'RESULT:', newValue);
+        newValue = await contracts[asset.name].allowance(...args);
+        if (DEBUG) console.log('contractName', asset.name, 'args', args, 'RESULT:', newValue);
       } else if (!args || (args && args.length === 0)) {
-        newValue = await contracts[assetName].allowance();
+        newValue = await contracts[asset.name].allowance();
       }
       // console.log("GOT VALUE",newValue)
       return newValue;
     } catch (e) {
-      console.log(assetName);
+      console.log(asset.name);
       console.log(e);
     }
   }

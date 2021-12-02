@@ -13,7 +13,6 @@ import {
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {
-  VAULTS,
   ASSET_NAME,
   PROVIDER_TYPE,
   PROVIDERS,
@@ -24,6 +23,9 @@ import {
 } from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
 import { useMediaQuery } from 'react-responsive';
+
+import { useAuth, useContractLoader } from 'hooks';
+
 import { SectionTitle } from '../../../components/Blocks';
 
 import './styles.css';
@@ -37,18 +39,19 @@ const providerIndexes = {
 async function getProviderIndex(vault, contracts) {
   const activeProvider = await contracts[vault.name].activeProvider();
 
-  const ibankAddr = PROVIDERS[PROVIDER_TYPE.IRONBANK].address;
-  const creamAddr = PROVIDERS[PROVIDER_TYPE.CREAM].address;
-
   let index = providerIndexes.AAVE;
 
   if (CHAIN_NAME === CHAIN_NAMES.ETHEREUM) {
+    const ibank = PROVIDERS[PROVIDER_TYPE.IRONBANK].name;
+    const ibankAddr = contracts[ibank].address;
     if ([ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name)) {
       index = providerIndexes.DYDX;
     } else if (activeProvider.toLowerCase() !== ibankAddr) {
       index = providerIndexes.CREAM;
     }
   } else if (CHAIN_NAME === CHAIN_NAMES.FANTOM) {
+    const cream = PROVIDERS[PROVIDER_TYPE.CREAM].name;
+    const creamAddr = contracts[cream].address;
     index =
       activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
   }
@@ -56,7 +59,10 @@ async function getProviderIndex(vault, contracts) {
   return index;
 }
 
-function FlashClose({ position, contracts, provider }) {
+function FlashClose({ position }) {
+  const { provider } = useAuth();
+  const contracts = useContractLoader();
+
   const tx = Transactor(provider);
 
   const [dialog, setDialog] = useState(false);
@@ -70,7 +76,7 @@ function FlashClose({ position, contracts, provider }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const vault = VAULTS[position.vaultAddress];
+  const vault = position.vault;
 
   const decimals = vault.borrowAsset.decimals;
   const onFlashClose = async () => {
