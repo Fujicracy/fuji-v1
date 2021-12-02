@@ -117,7 +117,7 @@ const Governance = () => {
 
   return (
     <>
-      <Header provider={provider} address={address} />
+      <Header />
       <Flex
         flex
         flexDirection={isMobile || isTablet ? 'column' : 'row'}

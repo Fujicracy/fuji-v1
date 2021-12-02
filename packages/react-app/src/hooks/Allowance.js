@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ASSETS } from 'consts';
 import usePoller from './Poller';
 
 const DEBUG = false;
 
-export default function useAllowance(contracts, assetName, args, pollTime, formatter, onChange) {
+export default function useAllowance(contracts, asset, args, pollTime, formatter, onChange) {
   let adjustPollTime = 4000;
   if (pollTime) {
     adjustPollTime = pollTime;
@@ -22,15 +21,15 @@ export default function useAllowance(contracts, assetName, args, pollTime, forma
 
   usePoller(
     async () => {
-      if (contracts && contracts[assetName] && ASSETS[assetName].isERC20) {
+      if (contracts && contracts[asset.name] && asset.isERC20) {
         try {
           let newValue;
-          if (DEBUG) console.log('CALLING ', assetName, 'allowance', 'with args', args);
+          if (DEBUG) console.log('CALLING ', asset.name, 'allowance', 'with args', args);
           if (args && args.length > 0 && args.indexOf('') === -1) {
-            newValue = await contracts[assetName].allowance(...args);
-            if (DEBUG) console.log('contractName', assetName, 'args', args, 'RESULT:', newValue);
+            newValue = await contracts[asset.name].allowance(...args);
+            if (DEBUG) console.log('contractName', asset.name, 'args', args, 'RESULT:', newValue);
           } else if (!args || (args && args.length === 0)) {
-            newValue = await contracts[assetName].allowance();
+            newValue = await contracts[asset.name].allowance();
           }
           if (formatter && typeof formatter === 'function') {
             newValue = formatter(newValue);
@@ -40,7 +39,7 @@ export default function useAllowance(contracts, assetName, args, pollTime, forma
             setValue(newValue);
           }
         } catch (e) {
-          console.log(assetName);
+          console.log(asset.name);
           console.log(e);
         }
       }

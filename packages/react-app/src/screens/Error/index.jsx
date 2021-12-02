@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import { CHAINS } from 'consts';
 import { useAuth } from 'hooks';
 
 import { notFoundIcon } from 'assets/images';
@@ -12,7 +13,7 @@ function Error() {
   const { errorType } = useParams();
   const location = useLocation();
 
-  const { address, connectAccount } = useAuth();
+  const { address, connectAccount, networkId } = useAuth();
   const { from } = location.state || { from: { pathname: '/dashboard' } };
 
   useEffect(() => {
@@ -22,6 +23,15 @@ function Error() {
       }
     }
   }, [errorType, address, history, from]);
+
+  useEffect(() => {
+    if (errorType === 'wrong-network') {
+      const network = Object.values(CHAINS).find(v => v.id === networkId && v.isDeployed);
+      if (network) {
+        history.replace('/dashboard');
+      }
+    }
+  }, [errorType, networkId, history]);
 
   return (
     <div className="error-page">
@@ -39,6 +49,13 @@ function Error() {
           >
             Connect wallet
           </Button>
+        </>
+      ) : errorType === 'wrong-network' ? (
+        <>
+          <h1 className="error-title">
+            <span className="brand-color">Unsupported network</span>
+            <span className="text-color">&gt; Please, switch to an appropriate one!</span>
+          </h1>
         </>
       ) : (
         <>
