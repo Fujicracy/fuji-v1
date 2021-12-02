@@ -113,6 +113,12 @@ function useProvideAuth() {
     }
   }
 
+  async function changeNetwork(id) {
+    onboard.config({ networkId: id });
+    setDeployment(DEPLOYMENT_TYPES.CORE);
+    await onboard.walletCheck();
+  }
+
   const subscriptions = useMemo(() => {
     return {
       wallet: wallet => {
@@ -176,8 +182,7 @@ function useProvideAuth() {
       const isSelected = await onboard.walletSelect(selectedWallet);
       const state = onboard.getState();
       if (networkId && networkId !== state.appNetworkID) {
-        onboard.config({ networkId });
-        await onboard.walletCheck();
+        await changeNetwork(networkId);
       }
       if (isSelected) {
         setProvider(new ethers.providers.Web3Provider(state.wallet.provider));
@@ -185,6 +190,7 @@ function useProvideAuth() {
     }
 
     if (onboard) connectWalletAccount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onboard, networkId]);
 
   // Return the user object and auth methods
@@ -193,6 +199,7 @@ function useProvideAuth() {
     provider,
     networkId,
     networkName,
+    changeNetwork,
     deployment,
     setDeployment,
     connectAccount,

@@ -42,7 +42,7 @@ import {
 } from './styles';
 
 function Header() {
-  const { address, provider, onboard, networkName, networkId } = useAuth();
+  const { address, provider, onboard, networkName, networkId, changeNetwork } = useAuth();
   const contracts = useContractLoader();
   const defaultAsset = DEFAULT_BALANCE_ASSET[networkName];
 
@@ -96,8 +96,7 @@ function Header() {
   const currentPage = useLocation();
 
   const onChangeChain = async chain => {
-    onboard.config({ networkId: chain.id });
-    await onboard.walletCheck();
+    await changeNetwork(chain.id);
     setSelectedChain(chain);
   };
 
