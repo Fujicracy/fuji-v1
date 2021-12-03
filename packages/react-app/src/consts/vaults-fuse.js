@@ -1,28 +1,27 @@
-import { getContractAddress } from 'helpers';
-import { ASSETS, ASSET_NAME } from './assets';
+import { ASSETS, ASSET_NAME } from './assets-ethereum';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
-const VAULTS_ADDRESS = {
-  VaultETHFEI: getContractAddress('VaultETHFEI'),
-  VaultETHUSDC: getContractAddress('VaultETHUSDC'),
+const VAULTS_NAMES = {
+  VaultETHFEI: 'VaultETHFEI',
+  VaultETHUSDC: 'VaultETHUSDC',
 };
 
 const COLLATERAL_IDS = {
-  [VAULTS_ADDRESS.VaultETHFEI]: 0,
-  [VAULTS_ADDRESS.VaultETHUSDC]: 2,
+  [VAULTS_NAMES.VaultETHFEI]: 0,
+  [VAULTS_NAMES.VaultETHUSDC]: 2,
 };
 
 const BORROW_IDS = {
-  [VAULTS_ADDRESS.VaultETHFEI]: 1,
-  [VAULTS_ADDRESS.VaultETHUSDC]: 3,
+  [VAULTS_NAMES.VaultETHFEI]: 1,
+  [VAULTS_NAMES.VaultETHUSDC]: 3,
 };
 
 const VAULTS = {
-  [VAULTS_ADDRESS.VaultETHFEI]: {
+  [VAULTS_NAMES.VaultETHFEI]: {
     borrowAsset: ASSETS[ASSET_NAME.FEI],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
-    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultETHFEI],
-    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultETHFEI],
+    borrowId: BORROW_IDS[VAULTS_NAMES.VaultETHFEI],
+    collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultETHFEI],
     providers: [
       PROVIDERS[PROVIDER_TYPE.FUSE6],
       PROVIDERS[PROVIDER_TYPE.FUSE7],
@@ -31,12 +30,13 @@ const VAULTS = {
     ],
     name: 'VaultETHFEI',
     title: 'ETH-FEI',
+    threshold: 75,
   },
-  [VAULTS_ADDRESS.VaultETHUSDC]: {
+  [VAULTS_NAMES.VaultETHUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
     collateralAsset: ASSETS[ASSET_NAME.ETH],
-    borrowId: BORROW_IDS[VAULTS_ADDRESS.VaultETHUSDC],
-    collateralId: COLLATERAL_IDS[VAULTS_ADDRESS.VaultETHUSDC],
+    borrowId: BORROW_IDS[VAULTS_NAMES.VaultETHUSDC],
+    collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultETHUSDC],
     providers: [
       PROVIDERS[PROVIDER_TYPE.FUSE3],
       PROVIDERS[PROVIDER_TYPE.FUSE6],
@@ -45,7 +45,8 @@ const VAULTS = {
     ],
     name: 'VaultETHUSDC',
     title: 'ETH-USDC',
+    threshold: 75,
   },
 };
 
-export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
+export { VAULTS_NAMES, BORROW_IDS, COLLATERAL_IDS, VAULTS };
