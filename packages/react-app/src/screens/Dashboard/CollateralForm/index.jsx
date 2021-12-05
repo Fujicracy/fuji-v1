@@ -275,15 +275,18 @@ function CollateralForm({ position }) {
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => {
         return (
-          <DialogActions>
-            <Button onClick={() => approve(false)} className="main-button">
-              Approve {Number(amount).toFixed(0)} {collateralAsset.name}
-            </Button>
-            <Button onClick={() => approve(true)} className="main-button">
-              Infinite Approve
-            </Button>
-            q
-          </DialogActions>
+          <>
+            <DialogActions>
+              <Button onClick={() => approve(false)} className="main-button">
+                Approve {Number(amount).toFixed(3)} {collateralAsset.name}
+              </Button>
+            </DialogActions>
+            <DialogActions>
+              <Button onClick={() => approve(true)} className="main-button">
+                Infinite Approve
+              </Button>
+            </DialogActions>
+          </>
         );
       },
     },

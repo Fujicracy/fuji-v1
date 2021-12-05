@@ -257,14 +257,18 @@ function DebtForm({ position }) {
       title: 'Approving... 1 of 2',
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => (
-        <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(amount).toFixed(0)} {borrowAsset.name}
-          </Button>
-          <Button onClick={() => approve(true)} className="main-button">
-            Infinite Approve
-          </Button>
-        </DialogActions>
+        <>
+          <DialogActions>
+            <Button onClick={() => approve(false)} className="main-button">
+              Approve {Number(amount).toFixed(3)} {borrowAsset.name}
+            </Button>
+          </DialogActions>
+          <DialogActions>
+            <Button onClick={() => approve(true)} className="main-button">
+              Infinite Approve
+            </Button>
+          </DialogActions>
+        </>
       ),
     },
     success: {
