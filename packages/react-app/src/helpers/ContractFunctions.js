@@ -100,25 +100,3 @@ export async function getExchangePrice(provider, asset) {
 
   return 0;
 }
-
-export async function getAllowance(contracts, asset, args) {
-  if (contracts && contracts[asset.name] && asset.isERC20) {
-    try {
-      let newValue;
-      if (DEBUG) console.log('CALLING ', asset.name, 'allowance', 'with args', args);
-      if (args && args.length > 0 && args.indexOf('') === -1) {
-        newValue = await contracts[asset.name].allowance(...args);
-        if (DEBUG) console.log('contractName', asset.name, 'args', args, 'RESULT:', newValue);
-      } else if (!args || (args && args.length === 0)) {
-        newValue = await contracts[asset.name].allowance();
-      }
-      // console.log("GOT VALUE",newValue)
-      return newValue;
-    } catch (e) {
-      console.log(asset.name);
-      console.log('Unsuccessful getAllowance call');
-    }
-  }
-
-  return null;
-}

@@ -39,9 +39,8 @@ import {
   CallContractFunction,
   getUserBalance,
   getExchangePrice,
-  getAllowance,
 } from 'helpers';
-import { useAuth, useBalance, useResources, useContractLoader } from 'hooks';
+import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
 
 import { Container, Helper } from './style';
 
@@ -77,12 +76,16 @@ function InitBorrow() {
   const [neededCollateral, setNeededCollateral] = useState(null);
 
   const [activeProvider, setActiveProvider] = useState('');
-  const [allowance, setAllowance] = useState();
 
   const [collateralBalance, setCollateralBalance] = useState();
   const [debtBalance, setDebtBalance] = useState();
 
   const [balance, setBalance] = useState(null);
+
+  const allowance = useAllowance(contracts, collateralAsset, [
+    address,
+    vault && contracts ? contracts[vault.name].address : '0x',
+  ]);
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -109,6 +112,7 @@ function InitBorrow() {
     collateralAsset.name,
     collateralAsset.isERC20,
   );
+
   useEffect(() => {
     async function fetchBalance() {
       const unFormattedBalance = await getUserBalance(
@@ -127,19 +131,6 @@ function InitBorrow() {
 
     fetchBalance();
   }, [collateralAsset, address, provider, contracts, pollUnformatedUserBalance]);
-
-  useEffect(() => {
-    async function fetchAllowance() {
-      setAllowance(
-        await getAllowance(contracts, collateralAsset.name, [
-          address,
-          contracts[vault.name].address,
-        ]),
-      );
-    }
-
-    if (contracts && vault && contracts[vault.name]) fetchAllowance();
-  }, [collateralAsset, address, contracts, vault]);
 
   useEffect(() => {
     async function fetchDatas() {
@@ -334,16 +325,20 @@ function InitBorrow() {
     },
     approval: {
       title: 'Approving... 1 of 2',
-      content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
+      content: 'You need first to approve a spending limit.',
       actions: () => (
-        <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
-            Approve {Number(collateralAmount).toFixed(0)} {collateralAsset.name}
-          </Button>
-          <Button onClick={() => approve(true)} className="main-button">
-            Infinite Approve
-          </Button>
-        </DialogActions>
+        <>
+          <DialogActions>
+            <Button onClick={() => approve(false)} className="main-button">
+              Approve {Number(collateralAmount).toFixed(3)} {collateralAsset.name}
+            </Button>
+          </DialogActions>
+          <DialogActions>
+            <Button onClick={() => approve(true)} className="main-button">
+              Infinite Approve
+            </Button>
+          </DialogActions>
+        </>
       ),
     },
     capCollateral: {
