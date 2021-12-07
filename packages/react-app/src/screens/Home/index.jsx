@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import ReactPageScroller from 'react-page-scroller';
+import { useMediaQuery } from 'react-responsive';
 
 import { LandingHeader } from 'components';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+
 import FirstComponent from './FirstPage';
 import SecondComponent from './SecondPage';
 import ThirdComponent from './ThirdPage';
@@ -40,21 +43,30 @@ const HomePage = () => {
     console.log(number);
   };
 
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
+
   return (
     <>
-      <LandingHeader isShowLogo={isShowLogo} />
+      {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
       <ReactPageScroller
         pageOnChange={handlePageChange}
         onBeforePageScroll={handleBeforePageChange}
         customPageNumber={currentPage}
         containerWidth={windowDimensions.width}
-        containerHeight={windowDimensions.height - 100}
+        containerHeight={
+          isMobile || isTablet ? windowDimensions.height : windowDimensions.height - 100
+        }
+        renderAllPagesOnFirstRender={false}
       >
         <FirstComponent />
         <SecondComponent />
         <ThirdComponent />
         <FourthComponent />
-        <FifthComponent />
+        {!isMobile && !isTablet && <FifthComponent />}
       </ReactPageScroller>
     </>
   );

@@ -18,6 +18,7 @@ import barIcon from './icons/bar.svg';
 import fujiLanding1 from './images/home/fujiLanding1.svg';
 import fujiLandingMobile from './images/home/fujiLandingMobile.svg';
 import fujiLandingTablet from './images/home/fujiLandingTablet.svg';
+import fujiAliceMobile from './images/home/fujiAliceMobile.svg';
 
 import fujiAlice1 from './images/home/fujiAlice1.svg';
 import fujiLanding2 from './images/home/fujiLanding2.svg';
@@ -92,6 +93,7 @@ export {
   fujiLanding1,
   fujiLandingMobile,
   fujiLandingTablet,
+  fujiAliceMobile,
   fujiAlice1,
   fujiLanding2,
   fujiAlice2,

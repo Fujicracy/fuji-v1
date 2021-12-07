@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { Grid } from '@material-ui/core';
 import { Flex } from 'rebass';
+import { fujiMedia } from 'consts';
 
 export const HomeContainer = styled(animated.div)`
   display: flex;
-  flex-direction: ${props => (props.flexDirection ? props.flexDirection : 'column')};
+  flex-direction: column;
   color: white;
   font-family: Poppins;
   text-align: center;
@@ -37,4 +38,7 @@ export const PageContainter = styled(Flex).attrs(() => ({
   justify-content: center;
   align-items: center;
   height: calc(100% - 100px);
+  ${fujiMedia.lessThan('medium')`
+    height: 100%;
+  `}
 `;
