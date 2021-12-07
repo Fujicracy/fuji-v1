@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ReactPageScroller from 'react-page-scroller';
 import { useMediaQuery } from 'react-responsive';
 
-import { LandingHeader } from 'components';
+import { LandingHeader, CirclePagination } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import FirstComponent from './FirstPage';
@@ -52,6 +52,13 @@ const HomePage = () => {
   return (
     <>
       {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
+
+      <CirclePagination
+        totalCount={isMobile || isTablet ? 4 : 5}
+        currentIndex={currentPage}
+        onHandleClick={handlePageChange}
+      />
+
       <ReactPageScroller
         pageOnChange={handlePageChange}
         onBeforePageScroll={handleBeforePageChange}

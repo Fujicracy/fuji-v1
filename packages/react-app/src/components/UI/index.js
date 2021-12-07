@@ -8,6 +8,7 @@ import CheckBox from './CheckBox';
 import AnimatedCounter from './AnimatedCounter';
 import BackgroundEffect from './BackgroundEffect';
 import Animation from './Animation';
+import CirclePagination from './CirclePagination';
 
 export {
   Button,
@@ -22,4 +23,5 @@ export {
   AnimatedCounter,
   BackgroundEffect,
   Animation,
+  CirclePagination,
 };

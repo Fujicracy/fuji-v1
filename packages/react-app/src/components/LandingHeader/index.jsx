@@ -18,7 +18,6 @@ function LandingHeader({ isShowLogo }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  console.log({ isMobile, isTablet });
   return (
     <Container>
       <HeaderContainer isShowLogo={isShowLogo}>

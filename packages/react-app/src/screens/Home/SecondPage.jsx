@@ -56,6 +56,7 @@ function SecondPage() {
                 textAlign="left"
                 lineHeight="130%"
                 fontFamily="Nexa Regular"
+                width="632px"
               >
                 <br />
                 Ever borrowed in DeFi? Taking out a loan at 5%

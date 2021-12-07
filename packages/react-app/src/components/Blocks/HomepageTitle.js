@@ -6,12 +6,10 @@ import SectionTitle from './SectionTitle';
 
 function HomepageTitle({ firstWord, secondWord, thirdWord, fourthWord }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({
-    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
-    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
-  });
-
-  console.log({ isMobile, isTablet });
+  // const isTablet = useMediaQuery({
+  //   minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+  //   maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  // });
 
   return (
     <Flex flexDirection="column" fontFamily="Nexa Bold">
