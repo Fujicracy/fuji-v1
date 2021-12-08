@@ -39,10 +39,6 @@ const HomePage = () => {
     setIsShowLogo(number !== 0);
   };
 
-  const handleBeforePageChange = number => {
-    console.log(number);
-  };
-
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -63,7 +59,6 @@ const HomePage = () => {
 
       <ReactPageScroller
         pageOnChange={handlePageChange}
-        onBeforePageScroll={handleBeforePageChange}
         customPageNumber={currentPage}
         containerWidth={windowDimensions.width}
         containerHeight={
