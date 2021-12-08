@@ -22,6 +22,7 @@ export const CircleOption = styled.div`
   border-radius: 50%;
   border: 2px solid white;
   margin: 8px;
+  cursor: pointer;
 
   &:hover {
     border-color: ${themeGet('colors.primary')};
