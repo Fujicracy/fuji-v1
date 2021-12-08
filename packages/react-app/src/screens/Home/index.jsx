@@ -71,14 +71,7 @@ const HomePage = () => {
         }
         renderAllPagesOnFirstRender={false}
       >
-        <FirstComponent
-          onClickAnimation={e => {
-            const nextPage = currentPage + 1;
-            console.log({ e, nextPage });
-
-            setCurrentPage(nextPage);
-          }}
-        />
+        <FirstComponent onClickAnimation={() => setCurrentPage(currentPage + 1)} />
         <SecondComponent />
         <ThirdComponent />
         <FourthComponent />
