@@ -17,7 +17,7 @@ import {
 
 import { HomeContainer } from './styles';
 
-function FirstPage() {
+function FirstPage({ onClickAnimation }) {
   const props = useSpring({
     from: {
       factor: 1,
@@ -78,6 +78,7 @@ function FirstPage() {
           isPaused={false}
           width={46}
           height={80}
+          onClick={onClickAnimation}
         />
       </HomeContainer>
     </Flex>

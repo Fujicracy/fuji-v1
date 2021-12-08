@@ -2,7 +2,15 @@ import React from 'react';
 import Lottie from 'react-lottie';
 import { Flex } from 'rebass';
 
-const Animation = ({ jsonAnimationData, isStopped, isPaused, width, height, marginTop }) => {
+const Animation = ({
+  jsonAnimationData,
+  isStopped,
+  isPaused,
+  width,
+  height,
+  marginTop,
+  onClick,
+}) => {
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -13,7 +21,7 @@ const Animation = ({ jsonAnimationData, isStopped, isPaused, width, height, marg
   };
 
   return (
-    <Flex marginTop={marginTop}>
+    <Flex marginTop={marginTop} style={{ cursor: 'pointer' }} onClick={onClick}>
       <Lottie
         options={defaultOptions}
         height={height}

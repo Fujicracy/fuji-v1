@@ -53,11 +53,13 @@ const HomePage = () => {
     <>
       {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
 
-      <CirclePagination
-        totalCount={isMobile || isTablet ? 4 : 5}
-        currentIndex={currentPage}
-        onHandleClick={handlePageChange}
-      />
+      {currentPage !== 0 && (
+        <CirclePagination
+          totalCount={isMobile || isTablet ? 4 : 5}
+          currentIndex={currentPage}
+          onHandleClick={handlePageChange}
+        />
+      )}
 
       <ReactPageScroller
         pageOnChange={handlePageChange}
@@ -69,7 +71,14 @@ const HomePage = () => {
         }
         renderAllPagesOnFirstRender={false}
       >
-        <FirstComponent />
+        <FirstComponent
+          onClickAnimation={e => {
+            const nextPage = currentPage + 1;
+            console.log({ e, nextPage });
+
+            setCurrentPage(nextPage);
+          }}
+        />
         <SecondComponent />
         <ThirdComponent />
         <FourthComponent />
