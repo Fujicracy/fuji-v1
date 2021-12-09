@@ -43,7 +43,7 @@ function FourthPage() {
           <Image
             src={isMobile || isTablet ? fujiAliceMobile : fujiAlice2}
             minWidth="auto"
-            width={isMobile ? '328px' : isTablet ? '512px' : '100%'}
+            width={isMobile ? '328px' : isTablet ? '512px' : 'auto'}
           />
 
           <Flex
