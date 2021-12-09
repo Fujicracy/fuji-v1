@@ -49,7 +49,7 @@ const HomePage = () => {
     <>
       {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
 
-      {currentPage !== 0 && (
+      {currentPage !== 0 && !isMobile && !isTablet && (
         <CirclePagination
           totalCount={isMobile || isTablet ? 4 : 5}
           currentIndex={currentPage}
