@@ -164,6 +164,18 @@ button:focus {
   font-weight: 400;
 }
 
+@font-face {
+  font-family: 'Nexa Bold';
+  src: local('Nexa Bold'), url('./assets/fonts/Nexa\ Bold.otf') format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Nexa Regular';
+  src: local('Nexa Regular'), url('./assets/fonts/Nexa\ Regular.otf') format('opentype');
+  font-weight: normal;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

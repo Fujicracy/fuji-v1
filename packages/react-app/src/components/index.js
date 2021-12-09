@@ -8,6 +8,7 @@ import ProvidersList from './ProvidersList';
 import DisclaimerPopup from './DisclaimerPopup';
 import SelectVault from './SelectVault';
 import SelectMarket from './SelectMarket';
+import LandingHeader from './LandingHeader';
 
 export * from './Blocks';
 export * from './UI';
@@ -23,4 +24,5 @@ export {
   DisclaimerPopup,
   SelectVault,
   SelectMarket,
+  LandingHeader,
 };
