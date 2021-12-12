@@ -4,6 +4,7 @@ import ReactPageScroller from 'react-page-scroller';
 import { useMediaQuery } from 'react-responsive';
 
 import { LandingHeader, CirclePagination } from 'components';
+
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import FirstComponent from './FirstPage';
@@ -51,9 +52,9 @@ const HomePage = () => {
 
       {currentPage !== 0 && !isMobile && !isTablet && (
         <CirclePagination
-          totalCount={isMobile || isTablet ? 4 : 5}
-          currentIndex={currentPage}
-          onHandleClick={handlePageChange}
+          count={isMobile || isTablet ? 4 : 5}
+          index={currentPage}
+          onDotClick={handlePageChange}
         />
       )}
 
