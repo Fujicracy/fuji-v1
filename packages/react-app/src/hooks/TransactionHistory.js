@@ -1,13 +1,13 @@
 /* eslint-disable no-await-in-loop */
 import { useState, useEffect } from 'react';
 import { useContractLoader, useAuth } from 'hooks';
-import { TRANSACTION_TYPES, ASSETS, CHAIN_ID, CHAIN_IDS } from 'consts';
+import { ASSETS, CHAIN_IDS } from 'consts';
 import { formatUnits } from '@ethersproject/units';
 
 export default function useTransactionHistory(vaultName) {
   const [transactionHistories, setTransactionHistories] = useState([]);
   const contracts = useContractLoader();
-  const { address, networkName } = useAuth();
+  const { address, networkName, networkId } = useAuth();
 
   useEffect(() => {
     async function init() {
@@ -17,20 +17,28 @@ export default function useTransactionHistory(vaultName) {
         const events = [];
 
         let liquidator = null;
-        if (CHAIN_ID === CHAIN_IDS.FANTOM) liquidator = contracts.FliquidatorFTM;
+        if (networkId === CHAIN_IDS.FANTOM) liquidator = contracts.FliquidatorFTM;
         else liquidator = contracts.Fliquidator;
 
         const liquidatorEvents = await contracts[vaultName].queryFilter(liquidator, address);
         events.push(...liquidatorEvents);
 
-        console.log({ liquidatorEvents });
-
         try {
-          for (let i = 0; i < TRANSACTION_TYPES.length; i += 1) {
-            const evts = await contracts[vaultName].queryFilter(TRANSACTION_TYPES[i], address);
-            console.log({ type: TRANSACTION_TYPES[i], evts });
-            events.push(...evts);
-          }
+          const filterBorrows = contracts[vaultName].filters.Borrow(address);
+          const borrowEvents = await contracts[vaultName].queryFilter(filterBorrows);
+          events.push(...borrowEvents);
+
+          const filterDeposit = contracts[vaultName].filters.Deposit(address);
+          const depositEvents = await contracts[vaultName].queryFilter(filterDeposit);
+          events.push(...depositEvents);
+
+          const filterWithdraw = contracts[vaultName].filters.Withdraw(address);
+          const withdrawEvents = await contracts[vaultName].queryFilter(filterWithdraw);
+          events.push(...withdrawEvents);
+
+          const filterPayback = contracts[vaultName].filters.Payback(address);
+          const paybackEvents = await contracts[vaultName].queryFilter(filterPayback);
+          events.push(...paybackEvents);
 
           for (let j = 0; j < events.length; j += 1) {
             const history = {};
@@ -68,6 +76,6 @@ export default function useTransactionHistory(vaultName) {
     if (contracts && vaultName && address) {
       init();
     }
-  }, [contracts, vaultName, address, networkName]);
+  }, [contracts, vaultName, address, networkName, networkId]);
   return transactionHistories;
 }
