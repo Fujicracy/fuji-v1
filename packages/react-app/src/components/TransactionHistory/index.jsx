@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+// import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+// import DateFnsUtils from '@date-io/date-fns';
 import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
   EXPLORER_INFO,
   TRANSACTION_TYPES,
-  CHAIN_NAME,
-  ASSETS,
+  // CHAIN_NAME,
+  // ASSETS,
 } from 'consts';
 import { Grid } from '@material-ui/core';
 import { useTransactionHistory } from 'hooks';
@@ -21,9 +21,9 @@ import { GridItem, LinkItem } from './styles';
 import DropDown from '../UI/DropDown';
 
 const TransactionHistory = ({ vaultName }) => {
-  const [selectedStartDate, setSelectedStartDate] = useState(new Date());
-  const [selectedEndDate, setSelectedEndDate] = useState(new Date());
-  const [selectedAsset, setSelectedAsset] = useState(null);
+  // const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+  // const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+  // const [selectedAsset, setSelectedAsset] = useState(null);
   const [selectedAction, setSelectedAction] = useState(null);
 
   const isMobile = useMediaQuery({
@@ -38,13 +38,13 @@ const TransactionHistory = ({ vaultName }) => {
   const transactionHistories = useTransactionHistory(vaultName);
 
   const actionOptions = TRANSACTION_TYPES.map(type => ({ title: type }));
-  const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
+  // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
   return (
     <BlackBoxContainer p="16px 32px" mt="40px" mb="50px">
       <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>History</SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="center">
-        <SectionTitle mr={2}>Start Date:</SectionTitle>
+        {/* <SectionTitle mr={2}>Start Date:</SectionTitle>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker
             value={selectedStartDate}
@@ -57,7 +57,7 @@ const TransactionHistory = ({ vaultName }) => {
         </SectionTitle>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker value={selectedEndDate} onChange={newValue => setSelectedEndDate(newValue)} />
-        </MuiPickersUtilsProvider>
+        </MuiPickersUtilsProvider> */}
 
         <SectionTitle mr={2} ml={3}>
           Action:
@@ -69,7 +69,7 @@ const TransactionHistory = ({ vaultName }) => {
           isOptionSelectable
           onOptionClicked={option => setSelectedAction(option)}
         />
-        <SectionTitle mr={2} ml={3}>
+        {/* <SectionTitle mr={2} ml={3}>
           Asset:
         </SectionTitle>
         <DropDown
@@ -78,7 +78,7 @@ const TransactionHistory = ({ vaultName }) => {
           width={150}
           isOptionSelectable
           onOptionClicked={option => setSelectedAsset(option)}
-        />
+        /> */}
       </Flex>
 
       <Grid container spacing={2}>
