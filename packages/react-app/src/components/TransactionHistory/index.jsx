@@ -24,7 +24,9 @@ const TransactionHistory = ({ vaultName }) => {
   // const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   // const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   // const [selectedAsset, setSelectedAsset] = useState(null);
-  const [selectedAction, setSelectedAction] = useState(null);
+  const actionOptions = TRANSACTION_TYPES.map(type => ({ title: type }));
+
+  const [selectedAction, setSelectedAction] = useState(actionOptions[0]);
 
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -35,15 +37,14 @@ const TransactionHistory = ({ vaultName }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const transactionHistories = useTransactionHistory(vaultName);
+  const transactionHistories = useTransactionHistory(vaultName, selectedAction.title);
 
-  const actionOptions = TRANSACTION_TYPES.map(type => ({ title: type }));
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
   return (
-    <BlackBoxContainer p="16px 32px" mt="40px" mb="50px">
+    <BlackBoxContainer p="16px 32px 24px" mt="40px" mb="50px">
       <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>History</SectionTitle>
-      <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="center">
+      <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
         {/* <SectionTitle mr={2}>Start Date:</SectionTitle>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <DatePicker
