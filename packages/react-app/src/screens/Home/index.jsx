@@ -50,7 +50,7 @@ const HomePage = () => {
     <>
       {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
 
-      {currentPage !== 0 && !isMobile && !isTablet && (
+      {currentPage !== null && currentPage !== 0 && !isMobile && !isTablet && (
         <CirclePagination
           count={isMobile || isTablet ? 4 : 5}
           index={currentPage}
@@ -59,7 +59,7 @@ const HomePage = () => {
       )}
 
       <ReactPageScroller
-        pageOnChange={handlePageChange}
+        onBeforePageScroll={handlePageChange}
         customPageNumber={currentPage}
         containerWidth={windowDimensions.width}
         containerHeight={
