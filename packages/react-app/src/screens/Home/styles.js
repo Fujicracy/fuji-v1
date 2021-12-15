@@ -11,6 +11,7 @@ export const HomeContainer = styled(animated.div)`
   font-family: Poppins;
   text-align: center;
   align-items: center;
+  width: calc(100% - 120px);
 `;
 
 export const HomeCta = styled(Grid)`
