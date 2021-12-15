@@ -84,7 +84,7 @@ function InitBorrow() {
 
   const allowance = useAllowance(contracts, collateralAsset, [
     address,
-    vault && contracts ? contracts[vault.name].address : '0x',
+    vault && contracts ? contracts[vault.name]?.address : '0x',
   ]);
 
   useEffect(() => {
