@@ -50,6 +50,7 @@ function DebtForm({ position }) {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftToBorrow, setLeftToBorrow] = useState('');
+  const [maxToRepay, setMaxToRepay] = useState('');
   const [dialog, setDialog] = useState({ step: null, withApproval: false });
 
   const { vaultAddress, vault } = position;
@@ -96,12 +97,21 @@ function DebtForm({ position }) {
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const colDecimals = collateralAsset.decimals;
+      const colDecimals = vault.collateralAsset.decimals;
       const diff = Number(formatUnits(collateralBalance.sub(neededCollateral), colDecimals));
-      const left = (diff / 1.35 / borrowPrice) * collateralPrice;
+      const ratio = vault.threshold / 100;
+      const left = ((diff * ratio) / borrowPrice) * collateralPrice;
       setLeftToBorrow(left.toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, collateralAsset]);
+  }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, vault]);
+
+  useEffect(() => {
+    if (balance && debtBalance) {
+      const debt = formatUnits(debtBalance, decimals);
+      const max = Number(debt) > Number(balance) ? balance : debt;
+      setMaxToRepay(Number(max).toFixed(6));
+    }
+  }, [debtBalance, balance, decimals]);
 
   const borrow = async () => {
     const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
@@ -135,7 +145,7 @@ function DebtForm({ position }) {
     // pass just the max amount of their balance and no -1
     // because they probably don't have to repay the accrued interest
 
-    // TODO ask Boyan
+    // TODO
     const unFormattedAmount =
       parseUnits(amount, decimals).eq(debtBalance) && debtBalance.eq(unFormattedBalance)
         ? formatUnits(unFormattedBalance, decimals)
@@ -349,7 +359,10 @@ function DebtForm({ position }) {
       <Grid item className="toggle-button">
         <div className="button">
           <input
-            onChange={({ target }) => setAction(target.checked ? Action.Borrow : Action.Repay)}
+            onChange={({ target }) => {
+              setValue('amount', '', { shouldValidate: false });
+              setAction(target.checked ? Action.Borrow : Action.Repay);
+            }}
             type="checkbox"
             className="checkbox"
           />
@@ -374,14 +387,14 @@ function DebtForm({ position }) {
             required: { value: true, message: 'insufficient-amount' },
             min: { value: 0, message: 'insufficient-amount' },
             max: {
-              value: action === Action.Repay ? balance : leftToBorrow,
+              value: action === Action.Repay ? maxToRepay : leftToBorrow,
               message: 'insufficient-balance',
             },
           })}
           subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
           subTitleInfo={
             action === Action.Repay
-              ? `${balance ? Number(balance).toFixed(2) : '...'} ${borrowAsset.name}`
+              ? `${maxToRepay ? Number(maxToRepay).toFixed(3) : '...'} ${borrowAsset.name}`
               : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${borrowAsset.name}`
           }
           startAdornmentImage={borrowAsset.icon}
@@ -393,11 +406,9 @@ function DebtForm({ position }) {
                   <Button
                     className="max-button"
                     onClick={() => {
-                      const debt = formatUnits(debtBalance, decimals);
-                      const maxRepay = Number(debt) > Number(balance) ? balance : debt;
-
-                      setAmount(action === Action.Repay ? maxRepay : leftToBorrow);
-                      setValue('amount', action === Action.Repay ? maxRepay : leftToBorrow, {
+                      const value = action === Action.Repay ? maxToRepay : leftToBorrow;
+                      setAmount(value);
+                      setValue('amount', value, {
                         shouldValidate: true,
                         shouldDirty: true,
                       });
@@ -417,13 +428,13 @@ function DebtForm({ position }) {
               </Typography>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
               <Typography className="error-input-msg" variant="body2">
-                Insufficient {borrowAsset.name} balance
+                You can repay max {maxToRepay} {borrowAsset.name}.
               </Typography>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
                 <Typography className="error-input-msg" variant="body2">
-                  You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
+                  You can borrow max {leftToBorrow} {borrowAsset.name}. Provide more collateral!
                 </Typography>
               )
             )
