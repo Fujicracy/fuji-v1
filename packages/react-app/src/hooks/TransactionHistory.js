@@ -11,44 +11,46 @@ export default function useTransactionHistory(vaultName, action) {
 
   useEffect(() => {
     async function init() {
-      if (contracts[vaultName]) {
+      const vaultContract = contracts[vaultName];
+      if (vaultContract) {
         const histories = [];
 
         const events = [];
 
-        console.log({ action });
-
-        if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
-          let liquidator = null;
-          if (networkId === CHAIN_IDS.FANTOM) liquidator = contracts.FliquidatorFTM;
-          else liquidator = contracts.Fliquidator;
-
-          const liquidatorEvents = await contracts[vaultName].queryFilter(liquidator, address);
-          events.push(...liquidatorEvents);
-        }
-
         try {
+          if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
+            let filterLiquidator = null;
+            if (networkId === CHAIN_IDS.FANTOM) {
+              filterLiquidator = vaultContract.filters.FliquidatorFTM(address);
+            } else {
+              filterLiquidator = vaultContract.filters.Fliquidator(address);
+            }
+
+            const liquidatorEvents = await vaultContract.queryFilter(filterLiquidator);
+            events.push(...liquidatorEvents);
+          }
+
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.BORROW) {
-            const filterBorrows = contracts[vaultName].filters.Borrow(address);
-            const borrowEvents = await contracts[vaultName].queryFilter(filterBorrows);
+            const filterBorrows = vaultContract.filters.Borrow(address);
+            const borrowEvents = await vaultContract.queryFilter(filterBorrows);
             events.push(...borrowEvents);
           }
 
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.DEPOSIT) {
-            const filterDeposit = contracts[vaultName].filters.Deposit(address);
-            const depositEvents = await contracts[vaultName].queryFilter(filterDeposit);
+            const filterDeposit = vaultContract.filters.Deposit(address);
+            const depositEvents = await vaultContract.queryFilter(filterDeposit);
             events.push(...depositEvents);
           }
 
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.WITHDRAW) {
-            const filterWithdraw = contracts[vaultName].filters.Withdraw(address);
-            const withdrawEvents = await contracts[vaultName].queryFilter(filterWithdraw);
+            const filterWithdraw = vaultContract.filters.Withdraw(address);
+            const withdrawEvents = await vaultContract.queryFilter(filterWithdraw);
             events.push(...withdrawEvents);
           }
 
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.PAYBACK) {
-            const filterPayback = contracts[vaultName].filters.Payback(address);
-            const paybackEvents = await contracts[vaultName].queryFilter(filterPayback);
+            const filterPayback = vaultContract.filters.Payback(address);
+            const paybackEvents = await vaultContract.queryFilter(filterPayback);
             events.push(...paybackEvents);
           }
 
