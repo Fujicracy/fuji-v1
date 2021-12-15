@@ -110,7 +110,10 @@ const TransactionHistory = ({ vaultName }) => {
               <BlackBoxContainer hasBlackContainer={false} p="4px">
                 <Grid container>
                   <GridItem item xs={3}>
-                    {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString()}`}
+                    {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}`}
                   </GridItem>
                   <GridItem item xs={2}>
                     {history.Action}
