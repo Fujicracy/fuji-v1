@@ -6,13 +6,13 @@ import { useMediaQuery } from 'react-responsive';
 import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
-  EXPLORER_INFO,
+  EXPLORER_INFOS,
   TRANSACTION_TYPES,
   // CHAIN_NAME,
   // ASSETS,
 } from 'consts';
 import { Grid } from '@material-ui/core';
-import { useTransactionHistory } from 'hooks';
+import { useTransactionHistory, useAuth } from 'hooks';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import SectionTitle from '../Blocks/SectionTitle';
@@ -21,6 +21,8 @@ import { GridItem, LinkItem } from './styles';
 import DropDown from '../UI/DropDown';
 
 const TransactionHistory = ({ vaultName }) => {
+  const { networkId } = useAuth();
+
   // const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   // const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   // const [selectedAsset, setSelectedAsset] = useState(null);
@@ -41,13 +43,14 @@ const TransactionHistory = ({ vaultName }) => {
 
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
+  console.log({ networkId, EXPLORER_INFOS });
   return (
     <BlackBoxContainer
       p={isMobile ? '32px 28px 16px' : isTablet ? '44px 32px 40px' : '16px 32px 24px'}
       mt="40px"
       mb="50px"
     >
-      <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>History</SectionTitle>
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>History</SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
         {/* <SectionTitle mr={2}>Start Date:</SectionTitle>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -138,7 +141,7 @@ const TransactionHistory = ({ vaultName }) => {
                     <GridItem item xs={3} sm={3}>
                       <LinkItem
                         onClick={() =>
-                          window.open(`${EXPLORER_INFO.url}${history.txHash}`, '_blank')
+                          window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')
                         }
                       >
                         Explorer

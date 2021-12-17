@@ -125,9 +125,10 @@ const TRANSACTION_ACTIONS = {
 };
 const TRANSACTION_TYPES = Object.keys(TRANSACTION_ACTIONS).map(key => TRANSACTION_ACTIONS[key]);
 
-const EXPLORER_INFO = {
-  url: CHAIN_ID === 250 ? 'https://ftmscan.com/tx/' : 'https://etherscan.io/tx/',
-  name: CHAIN_ID === 250 ? 'Ftmscan' : 'Etherscan',
+const EXPLORER_INFOS = {
+  [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
+  [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
+  [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
 };
 
 export {
@@ -148,5 +149,5 @@ export {
   FUJIFLOPS_NFT_ADDR,
   TRANSACTION_ACTIONS,
   TRANSACTION_TYPES,
-  EXPLORER_INFO,
+  EXPLORER_INFOS,
 };
