@@ -42,7 +42,11 @@ const TransactionHistory = ({ vaultName }) => {
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
   return (
-    <BlackBoxContainer p="16px 32px 24px" mt="40px" mb="50px">
+    <BlackBoxContainer
+      p={isMobile ? '32px 28px 16px' : isTablet ? '44px 32px 40px' : '16px 32px 24px'}
+      mt="40px"
+      mb="50px"
+    >
       <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>History</SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
         {/* <SectionTitle mr={2}>Start Date:</SectionTitle>
@@ -60,7 +64,7 @@ const TransactionHistory = ({ vaultName }) => {
           <DatePicker value={selectedEndDate} onChange={newValue => setSelectedEndDate(newValue)} />
         </MuiPickersUtilsProvider> */}
 
-        <SectionTitle mr={2} ml={3}>
+        <SectionTitle mr={3} ml={3}>
           Action:
         </SectionTitle>
         <DropDown
