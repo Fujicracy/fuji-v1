@@ -43,7 +43,6 @@ const TransactionHistory = ({ vaultName }) => {
 
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
-  console.log({ networkId, EXPLORER_INFOS });
   return (
     <BlackBoxContainer
       p={isMobile ? '32px 28px 16px' : isTablet ? '44px 32px 40px' : '16px 32px 24px'}
