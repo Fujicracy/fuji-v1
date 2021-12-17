@@ -19,14 +19,17 @@ export default function useTransactionHistory(vaultName, action) {
 
         try {
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
-            let filterLiquidator = null;
+            let liquidatorEvents;
             if (networkId === CHAIN_IDS.FANTOM) {
-              filterLiquidator = vaultContract.filters.FliquidatorFTM(address);
+              const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate();
+              liquidatorEvents = await contracts.FliquidatorFTM.queryFilter(filterLiquidator);
             } else {
-              filterLiquidator = vaultContract.filters.Fliquidator(address);
+              const filterLiquidator = contracts.Fliquidator.filters.Liquidate();
+              liquidatorEvents = await contracts.Fliquidator.queryFilter(filterLiquidator);
             }
 
-            const liquidatorEvents = await vaultContract.queryFilter(filterLiquidator);
+            console.log({ liquidatorEvents });
+
             events.push(...liquidatorEvents);
           }
 
