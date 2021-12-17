@@ -1,7 +1,4 @@
 import React from 'react';
-import { useSpring, config } from 'react-spring';
-// import { Button } from 'components/UI';
-// import { Grid } from '@material-ui/core';
 import { HomepageTitle, SectionTitle, Button } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -12,15 +9,6 @@ import { fujiAlice2, fujiAliceMobile } from 'assets/images';
 import { HomeContainer, PageContainter } from './styles';
 
 function FourthPage() {
-  const props = useSpring({
-    from: {
-      factor: 1,
-      opacity: 0,
-    },
-    to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses },
-  });
-
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -33,7 +21,7 @@ function FourthPage() {
 
   return (
     <PageContainter>
-      <HomeContainer style={props}>
+      <HomeContainer>
         <Flex
           flexDirection={isMobile || isTablet ? 'column' : 'row'}
           width="100%"

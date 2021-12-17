@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSpring, config } from 'react-spring';
 import { HomepageTitle, SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -12,15 +11,6 @@ import { fujiLanding2, fujiLandingMobile } from '../../assets/images';
 import { HomeContainer, PageContainter } from './styles';
 
 function ThirdPage() {
-  const props = useSpring({
-    from: {
-      factor: 1,
-      opacity: 0,
-    },
-    to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses },
-  });
-
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -29,7 +19,7 @@ function ThirdPage() {
 
   return (
     <PageContainter>
-      <HomeContainer style={props}>
+      <HomeContainer>
         <Grid container spacing={6}>
           {isMobile || isTablet ? (
             <>

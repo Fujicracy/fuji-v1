@@ -65,7 +65,7 @@ const HomePage = () => {
         containerHeight={
           isMobile || isTablet ? windowDimensions.height : windowDimensions.height - 100
         }
-        renderAllPagesOnFirstRender={false}
+        renderAllPagesOnFirstRender
       >
         <FirstComponent onClickAnimation={() => setCurrentPage(currentPage + 1)} />
         <SecondComponent />
