@@ -86,21 +86,25 @@ const TransactionHistory = ({ vaultName }) => {
         <Grid item xs={12}>
           <BlackBoxContainer hasBlackContainer={false} p="16px 4px 0px">
             <Grid container>
-              <GridItem item xs={3} fontWeight={700}>
+              <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
                 Date
               </GridItem>
-              <GridItem item xs={2} fontWeight={700}>
-                Action
-              </GridItem>
-              <GridItem item xs={2} fontWeight={700}>
+              {!isMobile && (
+                <GridItem item sm={2} md={2} fontWeight={700}>
+                  Action
+                </GridItem>
+              )}
+              <GridItem item xs={4} sm={2} md={2} fontWeight={700}>
                 Asset
               </GridItem>
-              <GridItem item xs={2} fontWeight={700}>
+              <GridItem item xs={4} sm={2} md={2} fontWeight={700}>
                 Amount
               </GridItem>
-              <GridItem item xs={3} fontWeight={700}>
-                Details
-              </GridItem>
+              {!isMobile && (
+                <GridItem item sm={3} md={3} fontWeight={700}>
+                  Details
+                </GridItem>
+              )}
             </Grid>
           </BlackBoxContainer>
         </Grid>
@@ -109,29 +113,35 @@ const TransactionHistory = ({ vaultName }) => {
             <Grid item xs={12} key={`${index.toString()}`}>
               <BlackBoxContainer hasBlackContainer={false} p="4px">
                 <Grid container>
-                  <GridItem item xs={3}>
+                  <GridItem item xs={4} sm={3} md={3}>
                     {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}`}
                   </GridItem>
-                  <GridItem item xs={2}>
-                    {history.Action}
-                  </GridItem>
-                  <GridItem item xs={2}>
+                  {!isMobile && (
+                    <GridItem item sm={2} md={2}>
+                      {history.Action}
+                    </GridItem>
+                  )}
+                  <GridItem item xs={4} sm={2} md={2}>
                     {history.Asset || 'ETH'}
                   </GridItem>
-                  <GridItem item xs={2}>
+                  <GridItem item xs={4} sm={2} md={2}>
                     {history.Amount}
                   </GridItem>
-                  <GridItem item xs={3}>
-                    <LinkItem
-                      onClick={() => window.open(`${EXPLORER_INFO.url}${history.txHash}`, '_blank')}
-                    >
-                      Explorer
-                      <OpenInNew />
-                    </LinkItem>
-                  </GridItem>
+                  {!isMobile && (
+                    <GridItem item xs={3} sm={3}>
+                      <LinkItem
+                        onClick={() =>
+                          window.open(`${EXPLORER_INFO.url}${history.txHash}`, '_blank')
+                        }
+                      >
+                        Explorer
+                        <OpenInNew />
+                      </LinkItem>
+                    </GridItem>
+                  )}
                 </Grid>
               </BlackBoxContainer>
             </Grid>
