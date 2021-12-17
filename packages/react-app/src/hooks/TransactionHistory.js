@@ -21,10 +21,10 @@ export default function useTransactionHistory(vaultName, action) {
           if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
             let liquidatorEvents;
             if (networkId === CHAIN_IDS.FANTOM) {
-              const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate();
+              const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate(address);
               liquidatorEvents = await contracts.FliquidatorFTM.queryFilter(filterLiquidator);
             } else {
-              const filterLiquidator = contracts.Fliquidator.filters.Liquidate();
+              const filterLiquidator = contracts.Fliquidator.filters.Liquidate(address);
               liquidatorEvents = await contracts.Fliquidator.queryFilter(filterLiquidator);
             }
 
