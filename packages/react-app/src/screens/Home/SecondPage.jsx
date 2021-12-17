@@ -20,14 +20,14 @@ function SecondPage() {
   return (
     <PageContainter>
       <HomeContainer>
-        <Grid container spacing={6} m={6}>
+        <Grid container spacing={isTablet ? 10 : 6} m={6}>
           <Grid
             item
             container
             xs={12}
             md={6}
             direction="row"
-            justifyContent="flex-end"
+            justifyContent={isMobile || isTablet ? 'center' : 'flex-end'}
             alignItems="center"
           >
             <Image src={fujiAlice1} width={isMobile ? '328px' : 'auto'} />

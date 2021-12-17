@@ -26,7 +26,8 @@ function FourthPage() {
           flexDirection={isMobile || isTablet ? 'column' : 'row'}
           width="100%"
           height="100%"
-          alignItems={isMobile || isTablet ? 'center' : 'left'}
+          alignItems="center"
+          justifyContent="center"
         >
           <Image
             src={isMobile || isTablet ? fujiAliceMobile : fujiAlice2}
@@ -36,11 +37,11 @@ function FourthPage() {
 
           <Flex
             flexDirection="column"
-            width="100%"
             justifyContent="center"
             alignItems={isTablet ? 'center' : 'left'}
             padding={isMobile || isTablet ? '40px 30px 16px' : '0px'}
             marginLeft={!isMobile && !isTablet && '-360px'}
+            mt={isTablet ? '40px' : '0px'}
           >
             <HomepageTitle firstWord="All-in-One" secondWord="Smart" thirdWord="Borrow" />
 

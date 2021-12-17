@@ -20,6 +20,10 @@ export const HomeContainer = styled.div`
   font-family: Poppins;
   text-align: center;
   align-items: center;
+  width: calc(100% - 120px);
+  ${fujiMedia.lessThan('medium')`
+    width: 100%;
+  `}
 `;
 
 export const HomeCta = styled(Grid)`

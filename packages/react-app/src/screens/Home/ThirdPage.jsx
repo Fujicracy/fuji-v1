@@ -20,7 +20,7 @@ function ThirdPage() {
   return (
     <PageContainter>
       <HomeContainer>
-        <Grid container spacing={6}>
+        <Grid container spacing={isTablet ? 10 : 6}>
           {isMobile || isTablet ? (
             <>
               <Grid item xs={12} md={6}>
@@ -63,10 +63,17 @@ function ThirdPage() {
             </>
           ) : (
             <>
-              <Grid item xs={12} md={6}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                container
+                direction="row"
+                justifyContent={isMobile || isTablet ? 'center' : 'flex-end'}
+                alignItems="center"
+              >
                 <Flex
                   flexDirection="column"
-                  width="100%"
                   justifyContent="center"
                   alignItems="left"
                   height="100%"
@@ -95,7 +102,15 @@ function ThirdPage() {
                 </Flex>
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                container
+                direction="row"
+                justifyContent={isMobile || isTablet ? 'center' : 'flex-start'}
+                alignItems="center"
+              >
                 <Image src={fujiLanding2} />
               </Grid>
             </>
