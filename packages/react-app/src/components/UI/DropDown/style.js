@@ -70,7 +70,7 @@ export const ListItem = styled('li')`
   font-size: 12px;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${props => (props.isSelectable ? '#1c1c1c' : 'rgba(255, 255, 255, 0.05)')};
   width: 100%;
   padding: 0px 10px 0px 10px;
   color: ${themeGet('colors.text32')};
