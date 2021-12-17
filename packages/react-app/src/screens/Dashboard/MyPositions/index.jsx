@@ -99,7 +99,7 @@ function MyPositions() {
               hasBlackContainer
               padding={isMobile ? '32px 28px' : '44px 36px 40px'}
             >
-              <Grid container spacing={12}>
+              <Grid container spacing={10}>
                 <Grid item xs={12} sm={12} md={12}>
                   <SelectMarket />
                 </Grid>
