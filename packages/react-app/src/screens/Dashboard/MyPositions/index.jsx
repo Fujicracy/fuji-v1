@@ -92,25 +92,20 @@ function MyPositions() {
 
   return (
     <Flex flex flexDirection="row" justifyContent="center">
-      <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
+      <Grid container className="positions-container" spacing={6}>
         {(isMobile || isTablet) && networkName !== CHAIN_NAMES.FANTOM && (
           <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer
               hasBlackContainer
               padding={isMobile ? '32px 28px' : '44px 36px 40px'}
             >
-              <Grid container spacing={12}>
-                <Grid item xs={12} sm={12} md={12}>
-                  <SelectMarket />
-                </Grid>
-              </Grid>
+              <SelectMarket />
             </BlackBoxContainer>
           </Grid>
         )}
         <Grid item md={8} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="center" className="positions">
             <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
-              {' '}
               My positions
             </SectionTitle>
             <div className="position-board">
@@ -149,6 +144,7 @@ function MyPositions() {
                             justifyContent="center"
                             alignItems="center"
                             width="40%"
+                            textAlign="center"
                           >
                             <>Health Factor</>
                           </SectionTitle>
