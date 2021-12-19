@@ -95,15 +95,10 @@ const TransactionHistory = ({ vaultName }) => {
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
                 Date
               </GridItem>
-              {!isMobile && (
-                <GridItem item sm={2} md={2} fontWeight={700}>
-                  Action
-                </GridItem>
-              )}
-              <GridItem item xs={4} sm={2} md={2} fontWeight={700}>
-                Asset
+              <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
+                Action
               </GridItem>
-              <GridItem item xs={4} sm={2} md={2} fontWeight={700}>
+              <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
                 Amount
               </GridItem>
               {!isMobile && (
@@ -125,16 +120,11 @@ const TransactionHistory = ({ vaultName }) => {
                       minute: '2-digit',
                     })}`}
                   </GridItem>
-                  {!isMobile && (
-                    <GridItem item sm={2} md={2}>
-                      {history.Action}
-                    </GridItem>
-                  )}
-                  <GridItem item xs={4} sm={2} md={2}>
-                    {history.Asset || 'ETH'}
+                  <GridItem item xs={4} sm={3} md={3}>
+                    {history.Action}
                   </GridItem>
-                  <GridItem item xs={4} sm={2} md={2}>
-                    {history.Amount}
+                  <GridItem item xs={4} sm={3} md={3}>
+                    {`${history.Amount} ${history.Asset || 'ETH'}`}
                   </GridItem>
                   {!isMobile && (
                     <GridItem item xs={3} sm={3}>
@@ -143,7 +133,7 @@ const TransactionHistory = ({ vaultName }) => {
                           window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')
                         }
                       >
-                        Explorer
+                        Explorer&nbsp;
                         <OpenInNew />
                       </LinkItem>
                     </GridItem>
