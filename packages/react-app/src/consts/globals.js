@@ -11,16 +11,15 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: { inString: '450px', inNumber: 450 },
-  [BREAKPOINT_NAMES.TABLET]: { inString: '768px', inNumber: 1120 },
-  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1280px', inNumber: 1170 },
-  [BREAKPOINT_NAMES.LARGE]: { inString: '1920px', inNumber: 1440 },
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '768px', inNumber: 768 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '1440px', inNumber: 1440 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1920px', inNumber: 1920 },
 };
 
 export const fujiMedia = generateMedia({
-  small: '450px',
-  medium: '1120px',
-  large: '1170px',
+  small: '768px',
+  medium: '1440px',
+  large: '1920px',
 });
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
