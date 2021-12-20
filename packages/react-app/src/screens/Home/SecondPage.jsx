@@ -17,6 +17,7 @@ function SecondPage() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  console.log({ isMobile, isTablet });
   return (
     <PageContainter>
       <HomeContainer>
@@ -37,31 +38,35 @@ function SecondPage() {
               flexDirection="column"
               width="100%"
               justifyContent="center"
-              alignItems="left"
+              alignItems={isMobile || isTablet ? 'center' : 'left'}
               height="100%"
               padding={isMobile ? '0px 30px' : isTablet ? '16px 64px' : '0px'}
             >
-              <HomepageTitle
-                firstWord="Borrow Rates"
-                secondWord="Fluctuate"
-                thirdWord={isMobile ? '' : 'All The Time'}
-                fourthWord={isMobile ? 'All The Time' : undefined}
-              />
+              <Flex flexDirection="column">
+                <HomepageTitle
+                  firstWord="Borrow Rates"
+                  secondWord="Fluctuate"
+                  thirdWord={isMobile ? '' : 'All The Time'}
+                  fourthWord={isMobile ? 'All The Time' : undefined}
+                />
 
-              <SectionTitle
-                fontWeight="normal"
-                fontSize={isMobile ? '20px' : '23px'}
-                textAlign="left"
-                lineHeight="130%"
-                fontFamily="Nexa Regular"
-              >
-                <br />
-                Ever borrowed in DeFi? Taking out a loan at 5%
-                <br /> and paying 15% shortly after is an everyday reality. <br />
-                <br />
-                Manually comparing loan providers is a tedious task, refinancing as rates change is
-                expensive in gas and time.
-              </SectionTitle>
+                <SectionTitle
+                  fontWeight="normal"
+                  fontSize={isMobile ? '20px' : '23px'}
+                  textAlign="left"
+                  lineHeight="130%"
+                  fontFamily="Nexa Regular"
+                >
+                  <br />
+                  Ever borrowed in DeFi?{isMobile && <br />}Taking out a loan at 5%
+                  {!isMobile && <br />}and {isMobile && <br />} paying 15% shortly after is
+                  {isMobile && <br />} an everyday reality. <br />
+                  <br />
+                  Manually comparing loan{isMobile && <br />} providers is a tedious task,
+                  <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
+                  time.
+                </SectionTitle>
+              </Flex>
             </Flex>
           </Grid>
         </Grid>

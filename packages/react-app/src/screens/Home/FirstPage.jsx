@@ -55,7 +55,7 @@ function FirstPage({ onClickAnimation }) {
           m="24px 0px 36px"
           fontFamily="Nexa Regular"
         >
-          The Auto-Refinancing Borrow Protocol
+          The Auto-Refinancing{isMobile && <br />} Borrow Protocol
         </SectionTitle>
         {(isMobile || isTablet) && (
           <Flex width="100%" padding={isMobile ? '24px 36px 44px' : '24px 92px 44px'}>

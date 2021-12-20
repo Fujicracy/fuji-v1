@@ -59,43 +59,42 @@ function FourthPage() {
               &bull; Non-Custodial Loan Routing <br />
               &bull; Rebates On Gas Costs
             </SectionTitle>
+            {(isMobile || isTablet) && (
+              <Flex
+                flexDirection={isMobile ? 'column' : 'row'}
+                width="100%"
+                justifyContent="center"
+                padding={!isMobile && '0px 30px'}
+              >
+                <Button
+                  block={isMobile}
+                  onClick={handleLearnClick}
+                  outline
+                  width={224}
+                  fontSize="18px"
+                  height={48}
+                  mt={4}
+                >
+                  Learn +
+                </Button>
+
+                <Button
+                  block={isMobile}
+                  color="white"
+                  fontSize="18px"
+                  width={224}
+                  height={48}
+                  ml={isTablet && '32px'}
+                  mt={4}
+                  onClick={() => {
+                    window.location = `${APP_URL}/#/dashboard`;
+                  }}
+                >
+                  Go to App
+                </Button>
+              </Flex>
+            )}
           </Flex>
-
-          {(isMobile || isTablet) && (
-            <Flex
-              flexDirection={isMobile ? 'column' : 'row'}
-              width="100%"
-              justifyContent="center"
-              padding="0px 30px"
-            >
-              <Button
-                block={isMobile}
-                onClick={handleLearnClick}
-                outline
-                width={224}
-                fontSize="18px"
-                height={48}
-                mt={3}
-              >
-                Learn +
-              </Button>
-
-              <Button
-                block={isMobile}
-                color="white"
-                fontSize="18px"
-                width={224}
-                height={48}
-                mt={3}
-                ml={isTablet && '32px'}
-                onClick={() => {
-                  window.location = `${APP_URL}/#/dashboard`;
-                }}
-              >
-                Go to App
-              </Button>
-            </Flex>
-          )}
         </Flex>
       </HomeContainer>
     </PageContainter>

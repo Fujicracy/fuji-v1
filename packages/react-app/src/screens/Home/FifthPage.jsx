@@ -18,8 +18,9 @@ function FifthPage() {
         <Flex flexDirection="row" alignItems="center">
           <BlackBoxContainer hasBlackContainer width="424px" height="240px">
             <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
-              <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
-                Learn more about Fuji with our extensive documentation
+              <Label color="textLabel" fontSize={4} ml={5} mr={5} lineHeight="26px">
+                Learn more about Fuji with
+                <br /> our extensive documentation
               </Label>
               <Button
                 onClick={handleLearnClick}
@@ -27,7 +28,7 @@ function FifthPage() {
                 fontSize="18px"
                 width={168}
                 height={48}
-                mt={3}
+                mt={5}
               >
                 Learn +
               </Button>
@@ -40,8 +41,9 @@ function FifthPage() {
 
           <BlackBoxContainer hasBlackContainer width="424px" height="240px">
             <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
-              <Label color="textLabel" fontSize={4} ml={6} mr={6} lineHeight="26px">
-                All clear? Time to up your borrow game to the next level
+              <Label color="textLabel" fontSize={4} ml={5} mr={5} lineHeight="131%">
+                All clear? Time to up your
+                <br /> borrow game to the next level
               </Label>
 
               <Button
@@ -49,7 +51,7 @@ function FifthPage() {
                 fontSize="18px"
                 width={168}
                 height={48}
-                mt={3}
+                mt={5}
                 onClick={() => {
                   window.location = `${APP_URL}/#/dashboard`;
                 }}
