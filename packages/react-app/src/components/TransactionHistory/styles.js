@@ -8,6 +8,7 @@ export const GridItem = styled(Grid)`
   align-items: center;
   justify-content: center;
   color: white;
+  cursor: ${props => (props.cursor ? props.cursor : 'inherit')};
   font-weight: ${props => (props.fontWeight ? props.fontWeight : 400)};
 `;
 

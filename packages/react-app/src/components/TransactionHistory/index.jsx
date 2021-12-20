@@ -43,6 +43,9 @@ const TransactionHistory = ({ vaultName }) => {
 
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
+  const handleViewDetail = hash => {
+    if (isMobile) window.open(`${EXPLORER_INFOS[networkId].url}${hash}`, '_blank');
+  };
   return (
     <BlackBoxContainer
       p={isMobile ? '32px 28px 16px' : isTablet ? '44px 32px 40px' : '16px 32px 24px'}
@@ -114,20 +117,41 @@ const TransactionHistory = ({ vaultName }) => {
             <Grid item xs={12} key={`${index.toString()}`}>
               <BlackBoxContainer hasBlackContainer={false} p="4px">
                 <Grid container>
-                  <GridItem item xs={4} sm={3} md={3}>
+                  <GridItem
+                    item
+                    xs={4}
+                    sm={3}
+                    md={3}
+                    cursor="pointer"
+                    onClick={() => handleViewDetail(history.txHash)}
+                  >
                     {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}`}
                   </GridItem>
-                  <GridItem item xs={4} sm={3} md={3}>
+                  <GridItem
+                    item
+                    xs={4}
+                    sm={3}
+                    md={3}
+                    cursor="pointer"
+                    onClick={() => handleViewDetail(history.txHash)}
+                  >
                     {history.Action}
                   </GridItem>
-                  <GridItem item xs={4} sm={3} md={3}>
+                  <GridItem
+                    item
+                    xs={4}
+                    sm={3}
+                    md={3}
+                    cursor="pointer"
+                    onClick={() => handleViewDetail(history.txHash)}
+                  >
                     {`${history.Amount} ${history.Asset || 'ETH'}`}
                   </GridItem>
                   {!isMobile && (
-                    <GridItem item xs={3} sm={3}>
+                    <GridItem item xs={3} sm={3} cursor="pointer">
                       <LinkItem
                         onClick={() =>
                           window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')

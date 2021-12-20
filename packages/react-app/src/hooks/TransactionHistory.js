@@ -88,8 +88,6 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
 
           histories.sort((x, y) => x.Date.valueOf() - y.Date.valueOf());
           setTransactionHistories(histories);
-
-          console.log({ histories });
         }
       }
     },
