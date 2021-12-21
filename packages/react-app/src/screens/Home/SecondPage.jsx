@@ -17,7 +17,6 @@ function SecondPage() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  console.log({ isMobile, isTablet });
   return (
     <PageContainter>
       <HomeContainer>
