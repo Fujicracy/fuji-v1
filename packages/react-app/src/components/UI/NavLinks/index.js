@@ -41,7 +41,6 @@ export const NavImageLink = styled.a.attrs(props => ({
     width: 28px;
   `}
   ${fujiMedia.lessThan('large')`
-    margin: 0px;
   `}
 `;
 
