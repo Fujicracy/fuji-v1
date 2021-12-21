@@ -57,14 +57,16 @@ function SecondPage() {
                   lineHeight="130%"
                   fontFamily="Nexa Regular"
                 >
-                  <br />
-                  Ever borrowed in DeFi?{isMobile && <br />}Taking out a loan at 5%
-                  {!isMobile && <br />}and {isMobile && <br />} paying 15% shortly after is
-                  {isMobile && <br />} an everyday reality. <br />
-                  <br />
-                  Manually comparing loan{isMobile && <br />} providers is a tedious task,
-                  <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
-                  time.
+                  <p>
+                    <br />
+                    Ever borrowed in DeFi?{isMobile && <br />} Taking out a loan at 5%
+                    {!isMobile && <br />}and {isMobile && <br />} paying 15% shortly after is
+                    {isMobile && <br />} an everyday reality. <br />
+                    <br />
+                    Manually comparing loan{isMobile && <br />} providers is a tedious task,
+                    <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
+                    time.
+                  </p>
                 </SectionTitle>
               </Flex>
             </Flex>

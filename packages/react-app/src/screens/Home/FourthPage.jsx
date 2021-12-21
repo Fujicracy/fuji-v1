@@ -39,7 +39,7 @@ function FourthPage() {
             flexDirection="column"
             justifyContent="center"
             alignItems={isTablet ? 'center' : 'left'}
-            padding={isMobile || isTablet ? '40px 30px 16px' : '0px'}
+            padding={isMobile || isTablet ? '40px 0px 16px' : '0px'}
             marginLeft={!isMobile && !isTablet && '-360px'}
             mt={isTablet ? '40px' : '0px'}
           >
@@ -52,12 +52,14 @@ function FourthPage() {
               lineHeight={isMobile ? '160%' : '190%'}
               fontFamily="Nexa Regular"
             >
-              <br />
-              &bull; Aggregated Borrow APR <br />
-              &bull; Automatic Loan Refinancing
-              <br />
-              &bull; Non-Custodial Loan Routing <br />
-              &bull; Rebates On Gas Costs
+              <p>
+                <br />
+                &bull; Aggregated Borrow APR <br />
+                &bull; Automatic Loan Refinancing
+                <br />
+                &bull; Non-Custodial Loan Routing <br />
+                &bull; Rebates On Gas Costs
+              </p>
             </SectionTitle>
             {(isMobile || isTablet) && (
               <Flex

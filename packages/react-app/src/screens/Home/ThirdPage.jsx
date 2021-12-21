@@ -51,16 +51,18 @@ function ThirdPage() {
                       lineHeight="130%"
                       fontFamily="Nexa Regular"
                     >
-                      <br />
-                      Routing your loan through Fuji {isMobile && <br />} ensures you get
-                      {!isMobile && <br />} the best borrow {isMobile && <br />} rate, aggregated
-                      across all
-                      {isMobile && <br />} providers.
-                      <br />
-                      <br />
-                      Better opportunity?{isMobile && <br />} The protocol automatically
-                      <br /> refinances the whole pool of {isMobile && <br />} loans to the new
-                      lowest APR.
+                      <p>
+                        <br />
+                        Routing your loan through Fuji {isMobile && <br />} ensures you get
+                        {!isMobile && <br />} the best borrow {isMobile && <br />} rate, aggregated
+                        across all
+                        {isMobile && <br />} providers.
+                        <br />
+                        <br />
+                        Better opportunity?{isMobile && <br />} The protocol automatically
+                        <br /> refinances the whole pool of {isMobile && <br />} loans to the new
+                        lowest APR.
+                      </p>
                     </SectionTitle>
                   </Flex>
                 </Flex>
@@ -96,13 +98,15 @@ function ThirdPage() {
                     lineHeight="130%"
                     fontFamily="Nexa Regular"
                   >
-                    <br />
-                    Routing your loan through Fuji ensures you get
-                    <br /> the best borrow rate, aggregated across all providers.
-                    <br />
-                    <br />
-                    Better opportunity? The protocol automatically
-                    <br /> refinances the whole pool of loans to the new lowest APR.
+                    <p>
+                      <br />
+                      Routing your loan through Fuji ensures you get
+                      <br /> the best borrow rate, aggregated across all providers.
+                      <br />
+                      <br />
+                      Better opportunity? The protocol automatically
+                      <br /> refinances the whole pool of loans to the new lowest APR.
+                    </p>
                   </SectionTitle>
                 </Flex>
               </Grid>
