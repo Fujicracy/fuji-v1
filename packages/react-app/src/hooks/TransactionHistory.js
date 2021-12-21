@@ -86,7 +86,7 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
             console.error('useTransactionHistory error:', { error });
           }
 
-          histories.sort((x, y) => x.Date.valueOf() - y.Date.valueOf());
+          histories.sort((x, y) => y.Date.valueOf() - x.Date.valueOf());
           setTransactionHistories(histories);
         }
       }
