@@ -9,12 +9,9 @@ export const GridItem = styled(Grid)`
   align-items: center;
   justify-content: center;
   color: white;
-  cursor: ${props => (props.cursor ? props.cursor : 'inherit')};
   font-weight: ${props => (props.fontWeight ? props.fontWeight : 400)};
-  ${fujiMedia.lessThan('medium')`
-    cursor: pointer;
-  `}
-  ${fujiMedia.greaterThan('medium')`
+  cursor: pointer;
+  ${fujiMedia.greaterThan('small')`
     cursor: inherit;
   `}
 `;

@@ -122,7 +122,6 @@ const TransactionHistory = ({ vaultName }) => {
                     xs={4}
                     sm={3}
                     md={3}
-                    cursor="pointer"
                     onClick={() => handleViewDetail(history.txHash)}
                   >
                     {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
@@ -135,7 +134,6 @@ const TransactionHistory = ({ vaultName }) => {
                     xs={4}
                     sm={3}
                     md={3}
-                    cursor="pointer"
                     onClick={() => handleViewDetail(history.txHash)}
                   >
                     {history.Action}
@@ -145,7 +143,6 @@ const TransactionHistory = ({ vaultName }) => {
                     xs={4}
                     sm={3}
                     md={3}
-                    cursor="pointer"
                     onClick={() => handleViewDetail(history.txHash)}
                   >
                     {`${history.Amount.toFixed(3)} ${history.Asset || 'ETH'}`}
