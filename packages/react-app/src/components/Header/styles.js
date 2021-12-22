@@ -22,6 +22,7 @@ export const HeaderContainer = styled(Box)`
 
   ${fujiMedia.lessThan('medium')`
     height:64px;
+    background-color:  #272727;
     padding: 16px 28px;
   `}
   ${fujiMedia.between('medium', 'large')`
