@@ -148,7 +148,7 @@ const TransactionHistory = ({ vaultName }) => {
                     cursor="pointer"
                     onClick={() => handleViewDetail(history.txHash)}
                   >
-                    {`${history.Amount} ${history.Asset || 'ETH'}`}
+                    {`${history.Amount.toFixed(3)} ${history.Asset || 'ETH'}`}
                   </GridItem>
                   {!isMobile && (
                     <GridItem item xs={3} sm={3} cursor="pointer">
