@@ -21,13 +21,11 @@ export const HeaderContainer = styled(Box)`
 
   ${fujiMedia.lessThan('medium')`
     height:64px;
-    background-color:  rgba(255, 255, 255, 0.05);
     padding: 16px 28px;
   `}
   ${fujiMedia.between('medium', 'large')`
     padding: 16px 40px;
     height: 88px;
-    background-color:  rgba(255, 255, 255, 0.05);
   `}
 `;
 
