@@ -80,7 +80,6 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
               history.txHash = evt.transactionHash;
 
               histories.push(history);
-              console.log({ histories, events });
             }
           } catch (error) {
             console.error('useTransactionHistory error:', { error });
