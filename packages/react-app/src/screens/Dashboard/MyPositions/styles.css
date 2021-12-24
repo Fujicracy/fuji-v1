@@ -257,8 +257,8 @@
 @media screen and (min-width: 768px) and (max-width: 1440px) {
   .positions-container {
     margin: 40px 28px;
-    min-width: 420px;
-    width: 420px;
+    min-width: 470px;
+    width: 470px;
   }
 
   .one-position{
