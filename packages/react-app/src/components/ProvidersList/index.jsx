@@ -9,11 +9,9 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { useContractLoader, useContractReader, useResources } from 'hooks';
 import { CallContractFunction } from 'helpers';
-import { DropDown } from '../UI';
+import { DropDown, AnimatedCounter, Tooltip } from '../UI';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
-import AnimatedCounter from '../UI/AnimatedCounter';
 
-import './styles.css';
 import { ProviderContainer, AssetContainer } from './styles';
 
 const Provider = ({ contracts, vaults, market, rates, isDropDown = true }) => {
@@ -166,12 +164,12 @@ function ProvidersList({
       >
         {title}
         {!isMobile && !isTablet && (
-          <div className="tooltip-info">
+          <Tooltip>
             <InfoOutlinedIcon />
-            <span className="tooltip">
+            <span>
               Live fetching borrow rates from underlying protocols that provide liquidity.
             </span>
-          </div>
+          </Tooltip>
         )}
       </SectionTitle>
 
