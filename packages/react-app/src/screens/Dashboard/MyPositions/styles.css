@@ -26,6 +26,7 @@
   border-radius: 0.5rem;
   margin-bottom: 1rem;
   position: relative;
+  height: 80px;
 }
 
 .positions .position-element {
@@ -252,6 +253,15 @@
     min-width: 320px;
     width: 320px;
   }
+
+  .adding-position {
+    height: 64px;
+  }
+
+  .one-position {
+    padding: 16px 0px 16px 28px;
+    height: 64px;
+  }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1440px) {
@@ -261,7 +271,7 @@
     width: 470px;
   }
 
-  .one-position{
+  .one-position {
     padding: 16px 0px 16px 28px;
     display: flex;
     flex-direction: row;
@@ -282,10 +292,6 @@
 
   .positions .position-board {
     margin-top: 32px;
-  }
-
-  .adding-position {
-    height: 64px;
   }
 
   .positions .position-about {
