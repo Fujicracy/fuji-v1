@@ -11,6 +11,7 @@ export const GridItem = styled(Grid)`
   color: white;
   font-weight: ${props => (props.fontWeight ? props.fontWeight : 400)};
   cursor: pointer;
+  text-align: center;
   ${fujiMedia.greaterThan('small')`
     cursor: inherit;
   `}
