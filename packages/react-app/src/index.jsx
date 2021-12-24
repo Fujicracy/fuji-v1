@@ -67,6 +67,31 @@ const theme = createTheme({
         border: 'none',
       },
     },
+    MuiInput: {
+      input: {
+        '&:before': {
+          borderColor: 'white',
+        },
+        '&:hover': {
+          borderColor: 'white',
+        },
+      },
+    },
+    MuiInputBase: {
+      root: {
+        color: 'white',
+      },
+      input: {
+        borderBottom: '1px solid white',
+        fontSize: 12,
+      },
+    },
+    MuiPickersBasePicker: {
+      pickerView: {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        color: 'white',
+      },
+    },
   },
 });
 

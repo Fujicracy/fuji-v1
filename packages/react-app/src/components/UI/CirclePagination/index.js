@@ -11,7 +11,9 @@ import {
 const CirclePagination = ({ count, index, onDotClick }) => {
   const [previousIndex, setPreviousIndex] = useState(index || 0);
   const [timerHandle, setTimerHandle] = useState(null);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    setMounted(true);
     return () => {
       if (timerHandle !== null) clearTimeout(timerHandle);
     };
@@ -19,16 +21,17 @@ const CirclePagination = ({ count, index, onDotClick }) => {
   }, []);
 
   useEffect(() => {
-    setTimerHandle(
-      setTimeout(() => {
-        setTimerHandle(null);
-        setPreviousIndex(index);
-      }, 200),
-    );
-  }, [index]);
+    if (mounted) {
+      setTimerHandle(
+        setTimeout(() => {
+          setTimerHandle(null);
+          setPreviousIndex(index);
+        }, 200),
+      );
+    }
+  }, [index, mounted]);
 
   const handleDotClick = (dotIndex, event) => {
-    console.log({ dotIndex, event });
     if (onDotClick) onDotClick(dotIndex, event);
   };
 

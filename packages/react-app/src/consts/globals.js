@@ -114,9 +114,26 @@ const DEPLOYMENT = process.env.REACT_APP_DEPLOYMENT || DEPLOYMENT_TYPES.CORE;
 const MERKLE_DIST_ADDR = '0x51407A073fb7C703185f47c3FBB1B915678221b8';
 const FUJIFLOPS_NFT_ADDR = '0x376C0AA9150095cB36AdcD472bE390D31C6BeF8F';
 
+const TRANSACTION_ACTIONS = {
+  ALL: 'All',
+  DEPOSIT: 'Deposit',
+  BORROW: 'Borrow',
+  PAYBACK: 'Payback',
+  WITHDRAW: 'Withdraw',
+  LIQUIDATION: 'Liquidation',
+};
+const TRANSACTION_TYPES = Object.keys(TRANSACTION_ACTIONS).map(key => TRANSACTION_ACTIONS[key]);
+
+const EXPLORER_INFOS = {
+  [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
+  [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
+  [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
+};
+
 export {
   CHAIN,
   CHAIN_ID,
+  CHAIN_IDS,
   CHAIN_NAME,
   CHAIN_NAMES,
   CHAINS,
@@ -129,4 +146,7 @@ export {
   ETH_CAP_VALUE,
   MERKLE_DIST_ADDR,
   FUJIFLOPS_NFT_ADDR,
+  TRANSACTION_ACTIONS,
+  TRANSACTION_TYPES,
+  EXPLORER_INFOS,
 };

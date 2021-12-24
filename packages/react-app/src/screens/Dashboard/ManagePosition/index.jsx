@@ -9,6 +9,7 @@ import { Grid } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
+import { TransactionHistory } from 'components';
 
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
@@ -18,7 +19,6 @@ import RepayAndWithdrawForm from '../RepayAndWithdrawForm';
 import PositionElement, { PositionActions } from '../../../components/PositionElement';
 import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
 import ProvidersList from '../../../components/ProvidersList';
-
 import './styles.css';
 
 function ManagePosition() {
@@ -181,6 +181,7 @@ function ManagePosition() {
               </>
             )}
           </Grid>
+          <TransactionHistory vaultName={vault?.name} />
         </BlackBoxContainer>
       </Flex>
     </Flex>

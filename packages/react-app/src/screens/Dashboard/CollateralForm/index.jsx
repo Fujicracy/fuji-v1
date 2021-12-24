@@ -15,8 +15,8 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, GasEstimator, getAllowance } from 'helpers';
-import { useAuth, useBalance, useContractLoader, useContractReader } from 'hooks';
+import { Transactor, GasEstimator } from 'helpers';
+import { useAuth, useBalance, useAllowance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -45,7 +45,6 @@ function CollateralForm({ position }) {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
-  const [allowance, setAllowance] = useState();
 
   const { vaultAddress, vault } = position;
   const { collateralAsset } = vault;
@@ -82,13 +81,7 @@ function CollateralForm({ position }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  useEffect(() => {
-    async function fetchAllowance() {
-      setAllowance(await getAllowance(contracts, collateralAsset.name, [address, vaultAddress]));
-    }
-
-    fetchAllowance();
-  }, [collateralAsset, address, contracts, vaultAddress]);
+  const allowance = useAllowance(contracts, collateralAsset, [address, vaultAddress]);
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
@@ -220,6 +213,8 @@ function CollateralForm({ position }) {
   const handleClose = () => {
     setDialog('');
     setAmount('');
+    setValue('amount', '', { shouldValidate: false });
+    setLoading(false);
   };
 
   const getBtnContent = () => {

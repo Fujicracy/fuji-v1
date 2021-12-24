@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
 export const DropDownContainer = styled('div')`
-  width: 100%;
+  position: relative;
+  width: ${props => (props.width ? `${props.width}px` : '100%')};
 `;
 
 export const DropDownHeader = styled('div')`
@@ -27,6 +28,9 @@ export const DropDownHeader = styled('div')`
 //  100% { height: 100px; opacity: 0.1; }
 // `;
 export const DropDownListContainer = styled('div')`
+  z-index: 9999;
+  position: ${props => (props.isSelectable ? 'absolute' : 'inherit')};
+  width: 100%;
   overflow-y: auto;
   &::-webkit-scrollbar {
     background-color: rgba(255, 255, 255, 0.05);
@@ -60,14 +64,17 @@ export const DropDownList = styled('ul')`
 `;
 
 export const ListItem = styled('li')`
+  z-index: 9999;
   list-style: none;
   height: 40px;
   font-size: 12px;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: ${props => (props.isSelectable ? '#1c1c1c' : 'rgba(255, 255, 255, 0.05)')};
+  width: 100%;
   padding: 0px 10px 0px 10px;
   color: ${themeGet('colors.text32')};
+  cursor: ${props => (props.isSelectable ? 'pointer' : 'inherit')};
   &:hover {
     color: #f5f5f5;
   }
