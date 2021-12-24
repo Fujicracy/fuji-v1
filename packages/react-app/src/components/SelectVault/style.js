@@ -23,11 +23,11 @@ export const DropDownHeader = styled('div')`
   border-bottom-right-radius: ${props => (props.isOpened ? '0px' : '6px')};
   border-bottom-left-radius: ${props => (props.isOpened ? '0px' : '6px')};
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 12px;
     height: 44px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     height: 56px;
     font-size: 18px;
   `}
@@ -72,14 +72,14 @@ export const DropDownList = styled('ul')`
     border-bottom-left-radius: 6px;
   }
   cursor: pointer;
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 12px;
   `}
 `;
 
 export const ListItem = styled('li')`
   list-style: none;
-  height: 56px;
+  height: 40px;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -97,11 +97,10 @@ export const ListItem = styled('li')`
     border-bottom-right-radius: 6px;
   }
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 12px;
-    height: 40px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     height: 56px;
     font-size: 18px;
   `}

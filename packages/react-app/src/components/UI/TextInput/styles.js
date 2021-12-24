@@ -19,19 +19,19 @@ export const InputContainer = styled.div`
     border: 1px solid ${themeGet('colors.primary')};
   }
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     height: 44px;
     border-radius: 4px;
   `}
 
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     height: 56px;
     border-radius: 4px;
   `}
 `;
 
 export const SubTitleContainer = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 20px;
   color: white;
   font-weight: 500;
@@ -40,11 +40,11 @@ export const SubTitleContainer = styled.div`
   align-items: center;
   position: relative;
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 12px;
     margin-bottom: 16px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     font-size: 20px;
     margin-bottom: 24px;
   `}
@@ -61,7 +61,7 @@ export const SubTitleInfo = styled.span`
   color: ${themeGet('colors.text64')};
   margin-top: 24px;
 
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     font-size: 12px;
     line-height: 18px;
     margin-top: 24px;
@@ -76,7 +76,7 @@ export const Description = styled.label`
   display: block;
   color: white;
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 0.5rem;
   `}
 `;
@@ -92,10 +92,10 @@ export const AdornmentText = styled.label`
   color: ${themeGet('colors.text64')};
   font-size: 14px;
   font-weight: 400;
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     font-size: 12px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     font-size: 16px;
   `}
 `;

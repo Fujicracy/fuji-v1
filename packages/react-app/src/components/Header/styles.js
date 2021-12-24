@@ -20,12 +20,12 @@ export const HeaderContainer = styled(Box)`
 
   ${size}
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     height:64px;
     background-color:  #272727;
     padding: 16px 28px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     padding: 16px 40px;
     height: 88px;
   `}
@@ -49,7 +49,7 @@ export const MenuBackContainer = styled(Box)`
   background: transparent;
   z-index: 9999;
   backdrop-filter: blur(0.25rem);
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     top: 88px;
     padding-left: 50%;
   `}
@@ -88,7 +88,7 @@ export const MenuNavigationContainer = styled(Box)`
   box-sizing: border-box;
   border-radius: 12px 12px 0px 0px;
   padding: 0px 24px;
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     height: 76px;
     bottom: 76px;
     padding: 0px 32px;
@@ -150,10 +150,8 @@ export const Navigation = styled.ul`
       }
     }
   }
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     display:none
-  `}
-  ${fujiMedia.greaterThan('medium')`
   `}
 `;
 

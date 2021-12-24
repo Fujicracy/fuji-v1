@@ -8,10 +8,10 @@ export const ContentContainer = styled(Box)`
   padding: 19px 6px 24px 19px;
   ${size};
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     padding: 40px 28px 32px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     
   `}
 `;

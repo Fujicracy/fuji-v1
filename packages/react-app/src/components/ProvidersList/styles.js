@@ -15,12 +15,13 @@ export const ProviderContainer = styled(Box).attrs(() => ({
   color: ${themeGet('colors.text64')};
   cursor: pointer;
   padding-top: 32px;
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     height: 32px;
     padding-top: 0px;
   `}
-  ${fujiMedia.between('medium', 'large')`
-    padding-top: 32px;
+  ${fujiMedia.between('small', 'medium')`
+    height: 40px;
+    padding-top: 8px;
   `}
 `;
 

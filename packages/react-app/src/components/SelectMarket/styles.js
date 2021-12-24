@@ -30,11 +30,11 @@ export const MarketButton = styled(Box)`
   border-right: ${props => (props.left ? 'none' : '1px solid rgb(80, 80, 80)')};
   color: white;
   cursor: pointer;
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
   `}
 
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     border-radius: ${props => (props.left ? '4px 0 0 4px' : props.right ? '0 4px 4px 0' : '0')};
     height: 40px;
     font-size:16px;

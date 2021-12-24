@@ -42,7 +42,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     }
   }
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     border-radius: 14px;
     border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
     border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};
@@ -53,7 +53,7 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
     }
   `}
 
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     border-radius: 14px;
     border-top-left-radius: ${props => props.noTopBorderRadius && '0px'};
     border-top-right-radius: ${props => props.noTopBorderRadius && '0px'};

@@ -15,7 +15,7 @@ export const NavUnlisted = styled(Box).attrs(props => ({
   align-content: center;
   left: ${props => props.position === 'left' && '32px'};
   right: ${props => props.position === 'right' && '32px'};
-  ${fujiMedia.lessThan('large')`
+  ${fujiMedia.lessThan('medium')`
     justify-content: space-between;
   `}
 `;
@@ -36,11 +36,9 @@ export const NavImageLink = styled.a.attrs(props => ({
     background: ${props => `url(${props.contact.imageHover}) no-repeat top center`};
     background-size: contain;
   }
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     height: 28px;
     width: 28px;
-  `}
-  ${fujiMedia.lessThan('large')`
   `}
 `;
 
