@@ -1,6 +1,32 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { fontSize, space } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
+
+const animationTop = keyframes`
+  0% {
+    visibility: visible;
+    opacity: 0;
+    margin-top: -5.875rem;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    margin-top: -5.5rem;
+  }
+`;
+
+const animationBottom = keyframes`
+  0% {
+    visibility: visible;
+    opacity: 0;
+    top: 2.125rem;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    top: 1.75rem;
+  }
+`;
 
 const Tooltip = styled.div`
   margin-left: 0.5rem;
@@ -32,8 +58,9 @@ const Tooltip = styled.div`
   &:hover {
     span {
       visibility: visible;
+      animation: ${props => (props.animationTop ? animationTop : animationBottom)} 250ms ease
+        forwards !important;
     }
-    animation: span 250ms ease forwards !important;
   }
 
   ${fontSize} ${space};
