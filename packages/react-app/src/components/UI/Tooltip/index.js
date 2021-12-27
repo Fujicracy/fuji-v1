@@ -28,14 +28,14 @@ const animationBottom = keyframes`
   }
 `;
 
-const Tooltip = styled.div`
+export const Tooltip = styled.div`
   margin-left: 0.5rem;
   color: ${props => (props.color ? themeGet(props.color) : themeGet('colors.text32'))};
   display: flex;
   cursor: pointer;
   position: relative;
 
-  span {
+  > span {
     visibility: hidden;
     min-width: 12.5rem;
     max-width: 15.375rem;
@@ -56,7 +56,7 @@ const Tooltip = styled.div`
   }
 
   &:hover {
-    span {
+    > span {
       visibility: visible;
       animation: ${props => (props.animationTop ? animationTop : animationBottom)} 250ms ease
         forwards !important;
@@ -66,4 +66,8 @@ const Tooltip = styled.div`
   ${fontSize} ${space};
 `;
 
-export default Tooltip;
+export const IntenseSpan = styled.span`
+  font-weight: 600;
+  color: ${props => (props.primary ? themeGet('colors.primary') : 'inherit')};
+  ${fontSize} ${space};
+`;

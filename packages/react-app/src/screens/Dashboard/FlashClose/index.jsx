@@ -25,7 +25,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useAuth, useContractLoader } from 'hooks';
 
-import { SectionTitle } from '../../../components/Blocks';
+import { SectionTitle, Tooltip } from 'components';
 
 import './styles.css';
 
@@ -172,12 +172,12 @@ function FlashClose({ position }) {
             Flash Close
           </SectionTitle>
           {!isMobile && !isTablet && (
-            <div className="tooltip-info">
+            <Tooltip>
               <InfoOutlinedIcon />
-              <span className="tooltip">
+              <span>
                 Repay your debt position from your collateral by using a flash loan. Fee: 1%
               </span>
-            </div>
+            </Tooltip>
           )}
         </div>
 

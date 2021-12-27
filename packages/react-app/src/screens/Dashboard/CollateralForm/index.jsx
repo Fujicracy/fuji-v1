@@ -22,10 +22,10 @@ import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
+import { TextInput, Label, Tooltip, SectionTitle, IntenseSpan } from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
-import { TextInput, Label } from '../../../components/UI';
-import { SectionTitle } from '../../../components/Blocks';
+// import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
@@ -356,13 +356,13 @@ function CollateralForm({ position }) {
       <Grid item className="section-title">
         <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
         {!isMobile && !isTablet && (
-          <div className="tooltip-info">
+          <Tooltip>
             <InfoOutlinedIcon />
-            <span className="tooltip tooltip-top">
-              <span className="bold">Supply</span> more {collateralAsset.name} as collateral or
-              <span className="bold"> withdraw</span> what is not locked for your borrows.
+            <span>
+              <IntenseSpan>Supply</IntenseSpan> more {collateralAsset.name} as collateral or
+              <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
             </span>
-          </div>
+          </Tooltip>
         )}
       </Grid>
       <Grid item className="toggle-button">

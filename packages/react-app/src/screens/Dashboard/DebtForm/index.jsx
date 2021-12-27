@@ -27,11 +27,11 @@ import {
   useContractLoader,
 } from 'hooks';
 
+import { TextInput, Label, SectionTitle, Tooltip, IntenseSpan } from 'components';
+
 import { Transactor, GasEstimator } from '../../../helpers';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
-import { TextInput, Label } from '../../../components/UI';
-import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Repay: 0,
@@ -333,13 +333,13 @@ function DebtForm({ position }) {
         <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
 
         {!isMobile && !isTablet && (
-          <div className="tooltip-info">
+          <Tooltip>
             <InfoOutlinedIcon />
-            <span className="tooltip tooltip-top">
-              <span className="bold">Repay</span> {borrowAsset.name} from your wallet balance or
-              <span className="bold"> borrow</span> more from it against your free collateral.
+            <span>
+              <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
+              <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
             </span>
-          </div>
+          </Tooltip>
         )}
       </Grid>
       <Grid item className="toggle-button">

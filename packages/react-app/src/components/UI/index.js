@@ -9,7 +9,8 @@ import AnimatedCounter from './AnimatedCounter';
 import BackgroundEffect from './BackgroundEffect';
 import Animation from './Animation';
 import CirclePagination from './CirclePagination';
-import Tooltip from './Tooltip';
+
+import { Tooltip, IntenseSpan } from './Tooltip';
 
 export {
   Button,
@@ -26,4 +27,5 @@ export {
   Animation,
   CirclePagination,
   Tooltip,
+  IntenseSpan,
 };

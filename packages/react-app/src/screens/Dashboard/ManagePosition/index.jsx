@@ -7,18 +7,27 @@ import { Flex } from 'rebass';
 import { Grid } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+// import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
-import { TransactionHistory } from 'components';
+import {
+  TransactionHistory,
+  CollaterizationIndicator,
+  ProvidersList,
+  PositionElement,
+  PositionActions,
+  BlackBoxContainer,
+  SectionTitle,
+} from 'components';
 
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
 import CollateralForm from '../CollateralForm';
 import SupplyAndBorrowForm from '../SupplyAndBorrowForm';
 import RepayAndWithdrawForm from '../RepayAndWithdrawForm';
-import PositionElement, { PositionActions } from '../../../components/PositionElement';
-import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
-import ProvidersList from '../../../components/ProvidersList';
+// import PositionElement, { PositionActions } from '../../../components/PositionElement';
+// import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
+// import ProvidersList from '../../../components/ProvidersList';
+
 import './styles.css';
 
 function ManagePosition() {
