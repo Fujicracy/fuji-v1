@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { animated } from 'react-spring';
 import { themeGet } from '@styled-system/theme-get';
+import { fujiMedia } from 'consts';
 
 export const AnimatedCircle = styled(animated.path)`
   fill: none;
@@ -99,14 +100,21 @@ export const ChartContent = styled.div`
 
 export const PositionDetails = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-bottom: 0.063rem solid ${themeGet('colors.text05')};
+  padding: 0.5rem 0rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
   color: ${themeGet('colors.text100')};
-  padding: 12px 0px;
-
+  &:first-child {
+    padding: 24px 0px 8px;
+  }
+  &:last-child {
+    padding: 0.5rem 0rem 0rem 0rem;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
+    border-bottom: none;
+  }
   .number {
     color: ${themeGet('colors.text64')};
   }
@@ -119,10 +127,16 @@ export const PositionDetails = styled.div`
     color: ${themeGet('colors.text64')};
   }
 
-  &:last-child {
-    padding: 0.5rem 0rem 0rem;
-    margin-bottom: 0rem;
-    margin-top: 0rem;
-    border-bottom: 0rem solid var(--text05);
-  }
+  ${fujiMedia.lessThan('small')`
+    .position-details {
+      border-bottom: none;
+    }
+  `}
+
+  ${fujiMedia.between('small', 'medium')`
+    .position-details {
+      font-size: 18px;
+      padding: 12px 0px;
+    }
+  `}
 `;

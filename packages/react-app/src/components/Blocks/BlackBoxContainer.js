@@ -24,23 +24,6 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   border-bottom: ${props => props.noBottomBorder && 'none'};
   ${size};
   ${background};
-  .position-details {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 0.063rem solid ${themeGet('colors.text05')};
-    padding: 0.5rem 0rem;
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-    &:first-child {
-      padding: 24px 0px 8px;
-    }
-    &:last-child {
-      padding: 0.5rem 0rem 0rem 0rem;
-      margin-bottom: 0rem;
-      margin-top: 0rem;
-      border-bottom: none;
-    }
-  }
 
   ${fujiMedia.lessThan('small')`
     border-radius: 14px;
