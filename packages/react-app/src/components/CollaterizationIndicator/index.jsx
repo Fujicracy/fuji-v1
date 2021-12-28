@@ -23,6 +23,7 @@ import {
   ChartContent,
   AnimatedCircle,
   AnimatedLine,
+  PositionDetails,
 } from './style';
 
 function hsl(r) {
@@ -158,17 +159,17 @@ function CollaterizationIndicator({ position }) {
             <ChartBackground />
           </Ratio>
 
-          <div className="position-details first">
+          <PositionDetails>
             <div className="title">
               <Typography variant="h3">Borrow Limit Used</Typography>
             </div>
             <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
-          </div>
+          </PositionDetails>
         </>
       )}
       <Collapse in={more}>
-        <div className="position-details">
-          <div className="title">
+        <PositionDetails>
+          <Flex>
             Current Loan-to-Value
             {!isMobile && !isTablet && (
               <Tooltip>
@@ -182,25 +183,25 @@ function CollaterizationIndicator({ position }) {
                 </span>
               </Tooltip>
             )}
-          </div>
+          </Flex>
           <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">LTV liquidation threshold</div>
           <div className="number">{threshold} %</div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">Current {collateralAsset.name} price</div>
           <div className="number">
             $ {collateralAssetPrice ? collateralAssetPrice.toFixed(2) : '...'}
           </div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">{collateralAsset.name} liquidation price</div>
           <div className="number">
             $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
           </div>
-        </div>
+        </PositionDetails>
       </Collapse>
       {isMobile || isTablet ? (
         <Flex
@@ -222,7 +223,7 @@ function CollaterizationIndicator({ position }) {
           )}
         </Flex>
       ) : (
-        <div className="position-details">
+        <PositionDetails>
           <Button
             size="small"
             disableRipple
@@ -233,7 +234,7 @@ function CollaterizationIndicator({ position }) {
           >
             Show {more ? 'less' : 'more'}
           </Button>
-        </div>
+        </PositionDetails>
       )}
     </BlackBoxContainer>
   );

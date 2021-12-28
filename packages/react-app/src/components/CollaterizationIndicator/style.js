@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { animated } from 'react-spring';
+import { themeGet } from '@styled-system/theme-get';
 
 export const AnimatedCircle = styled(animated.path)`
   fill: none;
@@ -68,7 +69,7 @@ export const ChartBackground = styled.div`
     height: 5.75rem;
     border-radius: 3rem;
     background: #191919;
-    border: 0.063rem solid var(--text05);
+    border: 0.063rem solid ${themeGet('colors.text05')};
   }
 `;
 
@@ -94,4 +95,34 @@ export const ChartContent = styled.div`
   z-index: 5;
   font-size: 1.25rem;
   color: var(--text64);
+`;
+
+export const PositionDetails = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: ${themeGet('colors.text100')};
+  padding: 12px 0px;
+
+  .number {
+    color: ${themeGet('colors.text64')};
+  }
+
+  button {
+    width: 150px;
+    margin-left: 50%;
+    height: 2rem;
+    font-weight: 300;
+    color: ${themeGet('colors.text64')};
+  }
+
+  &:last-child {
+    padding: 0.5rem 0rem 0rem;
+    margin-bottom: 0rem;
+    margin-top: 0rem;
+    border-bottom: 0rem solid var(--text05);
+  }
 `;
