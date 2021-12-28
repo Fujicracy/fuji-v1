@@ -25,7 +25,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
 
   function afterOpen() {
     setTimeout(() => {
-      setOpacity(0.9);
+      setOpacity(1);
     }, 100);
   }
 
@@ -41,13 +41,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
   };
 
   return (
-    <StyledModal
-      isOpen={isOpen}
-      afterOpen={afterOpen}
-      beforeClose={beforeClose}
-      opacity={opacity}
-      backgroundProps="filter:blur(5px)"
-    >
+    <StyledModal isOpen={isOpen} afterOpen={afterOpen} beforeClose={beforeClose} opacity={opacity}>
       <Flex flexDirection="column">
         <ContentContainer>
           <Flex flexDirection={isMobile ? 'column' : 'row'} alignItems="center">
@@ -114,7 +108,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 ml={3}
                 fontSize={isTablet ? 16 : isMobile ? 14 : 12}
                 lineHeight="130%"
-                width={isTablet && '280px'}
+                width={isTablet ? '280px' : undefined}
               >
                 By moving forward, you accept our
                 <br />
