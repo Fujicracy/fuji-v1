@@ -20,7 +20,6 @@ import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Container, FadingBackground, NavText } from './styles';
-import './style.css';
 
 function App() {
   const theme = themes.main;

@@ -16,8 +16,10 @@ const palette = {
   black64: 'rgba(16, 16, 16, 0.64)',
   dark64: 'rgba(25, 25, 25, 0.64)',
   dark56: 'rgba(25, 25, 25, 0.56)',
+  dark09: 'rgba(25, 25, 25, 0.9)',
   blackOpacity: 'rgba(0, 0, 0, 0.5)',
   textLabel: '#F5F5FD',
+  bg16: 'rgba(16, 16, 16, 1)',
 };
 
 const colors = {

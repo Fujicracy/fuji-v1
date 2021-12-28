@@ -25,7 +25,10 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useAuth, useContractLoader } from 'hooks';
 
+import { Flex } from 'rebass';
 import { SectionTitle, Tooltip } from 'components';
+
+import { FlashCloseContainer, RepayButton, Description } from './styles';
 
 import './styles.css';
 
@@ -166,8 +169,8 @@ function FlashClose({ position }) {
           )}
         </DialogActions>
       </Dialog>
-      <div className="flash-close">
-        <div className="section-title">
+      <FlashCloseContainer>
+        <Flex mb="0.5rem">
           <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
             Flash Close
           </SectionTitle>
@@ -179,25 +182,23 @@ function FlashClose({ position }) {
               </span>
             </Tooltip>
           )}
-        </div>
+        </Flex>
 
-        <div className="content">
-          <div className="description">
+        <Flex alignItems="center" justifyContent="space-between" mt="1rem">
+          <Description color="colors.text100">
             Use a flash loan to repay your debt in a single transaction.
-          </div>
+          </Description>
 
-          <div className="actions">
-            <Button
-              onClick={() => {
-                setDialog(true);
-                setAmount('-1');
-              }}
-            >
-              Repay
-            </Button>
-          </div>
-        </div>
-      </div>
+          <RepayButton
+            onClick={() => {
+              setDialog(true);
+              setAmount('-1');
+            }}
+          >
+            Repay
+          </RepayButton>
+        </Flex>
+      </FlashCloseContainer>
     </>
   );
 }
