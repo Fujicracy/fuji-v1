@@ -12,6 +12,6 @@ export const ContentContainer = styled(Box)`
     padding: 40px 28px 32px;
   `}
   ${fujiMedia.between('small', 'medium')`
-    
+    padding: 40px 32px 40px;
   `}
 `;

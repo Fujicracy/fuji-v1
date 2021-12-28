@@ -73,14 +73,14 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
               <Label
                 color="colors.text100"
                 fontWeight="700"
-                fontSize={isMobile || isTablet ? 20 : 16}
+                fontSize={isMobile ? 20 : isTablet ? 24 : 16}
               >
                 Safety Notice
               </Label>
               <Label
                 textAlign={isMobile ? 'center' : 'left'}
                 mt={isMobile ? '24px' : 2}
-                fontSize={16}
+                fontSize={isTablet ? 18 : 16}
                 color="colors.text100"
                 lineHeight={isMobile ? '150%' : '150%'}
               >
@@ -96,28 +96,40 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
           padding={isMobile ? '32px 28px 40px' : isTablet ? '32px 40px 40px' : '24px 0px 0px 0px'}
         >
           <Flex
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
             width={isMobile || isTablet ? 1 : 0.7}
-            pr={isMobile ? 0 : 3}
+            pr={isMobile || isTablet ? 0 : 3}
             mb={isMobile || isTablet ? '32px' : '0px'}
           >
-            <CheckBox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              descriptionFontSize={isMobile ? 14 : 12}
-            />
-            <Label textAlign={isMobile ? 'center' : 'left'} ml={3} lineHeight="130%">
-              By moving forward, you accept our{' '}
-              <NavTextLink
-                url="https://docs.fujidao.org/legals/terms-of-use"
-                fontSize="14px"
-                marginRight="5px"
-                fontWeight="700"
-                color="white"
+            <Flex>
+              <CheckBox
+                checked={checked}
+                onChange={handleCheckboxChange}
+                descriptionFontSize={isTablet ? 16 : isMobile ? 14 : 12}
+              />
+              <Label
+                textAlign={isMobile ? 'center' : 'left'}
+                ml={3}
+                fontSize={isTablet ? 16 : isMobile ? 14 : 12}
+                lineHeight="130%"
+                width={isTablet && '280px'}
               >
-                Terms of Use
-              </NavTextLink>
-              and confirm that you understand the risks
-            </Label>
+                By moving forward, you accept our
+                <br />
+                <NavTextLink
+                  url="https://docs.fujidao.org/legals/terms-of-use"
+                  fontSize="14px"
+                  marginRight="5px"
+                  fontWeight="700"
+                  color="white"
+                >
+                  Terms of Use
+                </NavTextLink>
+                and confirm that you understand the risks
+              </Label>
+            </Flex>
           </Flex>
           <Flex width={isMobile || isTablet ? 1 : 0.3} alignItems="center" justifyContent="center">
             <Button
@@ -125,8 +137,9 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
               borderRadius={4}
               block={!isTablet}
               disabled={!checked}
-              height={isMobile ? 40 : 33}
-              width="50%"
+              height={isTablet ? 48 : isMobile ? 40 : 33}
+              width={150}
+              fontSize={isTablet ? 16 : isMobile ? 14 : 12}
             >
               Accept
             </Button>

@@ -14,8 +14,8 @@ const StyledModal = Modal.styled`
   transition : all 0.3s ease-in-out;
   color: ${themeGet('colors.text64')};
 
-  ${fujiMedia.lessThan('medium')`
-    width: 100%;
+  ${fujiMedia.lessThan('small')`
+    max-width: 340px;
     margin-left: 28px;
     margin-right: 28px;
     box-shadow: none;
@@ -24,8 +24,13 @@ const StyledModal = Modal.styled`
     border-radius: 14px;
     border: 2px solid rgb(44, 44, 44);
   `}
-  ${fujiMedia.greaterThan('medium')`
-    margin: 56px;
+  ${fujiMedia.between('small', 'medium')`
+    max-width: 470px;
+    box-shadow: none;
+    background: rgb(21,21,21);
+    padding: 0px;
+    border-radius: 14px;
+    border: 2px solid rgb(44, 44, 44);
   `}
 `;
 
