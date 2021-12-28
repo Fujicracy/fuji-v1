@@ -48,7 +48,7 @@ const TransactionHistory = ({ vaultName }) => {
   };
   return (
     <BlackBoxContainer
-      p={isMobile ? '32px 28px 16px' : isTablet ? '44px 32px 40px' : '16px 32px 24px'}
+      p={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '16px 32px 24px'}
       mt="40px"
       mb="50px"
     >

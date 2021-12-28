@@ -5,6 +5,7 @@ const palette = {
   lightPink: '#fe3477',
   green: '#17cb49',
   white: '#ffffff',
+  fujiWhite: '#f5f5fd',
   black: '#101010',
   dark: '#191919',
   grey: '#292929',

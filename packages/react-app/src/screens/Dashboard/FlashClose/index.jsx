@@ -30,8 +30,6 @@ import { SectionTitle, Tooltip } from 'components';
 
 import { FlashCloseContainer, RepayButton, Description } from './styles';
 
-import './styles.css';
-
 const providerIndexes = {
   AAVE: '0', // on fantom it's Geist
   DYDX: '1',
@@ -185,18 +183,18 @@ function FlashClose({ position }) {
         </Flex>
 
         <Flex alignItems="center" justifyContent="space-between" mt="1rem">
-          <Description color="colors.text100">
-            Use a flash loan to repay your debt in a single transaction.
-          </Description>
+          <Description>Use a flash loan to repay your debt in a single transaction.</Description>
 
-          <RepayButton
-            onClick={() => {
-              setDialog(true);
-              setAmount('-1');
-            }}
-          >
-            Repay
-          </RepayButton>
+          <Flex>
+            <RepayButton
+              onClick={() => {
+                setDialog(true);
+                setAmount('-1');
+              }}
+            >
+              Repay
+            </RepayButton>
+          </Flex>
         </Flex>
       </FlashCloseContainer>
     </>
