@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import {
-  Button,
   Typography,
   Dialog,
   DialogActions,
@@ -16,7 +15,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Box } from 'rebass';
+import { Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 
@@ -29,9 +28,9 @@ import {
   SelectVault,
   BlackBoxContainer,
   SelectMarket,
+  Button,
 } from 'components';
 import { TextInput } from 'components/UI';
-
 import { PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES, ASSET_NAME } from 'consts';
 import {
   Transactor,
@@ -266,7 +265,7 @@ function InitBorrow() {
 
     if (!collateralAsset.isERC20) {
       const totalCollateral = Number(collateralAmount) + Number(formatUnits(collateralBalance));
-      if (totalCollateral > ETH_CAP_VALUE && collateralAsset.name === ASSET_NAME.ETH) {
+      if (totalCollateral > ETH_CAP_VALUE && collateralAsset.name === ASSET_NAME.ethereum.ETH) {
         setDialog({ step: 'capCollateral' });
         return;
       }
@@ -326,9 +325,11 @@ function InitBorrow() {
       content: 'Your transaction has been processed, you can check now your position.',
       actions: () => (
         <DialogActions>
-          <Button component={Link} to="/dashboard/my-positions" className="main-button">
-            Check my positions
-          </Button>
+          <NavLink to="/dashboard/my-positions" style={{ width: '100%' }}>
+            <Button block fontSize={16}>
+              Check my positions
+            </Button>
+          </NavLink>
         </DialogActions>
       ),
     },
@@ -337,10 +338,10 @@ function InitBorrow() {
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
+          <Button onClick={() => approve(false)} fontSize={16}>
             Approve {Number(collateralAmount).toFixed(0)} {collateralAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} className="main-button">
+          <Button onClick={() => approve(true)} fontSize={16}>
             Infinite Approve
           </Button>
         </DialogActions>
@@ -355,7 +356,8 @@ function InitBorrow() {
             onClick={() => {
               setDialog({ step: null });
             }}
-            className="main-button"
+            block
+            fontSize={16}
           >
             Close
           </Button>
@@ -371,7 +373,8 @@ function InitBorrow() {
             onClick={() => {
               setDialog({ step: null });
             }}
-            className="main-button"
+            block
+            fontSize={16}
           >
             Close
           </Button>
@@ -528,24 +531,29 @@ function InitBorrow() {
                   Liquidity for this transaction comes from
                   <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
+
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  className="main-button"
+                  block
+                  height={44}
+                  borderRadius={8}
+                  fontSize={16}
+                  fontWeight={600}
                   disabled={loading}
-                  startIcon={
-                    loading && (
+                >
+                  <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                    {loading && (
                       <CircularProgress
                         style={{
                           width: 25,
                           height: 25,
-                          marginRight: '10px',
+                          marginRight: '16px',
                           color: 'rgba(0, 0, 0, 0.26)',
                         }}
                       />
-                    )
-                  }
-                >
-                  {getBorrowBtnContent()}
+                    )}
+                    {getBorrowBtnContent()}
+                  </Flex>
                 </Button>
               </form>
             </BlackBoxContainer>

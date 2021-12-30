@@ -20,7 +20,7 @@ const Button = styled(Box).attrs({
   outline: none;
   box-shadow: none;
   display: inline-block;
-  font-weight: bold;
+  font-weight: ${props => (props.fontWeight ? props.fontWeight : 'bold')};
   font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
   z-index: 0;
   color: ${mapToTheme('buttons.color')};
