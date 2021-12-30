@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import { CHAINS } from 'consts';
+import { CHAINS, BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { useAuth } from 'hooks';
 
-import { notFoundIcon } from 'assets/images';
+import { Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
 
-import './styles.css';
+import { notFoundIcon } from 'assets/images';
+import { Button } from 'components';
+import { ErrorContainer, Title, ErrorImage, ErrorBrand, ErrorText } from './styles';
 
 function Error() {
   const history = useHistory();
@@ -15,6 +17,12 @@ function Error() {
 
   const { address, connectAccount, networkId } = useAuth();
   const { from } = location.state || { from: { pathname: '/dashboard' } };
+
+  // const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const isTablet = useMediaQuery({
+    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+  });
 
   useEffect(() => {
     if (errorType === 'not-connected') {
@@ -34,42 +42,49 @@ function Error() {
   }, [errorType, networkId, history]);
 
   return (
-    <div className="error-page">
-      {errorType === 'not-connected' ? (
-        <>
-          <h1 className="error-title">
-            <span className="brand-color">You are not connected</span>
-            <span className="text-color">&gt; Please, connect your wallet!</span>
-          </h1>
-          <Button
-            className="main-button"
-            onClick={() => {
-              return connectAccount();
-            }}
-          >
-            Connect wallet
-          </Button>
-        </>
-      ) : errorType === 'wrong-network' ? (
-        <>
-          <h1 className="error-title">
-            <span className="brand-color">Unsupported network</span>
-            <span className="text-color">&gt; Please, switch to an appropriate one!</span>
-          </h1>
-        </>
-      ) : (
-        <>
-          <img alt="not-found-404" src={notFoundIcon} />
-          <h1 className="error-title">
-            <span className="brand-color">Are you lost?</span>
-            <span className="text-color">&gt; Nothing was found at this URL</span>
-          </h1>
-          <Button className="main-button" href="/">
-            Go back Home
-          </Button>
-        </>
-      )}
-    </div>
+    <Flex justifyContent="center" alignItems="center" width="100%">
+      <ErrorContainer>
+        {errorType === 'not-connected' ? (
+          <>
+            <Title>
+              <ErrorBrand>You are not connected</ErrorBrand>
+              <ErrorText>&gt; Please, connect your wallet!</ErrorText>
+            </Title>
+            <Button
+              className="main-button"
+              onClick={() => {
+                return connectAccount();
+              }}
+            >
+              Connect wallet
+            </Button>
+          </>
+        ) : errorType === 'wrong-network' ? (
+          <>
+            <Title>
+              <ErrorBrand>Unsupported network</ErrorBrand>
+              <ErrorText>&gt; Please, switch to an appropriate one!</ErrorText>
+            </Title>
+          </>
+        ) : (
+          <>
+            <ErrorImage src={notFoundIcon} />
+            <Title>
+              <ErrorBrand>Are you lost?</ErrorBrand>
+              <ErrorText>&gt; Nothing was found at this URL</ErrorText>
+            </Title>
+            <Button
+              width={256}
+              height={isTablet ? 56 : 40}
+              fontSize={isTablet ? '24px' : '16px'}
+              href="/"
+            >
+              Go back Home
+            </Button>
+          </>
+        )}
+      </ErrorContainer>
+    </Flex>
   );
 }
 
