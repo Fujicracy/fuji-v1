@@ -51,7 +51,6 @@ function Error() {
               <ErrorText>&gt; Please, connect your wallet!</ErrorText>
             </Title>
             <Button
-              className="main-button"
               onClick={() => {
                 return connectAccount();
               }}
@@ -77,7 +76,9 @@ function Error() {
               width={256}
               height={isTablet ? 56 : 40}
               fontSize={isTablet ? '24px' : '16px'}
-              href="/"
+              onClick={() => {
+                window.location.href = '/';
+              }}
             >
               Go back Home
             </Button>
