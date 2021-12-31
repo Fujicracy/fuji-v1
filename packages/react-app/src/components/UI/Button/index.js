@@ -4,6 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import { maxWidth, fontSize, space, typography } from 'styled-system';
 import { mapToTheme } from 'styled-map';
+import { fujiMedia } from 'consts';
 
 const Button = styled(Box).attrs({
   as: 'button',
@@ -20,6 +21,7 @@ const Button = styled(Box).attrs({
   outline: none;
   box-shadow: none;
   display: inline-block;
+  font-size: 1rem;
   font-weight: ${props => (props.fontWeight ? props.fontWeight : 'bold')};
   font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
   z-index: 0;
@@ -57,6 +59,15 @@ const Button = styled(Box).attrs({
   ${fontSize}
   ${space}
   ${maxWidth}
+
+  ${fujiMedia.lessThan('small')`
+    height: ${props => !props.noResizeOnResponsive && '44px'};
+    border-radius: 6px;
+  `}
+  ${fujiMedia.between('small', 'medium')`
+    height: ${props => !props.noResizeOnResponsive && '56px'};
+    font-size: ${props => !props.noResizeOnResponsive && '20px'};
+  `}
 `;
 
 Button.defaultProps = {

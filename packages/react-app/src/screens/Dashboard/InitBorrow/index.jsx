@@ -326,7 +326,7 @@ function InitBorrow() {
       actions: () => (
         <DialogActions>
           <NavLink to="/dashboard/my-positions" style={{ width: '100%' }}>
-            <Button block fontSize={16}>
+            <Button block noResizeOnResponsive>
               Check my positions
             </Button>
           </NavLink>
@@ -338,10 +338,10 @@ function InitBorrow() {
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} fontSize={16}>
+          <Button onClick={() => approve(false)} noResizeOnResponsive>
             Approve {Number(collateralAmount).toFixed(0)} {collateralAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} fontSize={16}>
+          <Button onClick={() => approve(true)} noResizeOnResponsive>
             Infinite Approve
           </Button>
         </DialogActions>
@@ -357,7 +357,7 @@ function InitBorrow() {
               setDialog({ step: null });
             }}
             block
-            fontSize={16}
+            noResizeOnResponsive
           >
             Close
           </Button>
@@ -374,7 +374,7 @@ function InitBorrow() {
               setDialog({ step: null });
             }}
             block
-            fontSize={16}
+            noResizeOnResponsive
           >
             Close
           </Button>
@@ -532,15 +532,7 @@ function InitBorrow() {
                   <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
 
-                <Button
-                  onClick={handleSubmit(onSubmit)}
-                  block
-                  height={44}
-                  borderRadius={8}
-                  fontSize={16}
-                  fontWeight={600}
-                  disabled={loading}
-                >
+                <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>
                   <Flex flexDirection="row" justifyContent="center" alignItems="center">
                     {loading && (
                       <CircularProgress

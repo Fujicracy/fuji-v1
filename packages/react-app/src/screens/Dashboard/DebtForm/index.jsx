@@ -4,19 +4,33 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import { useMediaQuery } from 'react-responsive';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+// import Grid from '@material-ui/core/Grid';
+// import Typography from '@material-ui/core/Typography';
+// import InputAdornment from '@material-ui/core/InputAdornment';
+// import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+// import Dialog from '@material-ui/core/Dialog';
+// import DialogActions from '@material-ui/core/DialogActions';
+// import DialogContent from '@material-ui/core/DialogContent';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+// import CircularProgress from '@material-ui/core/CircularProgress';
+// import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+
+import {
+  Grid,
+  Typography,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+} from '@material-ui/core';
+
+import { InfoOutlined, HighlightOff } from '@material-ui/icons';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { Flex } from 'rebass';
 
 import {
   useContractReader,
@@ -27,7 +41,7 @@ import {
   useContractLoader,
 } from 'hooks';
 
-import { TextInput, Label, SectionTitle, Tooltip, IntenseSpan } from 'components';
+import { TextInput, Label, SectionTitle, Tooltip, IntenseSpan, Button } from 'components';
 
 import { Transactor, GasEstimator } from '../../../helpers';
 
@@ -246,7 +260,8 @@ function DebtForm({ position }) {
               setDialog({ step: null, withApproval: false });
               onSubmit();
             }}
-            className="main-button"
+            block
+            noResizeOnResponsive
           >
             Confirm
           </Button>
@@ -258,10 +273,10 @@ function DebtForm({ position }) {
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
+          <Button onClick={() => approve(false)} block noResizeOnResponsive>
             Approve {Number(amount).toFixed(0)} {borrowAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} className="main-button">
+          <Button onClick={() => approve(true)} block noResizeOnResponsive>
             Infinite Approve
           </Button>
         </DialogActions>
@@ -283,7 +298,8 @@ function DebtForm({ position }) {
               setAmount('');
               setValue('amount', '', { shouldValidate: false });
             }}
-            className="main-button"
+            block
+            noResizeOnResponsive
           >
             Close
           </Button>
@@ -323,7 +339,7 @@ function DebtForm({ position }) {
             setLoading(false);
           }}
         >
-          <HighlightOffIcon />
+          <HighlightOff />
         </div>
         <DialogTitle id="form-dialog-title">{dialogContents[dialog.step]?.title}</DialogTitle>
         <DialogContent>{dialogContents[dialog.step]?.content}</DialogContent>
@@ -334,7 +350,7 @@ function DebtForm({ position }) {
 
         {!isMobile && !isTablet && (
           <Tooltip>
-            <InfoOutlinedIcon />
+            <InfoOutlined />
             <span>
               <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
               <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
@@ -427,19 +443,20 @@ function DebtForm({ position }) {
         />
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleSubmit(onConfirmation)}
-          className="main-button"
-          disabled={loading}
-          startIcon={
-            loading && (
+        <Button onClick={handleSubmit(onConfirmation)} block fontWeight={600} disabled={loading}>
+          <Flex flexDirection="row" justifyContent="center" alignItems="center">
+            {loading && (
               <CircularProgress
-                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginRight: '16px',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                }}
               />
-            )
-          }
-        >
-          {getBtnContent()}
+            )}
+            {getBtnContent()}
+          </Flex>
         </Button>
       </Grid>
     </Grid>

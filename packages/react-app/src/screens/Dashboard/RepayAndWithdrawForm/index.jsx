@@ -6,7 +6,6 @@ import {
   TextField,
   DialogTitle,
   Avatar,
-  Button,
   Grid,
   Typography,
   InputAdornment,
@@ -18,7 +17,8 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-
+import { Flex } from 'rebass';
+import { Button } from 'components';
 import { VAULTS } from 'consts';
 import { ethIcons } from 'assets/images';
 import { useAuth, useContractLoader, useContractReader } from 'hooks';
@@ -108,10 +108,10 @@ function RepayAndWithdrawForm({ position }) {
       content: 'You need first to approve a spending limit.',
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} className="main-button">
+          <Button onClick={() => approve(false)} block noResizeOnResponsive>
             Approve {borrowAmount} {vault.borrowAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} className="main-button">
+          <Button onClick={() => approve(true)} block noResizeOnResponsive>
             Infinite Approve
           </Button>
         </DialogActions>
@@ -128,7 +128,8 @@ function RepayAndWithdrawForm({ position }) {
               setBorrowAmount('');
               setCollateralAmount('');
             }}
-            className="main-button"
+            block
+            noResizeOnResponsive
           >
             Close
           </Button>
@@ -261,21 +262,20 @@ function RepayAndWithdrawForm({ position }) {
         )}
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          className="main-button"
-          disabled={loading}
-          startIcon={
-            loading ? (
+        <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>
+          <Flex flexDirection="row" justifyContent="center" alignItems="center">
+            {loading && (
               <CircularProgress
-                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginRight: '16px',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                }}
               />
-            ) : (
-              ''
-            )
-          }
-        >
-          {getBtnContent()}
+            )}
+            {getBtnContent()}
+          </Flex>
         </Button>
       </Grid>
     </Grid>

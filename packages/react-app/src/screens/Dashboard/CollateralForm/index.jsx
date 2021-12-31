@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import {
-  Button,
   CircularProgress,
   Typography,
   Grid,
@@ -13,6 +12,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import { Flex } from 'rebass';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Transactor, GasEstimator } from 'helpers';
@@ -22,7 +22,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
-import { TextInput, Label, Tooltip, SectionTitle, IntenseSpan } from 'components';
+import { TextInput, Label, Tooltip, SectionTitle, IntenseSpan, Button } from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 // import { SectionTitle } from '../../../components/Blocks';
@@ -262,7 +262,8 @@ function CollateralForm({ position }) {
                 setDialog({ step: null, withApproval: false });
                 onSubmit();
               }}
-              className="main-button"
+              noResizeOnResponsive
+              block
             >
               Confirm
             </Button>
@@ -276,10 +277,10 @@ function CollateralForm({ position }) {
       actions: () => {
         return (
           <DialogActions>
-            <Button onClick={() => approve(false)} className="main-button">
+            <Button onClick={() => approve(false)} block noResizeOnResponsive>
               Approve {Number(amount).toFixed(0)} {collateralAsset.name}
             </Button>
-            <Button onClick={() => approve(true)} className="main-button">
+            <Button onClick={() => approve(true)} block noResizeOnResponsive>
               Infinite Approve
             </Button>
             q
@@ -304,7 +305,8 @@ function CollateralForm({ position }) {
                 setAmount('');
                 setValue('amount', '', { shouldValidate: false });
               }}
-              className="main-button"
+              noResizeOnResponsive
+              block
             >
               Close
             </Button>
@@ -329,7 +331,8 @@ function CollateralForm({ position }) {
               onClick={() => {
                 setDialog('');
               }}
-              className="main-button"
+              block
+              noResizeOnResponsive
             >
               Close
             </Button>
@@ -457,19 +460,20 @@ function CollateralForm({ position }) {
         />
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleSubmit(onConfirmation)}
-          className="main-button"
-          disabled={loading}
-          startIcon={
-            loading && (
+        <Button onClick={handleSubmit(onConfirmation)} block fontWeight={600} disabled={loading}>
+          <Flex flexDirection="row" justifyContent="center" alignItems="center">
+            {loading && (
               <CircularProgress
-                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginRight: '16px',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                }}
               />
-            )
-          }
-        >
-          {getBtnContent()}
+            )}
+            {getBtnContent()}
+          </Flex>
         </Button>
       </Grid>
     </Grid>

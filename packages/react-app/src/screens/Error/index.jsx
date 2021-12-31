@@ -77,7 +77,7 @@ function Error() {
               height={isTablet ? 56 : 40}
               fontSize={isTablet ? '24px' : '16px'}
               onClick={() => {
-                window.location.href = '/';
+                window.location = '/';
               }}
             >
               Go back Home

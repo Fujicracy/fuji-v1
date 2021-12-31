@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { parseUnits } from '@ethersproject/units';
 // import TextField from '@material-ui/core/TextField';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,7 +25,7 @@ import { useMediaQuery } from 'react-responsive';
 import { useAuth, useContractLoader } from 'hooks';
 
 import { Flex } from 'rebass';
-import { SectionTitle, Tooltip } from 'components';
+import { SectionTitle, Tooltip, Button } from 'components';
 
 import { FlashCloseContainer, RepayButton, Description } from './styles';
 
@@ -134,7 +133,7 @@ function FlashClose({ position }) {
         <DialogActions>
           {confirmation ? (
             <Button
-              className="main-button"
+              block
               onClick={() => {
                 setDialog(false);
                 setConfirmation(false);
@@ -145,10 +144,14 @@ function FlashClose({ position }) {
           ) : (
             <Button
               onClick={() => onFlashClose()}
-              className="main-button"
+              block
+              height={44}
+              borderRadius={8}
+              fontWeight={600}
               disabled={loading}
-              startIcon={
-                loading ? (
+            >
+              <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                {loading && (
                   <CircularProgress
                     style={{
                       width: 25,
@@ -157,12 +160,9 @@ function FlashClose({ position }) {
                       color: 'rgba(0, 0, 0, 0.26)',
                     }}
                   />
-                ) : (
-                  ''
-                )
-              }
-            >
-              {loading ? 'Repaying...' : 'Repay'}
+                )}
+                {loading ? 'Repaying...' : 'Repay'}
+              </Flex>
             </Button>
           )}
         </DialogActions>

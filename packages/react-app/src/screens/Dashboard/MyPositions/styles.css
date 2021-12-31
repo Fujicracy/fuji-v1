@@ -279,6 +279,7 @@
     align-items: center;
     height: 80px;
     margin-bottom: 24px;
+    cursor: pointer;
   }
 
   .adding-position {

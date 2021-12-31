@@ -261,39 +261,6 @@ input[type='number'] {
   display: none;
 }
 
-.main-button {
-  background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
-  color: var(--text);
-  height: 44px;
-  font-size: 16px;
-}
-
-@media screen and (max-width: 768px) {
-  .main-button {
-    height: 44px !important;
-    border-radius: 6px;
-  }
-}
-
-@media screen and (min-width: 1120px) and (max-width: 1170px) {
-  .main-button {
-    height: 56px !important;
-    font-size: 20px;
-  }
-}
-
-.main-button:hover {
-  background-color: var(--brand);
-  opacity: 0.8;
-}
-
-.main-button:disabled {
-  background-color: transparent;
-  border: 1px solid var(--text16);
-  color: var(--text16);
-  cursor: not-allowed;
-}
-
 .max-button {
   padding: 0;
   height: 2rem;
