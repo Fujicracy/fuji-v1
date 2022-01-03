@@ -260,32 +260,6 @@ input[type='number'] {
 .theme {
   display: none;
 }
-
-.max-button {
-  padding: 0;
-  height: 2rem;
-  background-color: var(--text05);
-  color: var(--text32);
-  margin-right: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.subtitle {
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-  color: var(--text);
-  font-weight: 500;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.subtitle .complementary-infos {
-  display: contents;
-  font-size: 0.75rem;
-  color: var(--text64);
-}
-
 /* ------------- */
 /*   GRID        */
 /* ------------- */

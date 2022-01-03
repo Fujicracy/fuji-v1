@@ -29,8 +29,6 @@ import RepayAndWithdrawForm from '../RepayAndWithdrawForm';
 // import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
 // import ProvidersList from '../../../components/ProvidersList';
 
-import './styles.css';
-
 function ManagePosition() {
   const { address } = useAuth();
   const contracts = useContractLoader();
@@ -149,7 +147,7 @@ function ManagePosition() {
                   </BlackBoxContainer>
                   <BlackBoxContainer hasBlackContainer padding="28px" noTopBorderRadius>
                     <form noValidate>
-                      <Grid container className="manage-content" spacing={4}>
+                      <Grid container spacing={4}>
                         <Grid item md={6} xs={12}>
                           {actionsType === 'single' ? (
                             <CollateralForm position={position} />

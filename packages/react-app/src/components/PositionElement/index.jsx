@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -10,6 +9,7 @@ import { SectionTitle } from 'components/Blocks';
 
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
+import { ManageButton } from './styles';
 
 export const PositionActions = {
   None: 0,
@@ -178,18 +178,17 @@ function PositionElement({ position, actionType }) {
       </Grid>
 
       {isShowManage && (
-        <Grid item className="position-actions" md={2}>
+        <Grid item md={2}>
           {actionType === PositionActions.Manage ? (
-            <Button
-              className="position-btn"
+            <ManageButton
               onClick={() => {
                 return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
               }}
             >
               Manage
-            </Button>
+            </ManageButton>
           ) : actionType === PositionActions.Liquidate ? (
-            <Button className="position-btn">Liquidate</Button>
+            <ManageButton>Liquidate</ManageButton>
           ) : (
             <span style={{ width: '5rem' }} />
           )}

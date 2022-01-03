@@ -30,10 +30,7 @@ export const Container = styled(Box)`
 `;
 
 export const Option = styled(Box)`
-  width: calc(50% - 4px);
-  padding: 4px;
-  left: 0.125rem;
-  height: 2.125rem;
+  width: 50%;
   font-size: 0.875rem;
   font-weight: 500;
   text-align: center;
@@ -50,7 +47,7 @@ export const Option = styled(Box)`
     border-radius: 0.25rem;
   `}
   ${fujiMedia.between('small', 'medium')`
-    height: 3.125rem;
+    height: 3.5rem;
     border-radius: 0.25rem;
     font-size: 1rem;
     font-weight: 600;
@@ -59,9 +56,7 @@ export const Option = styled(Box)`
 
 export const ThumbAnimation = styled(Paper)`
   position: absolute;
-  width: calc(50% - 4px);
-  padding: 4px;
-  left: 0.125rem;
+  width: calc(50% - 0.25rem);
   height: 2.125rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -71,7 +66,7 @@ export const ThumbAnimation = styled(Paper)`
 
   transition: 250ms ease all;
   background: var(--text32);
-  left: ${props => (props.selected === 'left' ? `0.125rem` : `calc(50% + 2px)`)};
+  left: ${props => (props.selected === 'left' ? `0.125rem` : `calc(50% + 0.125rem)`)};
 
   ${fujiMedia.lessThan('small')`
     border-radius: 0.25rem;

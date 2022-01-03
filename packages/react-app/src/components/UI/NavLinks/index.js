@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Box } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
@@ -61,6 +61,17 @@ export const NavTextLink = styled.a.attrs(props => ({
   }
 `;
 
+const animationBack = keyframes`
+  0% {
+    opacity: 0.8;
+    transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(5px);
+  }
+`;
+
 export const NavBackLink = styled(Link)`
   color: var(--text);
   cursor: pointer;
@@ -69,4 +80,9 @@ export const NavBackLink = styled(Link)`
   align-items: center;
   margin-bottom: 1.5rem;
   width: max-content;
+  &:hover {
+    > svg {
+      animation: ${animationBack} 1s ease-in-out alternate infinite;
+    }
+  }
 `;
