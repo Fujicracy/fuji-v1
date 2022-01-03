@@ -22,7 +22,16 @@ import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
-import { TextInput, Label, Tooltip, SectionTitle, IntenseSpan, Button } from 'components';
+import {
+  TextInput,
+  Label,
+  Tooltip,
+  SectionTitle,
+  IntenseSpan,
+  Button,
+  ToggleSwitch,
+  MaxButton,
+} from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 // import { SectionTitle } from '../../../components/Blocks';
@@ -368,22 +377,13 @@ function CollateralForm({ position }) {
           </Tooltip>
         )}
       </Grid>
-      <Grid item className="toggle-button">
-        <div className="button">
-          <input
-            onChange={({ target }) => {
-              return setAction(target.checked ? Action.Withdraw : Action.Supply);
-            }}
-            type="checkbox"
-            className="checkbox"
-          />
-          <div className="knobs">
-            <span className="toggle-options" data-toggle="Withdraw">
-              <span>Supply</span>
-            </span>
-          </div>
-          <div className="layer" />
-        </div>
+      <Grid item>
+        <ToggleSwitch
+          firstOption="Supply"
+          secondOption="Withdraw"
+          onSwitch={selected => setAction(selected === 'Supply' ? Action.Supply : Action.Withdraw)}
+          mb="1.5rem"
+        />
       </Grid>
       <Grid item>
         <TextInput
@@ -422,8 +422,7 @@ function CollateralForm({ position }) {
             component: (
               <InputAdornment position="end">
                 {focus && (
-                  <Button
-                    className="max-button"
+                  <MaxButton
                     onClick={() => {
                       setAmount(action === Action.Supply ? userBalance : leftCollateral);
                       setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
@@ -433,7 +432,7 @@ function CollateralForm({ position }) {
                     }}
                   >
                     max
-                  </Button>
+                  </MaxButton>
                 )}
                 <Label>{collateralAsset.name}</Label>
               </InputAdornment>

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Box } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
+import { Link } from 'react-router-dom';
 
 export const NavUnlisted = styled(Box).attrs(props => ({
   pt: 4,
@@ -58,4 +59,14 @@ export const NavTextLink = styled.a.attrs(props => ({
   &:hover {
     color: ${themeGet('colors.primary')};
   }
+`;
+
+export const NavBackLink = styled(Link)`
+  color: var(--text);
+  cursor: pointer;
+  width: auto;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  width: max-content;
 `;

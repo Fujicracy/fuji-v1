@@ -134,6 +134,7 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
               height={isTablet ? 48 : isMobile ? 40 : 33}
               width={150}
               fontSize={isTablet ? 16 : isMobile ? 14 : 12}
+              blackBackground
             >
               Accept
             </Button>

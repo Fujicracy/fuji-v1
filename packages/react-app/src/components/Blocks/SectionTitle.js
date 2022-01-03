@@ -5,7 +5,6 @@ import { space, width } from 'styled-system';
 
 const SectionTitle = styled(Box)`
   line-height: ${props => (props.lineHeight ? props.lineHeight : '120%')};
-  font-weight: 500;
   display: flex;
   align-items: center;
   color: ${props => (props.color ? props.color : themeGet('colors.text100'))};

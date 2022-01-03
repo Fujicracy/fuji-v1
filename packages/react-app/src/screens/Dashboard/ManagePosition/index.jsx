@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import find from 'lodash/find';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
@@ -17,6 +17,7 @@ import {
   PositionActions,
   BlackBoxContainer,
   SectionTitle,
+  NavBackLink,
 } from 'components';
 
 import FlashClose from '../FlashClose';
@@ -91,14 +92,12 @@ function ManagePosition() {
         margin={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
       >
         <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
-          <Link to="my-positions" className="back-to-link">
-            <Flex width={1 / 1} margin="0px 0px 16px">
-              <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
-              <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
-                Back
-              </SectionTitle>
-            </Flex>
-          </Link>
+          <NavBackLink to="my-positions">
+            <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
+            <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
+              Back
+            </SectionTitle>
+          </NavBackLink>
 
           <Grid container spacing={isMobile ? 3 : isTablet ? 4 : 6}>
             {position && (

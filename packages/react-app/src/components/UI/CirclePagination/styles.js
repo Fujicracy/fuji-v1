@@ -49,7 +49,7 @@ export const CircleAnimation = styled(Paper)`
   height: 8px;
   background: rgba(240, 1, 79, 1);
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  borderradius: 4px;
+  border-radius: 4px;
   position: absolute;
   margin-left: 4px;
   top: ${props => `${props.top}px`};

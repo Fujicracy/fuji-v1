@@ -40,11 +40,11 @@ const Button = styled(Box).attrs({
     `}
   &:disabled {
     box-shadow: none;
+    background: ${props => props.blackBackground && themeGet('colors.black')};
   }
 
   &:focus:enabled,
-  &:active:enabled {
-    outline: none;
+  &.active:enabled {
     box-shadow: ${mapToTheme('buttons.shadowActive')};
   }
 
@@ -52,7 +52,7 @@ const Button = styled(Box).attrs({
     opacity: 0.8;
   }
 
-  &:active:enabled {
+  &.active {
     background: ${mapToTheme('buttons.hover')};
   }
 

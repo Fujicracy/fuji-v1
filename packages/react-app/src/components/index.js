@@ -10,6 +10,7 @@ import SelectVault from './SelectVault';
 import SelectMarket from './SelectMarket';
 import LandingHeader from './LandingHeader';
 import TransactionHistory from './TransactionHistory';
+import ToggleSwitch from './ToggleSwitch';
 
 export * from './Blocks';
 export * from './UI';
@@ -27,4 +28,5 @@ export {
   SelectMarket,
   LandingHeader,
   TransactionHistory,
+  ToggleSwitch,
 };

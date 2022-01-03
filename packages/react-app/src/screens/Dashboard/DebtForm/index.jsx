@@ -4,18 +4,6 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import { useMediaQuery } from 'react-responsive';
 
-// import Grid from '@material-ui/core/Grid';
-// import Typography from '@material-ui/core/Typography';
-// import InputAdornment from '@material-ui/core/InputAdornment';
-// import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-// import CircularProgress from '@material-ui/core/CircularProgress';
-// import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-
 import {
   Grid,
   Typography,
@@ -41,7 +29,16 @@ import {
   useContractLoader,
 } from 'hooks';
 
-import { TextInput, Label, SectionTitle, Tooltip, IntenseSpan, Button } from 'components';
+import {
+  TextInput,
+  Label,
+  SectionTitle,
+  Tooltip,
+  IntenseSpan,
+  Button,
+  ToggleSwitch,
+  MaxButton,
+} from 'components';
 
 import { Transactor, GasEstimator } from '../../../helpers';
 
@@ -358,8 +355,9 @@ function DebtForm({ position }) {
           </Tooltip>
         )}
       </Grid>
-      <Grid item className="toggle-button">
-        <div className="button">
+      <Grid item>
+        {/* <Grid item className="toggle-button"> */}
+        {/* <div className="button">
           <input
             onChange={({ target }) => setAction(target.checked ? Action.Borrow : Action.Repay)}
             type="checkbox"
@@ -371,8 +369,16 @@ function DebtForm({ position }) {
             </span>
           </div>
           <div className="layer" />
-        </div>
+        </div> */}
+
+        <ToggleSwitch
+          firstOption="Repay"
+          secondOption="Borrow"
+          onSwitch={selected => setAction(selected === 'Repay' ? Action.Repay : Action.Borrow)}
+          mb="1.5rem"
+        />
       </Grid>
+
       <Grid item>
         <TextInput
           id="debtAmount"
@@ -402,8 +408,7 @@ function DebtForm({ position }) {
             component: (
               <InputAdornment position="end">
                 {focus && (
-                  <Button
-                    className="max-button"
+                  <MaxButton
                     onClick={() => {
                       const debt = formatUnits(debtBalance, decimals);
                       const maxRepay = Number(debt) > Number(balance) ? balance : debt;
@@ -416,7 +421,7 @@ function DebtForm({ position }) {
                     }}
                   >
                     max
-                  </Button>
+                  </MaxButton>
                 )}
                 <Label>{borrowAsset.name}</Label>
               </InputAdornment>
