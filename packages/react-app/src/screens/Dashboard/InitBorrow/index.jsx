@@ -42,7 +42,7 @@ import {
 } from 'helpers';
 import { useAuth, useBalance, useResources, useContractLoader } from 'hooks';
 
-import { Container, Helper } from './style';
+import { Container, Helper } from './styles';
 
 function InitBorrow() {
   const { address, provider, networkName } = useAuth();

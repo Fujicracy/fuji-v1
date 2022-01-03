@@ -5,7 +5,7 @@ import { flaskIcon } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { StyledModal, Label, Button, CheckBox, NavTextLink } from '../UI';
-import { ContentContainer } from './style';
+import { ContentContainer } from './styles';
 
 const DisclaimerPopup = ({ isOpen, onSubmit }) => {
   const [opacity, setOpacity] = useState(0);

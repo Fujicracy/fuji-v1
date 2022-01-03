@@ -24,7 +24,7 @@ import {
   AnimatedCircle,
   AnimatedLine,
   PositionDetails,
-} from './style';
+} from './styles';
 
 function hsl(r) {
   const hue = (r / 100) * 120;

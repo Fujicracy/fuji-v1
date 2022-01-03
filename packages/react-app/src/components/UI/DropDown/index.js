@@ -9,7 +9,7 @@ import {
   DropDownListContainer,
   DropDownList,
   ListItem,
-} from './style';
+} from './styles';
 
 const DropDown = ({ options, defaultOption, width, onOptionClicked, isOptionSelectable }) => {
   const [isOpen, setIsOpen] = useState(false);

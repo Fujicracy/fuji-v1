@@ -13,7 +13,7 @@ import {
   DropDownListContainer,
   DropDownList,
   ListItem,
-} from './style';
+} from './styles';
 
 const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-import { Container, TitleContainer, ContentContainer } from './style';
+import { Container, TitleContainer, ContentContainer } from './styles';
 
 function HowItWorks() {
   return (
