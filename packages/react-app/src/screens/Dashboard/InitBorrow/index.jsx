@@ -5,7 +5,6 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import Cookies from 'js-cookie';
 import {
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
@@ -29,6 +28,7 @@ import {
   BlackBoxContainer,
   SelectMarket,
   Button,
+  ErrorInputMessage,
 } from 'components';
 import { TextInput } from 'components/UI';
 import { PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES, ASSET_NAME } from 'consts';
@@ -504,23 +504,23 @@ function InitBorrow() {
                     }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
-                        <Typography className="error-input-msg" variant="body2">
+                        <ErrorInputMessage>
                           Please, type the amount you want to provide as collateral
-                        </Typography>
+                        </ErrorInputMessage>
                       ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
-                        <Typography className="error-input-msg" variant="body2">
+                        <ErrorInputMessage>
                           Please, provide at least{' '}
-                          <span className="brand-color">
+                          <span>
                             {neededCollateral ? neededCollateral.toFixed(3) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
-                        </Typography>
+                        </ErrorInputMessage>
                       ) : (
                         errors?.collateralAmount?.message === 'insufficient-balance' && (
-                          <Typography className="error-input-msg" variant="body2">
+                          <ErrorInputMessage>
                             Insufficient {collateralAsset.name} balance
-                          </Typography>
+                          </ErrorInputMessage>
                         )
                       )
                     }

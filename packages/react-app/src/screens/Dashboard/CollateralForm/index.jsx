@@ -3,7 +3,6 @@ import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import {
   CircularProgress,
-  Typography,
   Grid,
   InputAdornment,
   Dialog,
@@ -31,6 +30,7 @@ import {
   Button,
   ToggleSwitch,
   MaxButton,
+  ErrorInputMessage,
 } from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
@@ -365,17 +365,19 @@ function CollateralForm({ position }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
 
-      <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
-        {!isMobile && !isTablet && (
-          <Tooltip>
-            <InfoOutlinedIcon />
-            <span>
-              <IntenseSpan>Supply</IntenseSpan> more {collateralAsset.name} as collateral or
-              <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
-            </span>
-          </Tooltip>
-        )}
+      <Grid item>
+        <Flex mb={isMobile ? '1rem' : '1.5rem'}>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
+          {!isMobile && !isTablet && (
+            <Tooltip>
+              <InfoOutlinedIcon />
+              <span>
+                <IntenseSpan>Supply</IntenseSpan> more {collateralAsset.name} as collateral or
+                <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
+              </span>
+            </Tooltip>
+          )}
+        </Flex>
       </Grid>
       <Grid item>
         <ToggleSwitch
@@ -440,19 +442,17 @@ function CollateralForm({ position }) {
           }}
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
-              <Typography className="error-input-msg" variant="body2">
+              <ErrorInputMessage>
                 Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
-              </Typography>
+              </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
-              <Typography className="error-input-msg" variant="body2">
-                Insufficient {collateralAsset.name} balance
-              </Typography>
+              <ErrorInputMessage>Insufficient {collateralAsset.name} balance</ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Withdraw && (
-                <Typography className="error-input-msg" variant="body2">
+                <ErrorInputMessage>
                   You can withdraw max. {leftCollateral} {collateralAsset.name}
-                </Typography>
+                </ErrorInputMessage>
               )
             )
           }

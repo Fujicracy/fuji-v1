@@ -6,7 +6,6 @@ import { useMediaQuery } from 'react-responsive';
 
 import {
   Grid,
-  Typography,
   InputAdornment,
   Dialog,
   DialogActions,
@@ -38,6 +37,7 @@ import {
   Button,
   ToggleSwitch,
   MaxButton,
+  ErrorInputMessage,
 } from 'components';
 
 import { Transactor, GasEstimator } from '../../../helpers';
@@ -342,18 +342,20 @@ function DebtForm({ position }) {
         <DialogContent>{dialogContents[dialog.step]?.content}</DialogContent>
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
-      <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
+      <Grid item>
+        <Flex mb={isMobile ? '1rem' : '1.5rem'}>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
 
-        {!isMobile && !isTablet && (
-          <Tooltip>
-            <InfoOutlined />
-            <span>
-              <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
-              <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
-            </span>
-          </Tooltip>
-        )}
+          {!isMobile && !isTablet && (
+            <Tooltip>
+              <InfoOutlined />
+              <span>
+                <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
+                <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
+              </span>
+            </Tooltip>
+          )}
+        </Flex>
       </Grid>
       <Grid item>
         {/* <Grid item className="toggle-button"> */}
@@ -429,19 +431,17 @@ function DebtForm({ position }) {
           }}
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
-              <Typography className="error-input-msg" variant="body2">
+              <ErrorInputMessage>
                 Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
-              </Typography>
+              </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
-              <Typography className="error-input-msg" variant="body2">
-                Insufficient {borrowAsset.name} balance
-              </Typography>
+              <ErrorInputMessage>Insufficient {borrowAsset.name} balance</ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
-                <Typography className="error-input-msg" variant="body2">
+                <ErrorInputMessage>
                   You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
-                </Typography>
+                </ErrorInputMessage>
               )
             )
           }

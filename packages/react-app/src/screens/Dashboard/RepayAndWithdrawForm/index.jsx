@@ -18,7 +18,7 @@ import {
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Flex } from 'rebass';
-import { Button } from 'components';
+import { Button, ErrorInputMessage } from 'components';
 import { VAULTS } from 'consts';
 import { ethIcons } from 'assets/images';
 import { useAuth, useContractLoader, useContractReader } from 'hooks';
@@ -220,9 +220,7 @@ function RepayAndWithdrawForm({ position }) {
           />
         </div>
         {errors?.borrowAmount && (
-          <Typography variant="body2">
-            <div className="error-input-msg">Please, type the amount you like to repay!</div>
-          </Typography>
+          <ErrorInputMessage>Please, type the amount you like to repay!</ErrorInputMessage>
         )}
       </Grid>
       <Grid item>
@@ -256,9 +254,7 @@ function RepayAndWithdrawForm({ position }) {
           />
         </div>
         {errors?.amount && (
-          <Typography variant="body2">
-            <div className="error-input-msg">Please, type the amount you like to withdraw!</div>
-          </Typography>
+          <ErrorInputMessage>Please, type the amount you like to withdraw!</ErrorInputMessage>
         )}
       </Grid>
       <Grid item>

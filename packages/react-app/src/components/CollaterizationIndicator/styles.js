@@ -95,7 +95,7 @@ export const ChartContent = styled.div`
   transform: translate(-50%, -50%);
   z-index: 5;
   font-size: 1.25rem;
-  color: var(--text64);
+  color: ${themeGet('colors.text64')};
 `;
 
 export const PositionDetails = styled.div`

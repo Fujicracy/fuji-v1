@@ -18,7 +18,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import { Flex } from 'rebass';
-import { Button } from 'components';
+import { Button, ErrorInputMessage } from 'components';
 import { Transactor } from 'helpers';
 import { useAuth, useBalance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
@@ -188,10 +188,9 @@ function SupplyAndBorrowForm({ position }) {
           />
         </div>
         {errors?.collateralAmount && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, provide at least <span className="brand-color">{formattedCollateral} ETH</span>{' '}
-            as collateral!
-          </Typography>
+          <ErrorInputMessage>
+            Please, provide at least <span>{formattedCollateral} ETH</span> as collateral!
+          </ErrorInputMessage>
         )}
       </Grid>
       <Grid item>
@@ -229,9 +228,7 @@ function SupplyAndBorrowForm({ position }) {
           />
         </div>
         {errors?.borrowAmount && (
-          <Typography className="error-input-msg" variant="body2">
-            Please, type the amount you like to borrow!
-          </Typography>
+          <ErrorInputMessage>Please, type the amount you like to borrow!</ErrorInputMessage>
         )}
       </Grid>
       <Grid item>

@@ -21,6 +21,7 @@ const palette = {
   blackOpacity: 'rgba(0, 0, 0, 0.5)',
   textLabel: '#F5F5FD',
   bg16: 'rgba(16, 16, 16, 1)',
+  brand: 'rgba(240, 1, 79, 1)',
 };
 
 const colors = {

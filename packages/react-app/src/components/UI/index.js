@@ -12,6 +12,7 @@ import { Tooltip, IntenseSpan } from './Tooltip';
 
 export * from './Buttons';
 export * from './NavLinks';
+export * from './ErrorMessages';
 
 export {
   TextInput,
