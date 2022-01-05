@@ -287,12 +287,11 @@ function CollateralForm({ position }) {
         return (
           <DialogActions>
             <Button onClick={() => approve(false)} block noResizeOnResponsive>
-              Approve {Number(amount).toFixed(0)} {collateralAsset.name}
+              Approve {Number(amount).toFixed(3)} {collateralAsset.name}
             </Button>
             <Button onClick={() => approve(true)} block noResizeOnResponsive>
               Infinite Approve
             </Button>
-            q
           </DialogActions>
         );
       },
