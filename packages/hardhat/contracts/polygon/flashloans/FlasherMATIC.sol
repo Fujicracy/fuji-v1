@@ -9,32 +9,27 @@ import "../../interfaces/IFujiAdmin.sol";
 import "../../interfaces/IVault.sol";
 import "../../interfaces/IFlasher.sol";
 import "../../interfaces/IFliquidator.sol";
-import "../../interfaces/IFujiMappings.sol";
 import "../../interfaces/IWETH.sol";
 import "../../libraries/FlashLoans.sol";
 import "../../libraries/Errors.sol";
 import "../../interfaces/aave/IFlashLoanReceiver.sol";
 import "../../interfaces/aave/IAaveLendingPool.sol";
-import "../../interfaces/cream/ICTokenFlashloan.sol";
-import "../../interfaces/cream/ICFlashloanReceiver.sol";
-import "../libraries/LibUniversalERC20FTM.sol";
+import "../libraries/LibUniversalERC20MATIC.sol";
 
 /**
  * @dev Contract that handles Fuji protocol flash loan logic and
  * the specific logic of all active flash loan providers used by Fuji protocol.
  */
 
-contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanReceiver {
-  using LibUniversalERC20FTM for IERC20;
+contract FlasherMATIC is IFlasher, Claimable, IFlashLoanReceiver {
+  using LibUniversalERC20MATIC for IERC20;
 
   IFujiAdmin private _fujiAdmin;
 
-  address private constant _FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
-  address private constant _WFTM = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
+  address private constant _MATIC = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
+  address private constant _WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;
 
-  address private immutable _geistLendingPool = 0x9FAD24f572045c7869117160A571B2e50b10d068;
-  IFujiMappings private immutable _crMappings =
-    IFujiMappings(0x1eEdE44b91750933C96d2125b6757C4F89e63E20);
+  address private immutable _aaveLendingPool = 0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf;
 
   // need to be payable because of the conversion ETH <> WETH
   receive() external payable {}
@@ -74,8 +69,6 @@ contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanRecei
   {
     if (_flashnum == 0) {
       _initiateGeistFlashLoan(info);
-    } else if (_flashnum == 2) {
-      _initiateCreamFlashLoan(info);
     } else {
       revert(Errors.VL_INVALID_FLASH_NUMBER);
     }
@@ -87,12 +80,12 @@ contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanRecei
    */
   function _initiateGeistFlashLoan(FlashLoan.Info calldata info) internal {
     //Initialize Instance of Geist Lending Pool
-    IAaveLendingPool geistLp = IAaveLendingPool(_geistLendingPool);
+    IAaveLendingPool geistLp = IAaveLendingPool(_aaveLendingPool);
 
     //Passing arguments to construct Geist flashloan -limited to 1 asset type for now.
     address receiverAddress = address(this);
     address[] memory assets = new address[](1);
-    assets[0] = address(info.asset == _FTM ? _WFTM : info.asset);
+    assets[0] = address(info.asset == _MATIC ? _WMATIC : info.asset);
     uint256[] memory amounts = new uint256[](1);
     amounts[0] = info.amount;
 
@@ -119,15 +112,12 @@ contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanRecei
     address initiator,
     bytes calldata params
   ) external override returns (bool) {
-    require(
-      msg.sender == _geistLendingPool && initiator == address(this),
-      Errors.VL_NOT_AUTHORIZED
-    );
+    require(msg.sender == _aaveLendingPool && initiator == address(this), Errors.VL_NOT_AUTHORIZED);
 
     FlashLoan.Info memory info = abi.decode(params, (FlashLoan.Info));
 
     uint256 _value;
-    if (info.asset == _FTM) {
+    if (info.asset == _MATIC) {
       // Convert WETH to ETH and assign amount to be set as msg.value
       _convertWethToEth(amounts[0]);
       _value = info.amount;
@@ -140,66 +130,14 @@ contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanRecei
     _executeAction(info, amounts[0], premiums[0], _value);
 
     //Approve geistLP to spend to repay flashloan
-    _approveBeforeRepay(info.asset == _FTM, assets[0], amounts[0] + premiums[0], _geistLendingPool);
+    _approveBeforeRepay(
+      info.asset == _MATIC,
+      assets[0],
+      amounts[0] + premiums[0],
+      _aaveLendingPool
+    );
 
     return true;
-  }
-
-  // ===================== CreamFinance FlashLoan ===================================
-
-  /**
-   * @dev Initiates an CreamFinance flashloan.
-   * @param info: data to be passed between functions executing flashloan logic
-   */
-  function _initiateCreamFlashLoan(FlashLoan.Info calldata info) internal {
-    address crToken = info.asset == _FTM
-      ? 0xd528697008aC67A21818751A5e3c58C8daE54696
-      : _crMappings.addressMapping(info.asset);
-
-    // Prepara data for flashloan execution
-    bytes memory params = abi.encode(info);
-
-    // Initialize Instance of Cream crLendingContract
-    ICTokenFlashloan(crToken).flashLoan(address(this), address(this), info.amount, params);
-  }
-
-  /**
-   * @dev Executes CreamFinance Flashloan, this operation is required
-   * and called by CreamFinanceflashloan when sending loaned amount
-   */
-  function onFlashLoan(
-    address sender,
-    address underlying,
-    uint256 amount,
-    uint256 fee,
-    bytes calldata params
-  ) external override returns (bytes32) {
-    // Check Msg. Sender is crToken Lending Contract
-    // from IronBank because ETH on Cream cannot perform a flashloan
-    address crToken = underlying == _WFTM
-      ? 0xd528697008aC67A21818751A5e3c58C8daE54696
-      : _crMappings.addressMapping(underlying);
-    require(msg.sender == crToken && address(this) == sender, Errors.VL_NOT_AUTHORIZED);
-    require(IERC20(underlying).balanceOf(address(this)) >= amount, Errors.VL_FLASHLOAN_FAILED);
-    FlashLoan.Info memory info = abi.decode(params, (FlashLoan.Info));
-    uint256 _value;
-    if (info.asset == _FTM) {
-      // Convert WFTM to FTM and assign amount to be set as msg.value
-      _convertWethToEth(amount);
-      _value = amount;
-    } else {
-      // Transfer to Vault the flashloan Amount
-      // _value is 0
-      IERC20(underlying).univTransfer(payable(info.vault), amount);
-    }
-    // Do task according to CallType
-    _executeAction(info, amount, fee, _value);
-
-    if (info.asset == _FTM) _convertEthToWeth(amount + fee);
-    // Transfer flashloan + fee back to crToken Lending Contract
-    IERC20(underlying).univApprove(payable(crToken), amount + fee);
-
-    return keccak256("ERC3156FlashBorrowerInterface.onFlashLoan");
   }
 
   // ========================================================
@@ -236,25 +174,25 @@ contract FlasherFTM is IFlasher, Claimable, IFlashLoanReceiver, ICFlashloanRecei
   }
 
   function _approveBeforeRepay(
-    bool _isFTM,
+    bool _isMATIC,
     address _asset,
     uint256 _amount,
     address _spender
   ) internal {
-    if (_isFTM) {
+    if (_isMATIC) {
       _convertEthToWeth(_amount);
-      IERC20(_WFTM).univApprove(payable(_spender), _amount);
+      IERC20(_WMATIC).univApprove(payable(_spender), _amount);
     } else {
       IERC20(_asset).univApprove(payable(_spender), _amount);
     }
   }
 
   function _convertEthToWeth(uint256 _amount) internal {
-    IWETH(_WFTM).deposit{ value: _amount }();
+    IWETH(_WMATIC).deposit{ value: _amount }();
   }
 
   function _convertWethToEth(uint256 _amount) internal {
-    IWETH token = IWETH(_WFTM);
+    IWETH token = IWETH(_WMATIC);
     token.withdraw(_amount);
   }
 }

@@ -16,7 +16,7 @@ import "../interfaces/IFujiOracle.sol";
 import "../interfaces/IFujiERC1155.sol";
 import "../interfaces/IERC20Extended.sol";
 import "../interfaces/IFlasher.sol";
-import "./libraries/LibUniversalERC20FTM.sol";
+import "./libraries/LibUniversalERC20MATIC.sol";
 import "../libraries/FlashLoans.sol";
 import "../libraries/Errors.sol";
 
@@ -24,11 +24,11 @@ import "../libraries/Errors.sol";
  * @dev Contract to execute liquidations and flash close.
  */
 
-contract FliquidatorFTM is Claimable, ReentrancyGuard {
+contract FliquidatorMATIC is Claimable, ReentrancyGuard {
   using SafeERC20 for IERC20;
-  using LibUniversalERC20FTM for IERC20;
+  using LibUniversalERC20MATIC for IERC20;
 
-  address public constant FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
+  address public constant MATIC = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
   // slippage limit to 2%
   uint256 public constant SLIPPAGE_LIMIT_NUMERATOR = 2;
@@ -141,7 +141,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     // Check there is at least one user liquidatable
     require(debtTotal > 0, Errors.VL_USER_NOT_LIQUIDATABLE);
 
-    if (vAssets.borrowAsset == FTM) {
+    if (vAssets.borrowAsset == MATIC) {
       require(msg.value >= debtTotal, Errors.VL_AMOUNT_ERROR);
     } else {
       // Check Liquidator Allowance
@@ -155,7 +155,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     }
 
     // Repay BaseProtocol debt
-    uint256 _value = vAssets.borrowAsset == FTM ? debtTotal : 0;
+    uint256 _value = vAssets.borrowAsset == MATIC ? debtTotal : 0;
     IVault(_vault).paybackLiq{ value: _value }(addrs, debtTotal);
 
     // Compute liquidator's bonus: bonusL
@@ -251,7 +251,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     IVaultControl.VaultAssets memory vAssets = IVaultControl(_vault).vAssets();
 
     // Repay BaseProtocol debt to release collateral
-    uint256 _value = vAssets.borrowAsset == FTM ? _amount : 0;
+    uint256 _value = vAssets.borrowAsset == MATIC ? _amount : 0;
     IVault(_vault).paybackLiq{ value: _value }(_addrs, _amount);
 
     // Compute liquidator's bonus
@@ -383,7 +383,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     );
 
     // Repay BaseProtocol debt
-    uint256 _value = vAssets.borrowAsset == FTM ? _amount : 0;
+    uint256 _value = vAssets.borrowAsset == MATIC ? _amount : 0;
     address[] memory _addrs = new address[](1);
     _addrs[0] = _userAddr;
     IVault(_vault).paybackLiq{ value: _value }(_addrs, _amount);
@@ -447,12 +447,12 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     if (_checkSlippage) {
       uint8 _collateralAssetDecimals;
       uint8 _borrowAssetDecimals;
-      if (_collateralAsset == FTM) {
+      if (_collateralAsset == MATIC) {
         _collateralAssetDecimals = 18;
       } else {
         _collateralAssetDecimals = IERC20Extended(_collateralAsset).decimals();
       }
-      if (_borrowAsset == FTM) {
+      if (_borrowAsset == MATIC) {
         _borrowAssetDecimals = 18;
       } else {
         _borrowAssetDecimals = IERC20Extended(_borrowAsset).decimals();
@@ -480,7 +480,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
     address[] memory path;
     uint256[] memory swapperAmounts;
 
-    if (_collateralAsset == FTM) {
+    if (_collateralAsset == MATIC) {
       path = new address[](2);
       path[0] = weth;
       path[1] = _borrowAsset;
@@ -492,7 +492,7 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
         // solhint-disable-next-line
         block.timestamp
       );
-    } else if (_borrowAsset == FTM) {
+    } else if (_borrowAsset == MATIC) {
       path = new address[](2);
       path[0] = _collateralAsset;
       path[1] = weth;
@@ -545,11 +545,11 @@ contract FliquidatorFTM is Claimable, ReentrancyGuard {
   ) internal view returns (uint256) {
     address weth = swapper.WETH();
     address[] memory path;
-    if (_collateralAsset == FTM || _collateralAsset == weth) {
+    if (_collateralAsset == MATIC || _collateralAsset == weth) {
       path = new address[](2);
       path[0] = weth;
       path[1] = _borrowAsset;
-    } else if (_borrowAsset == FTM || _borrowAsset == weth) {
+    } else if (_borrowAsset == MATIC || _borrowAsset == weth) {
       path = new address[](2);
       path[0] = _collateralAsset;
       path[1] = weth;
