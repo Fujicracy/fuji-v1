@@ -50,6 +50,36 @@ const VAULTS = {
       PROVIDERS[PROVIDER_TYPE.CREAM],
     ]
   },
+  VaultWETHUSDC: {
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.USDC],
+    name: 'VaultWETHUSDC',
+    deployBlockNumber: 23503564,
+    refinanceConfig: {
+      thresholdAPR: 3,
+      hoursSinceLast: 24,
+    },
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.GEIST],
+      PROVIDERS[PROVIDER_TYPE.SCREAM],
+      PROVIDERS[PROVIDER_TYPE.CREAM],
+    ]
+  },
+  VaultWETHDAI: {
+    collateralAsset: assets[assetName.ETH],
+    borrowAsset: assets[assetName.DAI],
+    name: 'VaultWETHDAI',
+    deployBlockNumber: 23791628,
+    refinanceConfig: {
+      thresholdAPR: 3,
+      hoursSinceLast: 24,
+    },
+    providers: [
+      PROVIDERS[PROVIDER_TYPE.GEIST],
+      PROVIDERS[PROVIDER_TYPE.SCREAM],
+      PROVIDERS[PROVIDER_TYPE.CREAM],
+    ]
+  },
 };
 
 export { VAULTS };

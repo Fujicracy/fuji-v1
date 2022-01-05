@@ -185,7 +185,7 @@ button:focus {
   --blocks: rgba(25, 25, 25, 0.9);
   --blocks56: rgba(25, 25, 25, 0.56);
   --green: rgba(23, 203, 73, 1);
-  --fujiColor: #F5F5FD;
+  --fujiColor: #f5f5fd;
 }
 
 .light-theme {
@@ -258,12 +258,12 @@ input[type='number'] {
 
 @media screen and (max-width: 768px) {
   .main-button {
-    height: 40px !important;
+    height: 44px !important;
     border-radius: 6px;
   }
 }
 
-@media screen and (min-width: 450px) and (max-width: 1120px) {
+@media screen and (min-width: 1120px) and (max-width: 1170px) {
   .main-button {
     height: 56px !important;
     font-size: 20px;
@@ -549,13 +549,17 @@ input[type='number'] {
 }
 
 .MuiDialog-paper {
-  width: 25rem;
+  width: 50rem;
   height: auto;
   padding: 2rem;
   background-color: var(--bg);
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border: 0.1rem solid var(--text32);
   border-radius: 1rem;
+}
+
+.MuiDialog-paperWidthSm {
+  max-width: 550px;
 }
 
 .MuiDialog-paper .close {

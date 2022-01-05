@@ -15,13 +15,13 @@ import {
 } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, GasEstimator, getAllowance } from 'helpers';
-import { useBalance, useContractReader } from 'hooks';
+import { Transactor, GasEstimator } from 'helpers';
+import { useAuth, useBalance, useAllowance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
-import { VAULTS, BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 import { TextInput, Label } from '../../../components/UI';
@@ -32,7 +32,10 @@ const Action = {
   Withdraw: 1,
 };
 
-function CollateralForm({ position, contracts, provider, address }) {
+function CollateralForm({ position }) {
+  const { address, provider } = useAuth();
+  const contracts = useContractLoader();
+
   const { register, errors, setValue, handleSubmit, clearErrors } = useForm({ mode: 'onChange' });
   const tx = Transactor(provider);
 
@@ -42,20 +45,20 @@ function CollateralForm({ position, contracts, provider, address }) {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
-  const [allowance, setAllowance] = useState();
 
-  const vault = VAULTS[position.vaultAddress];
+  const { vaultAddress, vault } = position;
+  const { collateralAsset } = vault;
+
   const unformattedUserBalance = useBalance(
     provider,
     address,
     contracts,
-    vault.collateralAsset.name,
-    vault.collateralAsset.isERC20,
+    collateralAsset.name,
+    collateralAsset.isERC20,
   );
 
-  const { vaultAddress, collateralAsset } = position;
   const userBalance = unformattedUserBalance
-    ? Number(formatUnits(unformattedUserBalance, vault.collateralAsset.decimals)).toFixed(6)
+    ? Number(formatUnits(unformattedUserBalance, collateralAsset.decimals)).toFixed(6)
     : null;
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -78,29 +81,20 @@ function CollateralForm({ position, contracts, provider, address }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  useEffect(() => {
-    async function fetchAllowance() {
-      setAllowance(await getAllowance(contracts, collateralAsset.name, [address, vaultAddress]));
-    }
-
-    fetchAllowance();
-  }, [collateralAsset, address, contracts, vaultAddress]);
+  const allowance = useAllowance(contracts, collateralAsset, [address, vaultAddress]);
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
-      const diff = formatUnits(
-        collateralBalance.sub(neededCollateral),
-        vault.collateralAsset.decimals,
-      );
+      const diff = formatUnits(collateralBalance.sub(neededCollateral), collateralAsset.decimals);
       // use toFixed to avoid scientific notation 2.1222e-6
       setLeftCollateral(Number(diff).toFixed(6));
     }
-  }, [neededCollateral, collateralBalance, vault.collateralAsset.decimals]);
+  }, [neededCollateral, collateralBalance, collateralAsset.decimals]);
 
   const supply = async withApproval => {
     setDialog({ step: 'doing', withApproval });
 
-    const parsedAmount = parseUnits(amount, vault.collateralAsset.decimals);
+    const parsedAmount = parseUnits(amount, collateralAsset.decimals);
     const gasLimit = await GasEstimator(contracts[vault.name], 'deposit', [
       parsedAmount,
       { value: collateralAsset.isERC20 ? 0 : parsedAmount },
@@ -132,15 +126,12 @@ function CollateralForm({ position, contracts, provider, address }) {
 
     const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
     const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [
-      parseUnits(unformattedAmount, vault.collateralAsset.decimals),
+      parseUnits(unformattedAmount, collateralAsset.decimals),
     ]);
     const res = await tx(
-      contracts[vault.name].withdraw(
-        parseUnits(unformattedAmount, vault.collateralAsset.decimals),
-        {
-          gasLimit,
-        },
-      ),
+      contracts[vault.name].withdraw(parseUnits(unformattedAmount, collateralAsset.decimals), {
+        gasLimit,
+      }),
     );
 
     if (res && res.hash) {
@@ -162,7 +153,7 @@ function CollateralForm({ position, contracts, provider, address }) {
 
   const approve = async infiniteApproval => {
     let unFormattedAmount = amount;
-    if (parseUnits(amount, vault.collateralAsset.decimals).eq(collateralBalance)) {
+    if (parseUnits(amount, collateralAsset.decimals).eq(collateralBalance)) {
       unFormattedAmount = (Number(amount) * 1.02).toFixed(6);
     }
 
@@ -170,11 +161,11 @@ function CollateralForm({ position, contracts, provider, address }) {
     const e = BigNumber.from(256);
     const approveAmount = infiniteApproval
       ? base.pow(e).sub(1)
-      : parseUnits(unFormattedAmount, vault.collateralAsset.decimals);
+      : parseUnits(unFormattedAmount, collateralAsset.decimals);
 
     setDialog({ step: 'approvalPending', withApproval: true });
     const res = await tx(
-      contracts[vault.collateralAsset.name].approve(
+      contracts[collateralAsset.name].approve(
         contracts[vault.name].address,
         BigNumber.from(approveAmount),
       ),
@@ -193,7 +184,7 @@ function CollateralForm({ position, contracts, provider, address }) {
   };
 
   const onSubmit = async () => {
-    if (!vault.collateralAsset.isERC20 && vault.collateralAsset.name === ASSET_NAME.ETH) {
+    if (!collateralAsset.isERC20 && collateralAsset.name === ASSET_NAME.ETH) {
       const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
       if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
         setDialog({ step: 'capCollateral' });
@@ -203,7 +194,7 @@ function CollateralForm({ position, contracts, provider, address }) {
 
     setLoading(true);
 
-    if (vault.collateralAsset.isERC20 && action === Action.Supply) {
+    if (collateralAsset.isERC20 && action === Action.Supply) {
       if (parseUnits(amount, collateralAsset.decimals).gt(allowance)) {
         setDialog({ step: 'approval', withApproval: true });
       } else {
@@ -222,10 +213,12 @@ function CollateralForm({ position, contracts, provider, address }) {
   const handleClose = () => {
     setDialog('');
     setAmount('');
+    setValue('amount', '', { shouldValidate: false });
+    setLoading(false);
   };
 
   const getBtnContent = () => {
-    if (vault.collateralAsset.isERC20) {
+    if (collateralAsset.isERC20) {
       if (!loading) {
         return action === Action.Withdraw ? 'Withdraw' : 'Supply';
       }
@@ -248,8 +241,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       title: 'Postion Ratio Changes',
       content: (
         <DeltaPositionRatios
-          borrowAsset={vault.borrowAsset}
-          collateralAsset={vault.collateralAsset}
+          vault={vault}
           currentCollateral={collateralBalance}
           currentDebt={debtBalance}
           newDebt={debtBalance}
@@ -257,10 +249,9 @@ function CollateralForm({ position, contracts, provider, address }) {
             !collateralBalance || !amount
               ? 0
               : action === Action.Withdraw
-              ? collateralBalance.sub(parseUnits(amount, vault.collateralAsset.decimals))
-              : collateralBalance.add(parseUnits(amount, vault.collateralAsset.decimals))
+              ? collateralBalance.sub(parseUnits(amount, collateralAsset.decimals))
+              : collateralBalance.add(parseUnits(amount, collateralAsset.decimals))
           }
-          provider={provider}
         />
       ),
       actions: () => {
@@ -284,15 +275,18 @@ function CollateralForm({ position, contracts, provider, address }) {
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => {
         return (
-          <DialogActions>
-            <Button onClick={() => approve(false)} className="main-button">
-              Approve {Number(amount).toFixed(0)} {collateralAsset.name}
-            </Button>
-            <Button onClick={() => approve(true)} className="main-button">
-              Infinite Approve
-            </Button>
-            q
-          </DialogActions>
+          <>
+            <DialogActions>
+              <Button onClick={() => approve(false)} className="main-button">
+                Approve {Number(amount).toFixed(3)} {collateralAsset.name}
+              </Button>
+            </DialogActions>
+            <DialogActions>
+              <Button onClick={() => approve(true)} className="main-button">
+                Infinite Approve
+              </Button>
+            </DialogActions>
+          </>
         );
       },
     },
@@ -301,7 +295,7 @@ function CollateralForm({ position, contracts, provider, address }) {
       content: (
         <DialogContentText>
           You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount}{' '}
-          {vault.collateralAsset.name}.
+          {collateralAsset.name}.
         </DialogContentText>
       ),
       actions: () => {
@@ -368,8 +362,7 @@ function CollateralForm({ position, contracts, provider, address }) {
           <div className="tooltip-info">
             <InfoOutlinedIcon />
             <span className="tooltip tooltip-top">
-              <span className="bold">Supply</span> more {vault.collateralAsset.name} as collateral
-              or
+              <span className="bold">Supply</span> more {collateralAsset.name} as collateral or
               <span className="bold"> withdraw</span> what is not locked for your borrows.
             </span>
           </div>
@@ -418,14 +411,12 @@ function CollateralForm({ position, contracts, provider, address }) {
           subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
           subTitleInfo={
             action === Action.Supply
-              ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${
-                  vault.collateralAsset.name
-                } Ξ`
+              ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${collateralAsset.name}`
               : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ${
-                  vault.collateralAsset.name
-                } Ξ`
+                  collateralAsset.name
+                }`
           }
-          startAdornmentImage={vault.collateralAsset.icon}
+          startAdornmentImage={collateralAsset.icon}
           endAdornment={{
             type: 'component',
             component: (
@@ -444,7 +435,7 @@ function CollateralForm({ position, contracts, provider, address }) {
                     max
                   </Button>
                 )}
-                <Label>{vault.collateralAsset.name}</Label>
+                <Label>{collateralAsset.name}</Label>
               </InputAdornment>
             ),
           }}
@@ -455,13 +446,13 @@ function CollateralForm({ position, contracts, provider, address }) {
               </Typography>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
               <Typography className="error-input-msg" variant="body2">
-                Insufficient {vault.collateralAsset.name} balance
+                Insufficient {collateralAsset.name} balance
               </Typography>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Withdraw && (
                 <Typography className="error-input-msg" variant="body2">
-                  You can withdraw max. {leftCollateral} {vault.collateralAsset.name}
+                  You can withdraw max. {leftCollateral} {collateralAsset.name}
                 </Typography>
               )
             )

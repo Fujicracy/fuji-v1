@@ -3,6 +3,7 @@ export const ASSET_NAME = {
   USDC: 'USDC',
   FTM: 'FTM',
   BTC: 'BTC',
+  ETH: 'ETH',
 };
 
 export const ASSETS = {
@@ -33,5 +34,13 @@ export const ASSETS = {
     decimals: 8,
     address: '0x321162Cd933E2Be498Cd2267a90534A804051b11',
     oracle: '0x8e94C22142F4A64b99022ccDd994f4e9EC86E4B4',
+  },
+  [ASSET_NAME.ETH]: {
+    id: ASSET_NAME.ETH.toLowerCase(),
+    name: ASSET_NAME.ETH,
+    decimals: 18,
+    address: '0x74b23882a30290451a17c44f4f05243b6b58c76d',
+    oracle: '0x11DdD3d147E5b83D01cee7070027092397d63658',
+    isERC20: true,
   },
 };

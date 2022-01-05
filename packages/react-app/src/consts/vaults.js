@@ -1,34 +1,45 @@
-import { DEPLOYMENT, DEPLOYMENT_TYPES, CHAIN_NAME, CHAIN_NAMES } from 'consts/globals';
-import * as core from './vaults-core';
-import * as fuse from './vaults-fuse';
-import * as fantom from './vaults-fantom';
+import * as ethereumCore from './vaults-core';
+import * as ethereumFuse from './vaults-fuse';
+import * as fantomCore from './vaults-fantom';
 
-const BORROW_IDS =
-  DEPLOYMENT === DEPLOYMENT_TYPES.CORE
-    ? core.BORROW_IDS
-    : DEPLOYMENT === DEPLOYMENT_TYPES.FUSE
-    ? fuse.BORROW_IDS
-    : fantom.BORROW_IDS;
+const BORROW_IDS = {
+  ethereum: {
+    core: ethereumCore.BORROW_IDS,
+    fuse: ethereumFuse.BORROW_IDS,
+  },
+  fantom: {
+    core: fantomCore.BORROW_IDS,
+  },
+};
 
-const COLLATERAL_IDS =
-  DEPLOYMENT === DEPLOYMENT_TYPES.CORE
-    ? core.COLLATERAL_IDS
-    : DEPLOYMENT === DEPLOYMENT_TYPES.FUSE
-    ? fuse.COLLATERAL_IDS
-    : fantom.COLLATERAL_IDS;
+const COLLATERAL_IDS = {
+  ethereum: {
+    core: ethereumCore.COLLATERAL_IDS,
+    fuse: ethereumFuse.COLLATERAL_IDS,
+  },
+  fantom: {
+    core: fantomCore.COLLATERAL_IDS,
+  },
+};
 
-const VAULTS_ADDRESS =
-  DEPLOYMENT === DEPLOYMENT_TYPES.CORE
-    ? core.VAULTS_ADDRESS
-    : DEPLOYMENT === DEPLOYMENT_TYPES.FUSE
-    ? fuse.VAULTS_ADDRESS
-    : fantom.VAULTS_ADDRESS;
+const VAULTS_NAMES = {
+  ethereum: {
+    core: ethereumCore.VAULTS_NAMES,
+    fuse: ethereumFuse.VAULTS_NAMES,
+  },
+  fantom: {
+    core: fantomCore.VAULTS_NAMES,
+  },
+};
 
-const VAULTS =
-  CHAIN_NAME === CHAIN_NAMES.ETHEREUM
-    ? DEPLOYMENT === DEPLOYMENT_TYPES.CORE
-      ? core.VAULTS
-      : fuse.VAULTS
-    : fantom.VAULTS;
+const VAULTS = {
+  ethereum: {
+    core: ethereumCore.VAULTS,
+    fuse: ethereumFuse.VAULTS,
+  },
+  fantom: {
+    core: fantomCore.VAULTS,
+  },
+};
 
-export { VAULTS_ADDRESS, BORROW_IDS, COLLATERAL_IDS, VAULTS };
+export { VAULTS_NAMES, BORROW_IDS, COLLATERAL_IDS, VAULTS };
