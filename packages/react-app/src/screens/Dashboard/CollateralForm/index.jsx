@@ -50,7 +50,7 @@ function CollateralForm({ position }) {
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
-  const [focus, setFocus] = useState(false);
+  // const [focus, setFocus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
@@ -245,6 +245,14 @@ function CollateralForm({ position }) {
     return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}${loading ? 'ing...' : ''}`;
   };
 
+  const handleMaxBalance = () => {
+    setAmount(action === Action.Supply ? userBalance : leftCollateral);
+    setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
   const dialogContents = {
     deltaRatios: {
       title: 'Position Ratio Changes',
@@ -395,9 +403,10 @@ function CollateralForm({ position }) {
           onChange={value => {
             return setAmount(value);
           }}
-          onFocus={() => {
-            return setFocus(true);
-          }}
+          // onFocus={() => {
+          //   return setFocus(true);
+          // }}
+          onClickTitleInfo={handleMaxBalance}
           onBlur={() => {
             return clearErrors();
           }}
@@ -422,19 +431,7 @@ function CollateralForm({ position }) {
             type: 'component',
             component: (
               <InputAdornment position="end">
-                {focus && (
-                  <MaxButton
-                    onClick={() => {
-                      setAmount(action === Action.Supply ? userBalance : leftCollateral);
-                      setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      });
-                    }}
-                  >
-                    max
-                  </MaxButton>
-                )}
+                <MaxButton onClick={handleMaxBalance}>max</MaxButton>
                 <Label>{collateralAsset.name}</Label>
               </InputAdornment>
             ),
@@ -450,7 +447,7 @@ function CollateralForm({ position }) {
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Withdraw && (
                 <ErrorInputMessage>
-                  You can withdraw max. {leftCollateral} {collateralAsset.name}
+                  You can withdraw max: {leftCollateral} {collateralAsset.name}
                 </ErrorInputMessage>
               )
             )

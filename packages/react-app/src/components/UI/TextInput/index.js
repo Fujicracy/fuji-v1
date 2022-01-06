@@ -32,6 +32,7 @@ const TextField = React.forwardRef(
       errorComponent,
       autoComplete,
       value,
+      onClickTitleInfo,
     },
     ref,
   ) => {
@@ -45,7 +46,12 @@ const TextField = React.forwardRef(
       <Box mb={isMobile ? 4 : 4}>
         <SubTitleContainer>
           <label>{subTitle}</label>
-          <SubTitleInfo>{subTitleInfo}</SubTitleInfo>
+          <SubTitleInfo
+            isClickable={!!onClickTitleInfo}
+            onClick={onClickTitleInfo && onClickTitleInfo}
+          >
+            {subTitleInfo}
+          </SubTitleInfo>
         </SubTitleContainer>
         <InputContainer>
           <AdornmentAvatar
