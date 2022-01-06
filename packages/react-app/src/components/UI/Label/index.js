@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fontSize, space } from 'styled-system';
+import { fontSize, space, width } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 
 const Label = styled.p`
@@ -8,6 +8,8 @@ const Label = styled.p`
   text-align: ${props => (props.textAlign ? props.textAlign : 'center')};
   font-weight: ${props => (props.fontWeight ? props.fontWeight : '400')};
   line-height: ${props => (props.lineHeight ? props.lineHeight : '100%')};
-  ${fontSize} ${space};
+  ${fontSize};
+  ${space};
+  ${width};
 `;
 export default Label;

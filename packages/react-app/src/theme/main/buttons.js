@@ -8,7 +8,7 @@ export default {
   bg: {
     white: colors.white,
     secondary: colors.secondary,
-    disabled: colors.black,
+    disabled: colors.gradients.primary.toRight,
     default: colors.gradients.primary.toRight,
   },
   border: {

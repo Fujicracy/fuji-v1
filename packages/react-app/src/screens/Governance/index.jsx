@@ -24,7 +24,7 @@ import {
 import { fujiFlopsGiftbox } from 'assets/images';
 import { ELIGIBLE_USERS } from 'consts/eligible';
 
-import { NftButton } from './style';
+import { NftButton } from './styles';
 
 const leaves = ELIGIBLE_USERS.map(addr =>
   Buffer.from(utils.solidityKeccak256(['address'], [addr]).slice(2), 'hex'),
