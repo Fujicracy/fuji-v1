@@ -15,7 +15,7 @@ const Button = styled(Box).attrs({
   height: ${props => (props.height ? `${props.height}px` : '40px')};
   width: ${props => (props.width ? `${props.width}px` : '40px')};
 
-  border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '4px')};
+  border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '0.5rem')};
   position: relative;
   user-select: none;
   outline: none;
@@ -67,6 +67,7 @@ const Button = styled(Box).attrs({
   ${fujiMedia.between('small', 'medium')`
     height: ${props => !props.noResizeOnResponsive && '56px'};
     font-size: ${props => !props.noResizeOnResponsive && '20px'};
+    border-radius: 6px;
   `}
 `;
 

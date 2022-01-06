@@ -21,11 +21,11 @@ export const Container = styled(Box)`
   ${padding}
   ${space}
   ${fujiMedia.lessThan('small')`
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
   `}
   ${fujiMedia.between('small', 'medium')`
     height: 3.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
   `}
 `;
 

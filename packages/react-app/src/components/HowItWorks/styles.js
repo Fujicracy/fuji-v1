@@ -4,7 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 export const Container = styled.fieldset`
   border: 0.15rem solid var(--text64);
   border-radius: 0.5rem;
-  margin: -0.375rem 0rem 2.5rem;
+  margin: -0.5rem 0rem 2.5rem;
   background-color: var(--blocks56);
   backdrop-filter: blur(0.375rem);
   -webkit-backdrop-filter: blur(0.375rem);

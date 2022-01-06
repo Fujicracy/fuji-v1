@@ -21,12 +21,12 @@ export const InputContainer = styled.div`
 
   ${fujiMedia.lessThan('small')`
     height: 44px;
-    border-radius: 4px;
+    border-radius: 6px;
   `}
 
   ${fujiMedia.between('small', 'medium')`
     height: 56px;
-    border-radius: 4px;
+    border-radius: 6px;
   `}
 `;
 
