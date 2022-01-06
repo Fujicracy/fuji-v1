@@ -72,7 +72,7 @@ const Button = styled(Box).attrs({
 
 Button.defaultProps = {
   minWidth: 160,
-  fontSize: 2,
+  fontSize: 3,
   shadow: true,
 };
 

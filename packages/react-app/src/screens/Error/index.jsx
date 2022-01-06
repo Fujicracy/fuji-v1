@@ -51,6 +51,7 @@ function Error() {
               <ErrorText>&gt; Please, connect your wallet!</ErrorText>
             </Title>
             <Button
+              width={256}
               onClick={() => {
                 return connectAccount();
               }}

@@ -55,11 +55,11 @@ export const ErrorContainer = styled.div`
   justify-content: center;
   width: 100%;
   ${fujiMedia.lessThan('small')`
-    width: 320px;
+    width: 400px;
   `}
 
   ${fujiMedia.between('small', 'medium')`
-    width: 470px;
+    width: 500px;
   `}
 `;
 
@@ -109,11 +109,20 @@ export const ErrorImage = styled.img`
 `;
 
 export const ErrorBrand = styled.div`
+  color: var(--brand);
   filter: drop-shadow(0px 0px 2px var(--brand)) !important;
+
+  ${fujiMedia.between('small', 'medium')`
+    font-size: 28px;
+  `}
 `;
 
 export const ErrorText = styled.div`
   filter: drop-shadow(0px 0px 2px var(--text)) !important;
+
+  ${fujiMedia.between('small', 'medium')`
+    font-size: 28px;
+  `}
 `;
 
 export const BackButton = styled.button`
