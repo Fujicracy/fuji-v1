@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 // import { themeGet } from '@styled-system/theme-get';
-import { fujiMedia } from 'consts';
+// import { fujiMedia } from 'consts';
 
 export const ManageButton = styled(Button)`
   cursor: pointer;
@@ -24,8 +24,4 @@ export const ManageButton = styled(Button)`
     background: var(--brand);
     box-shadow: 0rem 0rem 0.25rem var(--brand);
   }
-
-  ${fujiMedia.greaterThan('small')`
-    cursor: inherit;
-  `}
 `;
