@@ -98,6 +98,7 @@ export const GridOnePosition = styled.div`
   ${fujiMedia.lessThan('small')`
     padding: 16px 0px 16px 28px;
     height: 64px;
+    cursor: pointer;
   `}
   ${fujiMedia.between('small', 'medium')`
     padding: 16px 0px 16px 28px;
