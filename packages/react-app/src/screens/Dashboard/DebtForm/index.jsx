@@ -244,7 +244,7 @@ function DebtForm({ position }) {
 
   const dialogContents = {
     deltaRatios: {
-      title: 'Postion Ratio Changes',
+      title: 'Position Ratio Changes',
       content: (
         <DeltaPositionRatios
           vault={vault}
