@@ -31,7 +31,7 @@ export const InputContainer = styled.div`
 `;
 
 export const SubTitleContainer = styled.div`
-  font-size: 16px;
+  font-size: 12px;
   margin-bottom: 20px;
   color: white;
   font-weight: 500;
@@ -45,7 +45,7 @@ export const SubTitleContainer = styled.div`
     margin-bottom: 16px;
   `}
   ${fujiMedia.between('small', 'medium')`
-    font-size: 20px;
+    font-size: 16px;
     margin-bottom: 24px;
   `}
 `;
