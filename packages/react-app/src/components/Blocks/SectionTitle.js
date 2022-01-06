@@ -16,7 +16,7 @@ const SectionTitle = styled(Box)`
   text-align: ${props => props.textAlign && props.textAlign};
   font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
 
-  span {
+  > span {
     margin-left: ${props => (props.spanMargin ? props.spanMargin : '4px')};
     color: ${props => (props.spanColor ? props.spanColor : themeGet('colors.pink'))};
   }
