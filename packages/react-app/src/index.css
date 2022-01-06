@@ -282,7 +282,7 @@ input[type='number'] {
 }
 
 .MuiDialog-paper {
-  width: 25rem;
+  width: 28rem;
   height: auto;
   padding: 2rem;
   background-color: var(--bg);
