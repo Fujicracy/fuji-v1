@@ -6,10 +6,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 export const CustomListItem = styled(ListItemText)`
   position: relative;
   color: ${themeGet('colors.text100')};
-  padding-left: 0px;
-  margin-top: 12px;
-  margin-bottom: 0px;
+
+  > span > div {
+    right: 0px;
+  }
   ${fujiMedia.lessThan('small')`
+    padding-left: 0px;
+    margin-top: 12px;
+    margin-bottom: 0px;
     p {
       color: ${themeGet('colors.text100')};
       font-size: 16px;
@@ -17,5 +21,6 @@ export const CustomListItem = styled(ListItemText)`
     }
   `}
   ${fujiMedia.between('small', 'medium')`
+    
   `}
 `;
