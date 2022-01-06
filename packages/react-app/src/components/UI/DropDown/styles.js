@@ -16,7 +16,7 @@ export const DropDownHeader = styled('div')`
   align-items: center;
   padding: 0px 8px 0px 12px;
   color: #f5f5f5;
-
+  cursor: ${props => (props.isSelectable ? 'pointer' : 'inherit')};
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   border-bottom-right-radius: ${props => (props.isOpened ? '0px' : '6px')};

@@ -22,7 +22,7 @@ const DropDown = ({ options, defaultOption, width, onOptionClicked, isOptionSele
 
   return (
     <DropDownContainer width={width}>
-      <DropDownHeader isOpened={isOpen} onClick={toggling}>
+      <DropDownHeader isOpened={isOpen} onClick={toggling} isSelectable={isOptionSelectable}>
         <Box width={defaultOption?.rate ? 4 / 7 : 6 / 7}>{defaultOption?.title}</Box>
         {defaultOption?.rate && (
           <Box
