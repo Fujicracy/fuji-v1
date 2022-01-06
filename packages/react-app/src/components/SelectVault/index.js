@@ -59,7 +59,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
               <SectionTitle
                 ml={isTablet ? 3 : 2}
                 fontWeight="500"
-                fontSize={isTablet ? '18px' : '12px'}
+                fontSize={isTablet ? '18px' : '16px'}
               >
                 {selectedVault.borrowAsset.name}
               </SectionTitle>
@@ -68,12 +68,12 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
               width={1 / 3}
               display="flex"
               flexDirection="row"
-              justifyContent={!isMobile && !isTablet ? 'flex-start' : 'flex-end'}
+              justifyContent="flex-start"
               alignItems="center"
             >
               <SectionTitle
                 fontWeight="normal"
-                fontSize={isTablet ? '18px' : '12px'}
+                fontSize={isTablet ? '18px' : '16px'}
                 color={isMobile && 'rgba(255, 255, 255, 0.5)'}
               >
                 with
@@ -96,7 +96,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
               <SectionTitle
                 ml={isTablet ? 3 : 2}
                 fontWeight="500"
-                fontSize={isTablet ? '18px' : '12px'}
+                fontSize={isTablet ? '18px' : '16px'}
               >
                 {`${selectedVault.collateralAsset.name} `}
               </SectionTitle>
@@ -138,7 +138,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                           <SectionTitle
                             ml={isTablet ? 3 : 2}
                             fontWeight="500"
-                            fontSize={isTablet ? '18px' : '12px'}
+                            fontSize={isTablet ? '18px' : '16px'}
                           >
                             {`${v.borrowAsset.name}`}
                           </SectionTitle>
@@ -147,13 +147,13 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                           width={1 / 3}
                           display="flex"
                           flexDirection="row"
-                          justifyContent={!isMobile && !isTablet ? 'flex-start' : 'flex-end'}
+                          justifyContent="flex-start"
                           alignItems="center"
                           ml={1}
                         >
                           <SectionTitle
                             fontWeight="normal"
-                            fontSize={isTablet ? '18px' : '12px'}
+                            fontSize={isTablet ? '18px' : '16px'}
                             color={isMobile && 'rgba(255, 255, 255, 0.5)'}
                           >
                             with
@@ -174,7 +174,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                         <SectionTitle
                           ml={isTablet ? 3 : 2}
                           fontWeight="500"
-                          fontSize={isTablet ? '18px' : '12px'}
+                          fontSize={isTablet ? '18px' : '16px'}
                         >
                           {`${v.collateralAsset.name} `}
                         </SectionTitle>

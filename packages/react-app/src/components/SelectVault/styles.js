@@ -79,7 +79,7 @@ export const DropDownList = styled('ul')`
 
 export const ListItem = styled('li')`
   list-style: none;
-  height: 40px;
+  height: 44px;
   font-size: 16px;
   display: flex;
   align-items: center;
