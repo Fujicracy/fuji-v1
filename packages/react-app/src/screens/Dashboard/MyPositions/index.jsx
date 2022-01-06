@@ -112,18 +112,18 @@ function MyPositions() {
                 <Grid item>
                   <BlackBoxContainer
                     hasBlackContainer={false}
-                    ml="28px"
+                    ml="20px"
                     mb={3}
                     mr={!isMobile && !isTablet && '28px'}
                   >
                     <Grid container>
-                      <Grid item xs={4} md={3}>
+                      <Grid item xs={5} md={3}>
                         {' '}
                       </Grid>
-                      <Grid item xs={8} md={7}>
+                      <Grid item xs={7} md={7}>
                         <Flex width={1 / 1}>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="30%"
@@ -131,7 +131,7 @@ function MyPositions() {
                             <>Collateral</>
                           </SectionTitle>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="30%"
@@ -139,7 +139,7 @@ function MyPositions() {
                             <>Debt</>
                           </SectionTitle>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="40%"

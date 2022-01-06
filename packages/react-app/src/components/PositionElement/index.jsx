@@ -66,7 +66,7 @@ function PositionElement({ position, actionType }) {
   const isShowManage = !isMobile && !isTablet && actionType === PositionActions.Manage;
   return (
     <Grid container alignItems="center">
-      <Grid item xs={4} md={isShowManage ? 3 : 4}>
+      <Grid item xs={5} md={isShowManage ? 3 : 4}>
         <Flex alignItems="center" justifyContent="flex-start">
           <Flex>
             <Image
@@ -86,7 +86,7 @@ function PositionElement({ position, actionType }) {
         </span> */}
           <SectionTitle
             fontWeight="500"
-            fontSize={isMobile ? '12px' : isTablet ? '18px' : '16px'}
+            fontSize={isMobile ? '12px' : isTablet ? '16px' : '16px'}
             ml={2}
           >
             {collateralAsset.name}/{borrowAsset.name}
@@ -94,7 +94,7 @@ function PositionElement({ position, actionType }) {
         </Flex>
       </Grid>
 
-      <Grid item xs={8} md={isShowManage ? 7 : 8}>
+      <Grid item xs={7} md={isShowManage ? 7 : 8}>
         <Flex flexDirection="row" width={1 / 1}>
           <Flex
             flexDirection="column"
@@ -114,7 +114,7 @@ function PositionElement({ position, actionType }) {
               />
               <SectionTitle
                 fontWeight="500"
-                fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                fontSize={isMobile ? '10px' : isTablet ? '16px' : '16px'}
                 mt={isMobile || isTablet ? 2 : 0}
                 ml={!isMobile && !isTablet ? 2 : 0}
               >
@@ -149,7 +149,7 @@ function PositionElement({ position, actionType }) {
               />
               <SectionTitle
                 fontWeight="500"
-                fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                fontSize={isMobile ? '10px' : isTablet ? '16px' : '16px'}
                 mt={isMobile || isTablet ? 2 : 0}
                 ml={!isMobile && !isTablet ? 2 : 0}
               >

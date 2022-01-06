@@ -68,7 +68,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
               width={1 / 3}
               display="flex"
               flexDirection="row"
-              justifyContent="flex-start"
+              justifyContent={isMobile ? 'flex-end' : 'flex-start'}
               alignItems="center"
             >
               <SectionTitle
@@ -147,7 +147,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                           width={1 / 3}
                           display="flex"
                           flexDirection="row"
-                          justifyContent="flex-start"
+                          justifyContent={isMobile ? 'flex-end' : 'flex-start'}
                           alignItems="center"
                           ml={1}
                         >
