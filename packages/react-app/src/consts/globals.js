@@ -11,9 +11,9 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: { inString: '768px', inNumber: 768 },
-  [BREAKPOINT_NAMES.TABLET]: { inString: '1440px', inNumber: 1440 },
-  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1920px', inNumber: 1920 },
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '767px', inNumber: 767 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '1439px', inNumber: 1439 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1919px', inNumber: 1919 },
 };
 
 export const fujiMedia = generateMedia({
