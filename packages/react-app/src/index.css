@@ -282,17 +282,13 @@ input[type='number'] {
 }
 
 .MuiDialog-paper {
-  width: 50rem;
+  width: 28rem;
   height: auto;
   padding: 2rem;
   background-color: var(--bg);
   box-shadow: 0rem 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
   border: 0.1rem solid var(--text32);
   border-radius: 1rem;
-}
-
-.MuiDialog-paperWidthSm {
-  max-width: 550px;
 }
 
 .MuiDialog-paper .close {
@@ -320,6 +316,10 @@ input[type='number'] {
   color: var(--text);
 }
 
+/* ------------------------------ */
+/*   Customize bnc-notify styles  */
+/* ------------------------------ */
+
 .bn-onboard-custom .bn-onboard-dark-mode {
   font-family: Poppins;
   background: rgba(13, 13, 13, 0.9) !important;
@@ -328,10 +328,6 @@ input[type='number'] {
 aside.svelte-rntogh {
   background: rgba(0, 0, 0, 0.8) !important;
 }
-
-/* ------------------------------ */
-/*   Customize bnc-notify styles  */
-/* ------------------------------ */
 
 .bn-notify-custom .bn-notify-notification {
   color: #f5f5fd;
