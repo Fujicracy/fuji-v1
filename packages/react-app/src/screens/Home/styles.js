@@ -4,13 +4,26 @@ import { Grid } from '@material-ui/core';
 import { Flex } from 'rebass';
 import { fujiMedia } from 'consts';
 
-export const HomeContainer = styled(animated.div)`
+export const HomeAnimatedContainer = styled(animated.div)`
   display: flex;
   flex-direction: column;
   color: white;
   font-family: Poppins;
   text-align: center;
   align-items: center;
+`;
+
+export const HomeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-family: Poppins;
+  text-align: center;
+  align-items: center;
+  width: calc(100% - 120px);
+  ${fujiMedia.lessThan('medium')`
+    width: 100%;
+  `}
 `;
 
 export const HomeCta = styled(Grid)`
@@ -31,7 +44,6 @@ export const VerticalLine = styled.div`
 `;
 
 export const PageContainter = styled(Flex).attrs(() => ({
-  // bg: themeGet('colors.dark56')(props),
   bg: 'transparent',
 }))`
   display: flex;

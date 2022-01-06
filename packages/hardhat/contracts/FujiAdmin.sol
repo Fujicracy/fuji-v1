@@ -11,7 +11,6 @@ import "./libraries/Errors.sol";
  */
 
 contract FujiAdmin is IFujiAdmin, OwnableUpgradeable {
-
   address private _flasher;
   address private _fliquidator;
   address payable private _ftreasury;
@@ -23,8 +22,8 @@ contract FujiAdmin is IFujiAdmin, OwnableUpgradeable {
   address private _swapper;
 
   /**
-  * @dev Initializes the contract setting the deployer as the initial owner.
-  */
+   * @dev Initializes the contract setting the deployer as the initial owner.
+   */
   function initialize() external initializer {
     __Ownable_init();
   }
@@ -97,6 +96,7 @@ contract FujiAdmin is IFujiAdmin, OwnableUpgradeable {
    * @param _permission: permission boolean
    */
   function allowVault(address _vaultAddr, bool _permission) external onlyOwner {
+    require(_vaultAddr != address(0), Errors.VL_ZERO_ADDR);
     validVault[_vaultAddr] = _permission;
     emit VaultPermitChanged(_vaultAddr, _permission);
   }

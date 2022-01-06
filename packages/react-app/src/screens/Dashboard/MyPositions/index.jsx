@@ -13,8 +13,7 @@ import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 
 import { PositionElement, PositionActions, ProvidersList, SelectMarket } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES } from 'consts';
-
-import './styles.css';
+import { GridContainer, GridNewPosition, PositionsBoard, GridOnePosition } from './styles';
 
 function MyPositions() {
   const history = useHistory();
@@ -92,44 +91,39 @@ function MyPositions() {
 
   return (
     <Flex flex flexDirection="row" justifyContent="center">
-      <Grid container className="positions-container" spacing={isMobile ? 1 : 6}>
+      <GridContainer container spacing={6}>
         {(isMobile || isTablet) && networkName !== CHAIN_NAMES.FANTOM && (
           <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer
               hasBlackContainer
               padding={isMobile ? '32px 28px' : '44px 36px 40px'}
             >
-              <Grid container spacing={12}>
-                <Grid item xs={12} sm={12} md={12}>
-                  <SelectMarket />
-                </Grid>
-              </Grid>
+              <SelectMarket />
             </BlackBoxContainer>
           </Grid>
         )}
         <Grid item md={8} sm={12} xs={12}>
-          <Grid container direction="column" justifyContent="center" className="positions">
+          <Grid container direction="column" justifyContent="center">
             <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
-              {' '}
               My positions
             </SectionTitle>
-            <div className="position-board">
+            <PositionsBoard>
               {hasPosition() ? (
                 <Grid item>
                   <BlackBoxContainer
                     hasBlackContainer={false}
-                    ml="28px"
+                    ml="20px"
                     mb={3}
                     mr={!isMobile && !isTablet && '28px'}
                   >
                     <Grid container>
-                      <Grid item xs={4} md={3}>
+                      <Grid item xs={5} md={3}>
                         {' '}
                       </Grid>
-                      <Grid item xs={8} md={7}>
+                      <Grid item xs={7} md={7}>
                         <Flex width={1 / 1}>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="30%"
@@ -137,7 +131,7 @@ function MyPositions() {
                             <>Collateral</>
                           </SectionTitle>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="30%"
@@ -145,10 +139,11 @@ function MyPositions() {
                             <>Debt</>
                           </SectionTitle>
                           <SectionTitle
-                            fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
+                            fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
                             justifyContent="center"
                             alignItems="center"
                             width="40%"
+                            textAlign="center"
                           >
                             <>Health Factor</>
                           </SectionTitle>
@@ -177,10 +172,9 @@ function MyPositions() {
                 ),
                 position =>
                   hasPosition(position) && (
-                    <Grid
+                    <GridOnePosition
                       key={`${position.vault.borrowAsset.name}-${position.vault.collateralAsset.name}`}
                       item
-                      className="one-position"
                       onClick={() => {
                         return (
                           (isMobile || isTablet) &&
@@ -189,18 +183,14 @@ function MyPositions() {
                       }}
                     >
                       <PositionElement actionType={PositionActions.Manage} position={position} />
-                    </Grid>
+                    </GridOnePosition>
                   ),
               )}
-              <Grid
-                item
-                onClick={() => history.push(`/dashboard/init-borrow`)}
-                className="adding-position"
-              >
+              <GridNewPosition item onClick={() => history.push(`/dashboard/init-borrow`)}>
                 <AddIcon />
                 Borrow
-              </Grid>
-            </div>
+              </GridNewPosition>
+            </PositionsBoard>
           </Grid>
         </Grid>
         {!isMobile && !isTablet && (
@@ -224,7 +214,7 @@ function MyPositions() {
             </BlackBoxContainer>
           </Grid>
         )}
-      </Grid>
+      </GridContainer>
     </Flex>
   );
 }

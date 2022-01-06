@@ -19,15 +19,13 @@ export const HeaderContainer = styled(Box)`
 
   ${size}
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     height:64px;
-    background-color:  rgba(255, 255, 255, 0.05);
     padding: 16px 28px;
   `}
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     padding: 16px 40px;
     height: 88px;
-    background-color:  rgba(255, 255, 255, 0.05);
   `}
 `;
 

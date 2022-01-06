@@ -34,11 +34,11 @@ export const Helper = styled(Box)`
   font-size: 10px;
   padding: 8px;
 
-  ${fujiMedia.lessThan('medium')`
+  ${fujiMedia.lessThan('small')`
     margin: -8px -12px 16px -12px !important;
   `}
 
-  ${fujiMedia.between('medium', 'large')`
+  ${fujiMedia.between('small', 'medium')`
     font-size: 12px;
     margin-top: -4px;
   `}

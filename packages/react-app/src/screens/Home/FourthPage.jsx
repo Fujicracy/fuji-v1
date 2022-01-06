@@ -1,7 +1,4 @@
 import React from 'react';
-import { useSpring, config } from 'react-spring';
-// import { Button } from 'components/UI';
-// import { Grid } from '@material-ui/core';
 import { HomepageTitle, SectionTitle, Button } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -12,15 +9,6 @@ import { fujiAlice2, fujiAliceMobile } from 'assets/images';
 import { HomeContainer, PageContainter } from './styles';
 
 function FourthPage() {
-  const props = useSpring({
-    from: {
-      factor: 1,
-      opacity: 0,
-    },
-    to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses },
-  });
-
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -33,26 +21,27 @@ function FourthPage() {
 
   return (
     <PageContainter>
-      <HomeContainer style={props}>
+      <HomeContainer>
         <Flex
           flexDirection={isMobile || isTablet ? 'column' : 'row'}
           width="100%"
           height="100%"
-          alignItems={isMobile || isTablet ? 'center' : 'left'}
+          alignItems="center"
+          justifyContent="center"
         >
           <Image
             src={isMobile || isTablet ? fujiAliceMobile : fujiAlice2}
             minWidth="auto"
-            width={isMobile ? '328px' : isTablet ? '512px' : '100%'}
+            width={isMobile ? '328px' : isTablet ? '512px' : 'auto'}
           />
 
           <Flex
             flexDirection="column"
-            width="100%"
             justifyContent="center"
             alignItems={isTablet ? 'center' : 'left'}
-            padding={isMobile || isTablet ? '40px 30px 16px' : '0px'}
+            padding={isMobile || isTablet ? '40px 0px 16px' : '0px'}
             marginLeft={!isMobile && !isTablet && '-360px'}
+            mt={isTablet ? '40px' : '0px'}
           >
             <HomepageTitle firstWord="All-in-One" secondWord="Smart" thirdWord="Borrow" />
 
@@ -63,50 +52,51 @@ function FourthPage() {
               lineHeight={isMobile ? '160%' : '190%'}
               fontFamily="Nexa Regular"
             >
-              <br />
-              &bull; Aggregated Borrow APR <br />
-              &bull; Automatic Loan Refinancing
-              <br />
-              &bull; Non-Custodial Loan Routing <br />
-              &bull; Rebates On Gas Costs
+              <p>
+                <br />
+                &bull; Aggregated Borrow APR <br />
+                &bull; Automatic Loan Refinancing
+                <br />
+                &bull; Non-Custodial Loan Routing <br />
+                &bull; Rebates On Gas Costs
+              </p>
             </SectionTitle>
+            {(isMobile || isTablet) && (
+              <Flex
+                flexDirection={isMobile ? 'column' : 'row'}
+                width="100%"
+                justifyContent="center"
+                padding={!isMobile && '0px 30px'}
+              >
+                <Button
+                  block={isMobile}
+                  onClick={handleLearnClick}
+                  outline
+                  width={224}
+                  fontSize="18px"
+                  height={48}
+                  mt={4}
+                >
+                  Learn +
+                </Button>
+
+                <Button
+                  block={isMobile}
+                  color="white"
+                  fontSize="18px"
+                  width={224}
+                  height={48}
+                  ml={isTablet && '32px'}
+                  mt={4}
+                  onClick={() => {
+                    window.location = `${APP_URL}/#/dashboard`;
+                  }}
+                >
+                  Go to App
+                </Button>
+              </Flex>
+            )}
           </Flex>
-
-          {(isMobile || isTablet) && (
-            <Flex
-              flexDirection={isMobile ? 'column' : 'row'}
-              width="100%"
-              justifyContent="center"
-              padding="0px 30px"
-            >
-              <Button
-                block={isMobile}
-                onClick={handleLearnClick}
-                outline
-                width={224}
-                fontSize="18px"
-                height={48}
-                mt={3}
-              >
-                Learn +
-              </Button>
-
-              <Button
-                block={isMobile}
-                color="white"
-                fontSize="18px"
-                width={224}
-                height={48}
-                mt={3}
-                ml={isTablet && '32px'}
-                onClick={() => {
-                  window.location = `${APP_URL}/#/dashboard`;
-                }}
-              >
-                Go to App
-              </Button>
-            </Flex>
-          )}
         </Flex>
       </HomeContainer>
     </PageContainter>

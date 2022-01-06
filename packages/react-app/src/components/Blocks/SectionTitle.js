@@ -5,7 +5,6 @@ import { space, width } from 'styled-system';
 
 const SectionTitle = styled(Box)`
   line-height: ${props => (props.lineHeight ? props.lineHeight : '120%')};
-  font-weight: 500;
   display: flex;
   align-items: center;
   color: ${props => (props.color ? props.color : themeGet('colors.text100'))};
@@ -16,7 +15,8 @@ const SectionTitle = styled(Box)`
   font-weight: ${props => (props.fontWeight ? props.fontWeight : 600)};
   text-align: ${props => props.textAlign && props.textAlign};
   font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
-  span {
+
+  > span {
     margin-left: ${props => (props.spanMargin ? props.spanMargin : '4px')};
     color: ${props => (props.spanColor ? props.spanColor : themeGet('colors.pink'))};
   }

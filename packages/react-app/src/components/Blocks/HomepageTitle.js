@@ -30,7 +30,7 @@ function HomepageTitle({ firstWord, secondWord, thirdWord, fourthWord }) {
         spanColor="rgb(254, 52, 119)"
         spanMargin="0px"
       >
-        <span>{secondWord}</span>&nbsp; {thirdWord}
+        <span>{secondWord}</span>&nbsp;{thirdWord}
       </SectionTitle>
       {!!fourthWord && (
         <SectionTitle

@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import find from 'lodash/find';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
 import { Grid } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+// import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
+import {
+  TransactionHistory,
+  CollaterizationIndicator,
+  ProvidersList,
+  PositionElement,
+  PositionActions,
+  BlackBoxContainer,
+  SectionTitle,
+  NavBackLink,
+} from 'components';
 
 import FlashClose from '../FlashClose';
 import DebtForm from '../DebtForm';
 import CollateralForm from '../CollateralForm';
 import SupplyAndBorrowForm from '../SupplyAndBorrowForm';
 import RepayAndWithdrawForm from '../RepayAndWithdrawForm';
-import PositionElement, { PositionActions } from '../../../components/PositionElement';
-import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
-import ProvidersList from '../../../components/ProvidersList';
-
-import './styles.css';
+// import PositionElement, { PositionActions } from '../../../components/PositionElement';
+// import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
+// import ProvidersList from '../../../components/ProvidersList';
 
 function ManagePosition() {
   const { address } = useAuth();
@@ -82,14 +90,12 @@ function ManagePosition() {
         margin={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
       >
         <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
-          <Link to="my-positions" className="back-to-link">
-            <Flex width={1 / 1} margin="0px 0px 16px">
-              <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
-              <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
-                Back
-              </SectionTitle>
-            </Flex>
-          </Link>
+          <NavBackLink to="my-positions">
+            <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
+            <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
+              Back
+            </SectionTitle>
+          </NavBackLink>
 
           <Grid container spacing={isMobile ? 3 : isTablet ? 4 : 6}>
             {position && (
@@ -141,7 +147,7 @@ function ManagePosition() {
                   </BlackBoxContainer>
                   <BlackBoxContainer hasBlackContainer padding="28px" noTopBorderRadius>
                     <form noValidate>
-                      <Grid container className="manage-content" spacing={4}>
+                      <Grid container spacing={4}>
                         <Grid item md={6} xs={12}>
                           {actionsType === 'single' ? (
                             <CollateralForm position={position} />
@@ -181,6 +187,7 @@ function ManagePosition() {
               </>
             )}
           </Grid>
+          <TransactionHistory vaultName={vault?.name} />
         </BlackBoxContainer>
       </Flex>
     </Flex>

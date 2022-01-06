@@ -4,6 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import { maxWidth, fontSize, space, typography } from 'styled-system';
 import { mapToTheme } from 'styled-map';
+import { fujiMedia } from 'consts';
 
 const Button = styled(Box).attrs({
   as: 'button',
@@ -14,13 +15,14 @@ const Button = styled(Box).attrs({
   height: ${props => (props.height ? `${props.height}px` : '40px')};
   width: ${props => (props.width ? `${props.width}px` : '40px')};
 
-  border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '4px')};
+  border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '0.5rem')};
   position: relative;
   user-select: none;
   outline: none;
   box-shadow: none;
   display: inline-block;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: ${props => (props.fontWeight ? props.fontWeight : 'bold')};
   font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
   z-index: 0;
   color: ${mapToTheme('buttons.color')};
@@ -38,11 +40,11 @@ const Button = styled(Box).attrs({
     `}
   &:disabled {
     box-shadow: none;
+    background: ${props => props.blackBackground && themeGet('colors.black')};
   }
 
   &:focus:enabled,
-  &:active:enabled {
-    outline: none;
+  &.active:enabled {
     box-shadow: ${mapToTheme('buttons.shadowActive')};
   }
 
@@ -50,18 +52,28 @@ const Button = styled(Box).attrs({
     opacity: 0.8;
   }
 
-  &:active:enabled {
+  &.active {
     background: ${mapToTheme('buttons.hover')};
   }
 
   ${fontSize}
   ${space}
   ${maxWidth}
+
+  ${fujiMedia.lessThan('small')`
+    height: ${props => !props.noResizeOnResponsive && '44px'};
+    border-radius: 6px;
+  `}
+  ${fujiMedia.between('small', 'medium')`
+    height: ${props => !props.noResizeOnResponsive && '56px'};
+    font-size: ${props => !props.noResizeOnResponsive && '20px'};
+    border-radius: 6px;
+  `}
 `;
 
 Button.defaultProps = {
   minWidth: 160,
-  fontSize: 2,
+  fontSize: 3,
   shadow: true,
 };
 

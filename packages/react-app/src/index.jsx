@@ -16,10 +16,9 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 450,
-      md: 1120,
-      lg: 1170,
-      xl: 1140,
+      sm: 768,
+      md: 1440,
+      lg: 1920,
     },
   },
   typography: {
@@ -66,6 +65,31 @@ const theme = createTheme({
     MuiOutlinedInput: {
       notchedOutline: {
         border: 'none',
+      },
+    },
+    MuiInput: {
+      input: {
+        '&:before': {
+          borderColor: 'white',
+        },
+        '&:hover': {
+          borderColor: 'white',
+        },
+      },
+    },
+    MuiInputBase: {
+      root: {
+        color: 'white',
+      },
+      input: {
+        borderBottom: '1px solid white',
+        fontSize: 12,
+      },
+    },
+    MuiPickersBasePicker: {
+      pickerView: {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        color: 'white',
       },
     },
   },

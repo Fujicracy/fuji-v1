@@ -15,7 +15,7 @@ import {
   scrollDownAnimation,
 } from 'assets/images';
 
-import { HomeContainer } from './styles';
+import { HomeAnimatedContainer } from './styles';
 
 function FirstPage({ onClickAnimation }) {
   const props = useSpring({
@@ -35,7 +35,7 @@ function FirstPage({ onClickAnimation }) {
 
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
-      <HomeContainer style={props}>
+      <HomeAnimatedContainer style={props}>
         <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1} />
         {(isMobile || isTablet) && (
           <SectionTitle
@@ -55,7 +55,7 @@ function FirstPage({ onClickAnimation }) {
           m="24px 0px 36px"
           fontFamily="Nexa Regular"
         >
-          The Auto-Refinancing Borrow Protocol
+          The Auto-Refinancing{isMobile && <br />} Borrow Protocol
         </SectionTitle>
         {(isMobile || isTablet) && (
           <Flex width="100%" padding={isMobile ? '24px 36px 44px' : '24px 92px 44px'}>
@@ -80,7 +80,7 @@ function FirstPage({ onClickAnimation }) {
           height={80}
           onClick={onClickAnimation}
         />
-      </HomeContainer>
+      </HomeAnimatedContainer>
     </Flex>
   );
 }
