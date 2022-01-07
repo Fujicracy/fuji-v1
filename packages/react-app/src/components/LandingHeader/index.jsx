@@ -35,10 +35,8 @@ function LandingHeader({ isShowLogo }) {
             block
             outline
             color="white"
-            fontSize="16px"
             borderRadius="64"
             background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
-            fontFamily="Nexa Regular"
           >
             Go to App
           </Button>
