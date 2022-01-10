@@ -4,19 +4,20 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import { useMediaQuery } from 'react-responsive';
 
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import {
+  Grid,
+  InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+} from '@material-ui/core';
+
+import { InfoOutlined, HighlightOff } from '@material-ui/icons';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { Flex } from 'rebass';
 
 import {
   useContractReader,
@@ -27,11 +28,21 @@ import {
   useContractLoader,
 } from 'hooks';
 
+import {
+  TextInput,
+  Label,
+  SectionTitle,
+  Tooltip,
+  IntenseSpan,
+  Button,
+  ToggleSwitch,
+  MaxButton,
+  ErrorInputMessage,
+} from 'components';
+
 import { Transactor, GasEstimator } from '../../../helpers';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
-import { TextInput, Label } from '../../../components/UI';
-import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Repay: 0,
@@ -233,7 +244,7 @@ function DebtForm({ position }) {
 
   const dialogContents = {
     deltaRatios: {
-      title: 'Postion Ratio Changes',
+      title: 'Position Ratio Changes',
       content: (
         <DeltaPositionRatios
           vault={vault}
@@ -256,7 +267,8 @@ function DebtForm({ position }) {
               setDialog({ step: null, withApproval: false });
               onSubmit();
             }}
-            className="main-button"
+            block
+            noResizeOnResponsive
           >
             Confirm
           </Button>
@@ -267,18 +279,14 @@ function DebtForm({ position }) {
       title: 'Approving... 1 of 2',
       content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
       actions: () => (
-        <>
-          <DialogActions>
-            <Button onClick={() => approve(false)} className="main-button">
-              Approve {Number(amount).toFixed(3)} {borrowAsset.name}
-            </Button>
-          </DialogActions>
-          <DialogActions>
-            <Button onClick={() => approve(true)} className="main-button">
-              Infinite Approve
-            </Button>
-          </DialogActions>
-        </>
+        <DialogActions>
+          <Button onClick={() => approve(false)} block noResizeOnResponsive>
+            Approve {Number(amount).toFixed(3)} {borrowAsset.name}
+          </Button>
+          <Button onClick={() => approve(true)} block noResizeOnResponsive>
+            Infinite Approve
+          </Button>
+        </DialogActions>
       ),
     },
     success: {
@@ -297,7 +305,8 @@ function DebtForm({ position }) {
               setAmount('');
               setValue('amount', '', { shouldValidate: false });
             }}
-            className="main-button"
+            block
+            noResizeOnResponsive
           >
             Close
           </Button>
@@ -337,27 +346,30 @@ function DebtForm({ position }) {
             setLoading(false);
           }}
         >
-          <HighlightOffIcon />
+          <HighlightOff />
         </div>
         <DialogTitle id="form-dialog-title">{dialogContents[dialog.step]?.title}</DialogTitle>
         <DialogContent>{dialogContents[dialog.step]?.content}</DialogContent>
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
-      <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
+      <Grid item>
+        <Flex mb={isMobile ? '1rem' : '1.5rem'}>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
 
-        {!isMobile && !isTablet && (
-          <div className="tooltip-info">
-            <InfoOutlinedIcon />
-            <span className="tooltip tooltip-top">
-              <span className="bold">Repay</span> {borrowAsset.name} from your wallet balance or
-              <span className="bold"> borrow</span> more from it against your free collateral.
-            </span>
-          </div>
-        )}
+          {!isMobile && !isTablet && (
+            <Tooltip>
+              <InfoOutlined />
+              <span>
+                <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
+                <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
+              </span>
+            </Tooltip>
+          )}
+        </Flex>
       </Grid>
-      <Grid item className="toggle-button">
-        <div className="button">
+      <Grid item>
+        {/* <Grid item className="toggle-button"> */}
+        {/* <div className="button">
           <input
             onChange={({ target }) => {
               setValue('amount', '', { shouldValidate: false });
@@ -372,8 +384,16 @@ function DebtForm({ position }) {
             </span>
           </div>
           <div className="layer" />
-        </div>
+        </div> */}
+
+        <ToggleSwitch
+          firstOption="Repay"
+          secondOption="Borrow"
+          onSwitch={selected => setAction(selected === 'Repay' ? Action.Repay : Action.Borrow)}
+          mb="1.5rem"
+        />
       </Grid>
+
       <Grid item>
         <TextInput
           id="debtAmount"
@@ -403,8 +423,7 @@ function DebtForm({ position }) {
             component: (
               <InputAdornment position="end">
                 {focus && (
-                  <Button
-                    className="max-button"
+                  <MaxButton
                     onClick={() => {
                       const value = action === Action.Repay ? maxToRepay : leftToBorrow;
                       setAmount(value);
@@ -415,7 +434,7 @@ function DebtForm({ position }) {
                     }}
                   >
                     max
-                  </Button>
+                  </MaxButton>
                 )}
                 <Label>{borrowAsset.name}</Label>
               </InputAdornment>
@@ -423,38 +442,39 @@ function DebtForm({ position }) {
           }}
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
-              <Typography className="error-input-msg" variant="body2">
+              <ErrorInputMessage>
                 Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
-              </Typography>
+              </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
-              <Typography className="error-input-msg" variant="body2">
+              <ErrorInputMessage>
                 You can repay max {maxToRepay} {borrowAsset.name}.
-              </Typography>
+              </ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
-                <Typography className="error-input-msg" variant="body2">
-                  You can borrow max {leftToBorrow} {borrowAsset.name}. Provide more collateral!
-                </Typography>
+                <ErrorInputMessage>
+                  You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
+                </ErrorInputMessage>
               )
             )
           }
         />
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleSubmit(onConfirmation)}
-          className="main-button"
-          disabled={loading}
-          startIcon={
-            loading && (
+        <Button onClick={handleSubmit(onConfirmation)} block fontWeight={600} disabled={loading}>
+          <Flex flexDirection="row" justifyContent="center" alignItems="center">
+            {loading && (
               <CircularProgress
-                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginRight: '16px',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                }}
               />
-            )
-          }
-        >
-          {getBtnContent()}
+            )}
+            {getBtnContent()}
+          </Flex>
         </Button>
       </Grid>
     </Grid>

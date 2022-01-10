@@ -1,25 +1,44 @@
-import React from 'react';
-import { useSpring, config } from 'react-spring';
-import { Button } from 'components/UI';
-import { Grid } from '@material-ui/core';
-import { SectionTitle } from 'components';
-import { Flex, Image } from 'rebass';
+import React, { useState, useEffect } from 'react';
+
+import ReactPageScroller from 'react-page-scroller';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 
-import { fujiLanding, fujiLandingMobile, fujiLandingTablet } from '../../assets/images';
+import { LandingHeader, CirclePagination } from 'components';
 
-import { HomeContainer, HomeCta } from './styles';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-function Home() {
-  const props = useSpring({
-    from: {
-      factor: 1,
-      opacity: 0,
-    },
-    to: { factor: 150, opacity: 1 },
-    config: { duration: 800, ...config.molasses },
-  });
+import FirstComponent from './FirstPage';
+import SecondComponent from './SecondPage';
+import ThirdComponent from './ThirdPage';
+import FourthComponent from './FourthPage';
+import FifthComponent from './FifthPage';
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+}
+
+const HomePage = () => {
+  const [currentPage, setCurrentPage] = useState(null);
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  const [isShowLogo, setIsShowLogo] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handlePageChange = number => {
+    setCurrentPage(number);
+    setIsShowLogo(number !== 0);
+  };
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
@@ -27,45 +46,35 @@ function Home() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const handleLearnClick = () => {
-    window.open('https://docs.fujidao.org/', '_blank');
-  };
-
   return (
-    <Flex flexDireciton="column" justifyContent="center" alignItems="center" height="100vh">
-      <HomeContainer style={props}>
-        {isMobile && (
-          <SectionTitle fontWeight="600" fontSize="20px" m={3} mb={3}>
-            The first DeFi Borrowing Aggregator
-          </SectionTitle>
-        )}
-        <Image
-          src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding}
-          mt={2}
-          p={!isMobile && !isTablet && '48px 40px 0px'}
-        />
-        <HomeCta container spacing={3}>
-          <Grid item xs={12} sm={6} md={6}>
-            <Button onClick={handleLearnClick} block outline fontSize="18px">
-              Learn
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Button
-              block
-              color="white"
-              fontSize="18px"
-              onClick={() => {
-                window.location = `${APP_URL}/#/dashboard`;
-              }}
-            >
-              App
-            </Button>
-          </Grid>
-        </HomeCta>
-      </HomeContainer>
-    </Flex>
-  );
-}
+    <>
+      {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
 
-export default Home;
+      {currentPage !== null && currentPage !== 0 && !isMobile && !isTablet && (
+        <CirclePagination
+          count={isMobile || isTablet ? 4 : 5}
+          index={currentPage}
+          onDotClick={handlePageChange}
+        />
+      )}
+
+      <ReactPageScroller
+        onBeforePageScroll={handlePageChange}
+        customPageNumber={currentPage}
+        containerWidth={windowDimensions.width}
+        containerHeight={
+          isMobile || isTablet ? windowDimensions.height : windowDimensions.height - 100
+        }
+        renderAllPagesOnFirstRender
+      >
+        <FirstComponent onClickAnimation={() => setCurrentPage(currentPage + 1)} />
+        <SecondComponent />
+        <ThirdComponent />
+        <FourthComponent />
+        {!isMobile && !isTablet && <FifthComponent />}
+      </ReactPageScroller>
+    </>
+  );
+};
+
+export default HomePage;

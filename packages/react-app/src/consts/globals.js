@@ -11,16 +11,15 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: { inString: '450px', inNumber: 450 },
-  [BREAKPOINT_NAMES.TABLET]: { inString: '768px', inNumber: 1120 },
-  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1280px', inNumber: 1170 },
-  [BREAKPOINT_NAMES.LARGE]: { inString: '1920px', inNumber: 1440 },
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '767px', inNumber: 767 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '1439px', inNumber: 1439 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1919px', inNumber: 1919 },
 };
 
 export const fujiMedia = generateMedia({
-  small: '450px',
-  medium: '1120px',
-  large: '1170px',
+  small: '768px',
+  medium: '1440px',
+  large: '1920px',
 });
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
@@ -115,9 +114,26 @@ const DEPLOYMENT = process.env.REACT_APP_DEPLOYMENT || DEPLOYMENT_TYPES.CORE;
 const MERKLE_DIST_ADDR = '0x51407A073fb7C703185f47c3FBB1B915678221b8';
 const FUJIFLOPS_NFT_ADDR = '0x376C0AA9150095cB36AdcD472bE390D31C6BeF8F';
 
+const TRANSACTION_ACTIONS = {
+  ALL: 'All',
+  DEPOSIT: 'Deposit',
+  BORROW: 'Borrow',
+  PAYBACK: 'Payback',
+  WITHDRAW: 'Withdraw',
+  LIQUIDATION: 'Liquidation',
+};
+const TRANSACTION_TYPES = Object.keys(TRANSACTION_ACTIONS).map(key => TRANSACTION_ACTIONS[key]);
+
+const EXPLORER_INFOS = {
+  [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
+  [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
+  [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
+};
+
 export {
   CHAIN,
   CHAIN_ID,
+  CHAIN_IDS,
   CHAIN_NAME,
   CHAIN_NAMES,
   CHAINS,
@@ -130,4 +146,7 @@ export {
   ETH_CAP_VALUE,
   MERKLE_DIST_ADDR,
   FUJIFLOPS_NFT_ADDR,
+  TRANSACTION_ACTIONS,
+  TRANSACTION_TYPES,
+  EXPLORER_INFOS,
 };
