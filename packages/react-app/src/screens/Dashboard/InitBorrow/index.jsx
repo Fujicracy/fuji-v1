@@ -177,7 +177,7 @@ function InitBorrow() {
   const position = {
     vault: vault ?? defaultVault,
     debtBalance: isPositionBalanceLoaded
-      ? debtBalance.add(parseUnits(borrowAmount, borrowAsset.decimals))
+      ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
       : 0,
     // !debtBalance || !borrowAmount
     // ? 0
