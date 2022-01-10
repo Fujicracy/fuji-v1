@@ -5,6 +5,7 @@ const palette = {
   lightPink: '#fe3477',
   green: '#17cb49',
   white: '#ffffff',
+  fujiWhite: '#f5f5fd',
   black: '#101010',
   dark: '#191919',
   grey: '#292929',
@@ -16,7 +17,11 @@ const palette = {
   black64: 'rgba(16, 16, 16, 0.64)',
   dark64: 'rgba(25, 25, 25, 0.64)',
   dark56: 'rgba(25, 25, 25, 0.56)',
+  dark09: 'rgba(25, 25, 25, 0.9)',
   blackOpacity: 'rgba(0, 0, 0, 0.5)',
+  textLabel: '#F5F5FD',
+  bg16: 'rgba(16, 16, 16, 1)',
+  brand: 'rgba(240, 1, 79, 1)',
 };
 
 const colors = {
