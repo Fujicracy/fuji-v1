@@ -36,7 +36,7 @@ const HomePage = () => {
 
   return !windowDimensions.width || !windowDimensions.height ? (
     <Loader />
-  ) : windowDimensions.height < MINIMUM_HEIGHT ? (
+  ) : windowDimensions.height < (isMobile ? MINIMUM_HEIGHT.MOBILE : MINIMUM_HEIGHT.DESKTOP) ? (
     <Flex justifyContent="center" alignItems="center" width="100%">
       <ErrorContainer>
         <Title>
