@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import ReactPageScroller from 'react-page-scroller';
 import { useMediaQuery } from 'react-responsive';
 
-import { LandingHeader, CirclePagination } from 'components';
+import { LandingHeader, CirclePagination, Loader } from 'components';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, MINIMUM_HEIGHT } from 'consts';
+
+import { useWindowDimension } from 'hooks';
+import { Flex } from 'rebass';
 
 import FirstComponent from './FirstPage';
 import SecondComponent from './SecondPage';
@@ -13,27 +16,12 @@ import ThirdComponent from './ThirdPage';
 import FourthComponent from './FourthPage';
 import FifthComponent from './FifthPage';
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height,
-  };
-}
+import { Title, ErrorBrand, ErrorText, ErrorContainer } from '../Error/styles';
 
 const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(null);
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+  const windowDimensions = useWindowDimension();
   const [isShowLogo, setIsShowLogo] = useState(false);
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handlePageChange = number => {
     setCurrentPage(number);
@@ -46,7 +34,18 @@ const HomePage = () => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  return (
+  return !windowDimensions.width || !windowDimensions.height ? (
+    <Loader />
+  ) : windowDimensions.height < MINIMUM_HEIGHT ? (
+    <Flex justifyContent="center" alignItems="center" width="100%">
+      <ErrorContainer>
+        <Title>
+          <ErrorBrand>The height of window is too small</ErrorBrand>
+          <ErrorText>&gt; Please, increase the height!</ErrorText>
+        </Title>
+      </ErrorContainer>
+    </Flex>
+  ) : (
     <>
       {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
 

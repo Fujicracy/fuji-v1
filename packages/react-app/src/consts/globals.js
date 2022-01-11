@@ -130,6 +130,8 @@ const EXPLORER_INFOS = {
   [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
 };
 
+const MINIMUM_HEIGHT = 1000;
+
 export {
   CHAIN,
   CHAIN_ID,
@@ -149,4 +151,5 @@ export {
   TRANSACTION_ACTIONS,
   TRANSACTION_TYPES,
   EXPLORER_INFOS,
+  MINIMUM_HEIGHT,
 };
