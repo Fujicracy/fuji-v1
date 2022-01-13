@@ -24,10 +24,7 @@ function ThirdPage({ titleFontSize, descriptionFontSize }) {
           {isMobile || isTablet ? (
             <>
               <Grid item xs={12} md={6}>
-                <Image
-                  src={isMobile ? fujiLandingMobile : fujiLanding2}
-                  height={isMobile || isTablet ? '35vh' : '100%'}
-                />
+                <Image src={isMobile ? fujiLandingMobile : fujiLanding2} height="35vh" />
               </Grid>
               <Grid item xs={12} md={6}>
                 <Flex
@@ -125,7 +122,7 @@ function ThirdPage({ titleFontSize, descriptionFontSize }) {
                 justifyContent="flex-start"
                 alignItems="center"
               >
-                <Image src={fujiLanding2} />
+                <Image src={fujiLanding2} height="60vh" />
               </Grid>
             </>
           )}

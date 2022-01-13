@@ -30,7 +30,7 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
             justifyContent={isMobile || isTablet ? 'center' : 'flex-end'}
             alignItems="center"
           >
-            <Image src={fujiAlice1} height={isMobile || isTablet ? '35vh' : '100%'} />
+            <Image src={fujiAlice1} height={isMobile || isTablet ? '35vh' : '60vh'} />
           </Grid>
           <Grid item xs={12} md={6}>
             <Flex

@@ -32,7 +32,7 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
           <Image
             src={isMobile || isTablet ? fujiAliceMobile : fujiAlice2}
             minWidth="auto"
-            height={isMobile || isTablet ? '35vh' : '100%'}
+            height={isMobile || isTablet ? '35vh' : '60vh'}
           />
 
           <Flex

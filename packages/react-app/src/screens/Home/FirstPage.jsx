@@ -53,7 +53,7 @@ function FirstPage({ onClickAnimation }) {
       <HomeAnimatedContainer style={props}>
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1}
-          height={isMobile || isTablet ? '40vh' : '100%'}
+          height={isMobile || isTablet ? '40vh' : '50vh'}
         />
         {(isMobile || isTablet) && (
           <SectionTitle
