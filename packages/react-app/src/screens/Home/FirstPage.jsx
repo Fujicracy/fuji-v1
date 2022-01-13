@@ -7,7 +7,7 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
-import { useWindowDimension } from 'hooks';
+import { useWindowSize } from 'hooks';
 
 import { calcResponsiveSize } from 'helpers';
 
@@ -36,7 +36,7 @@ function FirstPage({ onClickAnimation }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const windowDimensions = useWindowDimension();
+  const windowDimensions = useWindowSize();
 
   const designDimension = {
     width: isMobile ? 375 : 768,

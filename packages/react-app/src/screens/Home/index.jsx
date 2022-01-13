@@ -8,7 +8,7 @@ import { LandingHeader, CirclePagination, Loader } from 'components';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, DESKTOP_MINIMUM_HEIGHT } from 'consts';
 
-import { useWindowDimension } from 'hooks';
+import { useWindowSize } from 'hooks';
 import { Flex } from 'rebass';
 import { calcResponsiveSize } from 'helpers';
 
@@ -22,7 +22,7 @@ import { Title, ErrorBrand, ErrorText, ErrorContainer } from '../Error/styles';
 
 const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(null);
-  const windowDimensions = useWindowDimension();
+  const windowDimensions = useWindowSize();
   const [isShowLogo, setIsShowLogo] = useState(false);
 
   const handlePageChange = number => {
