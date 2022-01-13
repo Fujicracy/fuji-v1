@@ -193,7 +193,7 @@ function CollateralForm({ position }) {
   };
 
   const onSubmit = async () => {
-    if (!collateralAsset.isERC20 && collateralAsset.name === ASSET_NAME.ETH) {
+    if (!collateralAsset.isERC20 && collateralAsset.name === ASSET_NAME.ethereum.ETH) {
       const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
       if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
         setDialog({ step: 'capCollateral' });
