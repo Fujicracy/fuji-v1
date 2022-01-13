@@ -482,7 +482,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? fixDecimal(neededCollateral, 3) : '...'}{' '}
+                            {neededCollateral ? fixDecimal(neededCollateral, 6) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
