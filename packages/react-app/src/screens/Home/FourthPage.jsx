@@ -8,7 +8,7 @@ import { fujiAlice2, fujiAliceMobile } from 'assets/images';
 
 import { HomeContainer, PageContainter } from './styles';
 
-function FourthPage() {
+function FourthPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -32,22 +32,26 @@ function FourthPage() {
           <Image
             src={isMobile || isTablet ? fujiAliceMobile : fujiAlice2}
             minWidth="auto"
-            width={isMobile ? '328px' : isTablet ? '512px' : 'auto'}
+            height={isMobile || isTablet ? '35vh' : '100%'}
           />
 
           <Flex
             flexDirection="column"
             justifyContent="center"
             alignItems={isTablet ? 'center' : 'left'}
-            padding={isMobile || isTablet ? '40px 0px 16px' : '0px'}
+            padding={isMobile || isTablet ? '5vh 0px 2vh' : '0px'}
             marginLeft={!isMobile && !isTablet && '-360px'}
-            mt={isTablet ? '40px' : '0px'}
           >
-            <HomepageTitle firstWord="All-in-One" secondWord="Smart" thirdWord="Borrow" />
+            <HomepageTitle
+              firstWord="All-in-One"
+              secondWord="Smart"
+              thirdWord="Borrow"
+              fontSize={titleFontSize}
+            />
 
             <SectionTitle
               fontWeight="normal"
-              fontSize={isMobile ? '20px' : '24px'}
+              fontSize={descriptionFontSize}
               textAlign="left"
               lineHeight={isMobile ? '160%' : '190%'}
               fontFamily="Nexa Regular"
@@ -64,18 +68,19 @@ function FourthPage() {
             {(isMobile || isTablet) && (
               <Flex
                 flexDirection={isMobile ? 'column' : 'row'}
-                width="100%"
+                // width="100%"
                 justifyContent="center"
-                padding={!isMobile && '0px 30px'}
+                padding={!isMobile && '0px 4vh'}
               >
                 <Button
                   block={isMobile}
                   onClick={handleLearnClick}
                   outline
-                  width={224}
-                  fontSize="18px"
-                  height={48}
-                  mt={4}
+                  width="24vh"
+                  fontSize="2vh"
+                  height="6vh"
+                  mt="3vh"
+                  noResizeOnResponsive
                 >
                   Learn +
                 </Button>
@@ -83,14 +88,15 @@ function FourthPage() {
                 <Button
                   block={isMobile}
                   color="white"
-                  fontSize="18px"
-                  width={224}
-                  height={48}
+                  fontSize="2vh"
+                  width="24vh"
+                  height="6vh"
                   ml={isTablet && '32px'}
-                  mt={4}
+                  mt="3vh"
                   onClick={() => {
                     window.location = `${APP_URL}/#/dashboard`;
                   }}
+                  noResizeOnResponsive
                 >
                   Go to App
                 </Button>

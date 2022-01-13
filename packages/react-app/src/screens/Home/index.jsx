@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import ReactPageScroller from 'react-page-scroller';
@@ -5,10 +6,11 @@ import { useMediaQuery } from 'react-responsive';
 
 import { LandingHeader, CirclePagination, Loader } from 'components';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, MINIMUM_HEIGHT } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, DESKTOP_MINIMUM_HEIGHT } from 'consts';
 
 import { useWindowDimension } from 'hooks';
 import { Flex } from 'rebass';
+import { calcResponsiveSize } from 'helpers';
 
 import FirstComponent from './FirstPage';
 import SecondComponent from './SecondPage';
@@ -34,9 +36,24 @@ const HomePage = () => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  return !windowDimensions.width || !windowDimensions.height ? (
-    <Loader />
-  ) : windowDimensions.height < (isMobile ? MINIMUM_HEIGHT.MOBILE : MINIMUM_HEIGHT.DESKTOP) ? (
+  if (!windowDimensions.width || !windowDimensions.height) return <Loader />;
+
+  const designDimension = {
+    width: isMobile ? 375 : 768,
+    height: isMobile ? 812 : 1024,
+  };
+
+  const ratio = {
+    xAxios: Math.min(windowDimensions.width / designDimension.width, 1),
+    yAxios: Math.min(windowDimensions.height / designDimension.height, 1),
+  };
+
+  const titleFontSize = isMobile || isTablet ? calcResponsiveSize(ratio, isMobile ? 44 : 48) : 48;
+
+  const descriptionFontSize =
+    isMobile || isTablet ? calcResponsiveSize(ratio, isMobile ? 20 : 23) : 23;
+
+  return windowDimensions.height < DESKTOP_MINIMUM_HEIGHT && !isMobile && !isTablet ? (
     <Flex justifyContent="center" alignItems="center" width="100%">
       <ErrorContainer>
         <Title>
@@ -66,10 +83,13 @@ const HomePage = () => {
         }
         renderAllPagesOnFirstRender
       >
-        <FirstComponent onClickAnimation={() => setCurrentPage(currentPage + 1)} />
-        <SecondComponent />
-        <ThirdComponent />
-        <FourthComponent />
+        <FirstComponent
+          onClickAnimation={() => setCurrentPage(currentPage + 1)}
+          titleFontSize={titleFontSize}
+        />
+        <SecondComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
+        <ThirdComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
+        <FourthComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
         {!isMobile && !isTablet && <FifthComponent />}
       </ReactPageScroller>
     </>
