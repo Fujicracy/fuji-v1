@@ -32,14 +32,16 @@ import {
 } from 'components';
 import { TextInput } from 'components/UI';
 import { PROVIDERS, BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES, ASSET_NAME } from 'consts';
+import { Transactor, GasEstimator, fixDecimal } from 'helpers';
 import {
-  Transactor,
-  GasEstimator,
-  CallContractFunction,
-  getUserBalance,
-  getExchangePrice,
-} from 'helpers';
-import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
+  useAuth,
+  useBalance,
+  useAllowance,
+  useResources,
+  useContractLoader,
+  useContractReader,
+  useExchangePrice,
+} from 'hooks';
 
 import { Container, Helper } from './styles';
 
@@ -67,21 +69,8 @@ function InitBorrow() {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const [borrowAssetPrice, setBorrowAssetPrice] = useState(0);
-  const [collateralAssetPrice, setCollateralAssetPrice] = useState(0);
-
   const [dialog, setDialog] = useState('');
   const [loading, setLoading] = useState(false);
-  const [neededCollateral, setNeededCollateral] = useState(null);
-
-  const [activeProvider, setActiveProvider] = useState('');
-
-  const [collateralBalance, setCollateralBalance] = useState();
-  const [debtBalance, setDebtBalance] = useState();
-
-  const [balance, setBalance] = useState(null);
-
-  const [isPositionBalanceLoaded, setIsPositionBalanceLoaded] = useState(false);
 
   const allowance = useAllowance(contracts, collateralAsset, [
     address,
@@ -114,75 +103,54 @@ function InitBorrow() {
     collateralAsset.isERC20,
   );
 
-  useEffect(() => {
-    async function fetchBalance() {
-      const unFormattedBalance = await getUserBalance(
-        provider,
-        address,
-        contracts,
-        collateralAsset.name,
-        collateralAsset.isERC20,
-      );
-      const formattedBalance = unFormattedBalance
-        ? Number(formatUnits(unFormattedBalance, collateralAsset.decimals)).toFixed(6)
-        : null;
+  const balance = pollUnformatedUserBalance
+    ? fixDecimal(formatUnits(pollUnformatedUserBalance, collateralAsset.decimals), 6)
+    : null;
 
-      setBalance(formattedBalance);
-    }
+  const activeProvider = useContractReader(contracts, vault.name, 'activeProvider');
+  const borrowAssetPrice = useExchangePrice(borrowAsset);
+  const collateralAssetPrice = useExchangePrice(collateralAsset);
 
-    fetchBalance();
-  }, [collateralAsset, address, provider, contracts, pollUnformatedUserBalance]);
+  const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    vault.borrowId,
+  ]);
+  const collateralBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
+    address,
+    vault.collateralId,
+  ]);
 
-  useEffect(() => {
-    async function fetchDatas() {
-      const parsedBorrowAmount =
-        borrowAmount !== '' ? parseUnits(borrowAmount, borrowAsset.decimals) : 0x0;
+  const unFormattedNeededCollateral = useContractReader(
+    contracts,
+    vault.name,
+    'getNeededCollateralFor',
+    [
+      debtBalance ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals)) : '0',
+      'true',
+    ],
+  );
 
-      const unFormattedNeededCollateral = await CallContractFunction(
-        contracts,
-        vault.name,
-        'getNeededCollateralFor',
-        [borrowAmount ? parsedBorrowAmount : '', 'true'],
-      );
-      const collateral = unFormattedNeededCollateral
-        ? Number(formatUnits(unFormattedNeededCollateral, collateralAsset.decimals))
-        : 0;
-      setNeededCollateral(collateral);
+  const neededCollateral =
+    collateralBalance && unFormattedNeededCollateral
+      ? Number(
+          formatUnits(unFormattedNeededCollateral.sub(collateralBalance), collateralAsset.decimals),
+        )
+      : 0;
 
-      setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
-
-      setCollateralBalance(
-        await CallContractFunction(contracts, 'FujiERC1155', 'balanceOf', [
-          address,
-          vault.collateralId,
-        ]),
-      );
-
-      setDebtBalance(
-        await CallContractFunction(contracts, 'FujiERC1155', 'balanceOf', [
-          address,
-          vault.borrowId,
-        ]),
-      );
-
-      setCollateralAssetPrice(await getExchangePrice(provider, collateralAsset));
-      setBorrowAssetPrice(await getExchangePrice(provider, borrowAsset));
-
-      setIsPositionBalanceLoaded(true);
-    }
-
-    if (contracts && vault) fetchDatas();
-  }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider, loading]);
+  console.log({
+    neededCollateral,
+    test: fixDecimal('0.5', 6),
+  });
 
   const position = {
     vault: vault ?? defaultVault,
-    debtBalance: isPositionBalanceLoaded
+    debtBalance: debtBalance
       ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
       : 0,
     // !debtBalance || !borrowAmount
     // ? 0
     // : debtBalance.add(parseUnits(borrowAmount, borrowAsset.decimals)),
-    collateralBalance: isPositionBalanceLoaded
+    collateralBalance: collateralBalance
       ? collateralBalance.add(parseUnits(collateralAmount || '0', collateralAsset.decimals))
       : 0,
     // !collateralBalance || !collateralAmount
@@ -227,7 +195,7 @@ function InitBorrow() {
   const approve = async infiniteApproval => {
     let unFormattedAmount = collateralAmount;
     if (parseUnits(collateralAmount, collateralAsset.decimals).eq(collateralBalance)) {
-      unFormattedAmount = (Number(collateralAmount) * 1.02).toFixed(6);
+      unFormattedAmount = fixDecimal(Number(collateralAmount) * 1.02, 6);
     }
 
     const base = BigNumber.from(2);
@@ -285,8 +253,6 @@ function InitBorrow() {
   };
 
   const handleChangeVault = v => {
-    setNeededCollateral(0);
-
     setBorrowAsset(v.borrowAsset);
     setCollateralAsset(v.collateralAsset);
     setVault(v);
@@ -338,7 +304,7 @@ function InitBorrow() {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} noResizeOnResponsive>
-            Approve {Number(collateralAmount).toFixed(3)} {collateralAsset.name}
+            Approve {fixDecimal(collateralAmount, 6)} {collateralAsset.name}
           </Button>
           <Button onClick={() => approve(true)} noResizeOnResponsive>
             Infinite Approve
@@ -466,7 +432,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
-                      text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                      text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Amount to borrow"
@@ -482,7 +448,13 @@ function InitBorrow() {
                     name="collateralAmount"
                     type="number"
                     step="any"
-                    placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
+                    placeholder={`${
+                      neededCollateral
+                        ? neededCollateral > 0
+                          ? `min ${fixDecimal(neededCollateral, 6)}`
+                          : 'No need'
+                        : '...'
+                    }`}
                     onChange={value => setCollateralAmount(value)}
                     ref={register({
                       required: { value: true, message: 'required-amount' },
@@ -494,12 +466,12 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={collateralAsset.icon}
                     endAdornment={{
-                      text: (collateralAmount * collateralAssetPrice).toFixed(2),
+                      text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
-                      balance ? Number(balance).toFixed(3) : '...'
+                      balance ? fixDecimal(balance, 3) : '...'
                     }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
@@ -510,7 +482,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? neededCollateral.toFixed(3) : '...'}{' '}
+                            {neededCollateral ? fixDecimal(neededCollateral, 3) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
