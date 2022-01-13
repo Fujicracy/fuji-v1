@@ -137,11 +137,6 @@ function InitBorrow() {
         )
       : 0;
 
-  console.log({
-    neededCollateral,
-    test: fixDecimal('0.5', 6),
-  });
-
   const position = {
     vault: vault ?? defaultVault,
     debtBalance: debtBalance
