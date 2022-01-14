@@ -81,8 +81,6 @@ function InitBorrow() {
 
   const [balance, setBalance] = useState(null);
 
-  const [isPositionBalanceLoaded, setIsPositionBalanceLoaded] = useState(false);
-
   const allowance = useAllowance(contracts, collateralAsset, [
     address,
     vault && contracts ? contracts[vault.name]?.address : '0x',
@@ -167,8 +165,6 @@ function InitBorrow() {
 
       setCollateralAssetPrice(await getExchangePrice(provider, collateralAsset));
       setBorrowAssetPrice(await getExchangePrice(provider, borrowAsset));
-
-      setIsPositionBalanceLoaded(true);
     }
 
     if (contracts && vault) fetchDatas();
@@ -176,13 +172,13 @@ function InitBorrow() {
 
   const position = {
     vault: vault ?? defaultVault,
-    debtBalance: isPositionBalanceLoaded
+    debtBalance: debtBalance
       ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
       : 0,
     // !debtBalance || !borrowAmount
     // ? 0
     // : debtBalance.add(parseUnits(borrowAmount, borrowAsset.decimals)),
-    collateralBalance: isPositionBalanceLoaded
+    collateralBalance: collateralBalance
       ? collateralBalance.add(parseUnits(collateralAmount || '0', collateralAsset.decimals))
       : 0,
     // !collateralBalance || !collateralAmount
