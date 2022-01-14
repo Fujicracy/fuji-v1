@@ -207,33 +207,51 @@ function InitBorrow() {
 
   const borrow = async withApproval => {
     setDialog({ step: 'borrowing', withApproval });
-
-    const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
-      parseUnits(collateralAmount, collateralAsset.decimals),
-      parseUnits(borrowAmount, borrowAsset.decimals),
-      {
-        value: collateralAsset.isERC20 ? 0 : parseUnits(collateralAmount, collateralAsset.decimals),
-      },
-    ]);
-    const res = await tx(
-      contracts[vault.name].depositAndBorrow(
-        parseUnits(collateralAmount, collateralAsset.decimals),
-        parseUnits(borrowAmount, borrowAsset.decimals),
-        {
-          value: collateralAsset.isERC20
-            ? 0
-            : parseUnits(collateralAmount, collateralAsset.decimals),
-          gasLimit,
-        },
-      ),
-    );
-
-    if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
-        setDialog({ step: 'success' });
+    try {
+      let res;
+      if (collateralAmount) {
+        const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
+          parseUnits(collateralAmount, collateralAsset.decimals),
+          parseUnits(borrowAmount, borrowAsset.decimals),
+          {
+            value: collateralAsset.isERC20
+              ? 0
+              : parseUnits(collateralAmount, collateralAsset.decimals),
+          },
+        ]);
+        res = await tx(
+          contracts[vault.name].depositAndBorrow(
+            parseUnits(collateralAmount, collateralAsset.decimals),
+            parseUnits(borrowAmount, borrowAsset.decimals),
+            {
+              value: collateralAsset.isERC20
+                ? 0
+                : parseUnits(collateralAmount, collateralAsset.decimals),
+              gasLimit,
+            },
+          ),
+        );
+      } else {
+        const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
+          parseUnits(borrowAmount, borrowAsset.decimals),
+        ]);
+        res = await tx(
+          contracts[vault.name].borrow(parseUnits(borrowAmount, borrowAsset.decimals), {
+            gasLimit,
+          }),
+        );
       }
+
+      if (res && res.hash) {
+        const receipt = await res.wait();
+        if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
+          setDialog({ step: 'success' });
+        }
+      }
+    } catch (error) {
+      console.log('Borrow error:', { error });
     }
+
     setLoading(false);
   };
 
