@@ -270,7 +270,7 @@ function InitBorrow() {
   };
 
   const onSubmit = async () => {
-    if (Number(collateralAmount) <= 0 || Number(borrowAmount) <= 0) {
+    if ((Number(collateralAmount) <= 0 && neededCollateral > 0) || Number(borrowAmount) <= 0) {
       setDialog({ step: 'validateInput' });
       return;
     }
