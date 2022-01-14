@@ -38,6 +38,7 @@ import {
   CallContractFunction,
   getUserBalance,
   getExchangePrice,
+  fixDecimal,
 } from 'helpers';
 import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
 
@@ -478,7 +479,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
-                      text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                      text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Amount to borrow"
@@ -494,10 +495,16 @@ function InitBorrow() {
                     name="collateralAmount"
                     type="number"
                     step="any"
-                    placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
+                    placeholder={`${
+                      neededCollateral
+                        ? neededCollateral > 0
+                          ? `min ${fixDecimal(neededCollateral, 6)}`
+                          : 'No need'
+                        : '...'
+                    }`}
                     onChange={value => setCollateralAmount(value)}
                     ref={register({
-                      required: { value: true, message: 'required-amount' },
+                      required: { value: neededCollateral > 0, message: 'required-amount' },
                       min: {
                         value: neededCollateral,
                         message: 'insufficient-collateral',
@@ -506,12 +513,12 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={collateralAsset.icon}
                     endAdornment={{
-                      text: (collateralAmount * collateralAssetPrice).toFixed(2),
+                      text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
-                      balance ? Number(balance).toFixed(3) : '...'
+                      balance ? fixDecimal(balance, 3) : '...'
                     }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
@@ -522,7 +529,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? neededCollateral.toFixed(3) : '...'}{' '}
+                            {neededCollateral ? fixDecimal(neededCollateral, 6) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
