@@ -517,7 +517,7 @@ function InitBorrow() {
                       neededCollateral
                         ? neededCollateral > 0
                           ? `min ${fixDecimal(neededCollateral, 6)}`
-                          : 'No need'
+                          : 'Type amount (optional)'
                         : '...'
                     }`}
                     onChange={value => setCollateralAmount(value)}
