@@ -133,20 +133,6 @@ function InitBorrow() {
 
   useEffect(() => {
     async function fetchDatas() {
-      const parsedBorrowAmount =
-        borrowAmount !== '' ? parseUnits(borrowAmount, borrowAsset.decimals) : 0x0;
-
-      const unFormattedNeededCollateral = await CallContractFunction(
-        contracts,
-        vault.name,
-        'getNeededCollateralFor',
-        [borrowAmount ? parsedBorrowAmount : '', 'true'],
-      );
-      const collateral = unFormattedNeededCollateral
-        ? Number(formatUnits(unFormattedNeededCollateral, collateralAsset.decimals))
-        : 0;
-      setNeededCollateral(collateral);
-
       setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
 
       setCollateralBalance(
@@ -169,6 +155,36 @@ function InitBorrow() {
 
     if (contracts && vault) fetchDatas();
   }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider, loading]);
+
+  useEffect(() => {
+    async function fetchDatas() {
+      const unFormattedNeededCollateral = await CallContractFunction(
+        contracts,
+        vault.name,
+        'getNeededCollateralFor',
+        [
+          debtBalance
+            ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
+            : '0',
+          'true',
+        ],
+      );
+
+      const collateral =
+        collateralBalance && unFormattedNeededCollateral
+          ? Number(
+              formatUnits(
+                unFormattedNeededCollateral.sub(collateralBalance),
+                collateralAsset.decimals,
+              ),
+            )
+          : 0;
+      setNeededCollateral(collateral);
+    }
+
+    if (debtBalance && collateralBalance) fetchDatas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debtBalance, collateralBalance, borrowAmount]);
 
   const position = {
     vault: vault ?? defaultVault,
