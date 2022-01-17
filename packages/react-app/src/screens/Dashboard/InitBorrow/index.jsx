@@ -368,10 +368,10 @@ function InitBorrow() {
       content: 'You need first to approve a spending limit.',
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} noResizeOnResponsive>
+          <Button onClick={() => approve(false)} block noResizeOnResponsive>
             Approve {Number(collateralAmount).toFixed(3)} {collateralAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} noResizeOnResponsive>
+          <Button onClick={() => approve(true)} block noResizeOnResponsive>
             Infinite Approve
           </Button>
         </DialogActions>
