@@ -433,7 +433,11 @@ function DebtForm({ position }) {
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
                 <ErrorInputMessage>
-                  You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
+                  You can borrow max{' '}
+                  <span>
+                    {leftToBorrow} {borrowAsset.name}
+                  </span>
+                  . Provide more collateral!
                 </ErrorInputMessage>
               )
             )
