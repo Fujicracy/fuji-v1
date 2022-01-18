@@ -57,7 +57,7 @@ function DebtForm({ position }) {
   const tx = Transactor(provider);
 
   const [action, setAction] = useState(Action.Repay);
-  const [focus, setFocus] = useState(false);
+  // const [focus, setFocus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftToBorrow, setLeftToBorrow] = useState('');
@@ -242,6 +242,15 @@ function DebtForm({ position }) {
     setDialog({ step: 'deltaRatios', withApproval: false });
   };
 
+  const handleMaxBalance = () => {
+    const value = action === Action.Repay ? maxToRepay : leftToBorrow;
+    setAmount(value);
+    setValue('amount', value, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
   const dialogContents = {
     deltaRatios: {
       title: 'Position Ratio Changes',
@@ -368,24 +377,6 @@ function DebtForm({ position }) {
         </Flex>
       </Grid>
       <Grid item>
-        {/* <Grid item className="toggle-button"> */}
-        {/* <div className="button">
-          <input
-            onChange={({ target }) => {
-              setValue('amount', '', { shouldValidate: false });
-              setAction(target.checked ? Action.Borrow : Action.Repay);
-            }}
-            type="checkbox"
-            className="checkbox"
-          />
-          <div className="knobs">
-            <span className="toggle-options" data-toggle="Borrow">
-              <span>Repay</span>
-            </span>
-          </div>
-          <div className="layer" />
-        </div> */}
-
         <ToggleSwitch
           firstOption="Repay"
           secondOption="Borrow"
@@ -401,7 +392,8 @@ function DebtForm({ position }) {
           type="number"
           step="any"
           onChange={value => setAmount(value)}
-          onFocus={() => setFocus(true)}
+          // onFocus={() => setFocus(true)}
+          onClickTitleInfo={handleMaxBalance}
           onBlur={() => clearErrors()}
           ref={register({
             required: { value: true, message: 'insufficient-amount' },
@@ -422,20 +414,8 @@ function DebtForm({ position }) {
             type: 'component',
             component: (
               <InputAdornment position="end">
-                {focus && (
-                  <MaxButton
-                    onClick={() => {
-                      const value = action === Action.Repay ? maxToRepay : leftToBorrow;
-                      setAmount(value);
-                      setValue('amount', value, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      });
-                    }}
-                  >
-                    max
-                  </MaxButton>
-                )}
+                <MaxButton onClick={handleMaxBalance}>max</MaxButton>
+
                 <Label>{borrowAsset.name}</Label>
               </InputAdornment>
             ),
@@ -453,7 +433,11 @@ function DebtForm({ position }) {
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
                 <ErrorInputMessage>
-                  You can borrow max. {leftToBorrow} {borrowAsset.name}. Provide more collateral!
+                  You can borrow max{' '}
+                  <span>
+                    {leftToBorrow} {borrowAsset.name}
+                  </span>
+                  . Provide more collateral!
                 </ErrorInputMessage>
               )
             )

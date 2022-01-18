@@ -60,6 +60,11 @@ export const SubTitleInfo = styled.span`
   line-height: 15px;
   color: ${themeGet('colors.text64')};
   margin-top: 24px;
+  cursor: ${props => (props.isClickable ? 'pointer' : 'inherit')};
+
+  &:hover {
+    color: ${props => (props.isClickable ? themeGet('colors.primary') : 'undefined')};
+  }
 
   ${fujiMedia.between('small', 'medium')`
     font-size: 12px;
