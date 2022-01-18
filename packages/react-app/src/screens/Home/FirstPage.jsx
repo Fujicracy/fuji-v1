@@ -39,8 +39,8 @@ function FirstPage({ onClickAnimation }) {
   const windowDimensions = useWindowSize();
 
   const designDimension = {
-    width: isMobile ? 375 : 768,
-    height: isMobile ? 812 : 1024,
+    width: isMobile ? 375 : isTablet ? 768 : 1440,
+    height: isMobile ? 812 : isTablet ? 1024 : 1024,
   };
 
   const ratio = {
@@ -53,7 +53,7 @@ function FirstPage({ onClickAnimation }) {
       <HomeAnimatedContainer style={props}>
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1}
-          height={isMobile || isTablet ? '40vh' : '50vh'}
+          height={isMobile || isTablet ? '40vh' : '64vh'}
         />
         {(isMobile || isTablet) && (
           <SectionTitle
@@ -68,7 +68,7 @@ function FirstPage({ onClickAnimation }) {
         )}
         <SectionTitle
           fontWeight="400"
-          fontSize={isMobile || isTablet ? calcResponsiveSize(ratio, isMobile ? 24 : 28) : 28}
+          fontSize={calcResponsiveSize(ratio, isMobile ? 24 : 28)}
           textAlign="center"
           lineHeight="130%"
           m="3vh 0px 4vh"

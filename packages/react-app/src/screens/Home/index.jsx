@@ -39,8 +39,8 @@ const HomePage = () => {
   if (!windowDimensions.width || !windowDimensions.height) return <Loader />;
 
   const designDimension = {
-    width: isMobile ? 375 : 768,
-    height: isMobile ? 812 : 1024,
+    width: isMobile ? 375 : isTablet ? 768 : 1440,
+    height: isMobile ? 812 : isTablet ? 1024 : 1024,
   };
 
   const ratio = {
@@ -64,7 +64,9 @@ const HomePage = () => {
     </Flex>
   ) : (
     <>
-      {!isMobile && !isTablet && <LandingHeader isShowLogo={isShowLogo} />}
+      {!isMobile && !isTablet && (
+        <LandingHeader isShowLogo={isShowLogo} height={calcResponsiveSize(ratio, 100)} />
+      )}
 
       {currentPage !== null && currentPage !== 0 && !isMobile && !isTablet && (
         <CirclePagination
@@ -79,7 +81,9 @@ const HomePage = () => {
         customPageNumber={currentPage}
         containerWidth={windowDimensions.width}
         containerHeight={
-          isMobile || isTablet ? windowDimensions.height : windowDimensions.height - 100
+          isMobile || isTablet
+            ? windowDimensions.height
+            : windowDimensions.height - calcResponsiveSize(ratio, 100)
         }
         renderAllPagesOnFirstRender
       >
