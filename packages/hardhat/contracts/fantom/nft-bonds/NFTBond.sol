@@ -10,8 +10,9 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "../../interfaces/IVault.sol";
 import "../../interfaces/IVaultControl.sol";
 import "../../interfaces/IERC20Extended.sol";
+import "../../interfaces/INFTBond.sol";
 
-contract NFTBond is ERC1155 {
+contract NFTBond is ERC1155, INFTBond {
   struct UserData {
     uint64 lastTimestampUpdate;
     uint64 rateOfAccrual;
@@ -110,7 +111,7 @@ contract NFTBond is ERC1155 {
   /**
   * @notice Checks if a given vault is a valid vault
   */
-  function isValidVault(address vault) external view returns (bool){
+  function isValidVault(address vault) external view override returns (bool){
     for (uint256 i = 0; i < validVaults.length; i++) {
       if (validVaults[i] == vault) {
         return true;
@@ -128,7 +129,7 @@ contract NFTBond is ERC1155 {
     address user,
     uint256 balanceChange,
     bool isPayback
-  ) external onlyVault {
+  ) external override onlyVault {
     UserData memory info = userdata[user];
     uint256 debt = getUserDebt(user);
 

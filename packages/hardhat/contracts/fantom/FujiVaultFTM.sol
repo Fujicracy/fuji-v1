@@ -19,7 +19,7 @@ import "../interfaces/IFujiERC1155.sol";
 import "../interfaces/IProvider.sol";
 import "../libraries/Errors.sol";
 import "./libraries/LibUniversalERC20UpgradeableFTM.sol";
-import "./nft-bonds/NFTBond.sol";
+import "../interfaces/INFTBond.sol";
 
 /**
  * @dev Contract for the interaction of Fuji users with the Fuji protocol.
@@ -737,9 +737,9 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
     emit Borrow(msg.sender, vAssets.borrowAsset, _borrowAmount);
 
-    NFTBond bondGame = NFTBond(nftBond);
+    INFTBond bondGame = INFTBond(nftBond);
     if (bondGame.isValidVault(address(this))) {
-      NFTBond(nftBond).checkStateOfPoints(msg.sender, _borrowAmount, false);
+      INFTBond(nftBond).checkStateOfPoints(msg.sender, _borrowAmount, false);
     }
   }
 
@@ -793,7 +793,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
     emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
 
-    NFTBond bondGame = NFTBond(nftBond);
+    INFTBond bondGame = INFTBond(nftBond);
     if (bondGame.isValidVault(address(this))) {
       bondGame.checkStateOfPoints(msg.sender, amountToPayback, true);
     }
