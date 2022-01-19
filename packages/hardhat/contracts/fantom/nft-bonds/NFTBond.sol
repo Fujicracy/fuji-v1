@@ -7,11 +7,13 @@ pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
+import "../../abstracts/claimable/Claimable.sol";
 import "../../interfaces/IVault.sol";
 import "../../interfaces/IVaultControl.sol";
 import "../../interfaces/IERC20Extended.sol";
 
-contract NFTBond is ERC1155 {
+
+contract NFTBond is ERC1155, Claimable {
   struct UserData {
     uint64 lastTimestampUpdate;
     uint64 rateOfAccrual;
@@ -40,8 +42,13 @@ contract NFTBond is ERC1155 {
   // uint256 private constant MULTIPLIER_RATE = 100000000; // tbd
   uint256 private constant CONSTANT_DECIMALS = 8; // Applies to all constants
   uint256 private constant POINTS_ID = 0;
-  
+  uint256 public constant CRATE_COMMON_ID = 1;
+  uint256 public constant CRATE_EPIC_ID = 2;
+  uint256 public constant CRATE_LEGENDARY_ID = 3;
   uint256 public constant POINTS_DECIMALS = 5;
+
+  // CrateID => crate price
+  mapping(uint256 => uint256) public cratePrices;
 
   address private constant _FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
@@ -103,7 +110,7 @@ contract NFTBond is ERC1155 {
   /**
   * @notice Sets the list of vaults that count towards the game
   */
-  function setValidVaults(address[] memory vaults) external {
+  function setValidVaults(address[] memory vaults) external onlyOwner {
     validVaults = vaults;
   }
 
@@ -153,6 +160,32 @@ contract NFTBond is ERC1155 {
   function setMerkleRoot(bytes32 _merkleRoot) external {
     require(_merkleRoot[0] != 0, "empty merkleRoot!");
     merkleRoot = _merkleRoot;
+  }
+
+  /**
+  * @notice sets the prices for the crates
+  */
+  function setCratePrice(uint256 crateId, uint256 price) external onlyOwner {
+    require(crateId == CRATE_COMMON_ID || crateId == CRATE_EPIC_ID || crateId == CRATE_LEGENDARY_ID, "Invalid crate ID");
+    cratePrices[crateId] = price;
+  }
+
+  /**
+  * @notice Burns user points to mint a new crate
+  */
+  function getCrates(uint256 crateId, uint256 amount) external {
+    require(crateId == CRATE_COMMON_ID || crateId == CRATE_EPIC_ID || crateId == CRATE_LEGENDARY_ID, "Invalid crate ID");
+
+    uint price = cratePrices[crateId] * amount;
+    require(price > 0, "Price not set");
+
+    require(_pointsBalanceOf(msg.sender) >= price, "Not enough points");
+
+    _compoundPoints(msg.sender, getUserDebt(msg.sender));
+    userdata[msg.sender].accruedPoints -= uint128(price);
+
+    _mint(msg.sender, crateId, amount, "");
+    totalSupply[crateId] += amount;
   }
 
   // Internal Functions
