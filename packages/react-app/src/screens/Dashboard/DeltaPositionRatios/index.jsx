@@ -64,7 +64,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
 
   return (
     <List style={{ width: '100%' }}>
-      <CustomListItem alignItems="flex-start">
+      <CustomListItem>
         <ListItemText
           primary="Health Factor"
           secondary={
@@ -82,7 +82,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
         )}
       </CustomListItem>
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
-      <CustomListItem alignItems="flex-start">
+      <CustomListItem>
         <ListItemText
           primary="Borrow Limit"
           secondary={
@@ -100,7 +100,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
         )}
       </CustomListItem>
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
-      <CustomListItem alignItems="flex-start">
+      <CustomListItem>
         <ListItemText
           primary="Loan-to-Value"
           secondary={
@@ -116,7 +116,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
         )}
       </CustomListItem>
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
-      <CustomListItem alignItems="flex-start">
+      <CustomListItem>
         <ListItemText
           primary={`${vault.collateralAsset.name} liquidation price`}
           secondary={

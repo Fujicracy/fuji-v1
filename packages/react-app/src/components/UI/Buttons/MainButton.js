@@ -12,8 +12,19 @@ const Button = styled(Box).attrs({
   px: 4,
   typography,
 })`
-  height: ${props => (props.height ? `${props.height}px` : '40px')};
-  width: ${props => (props.width ? `${props.width}px` : '40px')};
+  height: ${props =>
+    props.height
+      ? props.height === Number(props.height)
+        ? `${props.height}px`
+        : props.height
+      : '40px'};
+
+  width: ${props =>
+    props.width
+      ? props.width === Number(props.width)
+        ? `${props.width}px`
+        : props.width
+      : '40px'};
 
   border-radius: ${props => (props.borderRadius ? `${props.borderRadius}px` : '0.5rem')};
   position: relative;

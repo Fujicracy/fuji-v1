@@ -10,7 +10,7 @@ import { fujiAlice1 } from '../../assets/images';
 
 import { HomeContainer, PageContainter } from './styles';
 
-function SecondPage() {
+function SecondPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -30,7 +30,7 @@ function SecondPage() {
             justifyContent={isMobile || isTablet ? 'center' : 'flex-end'}
             alignItems="center"
           >
-            <Image src={fujiAlice1} width={isMobile ? '328px' : 'auto'} />
+            <Image src={fujiAlice1} height={isMobile || isTablet ? '35vh' : '60vh'} />
           </Grid>
           <Grid item xs={12} md={6}>
             <Flex
@@ -47,11 +47,12 @@ function SecondPage() {
                   secondWord="Fluctuate"
                   thirdWord={isMobile ? '' : 'All The Time'}
                   fourthWord={isMobile ? 'All The Time' : undefined}
+                  fontSize={`${titleFontSize}px`}
                 />
 
                 <SectionTitle
                   fontWeight="normal"
-                  fontSize={isMobile ? '20px' : '23px'}
+                  fontSize={descriptionFontSize}
                   textAlign="left"
                   lineHeight="130%"
                   fontFamily="Nexa Regular"
@@ -59,7 +60,7 @@ function SecondPage() {
                   <p>
                     <br />
                     Ever borrowed in DeFi?{isMobile && <br />} Taking out a loan at 5%
-                    {!isMobile && <br />}and {isMobile && <br />} paying 15% shortly after is
+                    {!isMobile && <br />} and {isMobile && <br />} paying 15% shortly after is
                     {isMobile && <br />} an everyday reality. <br />
                     <br />
                     Manually comparing loan{isMobile && <br />} providers is a tedious task,
