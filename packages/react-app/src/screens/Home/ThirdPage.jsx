@@ -10,7 +10,7 @@ import { fujiLanding2, fujiLandingMobile } from '../../assets/images';
 
 import { HomeContainer, PageContainter } from './styles';
 
-function ThirdPage() {
+function ThirdPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -24,7 +24,7 @@ function ThirdPage() {
           {isMobile || isTablet ? (
             <>
               <Grid item xs={12} md={6}>
-                <Image src={isMobile ? fujiLandingMobile : fujiLanding2} />
+                <Image src={isMobile ? fujiLandingMobile : fujiLanding2} height="35vh" />
               </Grid>
               <Grid item xs={12} md={6}>
                 <Flex
@@ -42,11 +42,12 @@ function ThirdPage() {
                       secondWord="Scans"
                       thirdWord={isMobile ? 'Borrow' : 'Borrow Markets'}
                       fourthWord={isMobile ? 'Markets' : undefined}
+                      fontSize={titleFontSize}
                     />
 
                     <SectionTitle
                       fontWeight="normal"
-                      fontSize={isMobile ? '20px' : '23px'}
+                      fontSize={descriptionFontSize}
                       textAlign="left"
                       lineHeight="130%"
                       fontFamily="Nexa Regular"
@@ -76,7 +77,7 @@ function ThirdPage() {
                 md={6}
                 container
                 direction="row"
-                justifyContent={isMobile || isTablet ? 'center' : 'flex-end'}
+                justifyContent="flex-end"
                 alignItems="center"
               >
                 <Flex
@@ -89,6 +90,7 @@ function ThirdPage() {
                     firstWord="Fuji Constantly"
                     secondWord="Scans"
                     thirdWord="Borrow Markets"
+                    fontSize="48px"
                   />
 
                   <SectionTitle
@@ -117,10 +119,10 @@ function ThirdPage() {
                 md={6}
                 container
                 direction="row"
-                justifyContent={isMobile || isTablet ? 'center' : 'flex-start'}
+                justifyContent="flex-start"
                 alignItems="center"
               >
-                <Image src={fujiLanding2} />
+                <Image src={fujiLanding2} height="60vh" />
               </Grid>
             </>
           )}

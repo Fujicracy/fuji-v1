@@ -38,6 +38,7 @@ import {
   CallContractFunction,
   getUserBalance,
   getExchangePrice,
+  fixDecimal,
 } from 'helpers';
 import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
 
@@ -133,20 +134,6 @@ function InitBorrow() {
 
   useEffect(() => {
     async function fetchDatas() {
-      const parsedBorrowAmount =
-        borrowAmount !== '' ? parseUnits(borrowAmount, borrowAsset.decimals) : 0x0;
-
-      const unFormattedNeededCollateral = await CallContractFunction(
-        contracts,
-        vault.name,
-        'getNeededCollateralFor',
-        [borrowAmount ? parsedBorrowAmount : '', 'true'],
-      );
-      const collateral = unFormattedNeededCollateral
-        ? Number(formatUnits(unFormattedNeededCollateral, collateralAsset.decimals))
-        : 0;
-      setNeededCollateral(collateral);
-
       setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
 
       setCollateralBalance(
@@ -170,49 +157,101 @@ function InitBorrow() {
     if (contracts && vault) fetchDatas();
   }, [collateralAsset, borrowAmount, borrowAsset, contracts, vault, address, provider, loading]);
 
+  useEffect(() => {
+    async function fetchDatas() {
+      const unFormattedNeededCollateral = await CallContractFunction(
+        contracts,
+        vault.name,
+        'getNeededCollateralFor',
+        [
+          debtBalance
+            ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
+            : '0',
+          'true',
+        ],
+      );
+
+      const collateral =
+        collateralBalance && unFormattedNeededCollateral
+          ? Number(
+              formatUnits(
+                unFormattedNeededCollateral.sub(collateralBalance),
+                collateralAsset.decimals,
+              ),
+            )
+          : 0;
+      setNeededCollateral(collateral);
+    }
+
+    if (debtBalance && collateralBalance) fetchDatas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debtBalance, collateralBalance, borrowAmount]);
+
   const position = {
     vault: vault ?? defaultVault,
-    debtBalance:
-      !debtBalance || !borrowAmount
-        ? 0
-        : debtBalance.add(parseUnits(borrowAmount, borrowAsset.decimals)),
-    collateralBalance:
-      !collateralBalance || !collateralAmount
-        ? 0
-        : collateralBalance.add(parseUnits(collateralAmount, collateralAsset.decimals)),
+    debtBalance: debtBalance
+      ? debtBalance.add(parseUnits(borrowAmount || '0', borrowAsset.decimals))
+      : 0,
+    // !debtBalance || !borrowAmount
+    // ? 0
+    // : debtBalance.add(parseUnits(borrowAmount, borrowAsset.decimals)),
+    collateralBalance: collateralBalance
+      ? collateralBalance.add(parseUnits(collateralAmount || '0', collateralAsset.decimals))
+      : 0,
+    // !collateralBalance || !collateralAmount
+    // ? 0
+    // : collateralBalance.add(parseUnits(collateralAmount, collateralAsset.decimals)),
   };
 
   const tx = Transactor(provider);
 
   const borrow = async withApproval => {
     setDialog({ step: 'borrowing', withApproval });
-
-    const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
-      parseUnits(collateralAmount, collateralAsset.decimals),
-      parseUnits(borrowAmount, borrowAsset.decimals),
-      {
-        value: collateralAsset.isERC20 ? 0 : parseUnits(collateralAmount, collateralAsset.decimals),
-      },
-    ]);
-    const res = await tx(
-      contracts[vault.name].depositAndBorrow(
-        parseUnits(collateralAmount, collateralAsset.decimals),
-        parseUnits(borrowAmount, borrowAsset.decimals),
-        {
-          value: collateralAsset.isERC20
-            ? 0
-            : parseUnits(collateralAmount, collateralAsset.decimals),
-          gasLimit,
-        },
-      ),
-    );
-
-    if (res && res.hash) {
-      const receipt = await res.wait();
-      if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
-        setDialog({ step: 'success' });
+    try {
+      let res;
+      if (collateralAmount) {
+        const gasLimit = await GasEstimator(contracts[vault.name], 'depositAndBorrow', [
+          parseUnits(collateralAmount, collateralAsset.decimals),
+          parseUnits(borrowAmount, borrowAsset.decimals),
+          {
+            value: collateralAsset.isERC20
+              ? 0
+              : parseUnits(collateralAmount, collateralAsset.decimals),
+          },
+        ]);
+        res = await tx(
+          contracts[vault.name].depositAndBorrow(
+            parseUnits(collateralAmount, collateralAsset.decimals),
+            parseUnits(borrowAmount, borrowAsset.decimals),
+            {
+              value: collateralAsset.isERC20
+                ? 0
+                : parseUnits(collateralAmount, collateralAsset.decimals),
+              gasLimit,
+            },
+          ),
+        );
+      } else {
+        const gasLimit = await GasEstimator(contracts[vault.name], 'borrow', [
+          parseUnits(borrowAmount, borrowAsset.decimals),
+        ]);
+        res = await tx(
+          contracts[vault.name].borrow(parseUnits(borrowAmount, borrowAsset.decimals), {
+            gasLimit,
+          }),
+        );
       }
+
+      if (res && res.hash) {
+        const receipt = await res.wait();
+        if (receipt && receipt.events && receipt.events.find(e => e.event === 'Borrow')) {
+          setDialog({ step: 'success' });
+        }
+      }
+    } catch (error) {
+      console.log('Borrow error:', { error });
     }
+
     setLoading(false);
   };
 
@@ -249,7 +288,7 @@ function InitBorrow() {
   };
 
   const onSubmit = async () => {
-    if (Number(collateralAmount) <= 0 || Number(borrowAmount) <= 0) {
+    if ((Number(collateralAmount) <= 0 && neededCollateral > 0) || Number(borrowAmount) <= 0) {
       setDialog({ step: 'validateInput' });
       return;
     }
@@ -329,10 +368,10 @@ function InitBorrow() {
       content: 'You need first to approve a spending limit.',
       actions: () => (
         <DialogActions>
-          <Button onClick={() => approve(false)} noResizeOnResponsive>
+          <Button onClick={() => approve(false)} block noResizeOnResponsive>
             Approve {Number(collateralAmount).toFixed(3)} {collateralAsset.name}
           </Button>
-          <Button onClick={() => approve(true)} noResizeOnResponsive>
+          <Button onClick={() => approve(true)} block noResizeOnResponsive>
             Infinite Approve
           </Button>
         </DialogActions>
@@ -458,7 +497,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
-                      text: (borrowAmount * borrowAssetPrice).toFixed(2),
+                      text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Amount to borrow"
@@ -474,10 +513,16 @@ function InitBorrow() {
                     name="collateralAmount"
                     type="number"
                     step="any"
-                    placeholder={`min ${neededCollateral ? neededCollateral.toFixed(3) : '...'}`}
+                    placeholder={`${
+                      neededCollateral
+                        ? neededCollateral > 0
+                          ? `min ${fixDecimal(neededCollateral, 6)}`
+                          : 'Type amount (optional)'
+                        : '...'
+                    }`}
                     onChange={value => setCollateralAmount(value)}
                     ref={register({
-                      required: { value: true, message: 'required-amount' },
+                      required: { value: neededCollateral > 0, message: 'required-amount' },
                       min: {
                         value: neededCollateral,
                         message: 'insufficient-collateral',
@@ -486,12 +531,12 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={collateralAsset.icon}
                     endAdornment={{
-                      text: (collateralAmount * collateralAssetPrice).toFixed(2),
+                      text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
-                      balance ? Number(balance).toFixed(3) : '...'
+                      balance ? fixDecimal(balance, 3) : '...'
                     }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
@@ -502,7 +547,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? neededCollateral.toFixed(3) : '...'}{' '}
+                            {neededCollateral ? fixDecimal(neededCollateral, 6) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
