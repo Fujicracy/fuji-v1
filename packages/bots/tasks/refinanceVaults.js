@@ -13,7 +13,18 @@ function getProviderName(contracts, addr) {
   return provider.name;
 }
 
-async function executeSwitch(setup, vault, newProviderAddr) {
+async function executeSwitchFTM(setup, vault, newProviderAddr) {
+  const { contracts, signer } = setup;
+  return contracts.Controller.connect(signer).doRefinancing(
+    vault.address,
+    newProviderAddr,
+    1,
+    1,
+    '0',
+  );
+}
+
+async function executeSwitchETH(setup, vault, newProviderAddr) {
   const { contracts, signer } = setup;
 
   const index = await getFlashloanProvider(setup, vault);
@@ -35,6 +46,15 @@ async function executeSwitch(setup, vault, newProviderAddr) {
     index,
     { gasLimit },
   );
+}
+
+async function executeSwitch(setup, vault, newProviderAddr) {
+  const { config } = setup;
+  if (config.networkName === 'ethereum') {
+    return executeSwitchETH(setup, vault, newProviderAddr);
+  } else if (config.networkName === 'fantom') {
+    return executeSwitchFTM(setup, vault, newProviderAddr);
+  }
 }
 
 function shouldSwitch(vault, rates, blocks) {
