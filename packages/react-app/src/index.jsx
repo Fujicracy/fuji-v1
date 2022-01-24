@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import App from 'containers/App/index';
 import './index.css';
+import './i18n';
 
 // let subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"
 
