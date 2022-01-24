@@ -9,15 +9,11 @@ const providerIndexes = {
 const getForEthereum = (contracts, activeProvider, borrowAsset) => {
   const assets = ASSETS.ethereum;
 
-  if (
-    [assets.DAI.address, assets.USDC.address].includes(borrowAsset) &&
-    activeProvider !== contracts.ProviderDYDX.address
-  ) {
-    // use dydx flashloans when underlying asset is DAI or USDC and
-    // current activeProvider is not dYdX
+  if ([assets.DAI.address, assets.USDC.address].includes(borrowAsset)) {
+    // use dydx flashloans when underlying asset is DAI or USDC
     return providerIndexes.DYDX;
   }
-  if (contracts.ProviderIronBank.address !== activeProvider) {
+  if (contracts.ProviderIronBank && contracts.ProviderIronBank.address !== activeProvider) {
     return providerIndexes.CREAM;
   }
   return providerIndexes.AAVE;
