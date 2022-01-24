@@ -21,6 +21,8 @@ import {
   CHAIN_NAMES,
   DEFAULT_BALANCE_ASSET,
   CHAINS,
+  LANGUAGES,
+  LANGUAGE_NAMES,
 } from 'consts';
 
 import { flow } from 'lodash';
@@ -54,6 +56,7 @@ function Header() {
 
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
   const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
+  const [isOpenLanguageDropDown, setIsOpenLanguageDropDown] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -100,6 +103,8 @@ function Header() {
     setSelectedChain(chain);
   };
 
+  const [selectedLanguage, setSelectedLanugage] = useState(LANGUAGES[LANGUAGE_NAMES.EN]);
+
   const NetworkDropdown = () => {
     return (
       <Box
@@ -144,12 +149,62 @@ function Header() {
     );
   };
 
+  console.log({ selectedLanguage, LANGUAGES });
+
+  const LanguageDropdown = () => {
+    return (
+      <Box
+        ml={2}
+        sx={{ position: 'relative' }}
+        tabIndex="0"
+        onBlur={() => setIsOpenLanguageDropDown(false)}
+      >
+        <DropDownHeader
+          onClick={() => setIsOpenLanguageDropDown(!isOpenLanguageDropDown)}
+          isClicked={isOpenLanguageDropDown}
+          hasBorder
+          width={!isMobile ? '160px' : '80px'}
+        >
+          <Flex justifyContent="center" alignItems="center">
+            <Image src={selectedLanguage?.icon} width={20} />
+            {isMobile ? (
+              <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
+            ) : (
+              <Label ml={2} color="#f5f5f5">
+                {/* {selectedChain?.title ?? 'Switch network'} */}
+                {selectedLanguage?.label}
+              </Label>
+            )}
+          </Flex>
+          <Image src={isOpenLanguageDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
+        </DropDownHeader>
+        {isOpenLanguageDropDown && (
+          <DropDownBackContainer onClick={() => setIsOpenLanguageDropDown(false)}>
+            <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
+              {Object.keys(LANGUAGES)
+                .filter(key => key !== selectedLanguage?.label)
+                .map(key => (
+                  <DropDownItem key={key} onClick={() => setSelectedLanugage(LANGUAGES[key])}>
+                    <Image src={LANGUAGES[key].icon} width={16} />
+                    <Label color="#f5f5f5" ml="8px">
+                      {LANGUAGES[key].label}
+                    </Label>
+                  </DropDownItem>
+                ))}
+            </DropDownItemContainer>
+          </DropDownBackContainer>
+        )}
+      </Box>
+    );
+  };
+
   const menuIconStyle = {
     color: 'white',
     fontSize: 40,
     padding: 0,
     marginLeft: isTablet ? 40 : 20,
   };
+
   return (
     <Container>
       {isMenuOpen && (
@@ -281,7 +336,9 @@ function Header() {
                   </NavLink>
                 </li>
               )}
-
+              <li>
+                <LanguageDropdown />
+              </li>
               <li>
                 <NetworkDropdown />
               </li>

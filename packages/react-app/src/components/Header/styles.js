@@ -179,7 +179,7 @@ export const DropDownHeader = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
   height: 36px;
   color: #f5f5f5;
