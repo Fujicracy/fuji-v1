@@ -185,7 +185,7 @@ const TransactionHistory = ({ vaultName }) => {
                   md={3}
                   onClick={() => handleViewDetail(history.txHash)}
                 >
-                  {`${fixDecimal(history.Amount, 6)} ${history.Asset || 'ETH'}`}
+                  {fixDecimal(history.Amount, 6)} {history.Asset || 'ETH'}
                 </GridItem>
                 {!isMobile && (
                   <GridItem item xs={3} sm={3} cursor="pointer">
