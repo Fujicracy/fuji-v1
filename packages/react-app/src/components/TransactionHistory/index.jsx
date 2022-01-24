@@ -56,7 +56,7 @@ const TransactionHistory = ({ vaultName }) => {
     <BlackBoxContainer
       p={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '16px 32px 24px'}
       mt="40px"
-      mb="50px"
+      mb="48px"
     >
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>History</SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
@@ -99,7 +99,7 @@ const TransactionHistory = ({ vaultName }) => {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <BlackBoxContainer hasBlackContainer={false} p="16px 4px 0px">
+          <BlackBoxContainer hasBlackContainer={false} p="0px 4px">
             <Grid container>
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
                 Date
@@ -120,15 +120,38 @@ const TransactionHistory = ({ vaultName }) => {
         </Grid>
         {!transactionHistories ? (
           <GridItem item xs={12}>
-            {/* <Flex justifyContent="center" alignItems="center"> */}
-            <CircularProgress
-              style={{
-                width: 25,
-                height: 25,
-                color: 'rgba(255, 255, 255, 0.9)',
-              }}
-            />
-            {/* </Flex> */}
+            <Flex
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="96px"
+            >
+              <CircularProgress
+                style={{
+                  width: 25,
+                  height: 25,
+                  color: 'rgba(255, 255, 255, 0.9)',
+                }}
+              />
+            </Flex>
+          </GridItem>
+        ) : transactionHistories.length === 0 ? (
+          <GridItem item xs={12}>
+            <Flex
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="96px"
+            >
+              <SectionTitle
+                fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}
+                color="rgba(255, 255, 255, 0.7)"
+              >
+                No Transactions
+              </SectionTitle>
+            </Flex>
           </GridItem>
         ) : (
           transactionHistories.map((history, index) => {
