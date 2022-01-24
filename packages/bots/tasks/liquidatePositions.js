@@ -35,7 +35,7 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   console.log('Estimated bonus (USD): ', chalk.blue(bonus));
   console.log('Estimated cost (USD): ', chalk.red(cost));
 
-  return cost * 1.5 < bonus;
+  return cost < bonus;
 };
 
 const liquidateAll = async (setup, toLiq, vault, decimals) => {
