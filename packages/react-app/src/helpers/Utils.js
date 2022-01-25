@@ -14,3 +14,12 @@ export function fixDecimal(num, decimalCount) {
 
   return parseFloat(fixedString);
 }
+
+export function fixDecimalString(num, decimalCount) {
+  const temp = Number(num);
+  if (!temp) return 0;
+
+  const fixedString = temp.toFixed(decimalCount);
+
+  return parseFloat(fixedString).toString();
+}
