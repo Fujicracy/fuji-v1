@@ -14,7 +14,7 @@ import {
 import { Grid, CircularProgress } from '@material-ui/core';
 import { useTransactionHistory, useAuth } from 'hooks';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import { fixDecimal } from 'helpers';
+import { fixDecimalString } from 'helpers';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import BlackBoxContainer from '../Blocks/BlackBoxContainer';
@@ -185,7 +185,7 @@ const TransactionHistory = ({ vaultName }) => {
                   md={3}
                   onClick={() => handleViewDetail(history.txHash)}
                 >
-                  {fixDecimal(history.Amount, 6)} {history.Asset || 'ETH'}
+                  {fixDecimalString(history.Amount, 6)} {history.Asset || 'ETH'}
                 </GridItem>
                 {!isMobile && (
                   <GridItem item xs={3} sm={3} cursor="pointer">
