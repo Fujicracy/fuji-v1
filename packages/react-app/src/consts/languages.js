@@ -1,17 +1,17 @@
-import { ftmIcon } from 'assets/images';
-
 export const LANGUAGE_NAMES = {
-  EN: 'English',
-  DE: 'Dutch',
+  en: 'en',
+  de: 'de',
 };
 
 export const LANGUAGES = {
-  [LANGUAGE_NAMES.EN]: {
-    icon: ftmIcon.toString(),
-    label: LANGUAGE_NAMES.EN,
+  [LANGUAGE_NAMES.en]: {
+    label: 'English',
+    alpha2: 'en',
+    flag: 'gb',
   },
-  [LANGUAGE_NAMES.DE]: {
-    icon: ftmIcon.toString(),
-    label: LANGUAGE_NAMES.DE,
+  [LANGUAGE_NAMES.de]: {
+    label: 'Dutch',
+    alpha2: 'de',
+    flag: 'de',
   },
 };

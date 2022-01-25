@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { HashRouter, Switch, Route, NavLink } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
@@ -31,57 +31,59 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <ModalProvider backgroundComponent={FadingBackground}>
-        <Container>
-          <GlobalStyle />
-          <HashRouter>
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route path="/dashboard">
-                <ProvideAuth>
-                  <Dashboard />
-                </ProvideAuth>
-              </Route>
-              <Route path="/team">
-                <Team />
-              </Route>
-              <Route path="/about">
-                <ProvideAuth>
-                  <About />
-                </ProvideAuth>
-              </Route>
-              <Route path="/info">
-                <Infos />
-              </Route>
-              <Route path="/claim-nft">
-                <ProvideAuth>
-                  <Governance />
-                </ProvideAuth>
-              </Route>
-              <Route path="*">
-                <Error />
-              </Route>
-            </Switch>
-            {!isMobileOrTablet && (
-              <footer>
-                <NavUnlisted position="left">
-                  {map(Object.keys(CONTACTS), key => (
-                    <NavImageLink key={key} contact={CONTACTS[key]} />
-                  ))}
-                </NavUnlisted>
+        <Suspense fallback={<div>loading...</div>}>
+          <Container>
+            <GlobalStyle />
+            <HashRouter>
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route path="/dashboard">
+                  <ProvideAuth>
+                    <Dashboard />
+                  </ProvideAuth>
+                </Route>
+                <Route path="/team">
+                  <Team />
+                </Route>
+                <Route path="/about">
+                  <ProvideAuth>
+                    <About />
+                  </ProvideAuth>
+                </Route>
+                <Route path="/info">
+                  <Infos />
+                </Route>
+                <Route path="/claim-nft">
+                  <ProvideAuth>
+                    <Governance />
+                  </ProvideAuth>
+                </Route>
+                <Route path="*">
+                  <Error />
+                </Route>
+              </Switch>
+              {!isMobileOrTablet && (
+                <footer>
+                  <NavUnlisted position="left">
+                    {map(Object.keys(CONTACTS), key => (
+                      <NavImageLink key={key} contact={CONTACTS[key]} />
+                    ))}
+                  </NavUnlisted>
 
-                <NavUnlisted alignItems="center" position="right">
-                  <NavLink to="/about">
-                    <NavText>About</NavText>
-                  </NavLink>
-                  <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                  <Label fontSize={12}>© FujiDAO 2021</Label>
-                </NavUnlisted>
-              </footer>
-            )}
-          </HashRouter>
-        </Container>
+                  <NavUnlisted alignItems="center" position="right">
+                    <NavLink to="/about">
+                      <NavText>About</NavText>
+                    </NavLink>
+                    <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
+                    <Label fontSize={12}>© FujiDAO 2021</Label>
+                  </NavUnlisted>
+                </footer>
+              )}
+            </HashRouter>
+          </Container>
+        </Suspense>
       </ModalProvider>
     </ThemeProvider>
   );

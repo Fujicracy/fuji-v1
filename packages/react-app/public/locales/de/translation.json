@@ -1,0 +1,22 @@
+{
+  "global": {
+    "collateral": "Zekerheid",
+    "borrow": "Lenen",
+    "balance": "Evenwicht",
+    "borrowing": "Lenen"
+  },
+  "homepage": {
+    "landing": {
+      "goToApp": "Ga naar de App"
+    }
+  },
+  "initBorrow": {
+    "amountToBorrow": "Bedrag te lenen",
+    "yourBalance": "Je balans",
+    "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van"
+  },
+  "howItWorks": {
+    "title": "Hoe het werkt",
+    "description": "Met Fuji verlaagt u uw leenkosten met <span className=\"bold\">~10%</span>. Het protocol <span className=\"bold\">volgt</span> voortdurend de leenmarkten en <span className=\"bold\">herfinanciert</span> automatisch zijn schuldposities tegen de best beschikbare tarieven."
+  }
+}

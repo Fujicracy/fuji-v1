@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
@@ -86,6 +88,8 @@ function InitBorrow() {
     address,
     vault && contracts ? contracts[vault.name]?.address : '0x',
   ]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -500,7 +504,7 @@ function InitBorrow() {
                       text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
-                    subTitle="Amount to borrow"
+                    subTitle={t('initBorrow.amountToBorrow')}
                     description={
                       errors?.borrowAmount?.message === 'insufficient-borrow' &&
                       'Please, type the amount at least 1'
@@ -534,8 +538,8 @@ function InitBorrow() {
                       text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
-                    subTitle="Collateral"
-                    subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
+                    subTitle={t('global.collateral')}
+                    subTitleInfo={`${isMobile ? 'Balance' : t('global.balance')}: ${
                       balance ? fixDecimal(balance, 3) : '...'
                     }`}
                     errorComponent={

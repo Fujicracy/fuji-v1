@@ -1,0 +1,34 @@
+{
+  "global": {
+    "collateral": "Collateral",
+    "borrow": "Borrow",
+    "balance": "Balance",
+    "borrowing": "Borrowing",
+    "markets": "Markets",
+    "min": "min"
+  },
+  "homepage": {
+    "landing": {
+      "goToApp": "Go to App"
+    }
+  },
+  "initBorrow": {
+    "amountToBorrow": "Amount to borrow",
+    "yourBalance": "Your balance",
+    "liquidityNotification": "Liquidity for this transaction comes from"
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "description": "With Fuji you reduce your loan expenses by <span className=\"bold\">~10%</span>. The protocol constantly <span className=\"bold\">monitors</span> borrow markets and automatically <span className=\"bold\">refinances</span> its debt positions at the best available rates."
+  },
+  "healthFactor": {
+    "title": "Health Factor",
+    "borrowLimitUsed": "Borrow Limit Used",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "currentLoanToValue": "Current Loan-to-Value",
+    "ltvLiquidationThreshold": "LTV liquidation threshold",
+    "currentCollateralPrice": "Current %s price",
+    "collateralLiquidationPrice": "%s liquidation price"
+  }
+}

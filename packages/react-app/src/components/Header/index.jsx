@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
+import ReactCountryFlag from 'react-country-flag';
 
 import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/images';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
@@ -63,6 +66,7 @@ function Header() {
   const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
   const userBalance = useBalance(provider, address, contracts);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (Object.values(chains).find(chain => chain.id === networkId)) {
@@ -149,7 +153,11 @@ function Header() {
     );
   };
 
-  console.log({ selectedLanguage, LANGUAGES });
+  const onChangeLanguage = async lng => {
+    console.log({ lng, LANGUAGES });
+    i18n.changeLanguage(lng.alpha2);
+    setSelectedLanugage(lng);
+  };
 
   const LanguageDropdown = () => {
     return (
@@ -166,7 +174,7 @@ function Header() {
           width={!isMobile ? '160px' : '80px'}
         >
           <Flex justifyContent="center" alignItems="center">
-            <Image src={selectedLanguage?.icon} width={20} />
+            <ReactCountryFlag countryCode={selectedLanguage?.flag} />
             {isMobile ? (
               <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
             ) : (
@@ -184,8 +192,8 @@ function Header() {
               {Object.keys(LANGUAGES)
                 .filter(key => key !== selectedLanguage?.label)
                 .map(key => (
-                  <DropDownItem key={key} onClick={() => setSelectedLanugage(LANGUAGES[key])}>
-                    <Image src={LANGUAGES[key].icon} width={16} />
+                  <DropDownItem key={key} onClick={() => onChangeLanguage(LANGUAGES[key])}>
+                    <ReactCountryFlag countryCode={LANGUAGES[key].flag} />
                     <Label color="#f5f5f5" ml="8px">
                       {LANGUAGES[key].label}
                     </Label>

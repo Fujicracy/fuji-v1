@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image, Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import { useTranslation } from 'react-i18next';
 
 import Collapse from '@material-ui/core/Collapse';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -25,6 +26,8 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  const { t } = useTranslation();
+
   useEffect(() => defaultVault && setSelectedVault(defaultVault), [defaultVault]);
   const toggling = () => setIsOpen(!isOpen);
 
@@ -40,7 +43,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
         fontSize={isTablet ? '20px' : '16px'}
         mb={isMobile ? '16px' : isTablet ? '24px' : '20px'}
       >
-        Borrow
+        {t('global.borrow')}
       </SectionTitle>
       <Box mb={isMobile ? 4 : 4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
