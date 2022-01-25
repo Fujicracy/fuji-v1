@@ -14,7 +14,7 @@ import {
 import { Flex } from 'rebass';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, GasEstimator } from 'helpers';
+import { Transactor, GasEstimator, fixDecimalString } from 'helpers';
 import { useAuth, useBalance, useAllowance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
@@ -67,7 +67,7 @@ function CollateralForm({ position }) {
   );
 
   const userBalance = unformattedUserBalance
-    ? Number(formatUnits(unformattedUserBalance, collateralAsset.decimals)).toFixed(6)
+    ? fixDecimalString(formatUnits(unformattedUserBalance, collateralAsset.decimals), 6)
     : null;
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -96,7 +96,7 @@ function CollateralForm({ position }) {
     if (neededCollateral && collateralBalance) {
       const diff = formatUnits(collateralBalance.sub(neededCollateral), collateralAsset.decimals);
       // use toFixed to avoid scientific notation 2.1222e-6
-      setLeftCollateral(Number(diff).toFixed(6));
+      setLeftCollateral(fixDecimalString(diff, 6));
     }
   }, [neededCollateral, collateralBalance, collateralAsset.decimals]);
 
@@ -163,7 +163,7 @@ function CollateralForm({ position }) {
   const approve = async infiniteApproval => {
     let unFormattedAmount = amount;
     if (parseUnits(amount, collateralAsset.decimals).eq(collateralBalance)) {
-      unFormattedAmount = (Number(amount) * 1.02).toFixed(6);
+      unFormattedAmount = fixDecimalString(amount * 1.02, 6);
     }
 
     const base = BigNumber.from(2);
@@ -295,7 +295,7 @@ function CollateralForm({ position }) {
         return (
           <DialogActions>
             <Button onClick={() => approve(false)} block noResizeOnResponsive>
-              Approve {Number(amount).toFixed(3)} {collateralAsset.name}
+              Approve {fixDecimalString(amount, 3)} {collateralAsset.name}
             </Button>
             <Button onClick={() => approve(true)} block noResizeOnResponsive>
               Infinite Approve
@@ -406,7 +406,11 @@ function CollateralForm({ position }) {
           // onFocus={() => {
           //   return setFocus(true);
           // }}
-          onClickTitleInfo={handleMaxBalance}
+          onClickTitleInfo={
+            (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
+              ? handleMaxBalance
+              : undefined
+          }
           onBlur={() => {
             return clearErrors();
           }}
@@ -421,8 +425,8 @@ function CollateralForm({ position }) {
           subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
           subTitleInfo={
             action === Action.Supply
-              ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${collateralAsset.name}`
-              : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ${
+              ? `${userBalance ? fixDecimalString(userBalance, 3) : '...'} ${collateralAsset.name}`
+              : `${leftCollateral ? fixDecimalString(leftCollateral, 3) : '...'} ${
                   collateralAsset.name
                 }`
           }
