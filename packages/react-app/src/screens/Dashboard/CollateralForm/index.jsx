@@ -358,6 +358,11 @@ function CollateralForm({ position }) {
     },
   };
 
+  const handleClickTitleInfo =
+    (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   return (
     <Grid container direction="column">
       <Dialog
@@ -406,11 +411,7 @@ function CollateralForm({ position }) {
           // onFocus={() => {
           //   return setFocus(true);
           // }}
-          onClickTitleInfo={
-            (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
-              ? handleMaxBalance
-              : undefined
-          }
+          onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => {
             return clearErrors();
           }}

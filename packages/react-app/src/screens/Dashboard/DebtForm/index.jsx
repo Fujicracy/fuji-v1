@@ -343,6 +343,11 @@ function DebtForm({ position }) {
     return loading ? 'Borrowing...' : 'Borrow';
   };
 
+  const handleClickTitleInfo =
+    (action === Action.Repay ? Number(maxToRepay) : Number(leftToBorrow)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   return (
     <Grid container direction="column">
       <Dialog
@@ -395,11 +400,7 @@ function DebtForm({ position }) {
           step="any"
           onChange={value => setAmount(value)}
           // onFocus={() => setFocus(true)}
-          onClickTitleInfo={
-            (action === Action.Repay ? Number(maxToRepay) : Number(leftToBorrow)) > 0
-              ? handleMaxBalance
-              : undefined
-          }
+          onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => clearErrors()}
           ref={register({
             required: { value: true, message: 'insufficient-amount' },
