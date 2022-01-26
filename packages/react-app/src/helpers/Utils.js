@@ -17,7 +17,7 @@ export function fixDecimal(num, decimalCount) {
 
 export function fixDecimalString(num, decimalCount) {
   const temp = Number(num);
-  if (!temp) return 0;
+  if (Number.isNaN(temp)) return '';
 
   const fixedString = temp.toFixed(decimalCount);
 
