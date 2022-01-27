@@ -38,7 +38,7 @@ import {
   CallContractFunction,
   getUserBalance,
   getExchangePrice,
-  fixDecimal,
+  fixDecimalString,
 } from 'helpers';
 import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
 
@@ -497,7 +497,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
-                      text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
+                      text: fixDecimalString(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Amount to borrow"
@@ -516,7 +516,7 @@ function InitBorrow() {
                     placeholder={`${
                       neededCollateral
                         ? neededCollateral > 0
-                          ? `min ${fixDecimal(neededCollateral, 6)}`
+                          ? `min ${fixDecimalString(neededCollateral, 6)}`
                           : 'Type amount (optional)'
                         : '...'
                     }`}
@@ -531,12 +531,12 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={collateralAsset.icon}
                     endAdornment={{
-                      text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
+                      text: fixDecimalString(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle="Collateral"
                     subTitleInfo={`${isMobile ? 'Balance' : 'Your balance'}: ${
-                      balance ? fixDecimal(balance, 3) : '...'
+                      balance ? fixDecimalString(balance, 3) : '...'
                     }`}
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
@@ -547,7 +547,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? fixDecimal(neededCollateral, 6) : '...'}{' '}
+                            {neededCollateral ? fixDecimalString(neededCollateral, 6) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
