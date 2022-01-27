@@ -253,6 +253,11 @@ function DebtForm({ position }) {
     });
   };
 
+  const handleClickTitleInfo =
+    (action === Action.Repay ? Number(maxToRepay) : Number(leftToBorrow)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   const dialogContents = {
     deltaRatios: {
       title: 'Position Ratio Changes',
@@ -342,11 +347,6 @@ function DebtForm({ position }) {
 
     return loading ? 'Borrowing...' : 'Borrow';
   };
-
-  const handleClickTitleInfo =
-    (action === Action.Repay ? Number(maxToRepay) : Number(leftToBorrow)) > 0
-      ? handleMaxBalance
-      : undefined;
 
   return (
     <Grid container direction="column">

@@ -253,6 +253,11 @@ function CollateralForm({ position }) {
     });
   };
 
+  const handleClickTitleInfo =
+    (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   const dialogContents = {
     deltaRatios: {
       title: 'Position Ratio Changes',
@@ -357,11 +362,6 @@ function CollateralForm({ position }) {
       },
     },
   };
-
-  const handleClickTitleInfo =
-    (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
-      ? handleMaxBalance
-      : undefined;
 
   return (
     <Grid container direction="column">
