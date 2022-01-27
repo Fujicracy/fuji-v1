@@ -40,7 +40,7 @@ import {
   ErrorInputMessage,
 } from 'components';
 
-import { Transactor, GasEstimator } from '../../../helpers';
+import { Transactor, GasEstimator, fixDecimalString } from '../../../helpers';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
 
@@ -81,7 +81,7 @@ function DebtForm({ position }) {
   );
 
   const balance = unFormattedBalance
-    ? Number(formatUnits(unFormattedBalance, decimals)).toFixed(6)
+    ? fixDecimalString(formatUnits(unFormattedBalance, decimals), 6)
     : null;
 
   const allowance = useAllowance(contracts, borrowAsset, [address, vaultAddress]);
@@ -112,7 +112,9 @@ function DebtForm({ position }) {
       const diff = Number(formatUnits(collateralBalance.sub(neededCollateral), colDecimals));
       const ratio = vault.threshold / 100;
       const left = ((diff * ratio) / borrowPrice) * collateralPrice;
-      setLeftToBorrow(left.toFixed(6));
+      const leftAmount = left < 0 ? 0 : left;
+
+      setLeftToBorrow(fixDecimalString(leftAmount, 6));
     }
   }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, vault]);
 
@@ -120,7 +122,7 @@ function DebtForm({ position }) {
     if (balance && debtBalance) {
       const debt = formatUnits(debtBalance, decimals);
       const max = Number(debt) > Number(balance) ? balance : debt;
-      setMaxToRepay(Number(max).toFixed(6));
+      setMaxToRepay(fixDecimalString(max, 6));
     }
   }, [debtBalance, balance, decimals]);
 
@@ -193,7 +195,7 @@ function DebtForm({ position }) {
     // the accrued interest
     // TODO add message to inform user
     if (parseUnits(amount, decimals).eq(debtBalance)) {
-      unFormattedAmount = (Number(amount) * 1.02).toFixed(6);
+      unFormattedAmount = fixDecimalString(amount * 1.02, 6);
     }
 
     const base = BigNumber.from(2);
@@ -251,6 +253,11 @@ function DebtForm({ position }) {
     });
   };
 
+  const handleClickTitleInfo =
+    (action === Action.Repay ? Number(maxToRepay) : Number(leftToBorrow)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   const dialogContents = {
     deltaRatios: {
       title: 'Position Ratio Changes',
@@ -290,7 +297,7 @@ function DebtForm({ position }) {
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} block noResizeOnResponsive>
-            Approve {Number(amount).toFixed(3)} {borrowAsset.name}
+            Approve {fixDecimalString(amount, 3)} {borrowAsset.name}
           </Button>
           <Button onClick={() => approve(true)} block noResizeOnResponsive>
             Infinite Approve
@@ -393,7 +400,7 @@ function DebtForm({ position }) {
           step="any"
           onChange={value => setAmount(value)}
           // onFocus={() => setFocus(true)}
-          onClickTitleInfo={handleMaxBalance}
+          onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => clearErrors()}
           ref={register({
             required: { value: true, message: 'insufficient-amount' },
@@ -406,8 +413,8 @@ function DebtForm({ position }) {
           subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
           subTitleInfo={
             action === Action.Repay
-              ? `${maxToRepay ? Number(maxToRepay).toFixed(3) : '...'} ${borrowAsset.name}`
-              : `${leftToBorrow ? Number(leftToBorrow).toFixed(3) : '...'} ${borrowAsset.name}`
+              ? `${maxToRepay ? fixDecimalString(maxToRepay, 3) : '...'} ${borrowAsset.name}`
+              : `${leftToBorrow ? fixDecimalString(leftToBorrow, 3) : '...'} ${borrowAsset.name}`
           }
           startAdornmentImage={borrowAsset.icon}
           endAdornment={{
