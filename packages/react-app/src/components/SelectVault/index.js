@@ -79,7 +79,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                 fontSize={isTablet ? '18px' : '16px'}
                 color={isMobile && 'rgba(255, 255, 255, 0.5)'}
               >
-                with
+                {t('global.with')}
               </SectionTitle>
             </Box>
           </Box>
@@ -159,7 +159,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                             fontSize={isTablet ? '18px' : '16px'}
                             color={isMobile && 'rgba(255, 255, 255, 0.5)'}
                           >
-                            with
+                            {t('global.with')}
                           </SectionTitle>
                         </Box>
                       </Box>

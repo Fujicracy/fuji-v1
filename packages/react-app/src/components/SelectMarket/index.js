@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useAuth } from 'hooks';
 import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { Image } from 'rebass';
@@ -12,6 +14,8 @@ import { RadioContainer, MarketButton } from './styles';
 const SelectMarket = () => {
   const { deployment, setDeployment } = useAuth();
 
+  const { t } = useTranslation();
+
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
@@ -24,7 +28,7 @@ const SelectMarket = () => {
         fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}
         mb={isMobile ? '16px' : '20px'}
       >
-        Markets
+        {t('global.markets')}
       </SectionTitle>
       <RadioContainer>
         <MarketButton

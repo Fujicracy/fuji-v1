@@ -19,6 +19,8 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
+import { sprintf } from 'sprintf-js';
+import HTMLReactParser from 'html-react-parser';
 
 import { ETH_CAP_VALUE } from 'consts/globals';
 import {
@@ -568,8 +570,9 @@ function InitBorrow() {
                 </div>
 
                 <Helper>
-                  Liquidity for this transaction comes from
-                  <span>{` ${getActiveProviderName()}`}</span>.
+                  {/* Liquidity for this transaction comes from
+                  <span>{` ${getActiveProviderName()}`}</span>. */}
+                  {HTMLReactParser(sprintf(t('initBorrow.helper'), getActiveProviderName()))}
                 </Helper>
 
                 <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>

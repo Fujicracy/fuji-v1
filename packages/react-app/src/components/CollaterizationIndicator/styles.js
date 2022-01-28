@@ -101,6 +101,7 @@ export const ChartContent = styled.div`
 export const PositionDetails = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   border-bottom: 0.063rem solid ${themeGet('colors.text05')};
   padding: 0.5rem 0rem;
   margin-bottom: 0.5rem;

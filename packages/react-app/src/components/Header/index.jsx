@@ -107,7 +107,7 @@ function Header() {
     setSelectedChain(chain);
   };
 
-  const [selectedLanguage, setSelectedLanugage] = useState(LANGUAGES[LANGUAGE_NAMES.EN]);
+  const [selectedLanguage, setSelectedLanugage] = useState(LANGUAGES[LANGUAGE_NAMES.en]);
 
   const NetworkDropdown = () => {
     return (
@@ -154,7 +154,6 @@ function Header() {
   };
 
   const onChangeLanguage = async lng => {
-    console.log({ lng, LANGUAGES });
     i18n.changeLanguage(lng.alpha2);
     setSelectedLanugage(lng);
   };

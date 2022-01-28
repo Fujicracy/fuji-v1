@@ -5,7 +5,8 @@
     "balance": "Balance",
     "borrowing": "Borrowing",
     "markets": "Markets",
-    "min": "min"
+    "min": "min",
+    "with": "with"
   },
   "homepage": {
     "landing": {
@@ -15,7 +16,8 @@
   "initBorrow": {
     "amountToBorrow": "Amount to borrow",
     "yourBalance": "Your balance",
-    "liquidityNotification": "Liquidity for this transaction comes from"
+    "liquidityNotification": "Liquidity for this transaction comes from",
+    "helper": "Liquidity for this transaction comes from <span>%s</span>"
   },
   "howItWorks": {
     "title": "How it works",
@@ -23,10 +25,14 @@
   },
   "healthFactor": {
     "title": "Health Factor",
+    "tooltip": "<span>The health factor represents the safety of your loan derived from the proportion of collateral versus amount borrowed.<br /><span>Keep it above 1 to avoid liquidation.</span></span>",
     "borrowLimitUsed": "Borrow Limit Used",
     "showMore": "Show more",
     "showLess": "Show less",
-    "currentLoanToValue": "Current Loan-to-Value",
+    "currentLoanToValue": {
+      "title": "Current Loan-to-Value",
+      "tooltip": "The Maximum Loan-to-Value ratio represents the maximum borrow limit. <br />A max. LTV of %1$s means the user can borrow up to $ %2$s in the principal currency for every $100 worth of collateral.<br /><span>With LTV above they risk a liquidation.</span>"
+    },
     "ltvLiquidationThreshold": "LTV liquidation threshold",
     "currentCollateralPrice": "Current %s price",
     "collateralLiquidationPrice": "%s liquidation price"

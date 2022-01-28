@@ -3,7 +3,10 @@
     "collateral": "Zekerheid",
     "borrow": "Lenen",
     "balance": "Evenwicht",
-    "borrowing": "Lenen"
+    "borrowing": "Lenen",
+    "markets": "Markets",
+    "min": "min",
+    "with": "met"
   },
   "homepage": {
     "landing": {
@@ -13,10 +16,25 @@
   "initBorrow": {
     "amountToBorrow": "Bedrag te lenen",
     "yourBalance": "Je balans",
-    "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van"
+    "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van",
+    "helper": "De liquiditeit voor deze transactie is afkomstig van <span>%s</span>"
   },
   "howItWorks": {
     "title": "Hoe het werkt",
     "description": "Met Fuji verlaagt u uw leenkosten met <span className=\"bold\">~10%</span>. Het protocol <span className=\"bold\">volgt</span> voortdurend de leenmarkten en <span className=\"bold\">herfinanciert</span> automatisch zijn schuldposities tegen de best beschikbare tarieven."
+  },
+  "healthFactor": {
+    "title": "Gezondheidsfactor",
+    "tooltip": "<span>De gezondheidsfactor vertegenwoordigt de veiligheid van uw lening, afgeleid van het aandeel van het onderpand versus het geleende bedrag.<br /><span>Houd het boven de 1 om liquidatie te voorkomen.</span></span>",
+    "borrowLimitUsed": "Gebruikte leenlimiet",
+    "showMore": "Toon meer",
+    "showLess": "Toon minder",
+    "currentLoanToValue": {
+      "title": "Huidige lening-naar-waarde",
+      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van %1$s betekent dat de gebruiker tot $ %2$s kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><span>Met een LTV erboven riskeren ze een liquidatie.</span>"
+    },
+    "ltvLiquidationThreshold": "LTV-liquidatiedrempel",
+    "currentCollateralPrice": "Huidige %s prijs",
+    "collateralLiquidationPrice": "%s liquidatieprijs"
   }
 }

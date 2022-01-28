@@ -53,6 +53,10 @@ export const Tooltip = styled.div`
     position: absolute;
     top: 1.75rem;
     z-index: 25;
+    > span {
+      font-weight: 600;
+      color: ${themeGet('colors.primary')};
+    }
   }
 
   &:hover {
