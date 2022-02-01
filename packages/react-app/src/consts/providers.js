@@ -73,7 +73,7 @@ const PROVIDERS = {
   [PROVIDER_TYPE.HUNDRED]: {
     id: 'hundred',
     name: 'ProviderHundred',
-    title: 'Hundred Finance',
+    title: 'Hundred',
   },
 };
 
