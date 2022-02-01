@@ -189,13 +189,6 @@ function CollaterizationIndicator({ position }) {
                     <IntenseSpan primary>With LTV above 75% they risk a liquidation.</IntenseSpan>
                   </Trans>
                 </span>
-                {/* <span>
-                  <Trans i18nKey="healthFactor.tooltip">
-                    The health factor represents the safety of your loan derived from the proportion
-                    of collateral versus amount borrowed.
-                    <IntenseSpan primary>Keep it above 1 to avoid liquidation.</IntenseSpan>
-                  </Trans>
-                </span> */}
               </Tooltip>
             )}
           </Flex>
