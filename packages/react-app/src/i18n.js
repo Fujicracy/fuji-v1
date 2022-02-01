@@ -21,6 +21,11 @@ i18n
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
+
+    react: {
+      // Turn off the use of React Suspense
+      useSuspense: true,
+    },
   });
 
 export default i18n;

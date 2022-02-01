@@ -17,24 +17,24 @@
     "amountToBorrow": "Bedrag te lenen",
     "yourBalance": "Je balans",
     "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van",
-    "helper": "De liquiditeit voor deze transactie is afkomstig van <span>%s</span>"
+    "helper": "De liquiditeit voor deze transactie is afkomstig van <1>{{provider}}</1>"
   },
   "howItWorks": {
     "title": "Hoe het werkt",
-    "description": "Met Fuji verlaagt u uw leenkosten met <span className=\"bold\">~10%</span>. Het protocol <span className=\"bold\">volgt</span> voortdurend de leenmarkten en <span className=\"bold\">herfinanciert</span> automatisch zijn schuldposities tegen de best beschikbare tarieven."
+    "description": "Met Fuji verlaagt u uw leenkosten met <1>~10%</1>. Het protocol <1>volgt</1> voortdurend de leenmarkten en <1>herfinanciert</1> automatisch zijn schuldposities tegen de best beschikbare tarieven."
   },
   "healthFactor": {
     "title": "Gezondheidsfactor",
-    "tooltip": "<span>De gezondheidsfactor vertegenwoordigt de veiligheid van uw lening, afgeleid van het aandeel van het onderpand versus het geleende bedrag.<br /><span>Houd het boven de 1 om liquidatie te voorkomen.</span></span>",
+    "tooltip": "De gezondheidsfactor vertegenwoordigt de veiligheid van uw lening, afgeleid van het aandeel van het onderpand versus het geleende bedrag.<br /><1>Houd het boven de 1 om liquidatie te voorkomen.</1>",
     "borrowLimitUsed": "Gebruikte leenlimiet",
     "showMore": "Toon meer",
     "showLess": "Toon minder",
     "currentLoanToValue": {
       "title": "Huidige lening-naar-waarde",
-      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van %1$s betekent dat de gebruiker tot $ %2$s kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><span>Met een LTV erboven riskeren ze een liquidatie.</span>"
+      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><1>Met een LTV erboven riskeren ze een liquidatie.</1>"
     },
     "ltvLiquidationThreshold": "LTV-liquidatiedrempel",
-    "currentCollateralPrice": "Huidige %s prijs",
-    "collateralLiquidationPrice": "%s liquidatieprijs"
+    "currentCollateralPrice": "Huidige {{collateral}} prijs",
+    "collateralLiquidationPrice": "{{collateral}} liquidatieprijs"
   }
 }

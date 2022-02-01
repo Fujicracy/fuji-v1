@@ -6,7 +6,6 @@ import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
 import { useContractLoader, useAuth, useResources, useContractReader } from 'hooks';
 // import { CallContractFunction } from 'helpers';
-
 import Error from '../Error';
 
 import MyPositions from './MyPositions';
@@ -21,7 +20,6 @@ function Dashboard() {
 
   const contracts = useContractLoader();
   const { collateralIds } = useResources();
-
   const collateralBals = useContractReader(contracts, 'FujiERC1155', 'balanceOfBatch', [
     map(collateralIds, () => address),
     collateralIds,

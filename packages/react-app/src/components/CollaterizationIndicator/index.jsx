@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useReducer } from 'react';
-import { useSpring, animated } from 'react-spring';
-import { useTranslation } from 'react-i18next';
+import { useSpring } from 'react-spring';
+import { Trans } from 'react-i18next';
 
 import { Flex } from 'rebass';
 import { Typography, Button, Collapse } from '@material-ui/core';
@@ -9,8 +8,6 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useMediaQuery } from 'react-responsive';
-import { sprintf } from 'sprintf-js';
-import HTMLReactParser from 'html-react-parser';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
@@ -102,24 +99,22 @@ function CollaterizationIndicator({ position }) {
     from: { strokeDasharray: [oldHealthRatio, 100] },
   });
 
-  const { t } = useTranslation();
-
   return (
     <BlackBoxContainer
       padding={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '32px 28px 20px'}
     >
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
-        {t('healthFactor.title')}
+        <Trans i18nKey="healthFactor.title">Health Factor</Trans>
         {!isMobile && !isTablet && (
           <Tooltip>
             <InfoOutlinedIcon />
-            {HTMLReactParser(t('healthFactor.tooltip'))}
-            {/* <span>
-              The health factor represents the safety of your loan derived from the proportion of
-              collateral versus amount borrowed.
-              <br />
-              <IntenseSpan primary>Keep it above 1 to avoid liquidation.</IntenseSpan>
-            </span> */}
+            <span>
+              <Trans i18nKey="healthFactor.tooltip">
+                The health factor represents the safety of your loan derived from the proportion of
+                collateral versus amount borrowed.
+                <IntenseSpan primary>Keep it above 1 to avoid liquidation.</IntenseSpan>
+              </Trans>
+            </span>
           </Tooltip>
         )}
       </SectionTitle>
@@ -169,7 +164,9 @@ function CollaterizationIndicator({ position }) {
 
           <PositionDetails>
             <div className="title">
-              <Typography variant="h3">{t('healthFactor.borrowLimitUsed')}</Typography>
+              <Typography variant="h3">
+                <Trans i18nKey="healthFactor.borrowLimitUsed">Borrow Limit Used</Trans>
+              </Typography>
             </div>
             <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
           </PositionDetails>
@@ -178,36 +175,43 @@ function CollaterizationIndicator({ position }) {
       <Collapse in={more}>
         <PositionDetails>
           <Flex justifyContent="flex-start" alignItems="center" width="80%">
-            <span>{t('healthFactor.currentLoanToValue.title')}</span>
+            <span>
+              <Trans i18nKey="healthFactor.currentLoanToValue.title">Current Loan-to-Value</Trans>
+            </span>
             {!isMobile && !isTablet && (
               <Tooltip>
                 <InfoOutlinedIcon />
                 <span>
-                  {HTMLReactParser(
-                    sprintf(
-                      t('healthFactor.currentLoanToValue.tooltip'),
-                      `${threshold}%`,
-                      threshold.toString(),
-                    ),
-                  )}
-                  {/* The Maximum Loan-to-Value ratio represents the maximum borrow limit.
-                  <br />A max. LTV of {threshold}% means the user can borrow up to $ {threshold} in
-                  the principal currency for every $100 worth of collateral.
-                  <br />
-                  <IntenseSpan>With LTV above 75% they risk a liquidation.</IntenseSpan> */}
+                  <Trans i18nKey="healthFactor.currentLoanToValue.tooltip">
+                    The Maximum Loan-to-Value ratio represents the maximum borrow limit. A max. LTV
+                    of {{ threshold }}% means the user can borrow up to ${{ threshold }} in the
+                    principal currency for every $100 worth of collateral.
+                    <IntenseSpan primary>With LTV above 75% they risk a liquidation.</IntenseSpan>
+                  </Trans>
                 </span>
+                {/* <span>
+                  <Trans i18nKey="healthFactor.tooltip">
+                    The health factor represents the safety of your loan derived from the proportion
+                    of collateral versus amount borrowed.
+                    <IntenseSpan primary>Keep it above 1 to avoid liquidation.</IntenseSpan>
+                  </Trans>
+                </span> */}
               </Tooltip>
             )}
           </Flex>
           <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
         </PositionDetails>
         <PositionDetails>
-          <div className="title">{t('healthFactor.ltvLiquidationThreshold')}</div>
+          <div className="title">
+            <Trans i18nKey="healthFactor.ltvLiquidationThreshold">LTV liquidation threshold</Trans>
+          </div>
           <div className="number">{threshold} %</div>
         </PositionDetails>
         <PositionDetails>
           <div className="title">
-            {sprintf(t('healthFactor.currentCollateralPrice'), collateralAsset.name)}
+            <Trans i18nKey="healthFactor.currentCollateralPrice">
+              Current {{ collateral: collateralAsset.name }} price
+            </Trans>
           </div>
           <div className="number">
             $ {collateralAssetPrice ? collateralAssetPrice.toFixed(2) : '...'}
@@ -215,7 +219,9 @@ function CollaterizationIndicator({ position }) {
         </PositionDetails>
         <PositionDetails>
           <div className="title">
-            {sprintf(t('healthFactor.collateralLiquidationPrice'), collateralAsset.name)}
+            <Trans i18nKey="healthFactor.collateralLiquidationPrice">
+              {{ collateral: collateralAsset.name }} liquidation price
+            </Trans>
           </div>
           <div className="number">
             $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
@@ -251,7 +257,9 @@ function CollaterizationIndicator({ position }) {
             }}
             endIcon={more ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           >
-            {more ? t('healthFactor.showLess') : t('healthFactor.showMore')}
+            <Trans i18nKey={more ? 'healthFactor.showLess' : 'healthFactor.showMore'}>
+              {more ? 'Show less' : 'Show more'}
+            </Trans>
           </Button>
         </PositionDetails>
       )}

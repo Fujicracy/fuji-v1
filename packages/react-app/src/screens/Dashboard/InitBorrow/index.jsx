@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -19,8 +19,8 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
-import { sprintf } from 'sprintf-js';
-import HTMLReactParser from 'html-react-parser';
+// import { sprintf } from 'sprintf-js';
+// import HTMLReactParser from 'html-react-parser';
 
 import { ETH_CAP_VALUE } from 'consts/globals';
 import {
@@ -90,8 +90,6 @@ function InitBorrow() {
     address,
     vault && contracts ? contracts[vault.name]?.address : '0x',
   ]);
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -506,7 +504,7 @@ function InitBorrow() {
                       text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
-                    subTitle={t('initBorrow.amountToBorrow')}
+                    subTitle={<Trans i18nKey="initBorrow.amountToBorrow">Amount to borrow</Trans>}
                     description={
                       errors?.borrowAmount?.message === 'insufficient-borrow' &&
                       'Please, type the amount at least 1'
@@ -540,10 +538,15 @@ function InitBorrow() {
                       text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
-                    subTitle={t('global.collateral')}
-                    subTitleInfo={`${isMobile ? 'Balance' : t('global.balance')}: ${
-                      balance ? fixDecimal(balance, 3) : '...'
-                    }`}
+                    subTitle={<Trans i18nKey="global.collateral">Collateral</Trans>}
+                    subTitleInfo={
+                      <>
+                        <Trans i18nKey={isMobile ? 'global.balance' : 'initBorrow.yourBalance'}>
+                          {isMobile ? 'Balance' : 'Your Balance'}
+                        </Trans>
+                        {`: ${balance ? fixDecimal(balance, 3) : '...'}`}
+                      </>
+                    }
                     errorComponent={
                       errors?.collateralAmount?.message === 'required-amount' ? (
                         <ErrorInputMessage>
@@ -570,9 +573,10 @@ function InitBorrow() {
                 </div>
 
                 <Helper>
-                  {/* Liquidity for this transaction comes from
-                  <span>{` ${getActiveProviderName()}`}</span>. */}
-                  {HTMLReactParser(sprintf(t('initBorrow.helper'), getActiveProviderName()))}
+                  <Trans i18nKey="initBorrow.helper">
+                    Liquidity for this transaction comes from
+                    <span>{{ provider: getActiveProviderName() }}</span>.
+                  </Trans>
                 </Helper>
 
                 <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>

@@ -17,24 +17,24 @@
     "amountToBorrow": "Amount to borrow",
     "yourBalance": "Your balance",
     "liquidityNotification": "Liquidity for this transaction comes from",
-    "helper": "Liquidity for this transaction comes from <span>%s</span>"
+    "helper": "Liquidity for this transaction comes from <1>{{provider}}</1>"
   },
   "howItWorks": {
     "title": "How it works",
-    "description": "With Fuji you reduce your loan expenses by <span className=\"bold\">~10%</span>. The protocol constantly <span className=\"bold\">monitors</span> borrow markets and automatically <span className=\"bold\">refinances</span> its debt positions at the best available rates."
+    "description": "With Fuji you reduce your loan expenses by <1>~10%</1>. The protocol constantly <1>monitors</1> borrow markets and automatically <1>refinances</1> its debt positions at the best available rates."
   },
   "healthFactor": {
     "title": "Health Factor",
-    "tooltip": "<span>The health factor represents the safety of your loan derived from the proportion of collateral versus amount borrowed.<br /><span>Keep it above 1 to avoid liquidation.</span></span>",
+    "tooltip": "The health factor represents the safety of your loan derived from the proportion of collateral versus amount borrowed.<br /><1>Keep it above 1 to avoid liquidation.</1>",
     "borrowLimitUsed": "Borrow Limit Used",
     "showMore": "Show more",
     "showLess": "Show less",
     "currentLoanToValue": {
       "title": "Current Loan-to-Value",
-      "tooltip": "The Maximum Loan-to-Value ratio represents the maximum borrow limit. <br />A max. LTV of %1$s means the user can borrow up to $ %2$s in the principal currency for every $100 worth of collateral.<br /><span>With LTV above they risk a liquidation.</span>"
+      "tooltip": "The Maximum Loan-to-Value ratio represents the maximum borrow limit. <br />A max. LTV of {{threshold}}% means the user can borrow up to ${{threshold}} in the principal currency for every $100 worth of collateral.<br /><5>With LTV above they risk a liquidation.</5>"
     },
     "ltvLiquidationThreshold": "LTV liquidation threshold",
-    "currentCollateralPrice": "Current %s price",
-    "collateralLiquidationPrice": "%s liquidation price"
+    "currentCollateralPrice": "Current {{collateral}} price",
+    "collateralLiquidationPrice": "{{collateral}} liquidation price"
   }
 }

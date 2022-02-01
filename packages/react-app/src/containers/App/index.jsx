@@ -16,7 +16,7 @@ import Team from 'screens/Team';
 import Error from 'screens/Error';
 import Governance from 'screens/Governance';
 
-import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
+import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components';
 import { CONTACTS } from 'consts/contacts';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Container, FadingBackground, NavText } from './styles';
@@ -31,7 +31,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <ModalProvider backgroundComponent={FadingBackground}>
-        <Suspense fallback={<div>loading...</div>}>
+        <Suspense fallback="loading">
           <Container>
             <GlobalStyle />
             <HashRouter>
@@ -64,6 +64,7 @@ function App() {
                   <Error />
                 </Route>
               </Switch>
+
               {!isMobileOrTablet && (
                 <footer>
                   <NavUnlisted position="left">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image, Box } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import Collapse from '@material-ui/core/Collapse';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -26,8 +26,6 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const { t } = useTranslation();
-
   useEffect(() => defaultVault && setSelectedVault(defaultVault), [defaultVault]);
   const toggling = () => setIsOpen(!isOpen);
 
@@ -43,7 +41,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
         fontSize={isTablet ? '20px' : '16px'}
         mb={isMobile ? '16px' : isTablet ? '24px' : '20px'}
       >
-        {t('global.borrow')}
+        <Trans i18nKey="global.borrow">Borrow</Trans>
       </SectionTitle>
       <Box mb={isMobile ? 4 : 4}>
         <DropDownHeader isOpened={isOpen} onClick={toggling}>
@@ -79,7 +77,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                 fontSize={isTablet ? '18px' : '16px'}
                 color={isMobile && 'rgba(255, 255, 255, 0.5)'}
               >
-                {t('global.with')}
+                <Trans i18nKey="global.with">with</Trans>
               </SectionTitle>
             </Box>
           </Box>
@@ -159,7 +157,7 @@ const SelectVault = ({ defaultVault, onChangeVault, vaults }) => {
                             fontSize={isTablet ? '18px' : '16px'}
                             color={isMobile && 'rgba(255, 255, 255, 0.5)'}
                           >
-                            {t('global.with')}
+                            <Trans i18nKey="global.with">with</Trans>
                           </SectionTitle>
                         </Box>
                       </Box>
