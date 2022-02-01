@@ -31,7 +31,7 @@
     "showLess": "Toon minder",
     "currentLoanToValue": {
       "title": "Huidige lening-naar-waarde",
-      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><1>Met een LTV erboven riskeren ze een liquidatie.</1>"
+      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><5>Met een LTV erboven riskeren ze een liquidatie.</5>"
     },
     "ltvLiquidationThreshold": "LTV-liquidatiedrempel",
     "currentCollateralPrice": "Huidige {{collateral}} prijs",
