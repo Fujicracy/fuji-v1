@@ -7,6 +7,9 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
+import { useWindowSize } from 'hooks';
+
+import { calcResponsiveSize } from 'helpers';
 
 import {
   fujiLanding1,
@@ -33,16 +36,31 @@ function FirstPage({ onClickAnimation }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  const windowDimensions = useWindowSize();
+
+  const designDimension = {
+    width: isMobile ? 375 : isTablet ? 768 : 1440,
+    height: isMobile ? 812 : isTablet ? 1024 : 1024,
+  };
+
+  const ratio = {
+    xAxios: Math.min(windowDimensions.width / designDimension.width, 1),
+    yAxios: Math.min(windowDimensions.height / designDimension.height, 1),
+  };
+
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
       <HomeAnimatedContainer style={props}>
-        <Image src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1} />
+        <Image
+          src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1}
+          height={isMobile || isTablet ? '40vh' : '64vh'}
+        />
         {(isMobile || isTablet) && (
           <SectionTitle
             fontWeight="700"
-            fontSize="48px"
+            fontSize={isMobile || isTablet ? calcResponsiveSize(ratio, 70) : 70}
             textAlign="center"
-            m="64px 0px 4px"
+            m="6vh 0px 4px"
             fontFamily="Nexa Regular"
           >
             FujiDAO
@@ -50,23 +68,25 @@ function FirstPage({ onClickAnimation }) {
         )}
         <SectionTitle
           fontWeight="400"
-          fontSize="28px"
+          fontSize={calcResponsiveSize(ratio, isMobile ? 24 : 28)}
           textAlign="center"
-          m="24px 0px 36px"
+          lineHeight="130%"
+          m="3vh 0px 4vh"
           fontFamily="Nexa Regular"
         >
           The Auto-Refinancing{isMobile && <br />} Borrow Protocol
         </SectionTitle>
         {(isMobile || isTablet) && (
-          <Flex width="100%" padding={isMobile ? '24px 36px 44px' : '24px 92px 44px'}>
+          <Flex width="100%" padding={isMobile ? '3vh 36px 5vh' : '3vh 92px 5vh'}>
             <Button
               block
               color="white"
-              fontSize={isTablet ? '24px' : '18px'}
-              height={isTablet ? 64 : 48}
+              fontSize={calcResponsiveSize(ratio, isTablet ? 24 : 18)}
+              height={calcResponsiveSize(ratio, isMobile ? 48 : 60)}
               onClick={() => {
                 window.location = `${APP_URL}/#/dashboard`;
               }}
+              noResizeOnResponsive
             >
               Go to App
             </Button>

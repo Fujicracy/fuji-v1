@@ -8,7 +8,7 @@ import { logoTitleIcon, logoIcon } from 'assets/images';
 
 import { Container, HeaderContainer, Logo } from './styles';
 
-function LandingHeader({ isShowLogo }) {
+function LandingHeader({ isShowLogo, height }) {
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
   });
@@ -20,7 +20,7 @@ function LandingHeader({ isShowLogo }) {
 
   return (
     <Container>
-      <HeaderContainer isShowLogo={isShowLogo}>
+      <HeaderContainer isShowLogo={isShowLogo} height={height}>
         {isShowLogo && (
           <a href={LANDING_URL} style={{ lineHeight: '10px', height: '100%' }}>
             <Logo
@@ -35,10 +35,8 @@ function LandingHeader({ isShowLogo }) {
             block
             outline
             color="white"
-            fontSize="16px"
             borderRadius="64"
             background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
-            fontFamily="Nexa Regular"
           >
             Go to App
           </Button>

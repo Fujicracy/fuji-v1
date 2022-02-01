@@ -4,8 +4,9 @@ const { createFixtureLoader } = require("ethereum-waffle");
 
 const { getContractAt, provider } = ethers;
 
+const { parseUnits, evmSnapshot, evmRevert, FLASHLOAN } = require("./../helpers");
+
 const { fixture, ASSETS, VAULTS } = require("./utils");
-const { parseUnits, evmSnapshot, evmRevert, FLASHLOAN } = require("../helpers");
 
 const {
   testDeposit1,
@@ -15,17 +16,19 @@ const {
   testBorrow3,
   testPaybackAndWithdraw1,
   testPaybackAndWithdraw2,
-  testPaybackAndWithdraw3,
-} = require("../FujiVault");
+  testPaybackAndWithdraw3
+} = require("./../FujiVault");
 
-const { testRefinance1, testRefinance2, testRefinance3 } = require("../controller");
+const { testRefinance1, testRefinance2, testRefinance3 } = require("./../Controller");
 
-const FUJI_SCREAM_MAPPING = "0xA9c29eA1a067740be6dB1F98FcbA0043C475041A";
+const HUNDRED_FUJI_MAPPING = "0xE89f9aFe2cd8B0498FC575238b0ef65Cf24e3De2";
 
 const vaults = {};
+
 for (const v of VAULTS) {
   vaults[v.name] = v;
 }
+
 const {
   vaultftmdai,
   vaultftmusdc,
@@ -134,92 +137,95 @@ describe("Fantom Fuji Instance", function () {
     evmRevert(evmSnapshot0);
   });
 
-  describe("Scream! as Provider", function () {
+  describe("Hundred Finance as Provider", function () {
     before(async function () {
       evmRevert(evmSnapshot1);
-
       for (let i = 0; i < VAULTS.length; i += 1) {
         const vault = VAULTS[i];
-        await this.f[vault.name].setActiveProvider(this.f.scream.address);
+        await this.f[vault.name].setActiveProvider(this.f.hundred.address);
       }
     });
 
     describe("Native token as collateral, ERC20 as borrow asset.", function () {
       testDeposit1(
-        FUJI_SCREAM_MAPPING,
-        [vaultftmdai, vaultftmusdc, vaultftmweth, vaultftmwbtc],
+        HUNDRED_FUJI_MAPPING,
+        [vaultftmdai, vaultftmusdc],
         DEPOSIT_FTM
       );
 
       testBorrow1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testBorrow1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testBorrow1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
 
-      testPaybackAndWithdraw1([vaultftmdai, vaultftmusdc], DEPOSIT_FTM, BORROW_STABLE);
-      testPaybackAndWithdraw1([vaultftmweth], DEPOSIT_FTM, BORROW_WETH);
-      testPaybackAndWithdraw1([vaultftmwbtc], DEPOSIT_FTM, BORROW_WBTC);
+      testPaybackAndWithdraw1(
+        [vaultftmdai, vaultftmusdc],
+        DEPOSIT_FTM,
+        BORROW_STABLE
+      );
 
-      testRefinance1([vaultftmusdc, vaultftmdai], "scream", "cream", DEPOSIT_FTM, BORROW_STABLE, 0);
-      testRefinance1([vaultftmweth], "scream", "cream", DEPOSIT_FTM, BORROW_WETH, 0);
-      testRefinance1([vaultftmwbtc], "scream", "cream", DEPOSIT_FTM, BORROW_WBTC, 0);
+      testRefinance1(
+        [vaultftmdai, vaultftmusdc],
+        "hundred",
+        "geist",
+        DEPOSIT_FTM,
+        BORROW_STABLE,
+        FLASHLOAN.AAVE
+      );
+      testRefinance1(
+        [vaultftmdai, vaultftmusdc],
+        "hundred",
+        "scream",
+        DEPOSIT_FTM,
+        BORROW_STABLE,
+        FLASHLOAN.AAVE
+      );
     });
 
     describe("ERC20 token as collateral, ERC20 as borrow asset.", function () {
       testDeposit2(
-        FUJI_SCREAM_MAPPING,
-        [vaultwftmdai, vaultwftmusdc, vaultwftmweth, vaultwftmwbtc],
-        DEPOSIT_FTM
-      );
-      testDeposit2(FUJI_SCREAM_MAPPING, [vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE);
-      testDeposit2(
-        FUJI_SCREAM_MAPPING,
-        [vaultwethwftm, vaultwethdai, vaultwethusdc, vaultwethwbtc],
+        HUNDRED_FUJI_MAPPING,
+        [vaultwethdai, vaultwethusdc],
         DEPOSIT_WETH
       );
       testDeposit2(
-        FUJI_SCREAM_MAPPING,
-        [vaultwbtcwftm, vaultwbtcdai, vaultwbtcusdc, vaultwbtcweth],
+        HUNDRED_FUJI_MAPPING,
+        [vaultwbtcdai, vaultwbtcusdc],
         DEPOSIT_WBTC
       );
 
       testBorrow2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
       testBorrow2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
-      testBorrow2([vaultdaiwftm, vaultusdcwftm], DEPOSIT_STABLE, BORROW_FTM);
-      testBorrow2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testBorrow2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
 
-      testPaybackAndWithdraw2([vaultdaiweth, vaultusdcweth], DEPOSIT_STABLE, BORROW_WETH);
-      testPaybackAndWithdraw2([vaultdaiwbtc, vaultusdcwbtc], DEPOSIT_STABLE, BORROW_WBTC);
+      testPaybackAndWithdraw2([vaultwethdai, vaultwethusdc], DEPOSIT_WETH, BORROW_STABLE);
+      testPaybackAndWithdraw2([vaultwbtcdai, vaultwbtcusdc], DEPOSIT_WBTC, BORROW_STABLE);
 
       testRefinance2(
         [vaultwethdai, vaultwethusdc],
-        "scream",
-        "cream",
+        "hundred",
+        "geist",
         DEPOSIT_WETH,
         BORROW_STABLE,
-        0
+        FLASHLOAN.AAVE
       );
-      testRefinance2([vaultwethwbtc], "scream", "cream", DEPOSIT_WETH, BORROW_WBTC, 0);
       testRefinance2(
-        [vaultdaiweth, vaultusdcweth],
+        [vaultwbtcdai, vaultwbtcusdc],
+        "hundred",
         "scream",
-        "cream",
-        DEPOSIT_STABLE,
-        BORROW_WETH,
-        0
+        DEPOSIT_WBTC,
+        BORROW_STABLE,
+        FLASHLOAN.AAVE
       );
     });
 
     describe("ERC20 token as collateral, native token as borrow asset.", function () {
-      testBorrow3([vaultdaiftm], DEPOSIT_STABLE, BORROW_FTM);
-
-      testPaybackAndWithdraw3([vaultwbtcftm], DEPOSIT_WBTC, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM * 0.5);
-      testPaybackAndWithdraw3([vaultdaiftm, vaultusdcftm], DEPOSIT_STABLE, BORROW_FTM * 0.5);
-
-      testRefinance3([vaultusdcftm, vaultdaiftm], "scream", "cream", DEPOSIT_STABLE, BORROW_FTM, 0);
-      testRefinance3([vaultwbtcftm], "scream", "cream", DEPOSIT_WBTC, BORROW_FTM, 0);
-      testRefinance3([vaultwethftm], "scream", "cream", DEPOSIT_WETH, BORROW_FTM, 0);
+      testBorrow3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM);
+      testPaybackAndWithdraw3([vaultwethftm], DEPOSIT_WETH, BORROW_FTM);
+      testRefinance3(
+        [vaultwethftm],
+        "hundred",
+        "geist",
+        DEPOSIT_WETH,
+        BORROW_FTM,
+        FLASHLOAN.AAVE
+      );
     });
   });
 });

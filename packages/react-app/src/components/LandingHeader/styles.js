@@ -13,9 +13,9 @@ export const HeaderContainer = styled(Box)`
   flex-direction: row;
   align-items: center;
   justify-content: ${props => (props.isShowLogo ? 'space-between' : 'flex-end')};
-  height: 100px;
+  height: ${props => (props.height ? props.height : '100px')};
 
-  padding: 28px 32px;
+  padding: 0px 32px;
 
   ${size}
 
