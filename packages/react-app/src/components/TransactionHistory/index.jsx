@@ -11,9 +11,10 @@ import {
   // CHAIN_NAME,
   // ASSETS,
 } from 'consts';
-import { Grid } from '@material-ui/core';
+import { Grid, CircularProgress } from '@material-ui/core';
 import { useTransactionHistory, useAuth } from 'hooks';
 import OpenInNew from '@material-ui/icons/OpenInNew';
+import { fixDecimalString } from 'helpers';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import BlackBoxContainer from '../Blocks/BlackBoxContainer';
@@ -39,18 +40,23 @@ const TransactionHistory = ({ vaultName }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const transactionHistories = useTransactionHistory(vaultName, selectedAction.title);
+  const { transactionHistories } = useTransactionHistory(vaultName, selectedAction.title);
 
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
   const handleViewDetail = hash => {
     if (isMobile) window.open(`${EXPLORER_INFOS[networkId].url}${hash}`, '_blank');
   };
+
+  const onActionChange = option => {
+    setSelectedAction(option);
+  };
+
   return (
     <BlackBoxContainer
       p={isMobile ? '32px 28px 16px' : isTablet ? '44px 36px 40px' : '16px 32px 24px'}
       mt="40px"
-      mb="50px"
+      mb="48px"
     >
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>History</SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
@@ -77,7 +83,7 @@ const TransactionHistory = ({ vaultName }) => {
           defaultOption={selectedAction}
           width={200}
           isOptionSelectable
-          onOptionClicked={option => setSelectedAction(option)}
+          onOptionClicked={option => onActionChange(option)}
         />
         {/* <SectionTitle mr={2} ml={3}>
           Asset:
@@ -93,7 +99,7 @@ const TransactionHistory = ({ vaultName }) => {
 
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <BlackBoxContainer hasBlackContainer={false} p="16px 4px 0px">
+          <BlackBoxContainer hasBlackContainer={false} p="0px 4px">
             <Grid container>
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
                 Date
@@ -112,58 +118,91 @@ const TransactionHistory = ({ vaultName }) => {
             </Grid>
           </BlackBoxContainer>
         </Grid>
-        {transactionHistories.map((history, index) => {
-          return (
-            <Grid item xs={12} key={`${index.toString()}`}>
-              <BlackBoxContainer hasBlackContainer={false} p="4px">
-                <Grid container>
-                  <GridItem
-                    item
-                    xs={4}
-                    sm={3}
-                    md={3}
-                    onClick={() => handleViewDetail(history.txHash)}
-                  >
-                    {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}`}
+        {!transactionHistories ? (
+          <GridItem item xs={12}>
+            <Flex
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="96px"
+            >
+              <CircularProgress
+                style={{
+                  width: 25,
+                  height: 25,
+                  color: 'rgba(255, 255, 255, 0.9)',
+                }}
+              />
+            </Flex>
+          </GridItem>
+        ) : transactionHistories.length === 0 ? (
+          <GridItem item xs={12}>
+            <Flex
+              width="100%"
+              height="100%"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="96px"
+            >
+              <SectionTitle
+                fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}
+                color="rgba(255, 255, 255, 0.7)"
+              >
+                No Transactions
+              </SectionTitle>
+            </Flex>
+          </GridItem>
+        ) : (
+          transactionHistories.map((history, index) => {
+            return (
+              <Grid container item xs={12} key={`${index.toString()}`}>
+                <GridItem
+                  item
+                  xs={4}
+                  sm={3}
+                  md={3}
+                  onClick={() => handleViewDetail(history.txHash)}
+                >
+                  {`${history.Date.toLocaleDateString()} ${history.Date.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}`}
+                </GridItem>
+                <GridItem
+                  item
+                  xs={4}
+                  sm={3}
+                  md={3}
+                  onClick={() => handleViewDetail(history.txHash)}
+                >
+                  {history.Action}
+                </GridItem>
+                <GridItem
+                  item
+                  xs={4}
+                  sm={3}
+                  md={3}
+                  onClick={() => handleViewDetail(history.txHash)}
+                >
+                  {fixDecimalString(history.Amount, 6)} {history.Asset || 'ETH'}
+                </GridItem>
+                {!isMobile && (
+                  <GridItem item xs={3} sm={3} cursor="pointer">
+                    <LinkItem
+                      onClick={() =>
+                        window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')
+                      }
+                    >
+                      Explorer&nbsp;
+                      <OpenInNew />
+                    </LinkItem>
                   </GridItem>
-                  <GridItem
-                    item
-                    xs={4}
-                    sm={3}
-                    md={3}
-                    onClick={() => handleViewDetail(history.txHash)}
-                  >
-                    {history.Action}
-                  </GridItem>
-                  <GridItem
-                    item
-                    xs={4}
-                    sm={3}
-                    md={3}
-                    onClick={() => handleViewDetail(history.txHash)}
-                  >
-                    {`${history.Amount.toFixed(3)} ${history.Asset || 'ETH'}`}
-                  </GridItem>
-                  {!isMobile && (
-                    <GridItem item xs={3} sm={3} cursor="pointer">
-                      <LinkItem
-                        onClick={() =>
-                          window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')
-                        }
-                      >
-                        Explorer&nbsp;
-                        <OpenInNew />
-                      </LinkItem>
-                    </GridItem>
-                  )}
-                </Grid>
-              </BlackBoxContainer>
-            </Grid>
-          );
-        })}
+                )}
+              </Grid>
+            );
+          })
+        )}
       </Grid>
     </BlackBoxContainer>
   );

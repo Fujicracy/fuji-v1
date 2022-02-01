@@ -42,6 +42,7 @@ import {
   CallContractFunction,
   getUserBalance,
   getExchangePrice,
+  fixDecimalString,
   fixDecimal,
 } from 'helpers';
 import { useAuth, useBalance, useAllowance, useResources, useContractLoader } from 'hooks';
@@ -501,7 +502,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
-                      text: fixDecimal(borrowAmount * borrowAssetPrice, 2),
+                      text: fixDecimalString(borrowAmount * borrowAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle={<Trans i18nKey="initBorrow.amountToBorrow">Amount to borrow</Trans>}
@@ -520,7 +521,7 @@ function InitBorrow() {
                     placeholder={`${
                       neededCollateral
                         ? neededCollateral > 0
-                          ? `min ${fixDecimal(neededCollateral, 6)}`
+                          ? `min ${fixDecimalString(neededCollateral, 6)}`
                           : 'Type amount (optional)'
                         : '...'
                     }`}
@@ -535,7 +536,7 @@ function InitBorrow() {
                     })}
                     startAdornmentImage={collateralAsset.icon}
                     endAdornment={{
-                      text: fixDecimal(collateralAmount * collateralAssetPrice, 2),
+                      text: fixDecimalString(collateralAmount * collateralAssetPrice, 2),
                       type: 'currency',
                     }}
                     subTitle={<Trans i18nKey="global.collateral">Collateral</Trans>}
@@ -556,7 +557,7 @@ function InitBorrow() {
                         <ErrorInputMessage>
                           Please, provide at least{' '}
                           <span>
-                            {neededCollateral ? fixDecimal(neededCollateral, 6) : '...'}{' '}
+                            {neededCollateral ? fixDecimalString(neededCollateral, 6) : '...'}{' '}
                             {collateralAsset.name}
                           </span>{' '}
                           as collateral!
