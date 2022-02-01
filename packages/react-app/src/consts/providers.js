@@ -10,6 +10,7 @@ const PROVIDER_TYPE = {
   SCREAM: 'Scream',
   CREAM: 'Cream',
   GEIST: 'Geist',
+  HUNDRED: 'Hundred',
 };
 
 const PROVIDERS = {
@@ -62,12 +63,17 @@ const PROVIDERS = {
   [PROVIDER_TYPE.CREAM]: {
     id: 'cream',
     name: 'ProviderCream',
-    title: 'IronBank',
+    title: 'Iron Bank',
   },
   [PROVIDER_TYPE.GEIST]: {
     id: 'geist',
     name: 'ProviderGeist',
     title: 'Geist',
+  },
+  [PROVIDER_TYPE.HUNDRED]: {
+    id: 'hundred',
+    name: 'ProviderHundred',
+    title: 'Hundred',
   },
 };
 
