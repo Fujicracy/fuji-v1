@@ -343,9 +343,7 @@ function Header() {
                   </NavLink>
                 </li>
               )}
-              <li>
-                <LanguageDropdown />
-              </li>
+
               <li>
                 <NetworkDropdown />
               </li>
@@ -387,6 +385,10 @@ function Header() {
                     )}
                   </Box>
                 </BallanceContainer>
+              </li>
+
+              <li>
+                <LanguageDropdown />
               </li>
             </Navigation>
           ))}
