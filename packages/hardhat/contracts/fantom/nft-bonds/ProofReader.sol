@@ -6,7 +6,6 @@ import "hardhat/console.sol";
 
 contract ProofReader {
   bytes32 public merkleRoot;
-  uint8 storeddataSize;
 
   mapping(address => bool) public givePoints;
 
@@ -14,10 +13,18 @@ contract ProofReader {
     merkleRoot = _merkleroot;
   }
 
-  function tryGetthePoints() public {
+  function borrow(uint256 _borrowAmount) external {
+    _borrowAmount;
+    _tryGetthePoints();
+  }
+
+  // Internal functions to extract proof
+
+  function _tryGetthePoints() internal {
     (bool successGetProof, bytes32[] memory proof) = _getProofFromMessage();
     require(successGetProof, "Cannot extract proof!");
     require(_verify(msg.sender, proof), "cannot verify proof!");
+    console.log("verify ok");
     givePoints[msg.sender] = true;
   }
 
@@ -27,11 +34,43 @@ contract ProofReader {
   }
 
   function _getProofFromMessage() internal returns (bool success, bytes32[] memory proof) {
-    uint8 dataSize; //Number of data entries
+    uint8 dataSize;
+    uint8 bytes32slots;
+    uint8 proofcontent;
     assembly {
       dataSize := calldatasize()
+      bytes32slots := div(sub(dataSize, 36), 32)
+      proofcontent := sub(bytes32slots, 2)
     }
-    storeddataSize = dataSize;
-    console.log("dataSize", storeddataSize);
+    require(dataSize > 100, "No proof detected!");
+
+    bytes memory data = msg.data[100:dataSize];
+    proof = _bytesToBytes32Array(data);
+
+    require(proof.length == proofcontent, "build proof failed!");
+
+    success = true;
+  }
+
+  function _bytesToBytes32Array(bytes memory data) private pure returns (bytes32[] memory) {
+    // Find 32 bytes segments nb
+    uint256 dataNb = data.length / 32;
+    // Create an array of dataNb elements
+    bytes32[] memory dataList = new bytes32[](dataNb);
+    // Start array index at 0
+    uint256 index = 0;
+    // Loop all 32 bytes segments
+    for (uint256 i = 32; i <= data.length; i = i + 32) {
+      bytes32 temp;
+      // Get 32 bytes from data
+      assembly {
+        temp := mload(add(data, i))
+      }
+      // Add extracted 32 bytes to list
+      dataList[index] = temp;
+      index++;
+    }
+    // Return data list
+    return (dataList);
   }
 }

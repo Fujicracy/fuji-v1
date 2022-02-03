@@ -3,14 +3,36 @@ const { expect } = require('chai');
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
+const DEBUG = false;
 
 const abiCoder = ethers.utils.defaultAbiCoder;
 
-const DEBUG = true;
+const remove0xFromHexString = function (hexString) {
+  if (!(hexString === null || hexString === void 0 ? void 0 : hexString.toLowerCase().startsWith("0x"))) {
+    return hexString;
+  }
+  return hexString.substr(2);
+}
 
-describe("Show extraction Steps", function () {
+const appendMerkleProof = function (unsignedTransaction, merkletree, unhashedleaf) {
+  let utx = unsignedTransaction;
+  let proof = merkletree.getHexProof(keccak256(unhashedleaf));
+  if (DEBUG) {
+    console.log("proof from js", proof);
+  }
+  proof = abiCoder.encode(['bytes32[]'], [proof]);
+  proof = remove0xFromHexString(proof);
+  utx.data = utx.data + proof;
+  return utx;
+}
+
+describe("Test Proof Extraction", function () {
 
   let accounts;
+  let userEligible;
+  let userEligibleIndex;
+  let userNONeligible;
+  let userNONeligibleIndex;
 
   let ProofReader;
   let leaves;
@@ -20,6 +42,10 @@ describe("Show extraction Steps", function () {
 
   before(async () => {
     accounts = await ethers.getSigners();
+    userEligibleIndex = 0;
+    userEligible = accounts[userEligibleIndex];
+    userNONeligibleIndex = 19;
+    userNONeligible = accounts[userNONeligibleIndex];
 
     ProofReader = await ethers.getContractFactory('ProofReader');
     leaves = require('./sample-merkle-leaves.json');
@@ -28,23 +54,53 @@ describe("Show extraction Steps", function () {
     proofreader = await ProofReader.deploy(merkleroot);
   });
 
-  it('Read datasize with no passed proof', async () => {
-    const datasize = await proofreader.connect(accounts[0]).tryGetthePoints();
-    if (DEBUG) {
-      console.log("datasize", datasize);
-    }
-    expect(datasize).to.be.gt(0);
+  it('Should revert if no passed proof', async () => {
+    await expect(proofreader.connect(userEligible).borrow(100)).to.be.revertedWith("No proof detected!");
   });
 
-  it.only('Read datasize with passed proof', async () => {
-    let proof = merkletree.getHexProof(keccak256(leaves[0]));
-    proof = abiCoder.encode(['bytes32[]'], [proof]);
-    let utx = await proofreader.connect(accounts[0]).populateTransaction.tryGetthePoints();
-    if (DEBUG) {
-      console.log("proof", proof);
-      console.log("utx", utx);
+  it('Should revert if eligible user passes wrong proof', async () => {
+    let utx = await proofreader.connect(userEligible).populateTransaction.borrow(100);
+    utx = appendMerkleProof(utx, merkletree, leaves[userEligibleIndex]);
+
+    // Modify proof to be wrong.
+    function setCharAt(str, index, chr) {
+      if (index > str.length - 1) return str;
+      return str.substring(0, index) + chr + str.substring(index + 1);
     }
-    utx.data = utx.data + 
+    const dataLength = (utx.data).length;
+    utx.data = setCharAt(utx.data, dataLength - 10, 'f');
+
+    if (DEBUG) {
+      console.log("modified-utx-proof", utx);
+    }
+
+    await expect(userEligible.sendTransaction(utx)).to.be.revertedWith("cannot verify proof!");
+  });
+
+  it('Should revert if NON-eligible user passes a pretended proof', async () => {
+    let utx = await proofreader.connect(userNONeligible).populateTransaction.borrow(100);
+
+    // Passes the proof of an eligible user
+    utx = appendMerkleProof(utx, merkletree, leaves[userEligibleIndex]);
+
+    if (DEBUG) {
+      console.log("utx-proof", utx);
+    }
+
+    await expect(userNONeligible.sendTransaction(utx)).to.be.revertedWith("cannot verify proof!");
+  });
+
+  it("Should return true for 'givePoints' mapping, if eligible user passes correct proof", async () => {
+    let utx = await proofreader.connect(userEligible).populateTransaction.borrow(100);
+    utx = appendMerkleProof(utx, merkletree, leaves[0]);
+
+    if (DEBUG) {
+      console.log("utx+proof", utx);
+    }
+    await userEligible.sendTransaction(utx);
+
+    const check = await proofreader.givePoints(userEligible.address);
+    expect(check).to.eq(true);
   });
 
 });
