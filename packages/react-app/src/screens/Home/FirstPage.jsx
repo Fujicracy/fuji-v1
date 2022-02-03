@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSpring, config } from 'react-spring';
-// import { Button } from 'components/UI';
-// import { Grid } from '@material-ui/core';
+import { Trans, useTranslation } from 'react-i18next';
 import { SectionTitle, Animation, Button } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -37,6 +36,8 @@ function FirstPage({ onClickAnimation }) {
   });
 
   const windowDimensions = useWindowSize();
+
+  const { t } = useTranslation();
 
   const designDimension = {
     width: isMobile ? 375 : isTablet ? 768 : 1440,
@@ -74,7 +75,9 @@ function FirstPage({ onClickAnimation }) {
           m="3vh 0px 4vh"
           fontFamily="Nexa Regular"
         >
-          The Auto-Refinancing{isMobile && <br />} Borrow Protocol
+          <Trans t={t} i18nKey="homepage.landing.siteDescription">
+            The Auto-Refinancing{isMobile && <br />} Borrow Protocol
+          </Trans>
         </SectionTitle>
         {(isMobile || isTablet) && (
           <Flex width="100%" padding={isMobile ? '3vh 36px 5vh' : '3vh 92px 5vh'}>
@@ -88,7 +91,9 @@ function FirstPage({ onClickAnimation }) {
               }}
               noResizeOnResponsive
             >
-              Go to App
+              <Trans t={t} i18nKey="global.goToApp">
+                Go to App
+              </Trans>
             </Button>
           </Flex>
         )}

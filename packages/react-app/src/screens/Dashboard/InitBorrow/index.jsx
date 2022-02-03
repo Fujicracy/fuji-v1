@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
@@ -91,6 +91,8 @@ function InitBorrow() {
     address,
     vault && contracts ? contracts[vault.name]?.address : '0x',
   ]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (borrowAsset && collateralAsset) {
@@ -340,18 +342,38 @@ function InitBorrow() {
   const getBorrowBtnContent = () => {
     if (collateralAsset.isERC20) {
       if (!loading) {
-        return 'Borrow';
+        return (
+          <Trans t={t} i18nKey="global.borrow">
+            Borrow
+          </Trans>
+        );
       }
 
       if (dialog.step === 'approvalPending') {
-        return 'Approving... 1 of 2';
+        return (
+          <>
+            <Trans i18nKey="global.approving">Approving</Trans>
+            ... 1 of 2
+          </>
+        );
       }
       if (dialog.step === 'borrowing') {
-        return `Borrowing... ${dialog.withApproval ? '2 of 2' : ''}`;
+        return (
+          <>
+            <Trans i18nKey="global.borrowing">Borrowing</Trans>
+            {dialog.withApproval ? '2 of 2' : ''}
+          </>
+        );
       }
     }
 
-    return loading ? 'Borrowing...' : 'Borrow';
+    return loading ? (
+      <Trans i18nKey="global.borrowing">Borrowing</Trans>
+    ) : (
+      <Trans t={t} i18nKey="global.borrow">
+        Borrow
+      </Trans>
+    );
   };
 
   const dialogContents = {
@@ -417,6 +439,35 @@ function InitBorrow() {
       ),
     },
   };
+
+  const getCollateralErrorMessage = () => (
+    <ErrorInputMessage>
+      {errors?.collateralAmount?.message === 'required-amount' ? (
+        <Trans i18nKey="initBorrow.collateralRequiredAmount">
+          Please, type the amount you want to provide as collateral
+        </Trans>
+      ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
+        <Trans i18nKey="initBorrow.insufficientCollateral">
+          Please, provide at least
+          <span>
+            {{
+              neededCollateral: `${
+                neededCollateral ? fixDecimalString(neededCollateral, 6) : '...'
+              } ${collateralAsset.name}`,
+            }}
+          </span>
+          as collateral!
+        </Trans>
+      ) : (
+        errors?.collateralAmount?.message === 'insufficient-balance' && (
+          <Trans i18nKey="initBorrow.insufficientBalance">
+            Insufficient <span>{{ collateralName: collateralAsset.name }}</span>
+            &nbsp;balance
+          </Trans>
+        )
+      )}
+    </ErrorInputMessage>
+  );
 
   return (
     <Container>
@@ -498,7 +549,7 @@ function InitBorrow() {
                       }
                     }}
                     ref={register({
-                      min: { value: 0, message: 'insufficient-borrow' },
+                      required: { value: 1, message: 'insufficient-borrow' },
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
@@ -507,8 +558,11 @@ function InitBorrow() {
                     }}
                     subTitle={<Trans i18nKey="initBorrow.amountToBorrow">Amount to borrow</Trans>}
                     description={
-                      errors?.borrowAmount?.message === 'insufficient-borrow' &&
-                      'Please, type the amount at least 1'
+                      errors?.borrowAmount?.message === 'insufficient-borrow' && (
+                        <Trans i18nKey="initBorrow.insufficientBorrow">
+                          Please, type the amount at least 1
+                        </Trans>
+                      )
                     }
                   />
                 </div>
@@ -518,13 +572,13 @@ function InitBorrow() {
                     name="collateralAmount"
                     type="number"
                     step="any"
-                    placeholder={`${
+                    placeholder={
                       neededCollateral
                         ? neededCollateral > 0
-                          ? `min ${fixDecimalString(neededCollateral, 6)}`
-                          : 'Type amount (optional)'
+                          ? `${t('global.min')} ${fixDecimalString(neededCollateral, 6)}`
+                          : t('global.typeAmountOptional')
                         : '...'
-                    }`}
+                    }
                     onChange={value => setCollateralAmount(value)}
                     ref={register({
                       required: { value: neededCollateral > 0, message: 'required-amount' },
@@ -548,28 +602,7 @@ function InitBorrow() {
                         {`: ${balance ? fixDecimal(balance, 3) : '...'}`}
                       </>
                     }
-                    errorComponent={
-                      errors?.collateralAmount?.message === 'required-amount' ? (
-                        <ErrorInputMessage>
-                          Please, type the amount you want to provide as collateral
-                        </ErrorInputMessage>
-                      ) : errors?.collateralAmount?.message === 'insufficient-collateral' ? (
-                        <ErrorInputMessage>
-                          Please, provide at least{' '}
-                          <span>
-                            {neededCollateral ? fixDecimalString(neededCollateral, 6) : '...'}{' '}
-                            {collateralAsset.name}
-                          </span>{' '}
-                          as collateral!
-                        </ErrorInputMessage>
-                      ) : (
-                        errors?.collateralAmount?.message === 'insufficient-balance' && (
-                          <ErrorInputMessage>
-                            Insufficient {collateralAsset.name} balance
-                          </ErrorInputMessage>
-                        )
-                      )
-                    }
+                    errorComponent={getCollateralErrorMessage()}
                   />
                 </div>
 

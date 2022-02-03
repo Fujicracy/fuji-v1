@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, LANDING_URL } from 'consts';
 import { Button } from 'components/UI';
@@ -18,6 +19,7 @@ function LandingHeader({ isShowLogo, height }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  const { t } = useTranslation();
   return (
     <Container>
       <HeaderContainer isShowLogo={isShowLogo} height={height}>
@@ -38,7 +40,9 @@ function LandingHeader({ isShowLogo, height }) {
             borderRadius="64"
             background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
           >
-            Go to App
+            <Trans i18nKey="global.goToApp" t={t}>
+              Go to App
+            </Trans>
           </Button>
         </NavLink>
       </HeaderContainer>

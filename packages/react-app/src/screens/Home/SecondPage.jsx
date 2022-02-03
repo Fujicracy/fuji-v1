@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { HomepageTitle, SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import { Trans, useTranslation } from 'react-i18next';
 import { Grid } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -16,6 +18,8 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
+  const { t } = useTranslation();
 
   return (
     <PageContainter>
@@ -43,10 +47,10 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
             >
               <Flex flexDirection="column">
                 <HomepageTitle
-                  firstWord="Borrow Rates"
-                  secondWord="Fluctuate"
-                  thirdWord={isMobile ? '' : 'All The Time'}
-                  fourthWord={isMobile ? 'All The Time' : undefined}
+                  firstWord={t('homepage.secondPage.title_borrowRates')}
+                  secondWord={t('homepage.secondPage.title_fluctuate')}
+                  thirdWord={isMobile ? '' : t('homepage.secondPage.title_allTheTime')}
+                  fourthWord={isMobile ? t('homepage.secondPage.title_allTheTime') : undefined}
                   fontSize={`${titleFontSize}px`}
                 />
 
@@ -57,16 +61,24 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
                   lineHeight="130%"
                   fontFamily="Nexa Regular"
                 >
-                  <p>
-                    <br />
+                  <br />
+
+                  <Trans
+                    t={t}
+                    i18nKey={
+                      isMobile
+                        ? 'homepage.secondPage.descriptionMobile'
+                        : 'homepage.secondPage.description'
+                    }
+                  >
                     Ever borrowed in DeFi?{isMobile && <br />} Taking out a loan at 5%
                     {!isMobile && <br />} and {isMobile && <br />} paying 15% shortly after is
                     {isMobile && <br />} an everyday reality. <br />
                     <br />
                     Manually comparing loan{isMobile && <br />} providers is a tedious task,
                     <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
-                    time.
-                  </p>
+                    time.`
+                  </Trans>
                 </SectionTitle>
               </Flex>
             </Flex>
