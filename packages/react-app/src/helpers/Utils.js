@@ -3,7 +3,9 @@ export function capitalizeFirstLetter(string) {
 }
 
 export function calcResponsiveSize(ratio, size) {
-  return Math.min(ratio.xAxios * size, ratio.yAxios * size, size);
+  const ratioX = Number.isNaN(ratio.xAxios) ? 1 : ratio.xAxios;
+  const ratioY = Number.isNaN(ratio.yAxios) ? 1 : ratio.yAxios;
+  return Math.min(ratioX * size, ratioY * size, size);
 }
 
 export function fixDecimal(num, decimalCount) {
