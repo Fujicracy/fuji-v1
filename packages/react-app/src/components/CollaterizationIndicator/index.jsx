@@ -186,7 +186,9 @@ function CollaterizationIndicator({ position }) {
                     The Maximum Loan-to-Value ratio represents the maximum borrow limit. A max. LTV
                     of {{ threshold }}% means the user can borrow up to ${{ threshold }} in the
                     principal currency for every $100 worth of collateral.
-                    <IntenseSpan primary>With LTV above 75% they risk a liquidation.</IntenseSpan>
+                    <IntenseSpan primary>
+                      With LTV above {{ threshold }} % they risk a liquidation.
+                    </IntenseSpan>
                   </Trans>
                 </span>
               </Tooltip>
