@@ -6,18 +6,33 @@
     "borrowing": "Borrowing",
     "markets": "Markets",
     "min": "min",
-    "with": "with"
+    "with": "with",
+    "approve": "Approve",
+    "approving": "Approving",
+    "goToApp": "Go to App"
   },
   "homepage": {
     "landing": {
-      "goToApp": "Go to App"
+      "siteDescription": "The Auto-Refinancing Borrow Protocol"
+    },
+    "secondPage": {
+      "title_borrowRates": "Borrow Rates",
+      "title_fluctuate": "Fluctuate",
+      "title_allTheTime": "All The Time",
+      "description": "Ever borrowed in DeFi? Taking out a loan at 5%<br/> and paying 15% shortly after is an everyday reality.<br/><br/> Manually comparing loan providers is a tedious task,<br/> refinancing as rates change is expensive in gas and time.",
+      "descriptionMobile": "Ever borrowed in DeFi?<br/> Taking out a loan at 5% and<br/> paying 15% shortly after is<br/> an everyday reality.<br/><br/> Manually comparing loan</br> providers is a tedious task,<br/> refinancing as rates change</br> is expensive in gas and time."
     }
   },
   "initBorrow": {
     "amountToBorrow": "Amount to borrow",
     "yourBalance": "Your balance",
     "liquidityNotification": "Liquidity for this transaction comes from",
-    "helper": "Liquidity for this transaction comes from <1>{{provider}}</1>"
+    "helper": "Liquidity for this transaction comes from <1>{{provider}}</1>",
+    "insufficientBorrow": "Please, type the amount at least 1",
+    "typeAmountOptional": "Type amount (optional)",
+    "collateralRequiredAmount": "Please, type the amount you want to provide as collateral",
+    "insufficientBalance": "Insufficient {{collateralName}} balance",
+    "insufficientCollateral": "Please, provide at least <1>{{neededCollateral}}</1> as collateral!"
   },
   "howItWorks": {
     "title": "How it works",
@@ -31,10 +46,13 @@
     "showLess": "Show less",
     "currentLoanToValue": {
       "title": "Current Loan-to-Value",
-      "tooltip": "The Maximum Loan-to-Value ratio represents the maximum borrow limit. <br />A max. LTV of {{threshold}}% means the user can borrow up to ${{threshold}} in the principal currency for every $100 worth of collateral.<br /><5>With LTV above they risk a liquidation.</5>"
+      "tooltip": "The Maximum Loan-to-Value ratio represents the maximum borrow limit. <br />A max. LTV of {{threshold}}% means the user can borrow up to ${{threshold}} in the principal currency for every $100 worth of collateral.<br /><5>With LTV above {{ threshold }}% they risk a liquidation.</5>"
     },
     "ltvLiquidationThreshold": "LTV liquidation threshold",
     "currentCollateralPrice": "Current {{collateral}} price",
     "collateralLiquidationPrice": "{{collateral}} liquidation price"
+  },
+  "apr": {
+    "tooltip": "Live fetching borrow rates from underlying protocols that provide liquidity."
   }
 }

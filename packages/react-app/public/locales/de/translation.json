@@ -6,18 +6,32 @@
     "borrowing": "Lenen",
     "markets": "Markets",
     "min": "min",
-    "with": "met"
+    "with": "met",
+    "approve": "Goedkeuren",
+    "approving": "Goedkeuren",
+    "goToApp": "Ga naar de App"
   },
   "homepage": {
     "landing": {
-      "goToApp": "Ga naar de App"
+      "siteDescription": "Het protocol voor automatische herfinanciering van leningen"
+    },
+    "secondPage": {
+      "title1_borrowRates": "Leningstarieven",
+      "title2_fluctuate": "fluctueren",
+      "title3_allTheTime": "de hele tijd",
+      "description": "Ooit geleend in DeFi? Een lening afsluiten tegen 5% en kort daarna 15% betalen is een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van leningaanbieders is een vervelende taak, herfinanciering als de tarieven veranderen is duur in gas en tijd."
     }
   },
   "initBorrow": {
     "amountToBorrow": "Bedrag te lenen",
     "yourBalance": "Je balans",
     "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van",
-    "helper": "De liquiditeit voor deze transactie is afkomstig van <1>{{provider}}</1>"
+    "helper": "De liquiditeit voor deze transactie is afkomstig van <1>{{provider}}</1>",
+    "insufficientBorrow": "Typ het bedrag a.u.b. minimaal 1",
+    "typeAmountOptional": "Typ bedrag (optioneel)",
+    "collateralRequiredAmount": "Typ het bedrag dat u als onderpand wilt geven",
+    "insufficientBalance": "Onvoldoende <1>{{collateralName}}</1>-saldo",
+    "insufficientCollateral": "Geef ten minste <1>{{neededCollateral}}</1> op als onderpand"
   },
   "howItWorks": {
     "title": "Hoe het werkt",
@@ -31,10 +45,13 @@
     "showLess": "Toon minder",
     "currentLoanToValue": {
       "title": "Huidige lening-naar-waarde",
-      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><5>Met een LTV erboven riskeren ze een liquidatie.</5>"
+      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><5>Met een LTV {{ threshold }}% erboven riskeren ze een liquidatie.</5>"
     },
     "ltvLiquidationThreshold": "LTV-liquidatiedrempel",
     "currentCollateralPrice": "Huidige {{collateral}} prijs",
     "collateralLiquidationPrice": "{{collateral}} liquidatieprijs"
+  },
+  "apr": {
+    "tooltip": "Live leenrentes ophalen van onderliggende protocollen die liquiditeit bieden."
   }
 }
