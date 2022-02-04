@@ -2,12 +2,14 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Trans, useTranslation } from 'react-i18next';
+import { Flex } from 'rebass';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, LANDING_URL } from 'consts';
 import { Button } from 'components/UI';
 import { logoTitleIcon, logoIcon } from 'assets/images';
 
 import { Container, HeaderContainer, Logo } from './styles';
+import LanguageDropdown from '../LanguageDropdown';
 
 function LandingHeader({ isShowLogo, height }) {
   const isMobile = useMediaQuery({
@@ -32,19 +34,23 @@ function LandingHeader({ isShowLogo, height }) {
             />
           </a>
         )}
-        <NavLink to="/dashboard" activeClassName="current">
-          <Button
-            block
-            outline
-            color="white"
-            borderRadius="64"
-            background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
-          >
-            <Trans i18nKey="global.goToApp" t={t}>
-              Go to App
-            </Trans>
-          </Button>
-        </NavLink>
+
+        <Flex>
+          <LanguageDropdown />
+          <NavLink to="/dashboard" activeClassName="current">
+            <Button
+              block
+              outline
+              color="white"
+              borderRadius="64"
+              background="linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 0.01%, rgba(16, 16, 16, 0) 100%)"
+            >
+              <Trans i18nKey="global.goToApp" t={t}>
+                Go to App
+              </Trans>
+            </Button>
+          </NavLink>
+        </Flex>
       </HeaderContainer>
     </Container>
   );

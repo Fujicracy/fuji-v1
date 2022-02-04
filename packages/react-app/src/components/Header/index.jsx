@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-
 import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
-import ReactCountryFlag from 'react-country-flag';
 
 import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/images';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
@@ -24,12 +21,11 @@ import {
   CHAIN_NAMES,
   DEFAULT_BALANCE_ASSET,
   CHAINS,
-  LANGUAGES,
-  LANGUAGE_NAMES,
 } from 'consts';
 
 import { flow } from 'lodash';
 
+import LanguageDropdown from '../LanguageDropdown';
 import {
   Container,
   Logo,
@@ -59,14 +55,12 @@ function Header() {
 
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
   const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
-  const [isOpenLanguageDropDown, setIsOpenLanguageDropDown] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
   const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
   const userBalance = useBalance(provider, address, contracts);
-  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (Object.values(chains).find(chain => chain.id === networkId)) {
@@ -107,8 +101,6 @@ function Header() {
     setSelectedChain(chain);
   };
 
-  const [selectedLanguage, setSelectedLanugage] = useState(LANGUAGES[LANGUAGE_NAMES.en]);
-
   const NetworkDropdown = () => {
     return (
       <Box
@@ -143,58 +135,6 @@ function Header() {
                     <Image src={chains[key].icon} width={16} />
                     <Label color="#f5f5f5" ml="8px">
                       {chains[key].title}
-                    </Label>
-                  </DropDownItem>
-                ))}
-            </DropDownItemContainer>
-          </DropDownBackContainer>
-        )}
-      </Box>
-    );
-  };
-
-  const onChangeLanguage = async lng => {
-    i18n.changeLanguage(lng.alpha2);
-    setSelectedLanugage(lng);
-  };
-
-  const LanguageDropdown = () => {
-    return (
-      <Box
-        ml={2}
-        sx={{ position: 'relative' }}
-        tabIndex="0"
-        onBlur={() => setIsOpenLanguageDropDown(false)}
-      >
-        <DropDownHeader
-          onClick={() => setIsOpenLanguageDropDown(!isOpenLanguageDropDown)}
-          isClicked={isOpenLanguageDropDown}
-          hasBorder
-          width={!isMobile ? '160px' : '80px'}
-        >
-          <Flex justifyContent="center" alignItems="center">
-            <ReactCountryFlag countryCode={selectedLanguage?.flag} />
-            {isMobile ? (
-              <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
-            ) : (
-              <Label ml={2} color="#f5f5f5">
-                {/* {selectedChain?.title ?? 'Switch network'} */}
-                {selectedLanguage?.label}
-              </Label>
-            )}
-          </Flex>
-          <Image src={isOpenLanguageDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
-        </DropDownHeader>
-        {isOpenLanguageDropDown && (
-          <DropDownBackContainer onClick={() => setIsOpenLanguageDropDown(false)}>
-            <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
-              {Object.keys(LANGUAGES)
-                .filter(key => key !== selectedLanguage?.label)
-                .map(key => (
-                  <DropDownItem key={key} onClick={() => onChangeLanguage(LANGUAGES[key])}>
-                    <ReactCountryFlag countryCode={LANGUAGES[key].flag} />
-                    <Label color="#f5f5f5" ml="8px">
-                      {LANGUAGES[key].label}
                     </Label>
                   </DropDownItem>
                 ))}
