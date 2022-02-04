@@ -20,12 +20,10 @@ import {
   BREAKPOINT_NAMES,
   CHAIN_NAMES,
   DEFAULT_BALANCE_ASSET,
-  CHAINS,
 } from 'consts';
 
-import { flow } from 'lodash';
-
 import LanguageDropdown from '../LanguageDropdown';
+import NetworkDropdown from '../NetworkDropdown';
 import {
   Container,
   Logo,
@@ -39,36 +37,20 @@ import {
   MenuItem,
   MenuBackContainer,
   MenuNavigationContainer,
-  DropDownBackContainer,
 } from './styles';
 
 function Header() {
-  const { address, provider, onboard, networkName, networkId, changeNetwork } = useAuth();
+  const { address, provider, onboard, networkName } = useAuth();
   const contracts = useContractLoader();
   const defaultAsset = DEFAULT_BALANCE_ASSET[networkName];
 
-  const chains = flow([
-    Object.entries,
-    arr => arr.filter(([key]) => CHAINS[key].isDeployed),
-    Object.fromEntries,
-  ])(CHAINS);
-
   const [isOpenWalletDropDown, setIsOpenWalletDropDown] = useState(false);
-  const [isOpenNetworkDropDown, setIsOpenNetworkDropDown] = useState(false);
+  const [selectedChain, setSelectedChain] = useState(null);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
   const userBalance = useBalance(provider, address, contracts);
-
-  useEffect(() => {
-    if (Object.values(chains).find(chain => chain.id === networkId)) {
-      setSelectedChain(chains[networkName]);
-    } else {
-      setSelectedChain(null);
-    }
-  }, [chains, networkName, networkId]);
 
   useEffect(() => {
     function formatBalance() {
@@ -96,61 +78,14 @@ function Header() {
 
   const currentPage = useLocation();
 
-  const onChangeChain = async chain => {
-    await changeNetwork(chain.id);
-    setSelectedChain(chain);
-  };
-
-  const NetworkDropdown = () => {
-    return (
-      <Box
-        ml={2}
-        sx={{ position: 'relative' }}
-        tabIndex="0"
-        onBlur={() => setIsOpenNetworkDropDown(false)}
-      >
-        <DropDownHeader
-          onClick={() => setIsOpenNetworkDropDown(!isOpenNetworkDropDown)}
-          isClicked={isOpenNetworkDropDown}
-          hasBorder
-          width={!isMobile ? '160px' : '80px'}
-        >
-          <Image src={selectedChain?.icon} width={20} />
-          {isMobile ? (
-            <Label ml={2}>{!selectedChain ? 'Switch' : ''}</Label>
-          ) : (
-            <Label ml={2} color="#f5f5f5">
-              {selectedChain?.title ?? 'Switch network'}
-            </Label>
-          )}
-          <Image src={isOpenNetworkDropDown ? upArrowIcon : downArrowIcon} ml={2} width={11} />
-        </DropDownHeader>
-        {isOpenNetworkDropDown && (
-          <DropDownBackContainer onClick={() => setIsOpenNetworkDropDown(false)}>
-            <DropDownItemContainer width={!isMobile && !isTablet ? '128px' : '100%'}>
-              {Object.keys(chains)
-                .filter(key => key !== selectedChain?.name)
-                .map(key => (
-                  <DropDownItem key={key} onClick={() => onChangeChain(chains[key])}>
-                    <Image src={chains[key].icon} width={16} />
-                    <Label color="#f5f5f5" ml="8px">
-                      {chains[key].title}
-                    </Label>
-                  </DropDownItem>
-                ))}
-            </DropDownItemContainer>
-          </DropDownBackContainer>
-        )}
-      </Box>
-    );
-  };
-
   const menuIconStyle = {
     color: 'white',
     fontSize: 40,
     padding: 0,
     marginLeft: isTablet ? 40 : 20,
   };
+
+  console.log({ selectedChain });
 
   return (
     <Container>
@@ -240,7 +175,7 @@ function Header() {
         {address &&
           (isMobile || isTablet ? (
             <Flex flexDirection="row" alignItems="center">
-              <NetworkDropdown />
+              <NetworkDropdown onChangeNetwork={setSelectedChain} />
               {isMenuOpen ? (
                 <MenuOutlinedIcon
                   style={menuIconStyle}
@@ -285,7 +220,7 @@ function Header() {
               )}
 
               <li>
-                <NetworkDropdown />
+                <NetworkDropdown onChangeNetwork={setSelectedChain} />
               </li>
 
               <li>
