@@ -2,6 +2,7 @@ import React from 'react';
 import { HomepageTitle, SectionTitle, Button } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 import { fujiAlice2, fujiAliceMobile } from 'assets/images';
@@ -18,6 +19,8 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
   const handleLearnClick = () => {
     window.open('https://docs.fujidao.org/', '_blank');
   };
+
+  const { t } = useTranslation();
 
   return (
     <PageContainter>
@@ -43,9 +46,9 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
             marginLeft={!isMobile && !isTablet && '-360px'}
           >
             <HomepageTitle
-              firstWord="All-in-One"
-              secondWord="Smart"
-              thirdWord="Borrow"
+              firstWord={t('homepage.fourthPage.title_allInOne')}
+              secondWord={t('homepage.fourthPage.title_smart')}
+              thirdWord={t('homepage.fourthPage.title_borrow')}
               fontSize={titleFontSize}
             />
 
@@ -58,11 +61,25 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
             >
               <p>
                 <br />
-                &bull; Aggregated Borrow APR <br />
-                &bull; Automatic Loan Refinancing
+                &bull;{' '}
+                <Trans t={t} i18nKey="homepage.fourthPage.description">
+                  Aggregated Borrow APR
+                </Trans>
                 <br />
-                &bull; Non-Custodial Loan Routing <br />
-                &bull; Rebates On Gas Costs
+                &bull;{' '}
+                <Trans t={t} i18nKey="homepage.fourthPage.description">
+                  Automatic Loan Refinancing
+                </Trans>
+                <br />
+                &bull;{' '}
+                <Trans t={t} i18nKey="homepage.fourthPage.description">
+                  Non-Custodial Loan Routing
+                </Trans>
+                <br />
+                &bull;{' '}
+                <Trans t={t} i18nKey="homepage.fourthPage.description">
+                  Rebates On Gas Costs
+                </Trans>
               </p>
             </SectionTitle>
             {(isMobile || isTablet) && (
@@ -82,7 +99,10 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
                   mt="3vh"
                   noResizeOnResponsive
                 >
-                  Learn +
+                  <Trans t={t} i18nKey="global.learn">
+                    Learn
+                  </Trans>
+                  {' +'}
                 </Button>
 
                 <Button
@@ -98,7 +118,9 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
                   }}
                   noResizeOnResponsive
                 >
-                  Go to App
+                  <Trans t={t} i18nKey="global.goToApp">
+                    Go to App
+                  </Trans>
                 </Button>
               </Flex>
             )}

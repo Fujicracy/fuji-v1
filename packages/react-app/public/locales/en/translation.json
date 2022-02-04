@@ -9,7 +9,8 @@
     "with": "with",
     "approve": "Approve",
     "approving": "Approving",
-    "goToApp": "Go to App"
+    "goToApp": "Go to App",
+    "learn": "Learn"
   },
   "homepage": {
     "landing": {
@@ -20,7 +21,24 @@
       "title_fluctuate": "Fluctuate",
       "title_allTheTime": "All The Time",
       "description": "Ever borrowed in DeFi? Taking out a loan at 5%<br/> and paying 15% shortly after is an everyday reality.<br/><br/> Manually comparing loan providers is a tedious task,<br/> refinancing as rates change is expensive in gas and time.",
-      "descriptionMobile": "Ever borrowed in DeFi?<br/> Taking out a loan at 5% and<br/> paying 15% shortly after is<br/> an everyday reality.<br/><br/> Manually comparing loan</br> providers is a tedious task,<br/> refinancing as rates change</br> is expensive in gas and time."
+      "descriptionMobile": "Ever borrowed in DeFi?<br/> Taking out a loan at 5% and<br/> paying 15% shortly after is<br/> an everyday reality.<br/><br/> Manually comparing loan</br> providers is a tedious task,<br/> refinancing as rates change<br/> is expensive in gas and time."
+    },
+    "thirdPage": {
+      "title_fujiConstantly": "Fuji Constantly",
+      "title_scans": "Scans",
+      "title_borrow": "Borrow",
+      "title_markets": "Markets",
+      "description": "Routing your loan through Fuji ensures you get<br /> the best borrow rate, aggregated across all providers.<br /><br />Better opportunity? The protocol automatically<br /> refinances the whole pool of loans to the new lowest APR.",
+      "descriptionMobile": "Routing your loan through Fuji <br />ensures you get<br /> the best borrow<br /> rate, aggregated across all<br /> providers.<br /><br />Better opportunity? <br />The protocol automatically<br /> refinances the whole pool of <br /> loans to the new lowest APR."
+    },
+    "fourthPage": {
+      "title_allInOne": "All-in-One",
+      "title_smart": "Smart",
+      "title_borrow": "Borrow",
+      "description_1": "Aggregated Borrow APR",
+      "description_2": "Automatic Loan Refinancing",
+      "description_3": "Non-Custodial Loan Routing",
+      "description_4": "Rebates On Gas Costs"
     }
   },
   "initBorrow": {

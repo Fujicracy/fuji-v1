@@ -9,17 +9,36 @@
     "with": "met",
     "approve": "Goedkeuren",
     "approving": "Goedkeuren",
-    "goToApp": "Ga naar de App"
+    "goToApp": "Ga naar de App",
+    "learn": "Leren"
   },
   "homepage": {
     "landing": {
       "siteDescription": "Het protocol voor automatische herfinanciering van leningen"
     },
     "secondPage": {
-      "title1_borrowRates": "Leningstarieven",
-      "title2_fluctuate": "fluctueren",
-      "title3_allTheTime": "de hele tijd",
-      "description": "Ooit geleend in DeFi? Een lening afsluiten tegen 5% en kort daarna 15% betalen is een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van leningaanbieders is een vervelende taak, herfinanciering als de tarieven veranderen is duur in gas en tijd."
+      "title_borrowRates": "Leningstarieven",
+      "title_fluctuate": "Fluctueren",
+      "title_allTheTime": "De Hele Tijd",
+      "description": "Ooit geleend in DeFi? Een lening afsluiten tegen 5%<br/> en kort daarna 15% betalen is een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van leningaanbieders is een vervelende taak,<br/> herfinanciering als de tarieven veranderen is duur in gas en tijd.",
+      "descriptionMobile": "Ooit geleend in DeFi?<br/> Een lening afsluiten tegen 5% en<br/> kort daarna 15% betalen is<br/> een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van<br/> leningaanbieders is een vervelende taak,<br/> herfinanciering als de tarieven<br/> veranderen is duur in gas en tijd."
+    },
+    "thirdPage": {
+      "title_fujiConstantly": "Fuji Constant",
+      "title_scans": "Scant",
+      "title_borrow": "Leningen",
+      "title_markets": "Markten",
+      "description": "Door uw lening via Fuji te routeren, krijgt u<br/> de beste leenrente, geaggregeerd over alle aanbieders. <br/><br/>Betere mogelijkheid? Het protocol automatisch<br/> herfinanciert de hele pool van leningen tot de nieuwe laagste APR.",
+      "descriptionMobile": "Door uw lening via Fuji<br/> te routeren, krijgt u <br/>de beste leenrente,<br/> geaggregeerd over alle aanbieders. <br/><br/>Betere mogelijkheid?<br/> Het protocol automatisch<br/> herfinanciert de hele pool van<br/> leningen tot de nieuwe laagste APR."
+    },
+    "fourthPage": {
+      "title_allInOne": "Alles in een",
+      "title_smart": "Slim",
+      "title_borrow": "Lenen",
+      "description_1": "Geaggregeerde APR lenen",
+      "description_2": "Automatische herfinanciering van leningen",
+      "description_3": "Routing van niet-custodiale leningen",
+      "description_4": "Kortingen op gaskosten"
     }
   },
   "initBorrow": {

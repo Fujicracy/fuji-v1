@@ -61,24 +61,25 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
                   lineHeight="130%"
                   fontFamily="Nexa Regular"
                 >
-                  <br />
-
-                  <Trans
-                    t={t}
-                    i18nKey={
-                      isMobile
-                        ? 'homepage.secondPage.descriptionMobile'
-                        : 'homepage.secondPage.description'
-                    }
-                  >
-                    Ever borrowed in DeFi?{isMobile && <br />} Taking out a loan at 5%
-                    {!isMobile && <br />} and {isMobile && <br />} paying 15% shortly after is
-                    {isMobile && <br />} an everyday reality. <br />
+                  <p>
                     <br />
-                    Manually comparing loan{isMobile && <br />} providers is a tedious task,
-                    <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
-                    time.`
-                  </Trans>
+                    <Trans
+                      t={t}
+                      i18nKey={
+                        isMobile
+                          ? 'homepage.secondPage.descriptionMobile'
+                          : 'homepage.secondPage.description'
+                      }
+                    >
+                      Ever borrowed in DeFi?{isMobile && <br />} Taking out a loan at 5%
+                      {!isMobile && <br />} and {isMobile && <br />} paying 15% shortly after is
+                      {isMobile && <br />} an everyday reality. <br />
+                      <br />
+                      Manually comparing loan{isMobile && <br />} providers is a tedious task,
+                      <br /> refinancing as rates change{isMobile && <br />} is expensive in gas and
+                      time.`
+                    </Trans>
+                  </p>
                 </SectionTitle>
               </Flex>
             </Flex>
