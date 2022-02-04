@@ -5,12 +5,12 @@ pragma solidity ^0.8.2;
 /// @author fuji-dao.eth
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-import "../../abstracts/claimable/Claimable.sol";
 import "./NFTGame.sol";
 import "../libraries/LibPseudoRandom.sol";
 
-contract NFTInteractions is Claimable {
+contract NFTInteractions is Initializable{
   using LibPseudoRandom for uint256;
 
   /**
@@ -40,24 +40,31 @@ contract NFTInteractions is Claimable {
 
   // CrateID => crate rewards
   mapping(uint256 => uint256[]) crateRewards;
-  uint256[] private probabilityIntervals = [500000, 700000, 900000, 950000, 9501000];
+  uint256[] private probabilityIntervals;
 
   NFTGame private nftGame;
 
   // CrateID => crate price
   mapping(uint256 => uint256) public cratePrices;
 
+  function initialize(address _nftGame) external initializer {
+    nftGame = NFTGame(_nftGame);
+    probabilityIntervals = [500000, 700000, 900000, 950000, 9501000];
+  }
+
   /**
   * @notice Set address for NFTGame contract
   */
-  function setNFTGame(address _nftGame) external onlyOwner {
+  function setNFTGame(address _nftGame) external {
+    require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), "No permission");
     nftGame = NFTGame(_nftGame);
   }
 
   /**
   * @notice sets the prices for the crates
   */
-  function setCratePrice(uint256 crateId, uint256 price) external onlyOwner {
+  function setCratePrice(uint256 crateId, uint256 price) external {
+    require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), "No permission");
     require(crateId == CRATE_COMMON_ID || crateId == CRATE_EPIC_ID || crateId == CRATE_LEGENDARY_ID, "Invalid crate ID");
     cratePrices[crateId] = price;
     emit CratePriceChanged(crateId, price);
@@ -66,7 +73,8 @@ contract NFTInteractions is Claimable {
   /**
   * @notice sets probability intervals for crate rewards
   */
-  function setProbabilityIntervals(uint256[] memory intervals) external onlyOwner {
+  function setProbabilityIntervals(uint256[] memory intervals) external {
+    require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), "No permission");
     probabilityIntervals = intervals;
   }
 
@@ -74,7 +82,8 @@ contract NFTInteractions is Claimable {
   * @notice sets crate rewards
   * rewards are an array, with each element corresponding to the points multiplier value
   */
-  function setCrateRewards(uint256 crateId, uint256[] memory rewards) external onlyOwner {
+  function setCrateRewards(uint256 crateId, uint256[] memory rewards) external {
+    require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), "No permission");
     crateRewards[crateId] = rewards;
     emit CrateRewardsChanged(crateId, rewards);
   }

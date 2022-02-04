@@ -114,10 +114,10 @@ const fixture = async ([wallet]) => {
   );
 
   const NFTGame = await getContractFactory("NFTGame");
-  const nftgame = await NFTGame.deploy([]);
+  const nftgame = await upgrades.deployProxy(NFTGame, []);
 
   const NFTInteractions = await getContractFactory("NFTInteractions");
-  const nftinteractions = await NFTInteractions.deploy([]);
+  const nftinteractions = await upgrades.deployProxy(NFTInteractions, [nftgame.address]);
 
   // Step 2: Providers
   const ProviderCream = await getContractFactory("ProviderCream");
@@ -176,8 +176,8 @@ const fixture = async ([wallet]) => {
   await flasher.setFujiAdmin(fujiadmin.address);
   await controller.setFujiAdmin(fujiadmin.address);
   await f1155.setPermit(fliquidator.address, true);
-  await nftgame.setNFTInteractions(nftinteractions.address);
-  await nftinteractions.setNFTGame(nftgame.address);
+  await nftgame.grantRole(nftgame.GAME_ADMIN(), nftgame.signer.address);
+  await nftgame.grantRole(nftgame.GAME_INTERACTOR(), nftinteractions.address);
 
   return {
     ...tokens,
