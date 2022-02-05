@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useReducer } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { Flex } from 'rebass';
@@ -11,9 +12,19 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
 import { SectionTitle, BlackBoxContainer } from '../Blocks';
+import { Tooltip, IntenseSpan } from '../UI';
 
-import './styles.css';
-import { ChartContainer } from './style';
+import {
+  SvgContainer,
+  InnerProgress,
+  ChartBackground,
+  Ratio,
+  ChartContainer,
+  ChartContent,
+  AnimatedCircle,
+  AnimatedLine,
+  PositionDetails,
+} from './styles';
 
 function hsl(r) {
   const hue = (r / 100) * 120;
@@ -93,15 +104,15 @@ function CollaterizationIndicator({ position }) {
       <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
         Health Factor
         {!isMobile && !isTablet && (
-          <div className="tooltip-info">
+          <Tooltip>
             <InfoOutlinedIcon />
-            <span className="tooltip">
+            <span>
               The health factor represents the safety of your loan derived from the proportion of
               collateral versus amount borrowed.
               <br />
-              <span className="bold">Keep it above 1 to avoid liquidation.</span>
+              <IntenseSpan primary>Keep it above 1 to avoid liquidation.</IntenseSpan>
             </span>
-          </div>
+          </Tooltip>
         )}
       </SectionTitle>
 
@@ -117,80 +128,80 @@ function CollaterizationIndicator({ position }) {
             </SectionTitle>
           </Flex>
           <Flex width={1 / 1}>
-            <div className="inner-progress">
-              <ChartContainer viewBox="0 0 100 4" filterColor={hsl(healthRatio)}>
-                <animated.path
+            <InnerProgress>
+              <SvgContainer viewBox="0 0 100 4" filterColor={hsl(healthRatio)}>
+                <AnimatedLine
                   className="progress"
                   stroke={hsl(healthRatio)}
                   style={props}
                   d="M 3 2 l 100 0"
                 />
-              </ChartContainer>
-            </div>
+              </SvgContainer>
+            </InnerProgress>
           </Flex>
         </>
       ) : (
         <>
-          <div className="ratio">
-            <div className="svg-chart">
-              <ChartContainer viewBox="0 0 36 36" filterColor={hsl(healthRatio)}>
-                <animated.path
-                  className="circle"
+          <Ratio>
+            <ChartContainer>
+              <SvgContainer viewBox="0 0 36 36" filterColor={hsl(healthRatio)}>
+                <AnimatedCircle
+                  // className="circle"
                   stroke={hsl(healthRatio)}
                   style={props}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-              </ChartContainer>
-            </div>
-            <div className="percentage-chart">
+              </SvgContainer>
+            </ChartContainer>
+            <ChartContent>
               {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
-            </div>
-            <div className="bg-chart" />
-          </div>
+            </ChartContent>
+            <ChartBackground />
+          </Ratio>
 
-          <div className="position-details first">
+          <PositionDetails>
             <div className="title">
               <Typography variant="h3">Borrow Limit Used</Typography>
             </div>
             <div className="number">{borrowLimit ? (borrowLimit * 100).toFixed(1) : '...'} %</div>
-          </div>
+          </PositionDetails>
         </>
       )}
       <Collapse in={more}>
-        <div className="position-details">
-          <div className="title">
+        <PositionDetails>
+          <Flex>
             Current Loan-to-Value
             {!isMobile && !isTablet && (
-              <div className="tooltip-info">
+              <Tooltip>
                 <InfoOutlinedIcon />
-                <span className="tooltip">
+                <span>
                   The Maximum Loan-to-Value ratio represents the maximum borrow limit.
                   <br />A max. LTV of {threshold}% means the user can borrow up to $ {threshold} in
                   the principal currency for every $100 worth of collateral.
                   <br />
-                  <span className="bold">With LTV above 75% they risk a liquidation.</span>
+                  <IntenseSpan>With LTV above 75% they risk a liquidation.</IntenseSpan>
                 </span>
-              </div>
+              </Tooltip>
             )}
-          </div>
+          </Flex>
           <div className="number">{ltv && ltv !== Infinity ? (ltv * 100).toFixed(1) : '...'} %</div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">LTV liquidation threshold</div>
           <div className="number">{threshold} %</div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">Current {collateralAsset.name} price</div>
           <div className="number">
             $ {collateralAssetPrice ? collateralAssetPrice.toFixed(2) : '...'}
           </div>
-        </div>
-        <div className="position-details">
+        </PositionDetails>
+        <PositionDetails>
           <div className="title">{collateralAsset.name} liquidation price</div>
           <div className="number">
             $ {liqPrice && liqPrice !== Infinity ? liqPrice.toFixed(2) : '...'}
           </div>
-        </div>
+        </PositionDetails>
       </Collapse>
       {isMobile || isTablet ? (
         <Flex
@@ -212,7 +223,7 @@ function CollaterizationIndicator({ position }) {
           )}
         </Flex>
       ) : (
-        <div className="position-details">
+        <PositionDetails>
           <Button
             size="small"
             disableRipple
@@ -223,7 +234,7 @@ function CollaterizationIndicator({ position }) {
           >
             Show {more ? 'less' : 'more'}
           </Button>
-        </div>
+        </PositionDetails>
       )}
     </BlackBoxContainer>
   );

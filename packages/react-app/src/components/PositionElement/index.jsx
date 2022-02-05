@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { formatUnits } from '@ethersproject/units';
-import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -10,6 +9,7 @@ import { SectionTitle } from 'components/Blocks';
 
 import { useExchangePrice } from '../../hooks';
 import { PositionRatios } from '../../helpers';
+import { ManageButton } from './styles';
 
 export const PositionActions = {
   None: 0,
@@ -65,138 +65,135 @@ function PositionElement({ position, actionType }) {
 
   const isShowManage = !isMobile && !isTablet && actionType === PositionActions.Manage;
   return (
-    <Grid container>
-      <Flex alignItems="center" justifyContent="flex-start" width={1 / 1}>
-        <Grid item xs={4} md={isShowManage ? 3 : 4}>
-          <Flex alignItems="center" justifyContent="flex-start">
-            <Flex>
+    <Grid container alignItems="center">
+      <Grid item xs={5} md={isShowManage ? 3 : 4}>
+        <Flex alignItems="center" justifyContent="flex-start">
+          <Flex>
+            <Image
+              alt={collateralAsset.name}
+              src={collateralAsset.icon}
+              width={isMobile ? 16 : isTablet ? 24 : 24}
+            />
+            <Image
+              alt={borrowAsset.name}
+              src={borrowAsset.icon}
+              width={isMobile ? 16 : isTablet ? 24 : 24}
+              ml={isMobile || isTablet ? -1 : -2}
+            />
+          </Flex>
+          {/* <span className="elmt-name">
+          {collateralAsset.name}/{borrowAsset.name}
+        </span> */}
+          <SectionTitle
+            fontWeight="500"
+            fontSize={isMobile ? '12px' : isTablet ? '16px' : '16px'}
+            ml={2}
+          >
+            {collateralAsset.name}/{borrowAsset.name}
+          </SectionTitle>
+        </Flex>
+      </Grid>
+
+      <Grid item xs={7} md={isShowManage ? 7 : 8}>
+        <Flex flexDirection="row" width={1 / 1}>
+          <Flex
+            flexDirection="column"
+            sx={{ width: '30%' }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Flex
+              flexDirection={isMobile || isTablet ? 'column' : 'row'}
+              justifyContent="center"
+              alignItems="center"
+            >
               <Image
                 alt={collateralAsset.name}
                 src={collateralAsset.icon}
                 width={isMobile ? 16 : isTablet ? 24 : 24}
               />
+              <SectionTitle
+                fontWeight="500"
+                fontSize={isMobile ? '10px' : isTablet ? '16px' : '16px'}
+                mt={isMobile || isTablet ? 2 : 0}
+                ml={!isMobile && !isTablet ? 2 : 0}
+              >
+                {collateral ? collateral.toFixed(3) : '...'}
+              </SectionTitle>
+            </Flex>
+            {!isMobile && !isTablet && (
+              <SectionTitle mt={2}>
+                ≈ $
+                {collateral && collateralAssetPrice
+                  ? (collateral * collateralAssetPrice).toFixed(2)
+                  : '...'}
+              </SectionTitle>
+            )}
+          </Flex>
+
+          <Flex
+            flexDirection="column"
+            sx={{ width: '30%' }}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Flex
+              flexDirection={isMobile || isTablet ? 'column' : 'row'}
+              justifyContent="center"
+              alignItems="center"
+            >
               <Image
                 alt={borrowAsset.name}
                 src={borrowAsset.icon}
                 width={isMobile ? 16 : isTablet ? 24 : 24}
-                ml={isMobile || isTablet ? -1 : -2}
               />
-            </Flex>
-            {/* <span className="elmt-name">
-          {collateralAsset.name}/{borrowAsset.name}
-        </span> */}
-            <SectionTitle
-              fontWeight="500"
-              fontSize={isMobile ? '12px' : isTablet ? '18px' : '16px'}
-              ml={2}
-            >
-              {collateralAsset.name}/{borrowAsset.name}
-            </SectionTitle>
-          </Flex>
-        </Grid>
-
-        <Grid item xs={8} md={isShowManage ? 7 : 8}>
-          <Flex flexDirection="row" width={1 / 1}>
-            <Flex
-              flexDirection="column"
-              sx={{ width: '30%' }}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Flex
-                flexDirection={isMobile || isTablet ? 'column' : 'row'}
-                justifyContent="center"
-                alignItems="center"
+              <SectionTitle
+                fontWeight="500"
+                fontSize={isMobile ? '10px' : isTablet ? '16px' : '16px'}
+                mt={isMobile || isTablet ? 2 : 0}
+                ml={!isMobile && !isTablet ? 2 : 0}
               >
-                <Image
-                  alt={collateralAsset.name}
-                  src={collateralAsset.icon}
-                  width={isMobile ? 16 : isTablet ? 24 : 24}
-                />
-                <SectionTitle
-                  fontWeight="500"
-                  fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
-                  mt={isMobile || isTablet ? 2 : 0}
-                  ml={!isMobile && !isTablet ? 2 : 0}
-                >
-                  {collateral ? collateral.toFixed(3) : '...'}
-                </SectionTitle>
-              </Flex>
-              {!isMobile && !isTablet && (
-                <SectionTitle mt={2}>
-                  ≈ $
-                  {collateral && collateralAssetPrice
-                    ? (collateral * collateralAssetPrice).toFixed(2)
-                    : '...'}
-                </SectionTitle>
-              )}
+                {debt ? debt.toFixed(3) : '...'}
+              </SectionTitle>
             </Flex>
-
-            <Flex
-              flexDirection="column"
-              sx={{ width: '30%' }}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Flex
-                flexDirection={isMobile || isTablet ? 'column' : 'row'}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Image
-                  alt={borrowAsset.name}
-                  src={borrowAsset.icon}
-                  width={isMobile ? 16 : isTablet ? 24 : 24}
-                />
-                <SectionTitle
-                  fontWeight="500"
-                  fontSize={isMobile ? '10px' : isTablet ? '18px' : '16px'}
-                  mt={isMobile || isTablet ? 2 : 0}
-                  ml={!isMobile && !isTablet ? 2 : 0}
-                >
-                  {debt ? debt.toFixed(3) : '...'}
-                </SectionTitle>
-              </Flex>
-              {!isMobile && !isTablet && (
-                <SectionTitle mt={2}>
-                  ≈ ${debt ? (debt * borrowAssetPrice).toFixed(2) : '...'}
-                </SectionTitle>
-              )}
-            </Flex>
-
-            <Flex
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              color={hsl(healthRatio)}
-              fontSize={isMobile ? 2 : 4}
-              fontWeight="500"
-              sx={{ width: '40%' }}
-            >
-              {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
-            </Flex>
-          </Flex>
-        </Grid>
-
-        {isShowManage && (
-          <Grid item className="position-actions" md={2}>
-            {actionType === PositionActions.Manage ? (
-              <Button
-                className="position-btn"
-                onClick={() => {
-                  return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
-                }}
-              >
-                Manage
-              </Button>
-            ) : actionType === PositionActions.Liquidate ? (
-              <Button className="position-btn">Liquidate</Button>
-            ) : (
-              <span style={{ width: '5rem' }} />
+            {!isMobile && !isTablet && (
+              <SectionTitle mt={2}>
+                ≈ ${debt ? (debt * borrowAssetPrice).toFixed(2) : '...'}
+              </SectionTitle>
             )}
-          </Grid>
-        )}
-      </Flex>
+          </Flex>
+
+          <Flex
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            color={hsl(healthRatio)}
+            fontSize={isMobile ? 2 : 4}
+            fontWeight="500"
+            sx={{ width: '40%' }}
+          >
+            {healthFactor && healthFactor !== Infinity ? healthFactor.toFixed(2) : '...'}
+          </Flex>
+        </Flex>
+      </Grid>
+
+      {isShowManage && (
+        <Grid item md={2}>
+          {actionType === PositionActions.Manage ? (
+            <ManageButton
+              onClick={() => {
+                return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
+              }}
+            >
+              Manage
+            </ManageButton>
+          ) : actionType === PositionActions.Liquidate ? (
+            <ManageButton>Liquidate</ManageButton>
+          ) : (
+            <span style={{ width: '5rem' }} />
+          )}
+        </Grid>
+      )}
     </Grid>
   );
 }

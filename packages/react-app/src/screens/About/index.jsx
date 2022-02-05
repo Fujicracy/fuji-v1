@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme =>
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      maxWidth: '800px',
     },
     section: {
       padding: theme.spacing(6, 3),
