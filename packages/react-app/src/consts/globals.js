@@ -1,5 +1,5 @@
 import { generateMedia } from 'styled-media-query';
-import { ftmIcon, maticIcon, ethIcons } from 'assets/images';
+import { ftmIcon, maticIcon, ethIcons, logoIcon } from 'assets/images';
 import { capitalizeFirstLetter } from 'helpers/Utils';
 
 export const BREAKPOINT_NAMES = {
@@ -94,7 +94,7 @@ const CHAINS = {
     id: CHAIN_IDS.LOCAL,
     name: CHAIN_NAMES.LOCAL,
     title: capitalizeFirstLetter(CHAIN_NAMES.LOCAL),
-    icon: ethIcons.BLUE.toString(),
+    icon: logoIcon.toString(),
     isDeployed: false,
     isCustomNetwork: false,
     rpcUrl: 'http://localhost:8545',
