@@ -14,4 +14,6 @@ export { default as useResolveName } from './ResolveName';
 export { default as useNonce } from './Nonce';
 export { default as useAllowance } from './Allowance';
 export { default as useResources } from './Resources';
+export { default as useTransactionHistory } from './TransactionHistory';
+export { default as useWindowSize } from './WindowSize';
 export * from './Auth';

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { parseUnits } from '@ethersproject/units';
 // import TextField from '@material-ui/core/TextField';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -25,9 +24,10 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useAuth, useContractLoader } from 'hooks';
 
-import { SectionTitle } from '../../../components/Blocks';
+import { Flex } from 'rebass';
+import { SectionTitle, Tooltip, Button } from 'components';
 
-import './styles.css';
+import { FlashCloseContainer, RepayButton, Description } from './styles';
 
 const providerIndexes = {
   AAVE: '0', // on fantom it's Geist
@@ -133,7 +133,7 @@ function FlashClose({ position }) {
         <DialogActions>
           {confirmation ? (
             <Button
-              className="main-button"
+              block
               onClick={() => {
                 setDialog(false);
                 setConfirmation(false);
@@ -144,10 +144,14 @@ function FlashClose({ position }) {
           ) : (
             <Button
               onClick={() => onFlashClose()}
-              className="main-button"
+              block
+              height={44}
+              borderRadius={8}
+              fontWeight={600}
               disabled={loading}
-              startIcon={
-                loading ? (
+            >
+              <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                {loading && (
                   <CircularProgress
                     style={{
                       width: 25,
@@ -156,48 +160,43 @@ function FlashClose({ position }) {
                       color: 'rgba(0, 0, 0, 0.26)',
                     }}
                   />
-                ) : (
-                  ''
-                )
-              }
-            >
-              {loading ? 'Repaying...' : 'Repay'}
+                )}
+                {loading ? 'Repaying...' : 'Repay'}
+              </Flex>
             </Button>
           )}
         </DialogActions>
       </Dialog>
-      <div className="flash-close">
-        <div className="section-title">
+      <FlashCloseContainer>
+        <Flex mb="0.5rem">
           <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
             Flash Close
           </SectionTitle>
           {!isMobile && !isTablet && (
-            <div className="tooltip-info">
+            <Tooltip>
               <InfoOutlinedIcon />
-              <span className="tooltip">
+              <span>
                 Repay your debt position from your collateral by using a flash loan. Fee: 1%
               </span>
-            </div>
+            </Tooltip>
           )}
-        </div>
+        </Flex>
 
-        <div className="content">
-          <div className="description">
-            Use a flash loan to repay your debt in a single transaction.
-          </div>
+        <Flex alignItems="center" justifyContent="space-between" mt="1rem">
+          <Description>Use a flash loan to repay your debt in a single transaction.</Description>
 
-          <div className="actions">
-            <Button
+          <Flex>
+            <RepayButton
               onClick={() => {
                 setDialog(true);
                 setAmount('-1');
               }}
             >
               Repay
-            </Button>
-          </div>
-        </div>
-      </div>
+            </RepayButton>
+          </Flex>
+        </Flex>
+      </FlashCloseContainer>
     </>
   );
 }

@@ -53,7 +53,6 @@ export default function Transactor(provider) {
           console.log('RUNNING TX', tx);
           result = await signer.sendTransaction(tx);
         }
-        console.log('RESULT:', result);
 
         // if it is a valid Notify.js network, use that, if not, just send a default notification
         if ([1, 3, 4, 5, 42, 100].indexOf(network.chainId) >= 0) {

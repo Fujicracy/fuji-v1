@@ -64,6 +64,8 @@ function Header() {
   useEffect(() => {
     if (Object.values(chains).find(chain => chain.id === networkId)) {
       setSelectedChain(chains[networkName]);
+    } else if (networkId === 31337) {
+      setSelectedChain(CHAINS.local);
     } else {
       setSelectedChain(null);
     }

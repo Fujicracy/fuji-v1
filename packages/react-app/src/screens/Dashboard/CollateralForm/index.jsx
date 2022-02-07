@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
 import {
-  Button,
   CircularProgress,
-  Typography,
   Grid,
   InputAdornment,
   Dialog,
@@ -13,19 +11,30 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import { Flex } from 'rebass';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Transactor, GasEstimator } from 'helpers';
+import { Transactor, GasEstimator, fixDecimalString } from 'helpers';
 import { useAuth, useBalance, useAllowance, useContractLoader, useContractReader } from 'hooks';
 import { ETH_CAP_VALUE } from 'consts/globals';
 import { useMediaQuery } from 'react-responsive';
 import { BigNumber } from '@ethersproject/bignumber';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, ASSET_NAME } from 'consts';
+import {
+  TextInput,
+  Label,
+  Tooltip,
+  SectionTitle,
+  IntenseSpan,
+  Button,
+  ToggleSwitch,
+  MaxButton,
+  ErrorInputMessage,
+} from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
-import { TextInput, Label } from '../../../components/UI';
-import { SectionTitle } from '../../../components/Blocks';
+// import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
@@ -41,7 +50,7 @@ function CollateralForm({ position }) {
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
-  const [focus, setFocus] = useState(false);
+  // const [focus, setFocus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
@@ -58,7 +67,7 @@ function CollateralForm({ position }) {
   );
 
   const userBalance = unformattedUserBalance
-    ? Number(formatUnits(unformattedUserBalance, collateralAsset.decimals)).toFixed(6)
+    ? fixDecimalString(formatUnits(unformattedUserBalance, collateralAsset.decimals), 6)
     : null;
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -87,7 +96,7 @@ function CollateralForm({ position }) {
     if (neededCollateral && collateralBalance) {
       const diff = formatUnits(collateralBalance.sub(neededCollateral), collateralAsset.decimals);
       // use toFixed to avoid scientific notation 2.1222e-6
-      setLeftCollateral(Number(diff).toFixed(6));
+      setLeftCollateral(fixDecimalString(diff, 6));
     }
   }, [neededCollateral, collateralBalance, collateralAsset.decimals]);
 
@@ -154,7 +163,7 @@ function CollateralForm({ position }) {
   const approve = async infiniteApproval => {
     let unFormattedAmount = amount;
     if (parseUnits(amount, collateralAsset.decimals).eq(collateralBalance)) {
-      unFormattedAmount = (Number(amount) * 1.02).toFixed(6);
+      unFormattedAmount = fixDecimalString(amount * 1.02, 6);
     }
 
     const base = BigNumber.from(2);
@@ -184,7 +193,7 @@ function CollateralForm({ position }) {
   };
 
   const onSubmit = async () => {
-    if (!collateralAsset.isERC20 && collateralAsset.name === ASSET_NAME.ETH) {
+    if (!collateralAsset.isERC20 && collateralAsset.name === ASSET_NAME.ethereum.ETH) {
       const totalCollateral = Number(amount) + Number(formatUnits(collateralBalance));
       if (action === Action.Supply && totalCollateral > ETH_CAP_VALUE) {
         setDialog({ step: 'capCollateral' });
@@ -236,9 +245,22 @@ function CollateralForm({ position }) {
     return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}${loading ? 'ing...' : ''}`;
   };
 
+  const handleMaxBalance = () => {
+    setAmount(action === Action.Supply ? userBalance : leftCollateral);
+    setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  };
+
+  const handleClickTitleInfo =
+    (action === Action.Supply ? Number(userBalance) : Number(leftCollateral)) > 0
+      ? handleMaxBalance
+      : undefined;
+
   const dialogContents = {
     deltaRatios: {
-      title: 'Postion Ratio Changes',
+      title: 'Position Ratio Changes',
       content: (
         <DeltaPositionRatios
           vault={vault}
@@ -262,7 +284,8 @@ function CollateralForm({ position }) {
                 setDialog({ step: null, withApproval: false });
                 onSubmit();
               }}
-              className="main-button"
+              noResizeOnResponsive
+              block
             >
               Confirm
             </Button>
@@ -276,13 +299,12 @@ function CollateralForm({ position }) {
       actions: () => {
         return (
           <DialogActions>
-            <Button onClick={() => approve(false)} className="main-button">
-              Approve {Number(amount).toFixed(0)} {collateralAsset.name}
+            <Button onClick={() => approve(false)} block noResizeOnResponsive>
+              Approve {fixDecimalString(amount, 3)} {collateralAsset.name}
             </Button>
-            <Button onClick={() => approve(true)} className="main-button">
+            <Button onClick={() => approve(true)} block noResizeOnResponsive>
               Infinite Approve
             </Button>
-            q
           </DialogActions>
         );
       },
@@ -304,7 +326,8 @@ function CollateralForm({ position }) {
                 setAmount('');
                 setValue('amount', '', { shouldValidate: false });
               }}
-              className="main-button"
+              noResizeOnResponsive
+              block
             >
               Close
             </Button>
@@ -329,7 +352,8 @@ function CollateralForm({ position }) {
               onClick={() => {
                 setDialog('');
               }}
-              className="main-button"
+              block
+              noResizeOnResponsive
             >
               Close
             </Button>
@@ -353,34 +377,27 @@ function CollateralForm({ position }) {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
 
-      <Grid item className="section-title">
-        <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
-        {!isMobile && !isTablet && (
-          <div className="tooltip-info">
-            <InfoOutlinedIcon />
-            <span className="tooltip tooltip-top">
-              <span className="bold">Supply</span> more {collateralAsset.name} as collateral or
-              <span className="bold"> withdraw</span> what is not locked for your borrows.
-            </span>
-          </div>
-        )}
+      <Grid item>
+        <Flex mb={isMobile ? '1rem' : '1.5rem'}>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
+          {!isMobile && !isTablet && (
+            <Tooltip>
+              <InfoOutlinedIcon />
+              <span>
+                <IntenseSpan>Supply</IntenseSpan> more {collateralAsset.name} as collateral or
+                <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
+              </span>
+            </Tooltip>
+          )}
+        </Flex>
       </Grid>
-      <Grid item className="toggle-button">
-        <div className="button">
-          <input
-            onChange={({ target }) => {
-              return setAction(target.checked ? Action.Withdraw : Action.Supply);
-            }}
-            type="checkbox"
-            className="checkbox"
-          />
-          <div className="knobs">
-            <span className="toggle-options" data-toggle="Withdraw">
-              <span>Supply</span>
-            </span>
-          </div>
-          <div className="layer" />
-        </div>
+      <Grid item>
+        <ToggleSwitch
+          firstOption="Supply"
+          secondOption="Withdraw"
+          onSwitch={selected => setAction(selected === 'Supply' ? Action.Supply : Action.Withdraw)}
+          mb="1.5rem"
+        />
       </Grid>
       <Grid item>
         <TextInput
@@ -391,9 +408,10 @@ function CollateralForm({ position }) {
           onChange={value => {
             return setAmount(value);
           }}
-          onFocus={() => {
-            return setFocus(true);
-          }}
+          // onFocus={() => {
+          //   return setFocus(true);
+          // }}
+          onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => {
             return clearErrors();
           }}
@@ -408,8 +426,8 @@ function CollateralForm({ position }) {
           subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
           subTitleInfo={
             action === Action.Supply
-              ? `${userBalance ? Number(userBalance).toFixed(3) : '...'} ${collateralAsset.name}`
-              : `${leftCollateral ? Number(leftCollateral).toFixed(3) : '...'} ${
+              ? `${userBalance ? fixDecimalString(userBalance, 3) : '...'} ${collateralAsset.name}`
+              : `${leftCollateral ? fixDecimalString(leftCollateral, 3) : '...'} ${
                   collateralAsset.name
                 }`
           }
@@ -418,58 +436,44 @@ function CollateralForm({ position }) {
             type: 'component',
             component: (
               <InputAdornment position="end">
-                {focus && (
-                  <Button
-                    className="max-button"
-                    onClick={() => {
-                      setAmount(action === Action.Supply ? userBalance : leftCollateral);
-                      setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
-                        shouldValidate: true,
-                        shouldDirty: true,
-                      });
-                    }}
-                  >
-                    max
-                  </Button>
-                )}
+                <MaxButton onClick={handleMaxBalance}>max</MaxButton>
                 <Label>{collateralAsset.name}</Label>
               </InputAdornment>
             ),
           }}
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
-              <Typography className="error-input-msg" variant="body2">
+              <ErrorInputMessage>
                 Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
-              </Typography>
+              </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
-              <Typography className="error-input-msg" variant="body2">
-                Insufficient {collateralAsset.name} balance
-              </Typography>
+              <ErrorInputMessage>Insufficient {collateralAsset.name} balance</ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Withdraw && (
-                <Typography className="error-input-msg" variant="body2">
-                  You can withdraw max. {leftCollateral} {collateralAsset.name}
-                </Typography>
+                <ErrorInputMessage>
+                  You can withdraw max: {leftCollateral} {collateralAsset.name}
+                </ErrorInputMessage>
               )
             )
           }
         />
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleSubmit(onConfirmation)}
-          className="main-button"
-          disabled={loading}
-          startIcon={
-            loading && (
+        <Button onClick={handleSubmit(onConfirmation)} block fontWeight={600} disabled={loading}>
+          <Flex flexDirection="row" justifyContent="center" alignItems="center">
+            {loading && (
               <CircularProgress
-                style={{ width: 25, height: 25, marginRight: '10px', color: 'rgba(0, 0, 0, 0.26)' }}
+                style={{
+                  width: 25,
+                  height: 25,
+                  marginRight: '16px',
+                  color: 'rgba(0, 0, 0, 0.26)',
+                }}
               />
-            )
-          }
-        >
-          {getBtnContent()}
+            )}
+            {getBtnContent()}
+          </Flex>
         </Button>
       </Grid>
     </Grid>
