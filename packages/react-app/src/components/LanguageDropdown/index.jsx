@@ -27,20 +27,16 @@ const LanguageDropdown = () => {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
   const { i18n } = useTranslation();
+  const lang = i18n.language;
 
-  useEffect(() => {
-    if (i18n) {
-      const currentLanguage = i18n.language;
-      console.log({ currentLanguage });
-      setSelectedLanugage(LANGUAGES[currentLanguage]);
-    }
-  }, [i18n]);
-
+  useEffect(() => setSelectedLanugage(LANGUAGES[lang]), [lang]);
   const onChangeLanguage = async lng => {
     i18n.changeLanguage(lng.alpha2);
     setSelectedLanugage(lng);
   };
+
   return (
     <Box
       ml={2}

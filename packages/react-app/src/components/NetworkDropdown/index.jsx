@@ -49,13 +49,11 @@ const NetworkDropdown = ({ onChangeNetwork }) => {
   const onChangeChain = async chain => {
     await changeNetwork(chain.id);
     setSelectedChain(chain);
-    console.log({ chain });
     if (onChangeNetwork) {
       console.log('calling chain');
       onChangeNetwork(chains);
     }
   };
-  console.log({ onChangeNetwork });
 
   return (
     <Box

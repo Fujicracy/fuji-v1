@@ -9,7 +9,7 @@ const ToggleSwitch = ({ firstOption, secondOption, onSwitch, ...rest }) => {
       <Option
         onClick={() => {
           setSelected('left');
-          onSwitch(firstOption);
+          onSwitch(0);
         }}
       >
         <span>{firstOption}</span>
@@ -17,7 +17,7 @@ const ToggleSwitch = ({ firstOption, secondOption, onSwitch, ...rest }) => {
       <Option
         onClick={() => {
           setSelected('right');
-          onSwitch(secondOption);
+          onSwitch(1);
         }}
       >
         <span>{secondOption}</span>

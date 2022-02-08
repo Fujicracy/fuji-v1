@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { plusIcon, closeIcon } from 'assets/images';
 import { Image, Box } from 'rebass';
 import Collapse from '@material-ui/core/Collapse';
@@ -11,7 +12,14 @@ import {
   ListItem,
 } from './styles';
 
-const DropDown = ({ options, defaultOption, width, onOptionClicked, isOptionSelectable }) => {
+const DropDown = ({
+  options,
+  defaultOption,
+  width,
+  onOptionClicked,
+  isOptionSelectable,
+  transPrefix,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const filteredOptions = options.filter(option => option.title !== defaultOption?.title);
@@ -20,6 +28,7 @@ const DropDown = ({ options, defaultOption, width, onOptionClicked, isOptionSele
     if (filteredOptions.length > 0) setIsOpen(!isOpen);
   };
 
+  const { t } = useTranslation();
   return (
     <DropDownContainer width={width}>
       <DropDownHeader isOpened={isOpen} onClick={toggling} isSelectable={isOptionSelectable}>
@@ -56,7 +65,9 @@ const DropDown = ({ options, defaultOption, width, onOptionClicked, isOptionSele
                 }}
               >
                 <Box width={option.rate ? 4 / 7 : 1} cursor="pointer">
-                  {option.title}
+                  <Trans i18nKey={`${transPrefix}.${option.value?.toLowerCase()}`} t={t}>
+                    {option.title}
+                  </Trans>
                 </Box>
                 {option.rate && (
                   <Box

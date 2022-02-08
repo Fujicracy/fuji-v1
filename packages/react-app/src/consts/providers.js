@@ -1,5 +1,5 @@
 const PROVIDER_TYPE = {
-  AAVE: 'AAVE',
+  AAVE: 'Aave',
   COMPOUND: 'Compound',
   IRONBANK: 'IronBank',
   FUSE3: 'FusePool3',

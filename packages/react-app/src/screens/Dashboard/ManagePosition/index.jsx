@@ -3,6 +3,7 @@ import find from 'lodash/find';
 import { useLocation, useHistory } from 'react-router-dom';
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import { useMediaQuery } from 'react-responsive';
+import { useTranslation, Trans } from 'react-i18next';
 import { Flex } from 'rebass';
 import { Grid } from '@material-ui/core';
 
@@ -58,6 +59,7 @@ function ManagePosition() {
     vault?.collateralId,
   ]);
 
+  const { t } = useTranslation();
   useEffect(() => {
     function init() {
       const vaultName = find(
@@ -93,7 +95,9 @@ function ManagePosition() {
           <NavBackLink to="my-positions">
             <ArrowBackIosOutlinedIcon style={{ fontSize: isMobile ? 16 : 18 }} />
             <SectionTitle marginLeft="8px" fontSize={isMobile ? '16px' : '18px'}>
-              Back
+              <Trans i18nKey="global.back" t={t}>
+                Back
+              </Trans>
             </SectionTitle>
           </NavBackLink>
 
@@ -114,7 +118,9 @@ function ManagePosition() {
                             alignItems="center"
                             width="30%"
                           >
-                            <>Collateral</>
+                            <Trans i18nKey="global.collateral" t={t}>
+                              Collateral
+                            </Trans>
                           </SectionTitle>
                           <SectionTitle
                             fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
@@ -122,7 +128,9 @@ function ManagePosition() {
                             alignItems="center"
                             width="30%"
                           >
-                            <>Debt</>
+                            <Trans i18nKey="global.debt" t={t}>
+                              Debt
+                            </Trans>
                           </SectionTitle>
                           <SectionTitle
                             fontSize={isMobile ? '10px' : isTablet ? '14px' : '16px'}
@@ -130,7 +138,9 @@ function ManagePosition() {
                             alignItems="center"
                             width="40%"
                           >
-                            <>Health Factor</>
+                            <Trans i18nKey="healthFactor.title" t={t}>
+                              Health Factor
+                            </Trans>
                           </SectionTitle>
                         </Flex>
                       </Grid>

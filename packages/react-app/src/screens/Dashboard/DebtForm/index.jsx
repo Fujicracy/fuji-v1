@@ -3,6 +3,7 @@ import { formatUnits, parseUnits } from '@ethersproject/units';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useForm } from 'react-hook-form';
 import { useMediaQuery } from 'react-responsive';
+import { Trans, useTranslation } from 'react-i18next';
 
 import {
   Grid,
@@ -105,6 +106,8 @@ function DebtForm({ position }) {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
@@ -260,7 +263,11 @@ function DebtForm({ position }) {
 
   const dialogContents = {
     deltaRatios: {
-      title: 'Position Ratio Changes',
+      title: (
+        <Trans i18nKey="global.deltaRatiosModal.title" t={t}>
+          Position Ratio Changes
+        </Trans>
+      ),
       content: (
         <DeltaPositionRatios
           vault={vault}
@@ -286,31 +293,67 @@ function DebtForm({ position }) {
             block
             noResizeOnResponsive
           >
-            Confirm
+            <Trans i18nKey="global.confirm" t={t}>
+              Confirm
+            </Trans>
           </Button>
         </DialogActions>
       ),
     },
     approval: {
-      title: 'Approving... 1 of 2',
-      content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
+      title: (
+        <>
+          <Trans i18nKey="global.approving" t={t}>
+            Approving
+          </Trans>
+          ... 1 of 2
+        </>
+      ),
+      content: (
+        <DialogContentText>
+          <Trans i18nKey="global.approvalModal.title" t={t}>
+            You need first to approve a spending limit.
+          </Trans>
+        </DialogContentText>
+      ),
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} block noResizeOnResponsive>
-            Approve {fixDecimalString(amount, 3)} {borrowAsset.name}
+            <Trans i18nKey="global.approve" t={t}>
+              Approve
+            </Trans>{' '}
+            {fixDecimalString(amount, 3)} {borrowAsset.name}
           </Button>
           <Button onClick={() => approve(true)} block noResizeOnResponsive>
-            Infinite Approve
+            <Trans i18nKey="global.approvalModal.infiniteApprove" t={t}>
+              Infinite Approve
+            </Trans>
           </Button>
         </DialogActions>
       ),
     },
     success: {
-      title: 'Transaction successful',
+      title: (
+        <Trans i18nKey="global.successModal.title" t={t}>
+          Transaction successful
+        </Trans>
+      ),
       content: (
         <DialogContentText>
           You have successfully {action === Action.Repay ? 'repay' : 'borrow'}ed {amount}{' '}
           {borrowAsset.name}.
+          <Trans
+            i18nKey={
+              action === Action.Repay
+                ? 'global.successModal.repaidSuccessDescription'
+                : 'global.successModal.borrowedSuccessDescription'
+            }
+            t={t}
+          >
+            {action === Action.Repay
+              ? `You have successfully reapid {{ amount }} {{ assetName: collateralAsset.name }}.`
+              : `You have successfully borrowed {{ amount }} {{ assetName: collateralAsset.name }}.`}
+          </Trans>
         </DialogContentText>
       ),
       actions: () => (
@@ -324,7 +367,9 @@ function DebtForm({ position }) {
             block
             noResizeOnResponsive
           >
-            Close
+            <Trans i18nKey="global.close" t={t}>
+              Close
+            </Trans>
           </Button>
         </DialogActions>
       ),
@@ -334,18 +379,42 @@ function DebtForm({ position }) {
   const getBtnContent = () => {
     if (action === Action.Repay) {
       if (!loading) {
-        return 'Repay';
+        return (
+          <Trans i18nKey="global.repay" t={t}>
+            Repay
+          </Trans>
+        );
       }
 
       if (dialog.step === 'approvalPending') {
-        return 'Approving... 1 of 2';
+        return (
+          <>
+            <Trans i18nKey="global.approving" t={t}>
+              Approving
+            </Trans>
+            ... 1 of 2
+          </>
+        );
       }
       if (dialog.step === 'repaying') {
-        return `Repaying... ${dialog.withApproval ? '2 of 2' : ''}`;
+        return (
+          <>
+            <Trans i18nKey="global.repaying" t={t}>
+              Repaying
+            </Trans>
+            ...{dialog.withApproval ? '2 of 2' : ''}
+          </>
+        );
       }
     }
-
-    return loading ? 'Borrowing...' : 'Borrow';
+    return (
+      <>
+        <Trans i18nKey={loading ? 'global.borrowing' : 'global.borrow'} t={t}>
+          {loading ? 'Borrowing' : 'Borrow'}
+        </Trans>
+        {loading ? '...' : ''}
+      </>
+    );
   };
 
   return (
@@ -370,14 +439,21 @@ function DebtForm({ position }) {
       </Dialog>
       <Grid item>
         <Flex mb={isMobile ? '1rem' : '1.5rem'}>
-          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Debt</SectionTitle>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>
+            <Trans i18nKey="global.debt" t={t}>
+              Debt
+            </Trans>
+          </SectionTitle>
 
           {!isMobile && !isTablet && (
             <Tooltip>
               <InfoOutlined />
               <span>
-                <IntenseSpan>Repay</IntenseSpan> {borrowAsset.name} from your wallet balance or
-                <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
+                <Trans i18nKey="debtForm.tooltip" t={t}>
+                  <IntenseSpan>Repay</IntenseSpan> {{ borrowAssetName: borrowAsset.name }} from your
+                  wallet balance or
+                  <IntenseSpan> borrow</IntenseSpan> more from it against your free collateral.
+                </Trans>
               </span>
             </Tooltip>
           )}
@@ -385,9 +461,9 @@ function DebtForm({ position }) {
       </Grid>
       <Grid item>
         <ToggleSwitch
-          firstOption="Repay"
-          secondOption="Borrow"
-          onSwitch={selected => setAction(selected === 'Repay' ? Action.Repay : Action.Borrow)}
+          firstOption={t('global.repay')}
+          secondOption={t('global.borrow')}
+          onSwitch={setAction}
           mb="1.5rem"
         />
       </Grid>
@@ -410,7 +486,17 @@ function DebtForm({ position }) {
               message: 'insufficient-balance',
             },
           })}
-          subTitle={action === Action.Repay ? 'Available to repay:' : 'Available to borrow:'}
+          subTitle={
+            action === Action.Repay ? (
+              <Trans i18nKey="debtForm.availableToRepay" t={t}>
+                Available to repay:
+              </Trans>
+            ) : (
+              <Trans i18nKey="debtForm.availableToBorrow" t={t}>
+                Available to borrow:
+              </Trans>
+            )
+          }
           subTitleInfo={
             action === Action.Repay
               ? `${maxToRepay ? fixDecimalString(maxToRepay, 3) : '...'} ${borrowAsset.name}`
@@ -421,8 +507,11 @@ function DebtForm({ position }) {
             type: 'component',
             component: (
               <InputAdornment position="end">
-                <MaxButton onClick={handleMaxBalance}>max</MaxButton>
-
+                <MaxButton onClick={handleMaxBalance}>
+                  <Trans i18nKey="global.max" t={t}>
+                    max
+                  </Trans>
+                </MaxButton>
                 <Label>{borrowAsset.name}</Label>
               </InputAdornment>
             ),
@@ -430,21 +519,28 @@ function DebtForm({ position }) {
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
               <ErrorInputMessage>
-                Please, type the amount you like to {action === Action.Repay ? 'repay' : 'borrow'}
+                <Trans i18nKey="debtForm.errors.insufficientAmount" t={t}>
+                  Please, type the amount you like to
+                  {{ action: action === Action.Repay ? 'repay' : 'borrow' }}
+                </Trans>
               </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Repay ? (
               <ErrorInputMessage>
-                You can repay max {maxToRepay} {borrowAsset.name}.
+                <Trans i18nKey="debtForm.errors.insufficientBalanceToRepay" t={t}>
+                  You can repay max {{ maxToRepay }} {{ borrowAssetName: borrowAsset.name }}.
+                </Trans>
               </ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Borrow && (
                 <ErrorInputMessage>
-                  You can borrow max{' '}
-                  <span>
-                    {leftToBorrow} {borrowAsset.name}
-                  </span>
-                  . Provide more collateral!
+                  <Trans i18nKey="debtForm.errors.insufficientBalanceToBorrow" t={t}>
+                    You can borrow max
+                    <span>
+                      {{ leftToBorrow }} {{ borrowAssetName: borrowAsset.name }}
+                    </span>
+                    . Provide more collateral!
+                  </Trans>
                 </ErrorInputMessage>
               )
             )

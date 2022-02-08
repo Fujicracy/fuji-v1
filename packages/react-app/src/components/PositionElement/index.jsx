@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
+import { useMediaQuery } from 'react-responsive';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
-import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Image, Flex } from 'rebass';
 import { SectionTitle } from 'components/Blocks';
@@ -54,6 +55,8 @@ function PositionElement({ position, actionType }) {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const ratios = PositionRatios(position, collateralAssetPrice, borrowAssetPrice);
@@ -185,10 +188,16 @@ function PositionElement({ position, actionType }) {
                 return history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`);
               }}
             >
-              Manage
+              <Trans i18nKey="global.manage" t={t}>
+                Manage
+              </Trans>
             </ManageButton>
           ) : actionType === PositionActions.Liquidate ? (
-            <ManageButton>Liquidate</ManageButton>
+            <ManageButton>
+              <Trans i18nKey="global.liquidate" t={t}>
+                Liquidate
+              </Trans>
+            </ManageButton>
           ) : (
             <span style={{ width: '5rem' }} />
           )}

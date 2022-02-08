@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import { Trans, useTranslation } from 'react-i18next';
 // import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import DateFnsUtils from '@date-io/date-fns';
 import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
   EXPLORER_INFOS,
-  TRANSACTION_TYPES,
+  TRANSACTION_ACTIONS,
   // CHAIN_NAME,
   // ASSETS,
 } from 'consts';
@@ -27,7 +28,12 @@ const TransactionHistory = ({ vaultName }) => {
   // const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   // const [selectedEndDate, setSelectedEndDate] = useState(new Date());
   // const [selectedAsset, setSelectedAsset] = useState(null);
-  const actionOptions = TRANSACTION_TYPES.map(type => ({ title: type }));
+  const { t } = useTranslation();
+
+  const actionOptions = Object.keys(TRANSACTION_ACTIONS).map(actionKey => ({
+    value: TRANSACTION_ACTIONS[actionKey],
+    title: TRANSACTION_ACTIONS[actionKey],
+  }));
 
   const [selectedAction, setSelectedAction] = useState(actionOptions[0]);
 
@@ -40,7 +46,7 @@ const TransactionHistory = ({ vaultName }) => {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
-  const { transactionHistories } = useTransactionHistory(vaultName, selectedAction.title);
+  const { transactionHistories } = useTransactionHistory(vaultName, selectedAction.value);
 
   // const assetOptions = Object.keys(ASSETS[CHAIN_NAME]).map(asset => ({ title: asset }));
 
@@ -58,7 +64,11 @@ const TransactionHistory = ({ vaultName }) => {
       mt="40px"
       mb="48px"
     >
-      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>History</SectionTitle>
+      <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
+        <Trans i18nKey="history.title" t={t}>
+          History
+        </Trans>
+      </SectionTitle>
       <Flex flexDirection="row" mt={16} mb={24} alignItems="center" justifyContent="flex-end">
         {/* <SectionTitle mr={2}>Start Date:</SectionTitle>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -76,7 +86,10 @@ const TransactionHistory = ({ vaultName }) => {
         </MuiPickersUtilsProvider> */}
 
         <SectionTitle mr={3} ml={3}>
-          Action:
+          <Trans i18nKey="history.action" t={t}>
+            Action
+          </Trans>
+          :
         </SectionTitle>
         <DropDown
           options={actionOptions}
@@ -84,6 +97,7 @@ const TransactionHistory = ({ vaultName }) => {
           width={200}
           isOptionSelectable
           onOptionClicked={option => onActionChange(option)}
+          transPrefix="global.actionTypes"
         />
         {/* <SectionTitle mr={2} ml={3}>
           Asset:
@@ -102,17 +116,25 @@ const TransactionHistory = ({ vaultName }) => {
           <BlackBoxContainer hasBlackContainer={false} p="0px 4px">
             <Grid container>
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
-                Date
+                <Trans i18nKey="history.date" t={t}>
+                  Date
+                </Trans>
               </GridItem>
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
-                Action
+                <Trans i18nKey="history.action" t={t}>
+                  Action
+                </Trans>
               </GridItem>
               <GridItem item xs={4} sm={3} md={3} fontWeight={700}>
-                Amount
+                <Trans i18nKey="history.amount" t={t}>
+                  Amount
+                </Trans>
               </GridItem>
               {!isMobile && (
                 <GridItem item sm={3} md={3} fontWeight={700}>
-                  Details
+                  <Trans i18nKey="history.details" t={t}>
+                    Details
+                  </Trans>
                 </GridItem>
               )}
             </Grid>
@@ -149,7 +171,9 @@ const TransactionHistory = ({ vaultName }) => {
                 fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}
                 color="rgba(255, 255, 255, 0.7)"
               >
-                No Transactions
+                <Trans i18nKey="history.noTransactions" t={t}>
+                  No Transactions
+                </Trans>
               </SectionTitle>
             </Flex>
           </GridItem>
@@ -176,7 +200,9 @@ const TransactionHistory = ({ vaultName }) => {
                   md={3}
                   onClick={() => handleViewDetail(history.txHash)}
                 >
-                  {history.Action}
+                  <Trans i18nKey={`global.actionTypes.${history.Action.toLowerCase()}`} t={t}>
+                    {history.Action}
+                  </Trans>
                 </GridItem>
                 <GridItem
                   item
@@ -194,7 +220,10 @@ const TransactionHistory = ({ vaultName }) => {
                         window.open(`${EXPLORER_INFOS[networkId].url}${history.txHash}`, '_blank')
                       }
                     >
-                      Explorer&nbsp;
+                      <Trans i18nKey="history.explorer" t={t}>
+                        Explorer
+                      </Trans>
+                      &nbsp;
                       <OpenInNew />
                     </LinkItem>
                   </GridItem>

@@ -378,35 +378,75 @@ function InitBorrow() {
 
   const dialogContents = {
     success: {
-      title: 'Success',
-      content: 'Your transaction has been processed, you can check now your position.',
+      title: (
+        <Trans i18nKey="global.success" t={t}>
+          Success
+        </Trans>
+      ),
+      content: (
+        <Trans i18nKey="initBorrow.successModal.transactionDescription" t={t}>
+          Your transaction has been processed, you can check now your position.
+        </Trans>
+      ),
       actions: () => (
         <DialogActions>
           <NavLink to="/dashboard/my-positions" style={{ width: '100%' }}>
             <Button block noResizeOnResponsive>
-              Check my positions
+              <Trans i18nKey="initBorrow.successModal.checkMyPositions" t={t}>
+                Check my positions
+              </Trans>
             </Button>
           </NavLink>
         </DialogActions>
       ),
     },
     approval: {
-      title: 'Approving... 1 of 2',
-      content: 'You need first to approve a spending limit.',
+      title: (
+        <>
+          <Trans i18nKey="global.approving" t={t}>
+            Approving
+          </Trans>
+          ... 1 of 2
+        </>
+      ),
+      content: (
+        <Trans i18nKey="initBorrow.approvalModal.content" t={t}>
+          You need first to approve a spending limit.
+        </Trans>
+      ),
       actions: () => (
         <DialogActions>
           <Button onClick={() => approve(false)} block noResizeOnResponsive>
-            Approve {Number(collateralAmount).toFixed(3)} {collateralAsset.name}
+            <Trans i18nKey="global.approve" t={t}>
+              Approve
+            </Trans>{' '}
+            {fixDecimalString(collateralAmount, 3)} {collateralAsset.name}
           </Button>
           <Button onClick={() => approve(true)} block noResizeOnResponsive>
-            Infinite Approve
+            <Trans i18nKey="global.approvalModal.infiniteApprove" t={t}>
+              Infinite Approve
+            </Trans>
           </Button>
         </DialogActions>
       ),
     },
     capCollateral: {
-      title: 'Collateral Cap',
-      content: `The total amount of ETH you provide as collateral exceeds ${ETH_CAP_VALUE} ETH. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon.`,
+      title: (
+        <Trans i18nKey="global.capCollateralModal.title" t={t}>
+          Collateral Cap
+        </Trans>
+      ),
+      content: (
+        <DialogContentText>
+          <Trans i18nKey="global.capCollateralModal.description" t={t}>
+            The total amount of {{ assetName: collateralAsset.name }} you provide as collateral
+            exceeds {{ cap: ETH_CAP_VALUE }} {{ assetName: collateralAsset.name }}. This limit is
+            set because the contracts are not audited yet and we want to cap the risk. Please, bear
+            in mind that the alpha version is meant just to demonstrate the functioning of the
+            protocol in real conditions. A fully fledged version will be available soon.
+          </Trans>
+        </DialogContentText>
+      ),
       actions: () => (
         <DialogActions>
           <Button
@@ -416,14 +456,24 @@ function InitBorrow() {
             block
             noResizeOnResponsive
           >
-            Close
+            <Trans i18nKey="global.close" t={t}>
+              Close
+            </Trans>
           </Button>
         </DialogActions>
       ),
     },
     validateInput: {
-      title: 'Input Validation',
-      content: `Incorect amount of collateral and/or borrow amount!`,
+      title: (
+        <Trans i18nKey="initBorrow.validationModal.title" t={t}>
+          Input Validation
+        </Trans>
+      ),
+      content: (
+        <Trans i18nKey="initBorrow.validationModal.content" t={t}>
+          Incorect amount of collateral and/or borrow amount!
+        </Trans>
+      ),
       actions: () => (
         <DialogActions>
           <Button
@@ -433,7 +483,9 @@ function InitBorrow() {
             block
             noResizeOnResponsive
           >
-            Close
+            <Trans i18nKey="global.close" t={t}>
+              Close
+            </Trans>
           </Button>
         </DialogActions>
       ),
@@ -549,7 +601,7 @@ function InitBorrow() {
                       }
                     }}
                     ref={register({
-                      required: { value: 1, message: 'insufficient-borrow' },
+                      min: { value: 0, message: 'insufficient-borrow' },
                     })}
                     startAdornmentImage={borrowAsset.icon}
                     endAdornment={{
@@ -576,7 +628,7 @@ function InitBorrow() {
                       neededCollateral
                         ? neededCollateral > 0
                           ? `${t('global.min')} ${fixDecimalString(neededCollateral, 6)}`
-                          : t('global.typeAmountOptional')
+                          : t('initBorrow.typeAmountOptional')
                         : '...'
                     }
                     onChange={value => setCollateralAmount(value)}

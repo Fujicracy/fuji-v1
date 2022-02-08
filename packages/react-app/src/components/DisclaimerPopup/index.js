@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import { useMediaQuery } from 'react-responsive';
 import { Image, Flex } from 'rebass';
 import Cookies from 'js-cookie';
 import { flaskIcon } from 'assets/images';
-import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { StyledModal, Label, Button, CheckBox, NavTextLink } from '../UI';
 import { ContentContainer } from './styles';
@@ -16,6 +17,8 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
+  const { t } = useTranslation();
 
   function toggleModal() {
     setOpacity(0);
@@ -69,7 +72,9 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 fontWeight="700"
                 fontSize={isMobile ? 20 : isTablet ? 24 : 16}
               >
-                Safety Notice
+                <Trans i18nKey="disclaimerPopup.title" t={t}>
+                  Safety Notice
+                </Trans>
               </Label>
               <Label
                 textAlign={isMobile ? 'center' : 'left'}
@@ -78,8 +83,10 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 color="colors.text100"
                 lineHeight={isMobile ? '150%' : '150%'}
               >
-                Please be advised that the current version of the contracts isn&apos;t fully
-                audited. Use at your own risk.
+                <Trans i18nKey="disclaimerPopup.description" t={t}>
+                  Please be advised that the current version of the contracts isn&apos;t fully
+                  audited. Use at your own risk.
+                </Trans>
               </Label>
             </Flex>
           </Flex>
@@ -110,18 +117,20 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 lineHeight="130%"
                 width={isTablet ? '280px' : undefined}
               >
-                By moving forward, you accept our
-                <br />
-                <NavTextLink
-                  url="https://docs.fujidao.org/legals/terms-of-use"
-                  fontSize="14px"
-                  marginRight="5px"
-                  fontWeight="700"
-                  color="white"
-                >
-                  Terms of Use
-                </NavTextLink>
-                and confirm that you understand the risks
+                <Trans i18nKey="disclaimerPopup.checkDescription" t={t}>
+                  By moving forward, you accept our
+                  <br />
+                  <NavTextLink
+                    url="https://docs.fujidao.org/legals/terms-of-use"
+                    fontSize="14px"
+                    marginRight="5px"
+                    fontWeight="700"
+                    color="white"
+                  >
+                    Terms of Use
+                  </NavTextLink>
+                  and confirm that you understand the risks
+                </Trans>
               </Label>
             </Flex>
           </Flex>
@@ -136,7 +145,9 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
               fontSize={isTablet ? 16 : isMobile ? 14 : 12}
               blackBackground
             >
-              Accept
+              <Trans i18nKey="disclaimerPopup.accept" t={t}>
+                Accept
+              </Trans>
             </Button>
           </Flex>
         </Flex>

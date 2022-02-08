@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { useSpring, animated, config } from 'react-spring';
+import { useTranslation, Trans } from 'react-i18next';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { find } from 'lodash';
 import { Image, Box, Text, Flex } from 'rebass';
@@ -30,6 +31,7 @@ const Provider = ({ contracts, vaults, market, rates, isDropDown = true }) => {
       let tmpDefaultOption;
       const tmpOptions = vault.providers.map(provider => {
         const option = {
+          value: provider.id,
           title: provider.title,
           rate: Number(rates?.[provider.id]?.[vault.borrowAsset.id] || 0).toFixed(2),
         };
@@ -71,7 +73,11 @@ const Provider = ({ contracts, vaults, market, rates, isDropDown = true }) => {
             </AssetContainer>
           </Flex>
           <Flex>
-            <DropDown options={options} defaultOption={defaultOption} />
+            <DropDown
+              options={options}
+              defaultOption={defaultOption}
+              transPrefix="global.providers"
+            />
           </Flex>
         </Flex>
       ) : (
@@ -152,6 +158,8 @@ function ProvidersList({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  const { t } = useTranslation();
+
   return (
     <BlackBoxContainer
       zIndex={1}
@@ -167,7 +175,9 @@ function ProvidersList({
           <Tooltip>
             <InfoOutlinedIcon />
             <span>
-              Live fetching borrow rates from underlying protocols that provide liquidity.
+              <Trans i18nKey="apr.tooltip" t={t}>
+                Live fetching borrow rates from underlying protocols that provide liquidity.
+              </Trans>
             </span>
           </Tooltip>
         )}

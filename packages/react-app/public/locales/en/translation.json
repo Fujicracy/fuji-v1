@@ -2,15 +2,75 @@
   "global": {
     "collateral": "Collateral",
     "borrow": "Borrow",
-    "balance": "Balance",
     "borrowing": "Borrowing",
+    "balance": "Balance",
+    "repay": "Repay",
+    "repaying": "Repaying",
     "markets": "Markets",
     "min": "min",
     "with": "with",
     "approve": "Approve",
     "approving": "Approving",
     "goToApp": "Go to App",
-    "learn": "Learn"
+    "learn": "Learn",
+    "myPositions": "My positions",
+    "close": "Close",
+    "success": "Success",
+    "back": "Back",
+    "debt": "Debt",
+    "manage": "Manage",
+    "liquidate": "Liquidate",
+    "max": "max",
+    "confirm": "Confirm",
+    "supply": "Supply",
+    "supplying": "Supplying",
+    "withdraw": "Withdraw",
+    "withdrawing": "Withdrawing",
+    "deltaRatiosModal": {
+      "title": "Position Ratio Changes"
+    },
+    "approvalModal": {
+      "title": "You need first to approve a spending limit.",
+      "infiniteApprove": "Infinite Approve"
+    },
+    "successModal": {
+      "title": "Transaction successful",
+      "suppliedSuccessDescription": "You have successfully supplied {{amount}} {{assetName}}",
+      "withdrawnSuccessDescription": "You have successfully withdrawn {{amount}} {{assetName}}",
+      "repaidSuccessDescription": "You have successfully repaid {{amount}} {{assetName}}",
+      "borrowedSuccessDescription": "You have successfully borrowed {{amount}} {{assetName}}"
+    },
+    "capCollateralModal": {
+      "title": "Collateral Cap",
+      "description": "The total amount of {{assetName}} you provide as collateral exceeds {{cap}} {{assetName}}. This limit is set because the contracts are not audited yet and we want to cap the risk. Please, bear in mind that the alpha version is meant just to demonstrate the functioning of the protocol in real conditions. A fully fledged version will be available soon."
+    },
+    "actionTypes": {
+      "all": "All",
+      "deposit": "Deposit",
+      "borrow": "Borrow",
+      "payback": "Payback",
+      "withdraw": "Withdraw",
+      "liquidation": "Liquidation"
+    },
+    "providers": {
+      "aave": "Aave",
+      "compound": "Compound",
+      "ironbank": "IronBank",
+      "fuse3": "FusePool3",
+      "fuse6": "FusePool6",
+      "fuse7": "FusePool7",
+      "fuse8": "FusePool8",
+      "fuse18": "FusePool18",
+      "scream": "Scream",
+      "cream": "Cream",
+      "geist": "Geist",
+      "hundred": "Hundred"
+    }
+  },
+  "header": {
+    "claimMyNft": "Claim my NFT",
+    "disconnect": "Disconnect",
+    "changeWallet": "Change Wallet"
   },
   "homepage": {
     "landing": {
@@ -50,7 +110,18 @@
     "typeAmountOptional": "Type amount (optional)",
     "collateralRequiredAmount": "Please, type the amount you want to provide as collateral",
     "insufficientBalance": "Insufficient {{collateralName}} balance",
-    "insufficientCollateral": "Please, provide at least <1>{{neededCollateral}}</1> as collateral!"
+    "insufficientCollateral": "Please, provide at least <1>{{neededCollateral}}</1> as collateral!",
+    "successModal": {
+      "transactionDescription": "Your transaction has been processed, you can check now your position.",
+      "checkMyPositions": "Check my positions"
+    },
+    "approvalModal": {
+      "content": "You need first to approve a spending limit."
+    },
+    "validationModal": {
+      "title": "Input Validation",
+      "content": "Incorect amount of collateral and/or borrow amount!"
+    }
   },
   "howItWorks": {
     "title": "How it works",
@@ -72,5 +143,58 @@
   },
   "apr": {
     "tooltip": "Live fetching borrow rates from underlying protocols that provide liquidity."
+  },
+  "disclaimerPopup": {
+    "title": "Safety Notice",
+    "description": "Please be advised that the current version of the contracts isn't fully audited. Use at your own risk.",
+    "checkDescription": "By moving forward, you accept our <1/> <2>Terms of Use</2> and confirm that you understand the risks",
+    "accept": "Accept"
+  },
+  "footer": {
+    "about": "About",
+    "documentation": "Documentation"
+  },
+  "collateralForm": {
+    "availableToSupply": "Available to supply:",
+    "availableToWithdraw": "Available to withdraw:",
+    "tooltip": "<4>Supply</4> more {{collateralAssetName}} as collateral or <4>withdraw</4> what is not locked for your borrows.",
+    "errors": {
+      "insufficientAmount": "Please, type an amount to {{action}}",
+      "insufficientBalanceToSupply": "Insufficient {{collateralAssetName}} balance",
+      "insufficientBalanceToWithdraw": "You can withdraw max: {{leftCollateral}} {{collateralAssetName}}"
+    }
+  },
+  "debtForm": {
+    "availableToRepay": "Available to Repay:",
+    "availableToBorrow": "Available to borrow:",
+    "tooltip": " <4>Repay</4> {{borrowAssetName}} from your wallet balance or <4> borrow</4> more from it against your free collateral.",
+    "errors": {
+      "insufficientAmount": "Please, type an amount you like to {{action}}",
+      "insufficientBalanceToRepay": "You can repay max {{maxToRepay}} {{borrowAssetName}}",
+      "insufficientBalanceToBorrow": "You can borrow max <1>{{leftToBorrow}} {{borrowAssetName}}</1>. Provide more collateral!"
+    }
+  },
+  "deltaPositionRatios": {
+    "borrowLimit": "Borrow Limit",
+    "loanToValue": "Loan-to-Value",
+    "assetLiquidationPrice": "{{assetName}} liquidation price"
+  },
+  "flashClose": {
+    "title": "Flash Close",
+    "description": "Use a flash loan to repay your debt in a single transaction.",
+    "tooltip": "Repay your debt position from your collateral by using a flash loan. Fee: 1%",
+    "dialog": {
+      "confirmation": "Your transaction has been processed.",
+      "description": "You are about to repay your debt by selling part of your collateral. We are going to use a flash loan for that purpose. <1 /><2 /> <3>Fee: 1%</3>"
+    }
+  },
+  "history": {
+    "title": "History",
+    "date": "Date",
+    "action": "Action",
+    "amount": "Amount",
+    "details": "Details",
+    "noTransactions": "No Transactions",
+    "explorer": "Explorer"
   }
 }

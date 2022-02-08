@@ -4,6 +4,7 @@ import { useAuth, useBalance, useContractLoader } from 'hooks';
 import { Image, Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { useSpring, animated } from 'react-spring';
+import { useTranslation, Trans } from 'react-i18next';
 
 import { downArrowIcon, upArrowIcon, logoTitleIcon, logoIcon } from 'assets/images';
 import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
@@ -77,6 +78,7 @@ function Header() {
   });
 
   const currentPage = useLocation();
+  const { t } = useTranslation();
 
   const menuIconStyle = {
     color: 'white',
@@ -84,8 +86,6 @@ function Header() {
     padding: 0,
     marginLeft: isTablet ? 40 : 20,
   };
-
-  console.log({ selectedChain });
 
   return (
     <Container>
@@ -113,7 +113,9 @@ function Header() {
                     isSelected={currentPage.pathname === '/dashboard/init-borrow'}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Borrow
+                    <Trans i18nKey="global.borrow" t={t}>
+                      Borrow
+                    </Trans>
                   </MenuItem>
                 </NavLink>
 
@@ -122,7 +124,9 @@ function Header() {
                     isSelected={currentPage.pathname === '/dashboard/my-positions'}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    My positions
+                    <Trans i18nKey="global.myPositions" t={t}>
+                      My positions
+                    </Trans>
                   </MenuItem>
                 </NavLink>
 
@@ -131,7 +135,9 @@ function Header() {
                     isSelected={currentPage.pathname === '/about'}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    About
+                    <Trans i18nKey="footer.about" t={t}>
+                      About
+                    </Trans>
                   </MenuItem>
                 </NavLink>
                 <MenuItem
@@ -140,7 +146,9 @@ function Header() {
                     window.open('https://docs.fujidao.org', '_blank');
                   }}
                 >
-                  Documentation
+                  <Trans i18nKey="footer.documentation" t={t}>
+                    Documentation
+                  </Trans>
                 </MenuItem>
 
                 {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
@@ -149,7 +157,9 @@ function Header() {
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Claim My NFT
+                      <Trans i18nKey="header.claimMyNft" t={t}>
+                        Claim My NFT
+                      </Trans>
                     </MenuItem>
                   </NavLink>
                 )}
@@ -200,13 +210,17 @@ function Header() {
                 <>
                   <li className="nav-item">
                     <NavLink to="/dashboard/init-borrow" activeClassName="current">
-                      Borrow
+                      <Trans i18nKey="global.borrow" t={t}>
+                        Borrow
+                      </Trans>
                     </NavLink>
                   </li>
 
                   <li className="nav-item">
                     <NavLink to="/dashboard/my-positions" activeClassName="current">
-                      My positions
+                      <Trans i18nKey="global.myPositions" t={t}>
+                        My positions
+                      </Trans>
                     </NavLink>
                   </li>
                 </>
@@ -254,7 +268,9 @@ function Header() {
                             onboard.walletReset();
                           }}
                         >
-                          Disconnect
+                          <Trans i18nKey="header.disconnect" t={t}>
+                            Disconnect
+                          </Trans>
                         </DropDownItem>
                       </DropDownItemContainer>
                     )}

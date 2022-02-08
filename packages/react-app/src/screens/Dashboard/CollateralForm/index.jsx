@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { useForm } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   CircularProgress,
   Grid,
@@ -91,7 +92,7 @@ function CollateralForm({ position }) {
   });
 
   const allowance = useAllowance(contracts, collateralAsset, [address, vaultAddress]);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (neededCollateral && collateralBalance) {
       const diff = formatUnits(collateralBalance.sub(neededCollateral), collateralAsset.decimals);
@@ -229,20 +230,54 @@ function CollateralForm({ position }) {
   const getBtnContent = () => {
     if (collateralAsset.isERC20) {
       if (!loading) {
-        return action === Action.Withdraw ? 'Withdraw' : 'Supply';
+        return action === Action.Withdraw ? (
+          <Trans i18nKey="global.withdraw" t={t}>
+            Withdraw
+          </Trans>
+        ) : (
+          <Trans i18nKey="global.supply" t={t}>
+            Supply
+          </Trans>
+        );
       }
 
       if (dialog.step === 'approvalPending') {
-        return 'Approving... 1 of 2';
+        return (
+          <>
+            <Trans i18nKey="global.approving" t={t}>
+              Approving
+            </Trans>
+            ... 1 of 2
+          </>
+        );
       }
       if (dialog.step === 'doing') {
-        return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}ing... ${
-          dialog.withApproval ? '2 of 2' : ''
-        }`;
+        return (
+          <>
+            {action === Action.Withdraw ? (
+              <Trans i18nKey="global.withdrawing" t={t}>
+                Withdrawing...
+              </Trans>
+            ) : (
+              <Trans i18nKey="global.supplying" t={t}>
+                Supplying...
+              </Trans>
+            )}
+            {dialog.withApproval ? '2 of 2' : ''}
+          </>
+        );
       }
     }
 
-    return `${action === Action.Withdraw ? 'Withdraw' : 'Supply'}${loading ? 'ing...' : ''}`;
+    return action === Action.Withdraw ? (
+      <Trans i18nKey={loading ? 'global.withdrawing' : 'global.withdraw'} t={t}>
+        {loading ? 'Withdrawing...' : 'Withdraw'}
+      </Trans>
+    ) : (
+      <Trans i18nKey={loading ? 'global.supplying' : 'global.supply'} t={t}>
+        {loading ? 'Supplying...' : 'Supply'}
+      </Trans>
+    );
   };
 
   const handleMaxBalance = () => {
@@ -260,7 +295,11 @@ function CollateralForm({ position }) {
 
   const dialogContents = {
     deltaRatios: {
-      title: 'Position Ratio Changes',
+      title: (
+        <Trans i18nKey="global.deltaRatiosModal.title" t={t}>
+          Position Ratio Changes
+        </Trans>
+      ),
       content: (
         <DeltaPositionRatios
           vault={vault}
@@ -287,34 +326,68 @@ function CollateralForm({ position }) {
               noResizeOnResponsive
               block
             >
-              Confirm
+              <Trans i18nKey="global.confirm" t={t}>
+                Confirm
+              </Trans>
             </Button>
           </DialogActions>
         );
       },
     },
     approval: {
-      title: 'Approving... 1 of 2',
-      content: <DialogContentText>You need first to approve a spending limit.</DialogContentText>,
+      title: (
+        <>
+          <Trans i18nKey="global.approving" t={t}>
+            Approving
+          </Trans>
+          ... 1 of 2
+        </>
+      ),
+      content: (
+        <DialogContentText>
+          <Trans i18nKey="global.approvalModal.title" t={t}>
+            You need first to approve a spending limit.
+          </Trans>
+        </DialogContentText>
+      ),
       actions: () => {
         return (
           <DialogActions>
             <Button onClick={() => approve(false)} block noResizeOnResponsive>
-              Approve {fixDecimalString(amount, 3)} {collateralAsset.name}
+              <Trans i18nKey="global.approve" t={t}>
+                Approve
+              </Trans>{' '}
+              {fixDecimalString(amount, 3)} {collateralAsset.name}
             </Button>
             <Button onClick={() => approve(true)} block noResizeOnResponsive>
-              Infinite Approve
+              <Trans i18nKey="global.approvalModal.infiniteApprove" t={t}>
+                Infinite Approve
+              </Trans>
             </Button>
           </DialogActions>
         );
       },
     },
     success: {
-      title: 'Transaction successful',
+      title: (
+        <Trans i18nKey="global.successModal.title" t={t}>
+          Transaction successful
+        </Trans>
+      ),
       content: (
         <DialogContentText>
-          You have successfully {action === Action.Withdraw ? 'withdrawn' : 'supplied'} {amount}{' '}
-          {collateralAsset.name}.
+          <Trans
+            i18nKey={
+              action === Action.Supply
+                ? 'global.successModal.suppliedSuccessDescription'
+                : 'global.successModal.suppliedWithdrawnDescription'
+            }
+            t={t}
+          >
+            {action === Action.Supply
+              ? `You have successfully supplied {{ amount }} {{ assetName: collateralAsset.name }}.`
+              : `You have successfully withdrawn {{ amount }} {{ assetName: collateralAsset.name }}.`}
+          </Trans>
         </DialogContentText>
       ),
       actions: () => {
@@ -329,20 +402,29 @@ function CollateralForm({ position }) {
               noResizeOnResponsive
               block
             >
-              Close
+              <Trans i18nKey="global.close" t={t}>
+                Close
+              </Trans>
             </Button>
           </DialogActions>
         );
       },
     },
     capCollateral: {
-      title: 'Collateral Cap',
+      title: (
+        <Trans i18nKey="global.capCollateralModal.title" t={t}>
+          Collateral Cap
+        </Trans>
+      ),
       content: (
         <DialogContentText>
-          The total amount of ETH you provide as collateral exceeds {ETH_CAP_VALUE} ETH. This limit
-          is set because the contracts are not audited yet and we want to cap the risk. Please, bear
-          in mind that the alpha version is meant just to demonstrate the functioning of the
-          protocol in real conditions. A fully fledged version will be available soon.
+          <Trans i18nKey="global.capCollateralModal.description" t={t}>
+            The total amount of {{ assetName: collateralAsset.name }} you provide as collateral
+            exceeds {{ cap: ETH_CAP_VALUE }} {{ assetName: collateralAsset.name }}. This limit is
+            set because the contracts are not audited yet and we want to cap the risk. Please, bear
+            in mind that the alpha version is meant just to demonstrate the functioning of the
+            protocol in real conditions. A fully fledged version will be available soon.
+          </Trans>
         </DialogContentText>
       ),
       actions: () => {
@@ -355,7 +437,9 @@ function CollateralForm({ position }) {
               block
               noResizeOnResponsive
             >
-              Close
+              <Trans i18nKey="global.close" t={t}>
+                Close
+              </Trans>
             </Button>
           </DialogActions>
         );
@@ -379,13 +463,20 @@ function CollateralForm({ position }) {
 
       <Grid item>
         <Flex mb={isMobile ? '1rem' : '1.5rem'}>
-          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>Collateral</SectionTitle>
+          <SectionTitle fontSize={isMobile ? '16px' : '20px'}>
+            <Trans i18nKey="global.collateral" t={t}>
+              Collateral
+            </Trans>
+          </SectionTitle>
           {!isMobile && !isTablet && (
             <Tooltip>
               <InfoOutlinedIcon />
               <span>
-                <IntenseSpan>Supply</IntenseSpan> more {collateralAsset.name} as collateral or
-                <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
+                <Trans i18nKey="collateralForm.tooltip" t={t}>
+                  <IntenseSpan>Supply</IntenseSpan> more
+                  {{ collateralAssetName: collateralAsset.name }} as collateral or
+                  <IntenseSpan> withdraw</IntenseSpan> what is not locked for your borrows.
+                </Trans>
               </span>
             </Tooltip>
           )}
@@ -393,9 +484,9 @@ function CollateralForm({ position }) {
       </Grid>
       <Grid item>
         <ToggleSwitch
-          firstOption="Supply"
-          secondOption="Withdraw"
-          onSwitch={selected => setAction(selected === 'Supply' ? Action.Supply : Action.Withdraw)}
+          firstOption={t('global.supply')}
+          secondOption={t('global.withdraw')}
+          onSwitch={setAction}
           mb="1.5rem"
         />
       </Grid>
@@ -423,7 +514,17 @@ function CollateralForm({ position }) {
               message: 'insufficient-balance',
             },
           })}
-          subTitle={action === Action.Supply ? 'Available to supply:' : 'Available to withdraw:'}
+          subTitle={
+            action === Action.Supply ? (
+              <Trans i18nKey="collateralForm.availableToSupply" t={t}>
+                Available to supply:
+              </Trans>
+            ) : (
+              <Trans i18nKey="collateralForm.availableToWithdraw" t={t}>
+                Available to withdraw:
+              </Trans>
+            )
+          }
           subTitleInfo={
             action === Action.Supply
               ? `${userBalance ? fixDecimalString(userBalance, 3) : '...'} ${collateralAsset.name}`
@@ -436,7 +537,11 @@ function CollateralForm({ position }) {
             type: 'component',
             component: (
               <InputAdornment position="end">
-                <MaxButton onClick={handleMaxBalance}>max</MaxButton>
+                <MaxButton onClick={handleMaxBalance}>
+                  <Trans i18nKey="global.max" t={t}>
+                    max
+                  </Trans>
+                </MaxButton>
                 <Label>{collateralAsset.name}</Label>
               </InputAdornment>
             ),
@@ -444,15 +549,25 @@ function CollateralForm({ position }) {
           errorComponent={
             errors?.amount?.message === 'insufficient-amount' ? (
               <ErrorInputMessage>
-                Please, type an amount to {action === Action.Withdraw ? 'withdraw' : 'supply'}
+                <Trans i18nKey="collateralForm.errors.insufficientAmount" t={t}>
+                  Please, type an amount to
+                  {{ action: action === Action.Withdraw ? 'withdraw' : 'supply' }}
+                </Trans>
               </ErrorInputMessage>
             ) : errors?.amount?.message === 'insufficient-balance' && action === Action.Supply ? (
-              <ErrorInputMessage>Insufficient {collateralAsset.name} balance</ErrorInputMessage>
+              <ErrorInputMessage>
+                <Trans i18nKey="collateralForm.errors.insufficientBalanceToSupply" t={t}>
+                  Insufficient {{ collateralAssetName: collateralAsset.name }} balance
+                </Trans>
+              </ErrorInputMessage>
             ) : (
               errors?.amount?.message === 'insufficient-balance' &&
               action === Action.Withdraw && (
                 <ErrorInputMessage>
-                  You can withdraw max: {leftCollateral} {collateralAsset.name}
+                  <Trans i18nKey="collateralForm.errors.insufficientBalanceToWithdraw" t={t}>
+                    You can withdraw max: {{ leftCollateral }}
+                    {{ collateralAssetName: collateralAsset.name }}
+                  </Trans>
                 </ErrorInputMessage>
               )
             )

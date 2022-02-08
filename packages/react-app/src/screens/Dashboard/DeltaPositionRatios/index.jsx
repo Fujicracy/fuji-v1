@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -20,6 +21,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
   const [liqPrice, setLiqPrice] = useState([]);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchValues() {
@@ -66,7 +68,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
     <List style={{ width: '100%' }}>
       <CustomListItem>
         <ListItemText
-          primary="Health Factor"
+          primary={t('healthFactor.title')} // "Health Factor"
           secondary={
             isMobile
               ? formatValue(healthFactor[0], 2) + ' -> ' + formatValue(healthFactor[1], 2)
@@ -84,7 +86,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
       <CustomListItem>
         <ListItemText
-          primary="Borrow Limit"
+          primary={t('deltaPositionRatios.borrowLimit')} // "Borrow Limit"
           secondary={
             isMobile
               ? formatValue(borrowLimit[0], 1) + ' % -> ' + formatValue(borrowLimit[1], 1) + ' %'
@@ -102,7 +104,7 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
       <CustomListItem>
         <ListItemText
-          primary="Loan-to-Value"
+          primary={t('deltaPositionRatios.loanToValue')} // "Loan-to-Value"
           secondary={
             isMobile ? formatValue(ltv[0], 1) + ' % -> ' + formatValue(ltv[1], 1) + ' %' : ''
           }
@@ -118,7 +120,9 @@ function DeltaPositionRatios({ vault, currentCollateral, currentDebt, newCollate
       <Divider component="li" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }} />
       <CustomListItem>
         <ListItemText
-          primary={`${vault.collateralAsset.name} liquidation price`}
+          primary={t('deltaPositionRatios.assetLiquidationPrice', {
+            assetName: vault.collateralAsset.name,
+          })} // {`${vault.collateralAsset.name} liquidation price`}
           secondary={
             isMobile
               ? '$' + formatValue(liqPrice[0], 2) + ' -> $' + formatValue(liqPrice[1], 2)

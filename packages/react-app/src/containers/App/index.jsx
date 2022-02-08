@@ -7,6 +7,7 @@ import GlobalStyle from 'components/GlobalStyle';
 import themes from 'theme';
 import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
+import { useTranslation, Trans } from 'react-i18next';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
@@ -27,6 +28,8 @@ function App() {
   const isMobileOrTablet = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+
+  const { t } = useTranslation();
 
   return (
     <ThemeProvider theme={theme}>
@@ -75,9 +78,17 @@ function App() {
 
                   <NavUnlisted alignItems="center" position="right">
                     <NavLink to="/about">
-                      <NavText>About</NavText>
+                      <NavText>
+                        <Trans i18nKey="footer.about" t={t}>
+                          About
+                        </Trans>
+                      </NavText>
                     </NavLink>
-                    <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
+                    <NavTextLink url="https://docs.fujidao.org">
+                      <Trans i18nKey="footer.documentation" t={t}>
+                        Documentation
+                      </Trans>
+                    </NavTextLink>
                     <Label fontSize={12}>© FujiDAO 2021</Label>
                   </NavUnlisted>
                 </footer>

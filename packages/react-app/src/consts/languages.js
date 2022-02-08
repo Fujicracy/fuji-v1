@@ -1,6 +1,6 @@
 export const LANGUAGE_NAMES = {
   en: 'en',
-  de: 'de',
+  nl: 'nl',
 };
 
 export const LANGUAGES = {
@@ -9,9 +9,9 @@ export const LANGUAGES = {
     alpha2: 'en',
     flag: 'gb',
   },
-  [LANGUAGE_NAMES.de]: {
+  [LANGUAGE_NAMES.nl]: {
     label: 'Dutch',
-    alpha2: 'de',
-    flag: 'de',
+    alpha2: 'nl',
+    flag: 'nl',
   },
 };

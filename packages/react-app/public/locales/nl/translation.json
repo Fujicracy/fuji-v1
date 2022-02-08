@@ -1,0 +1,191 @@
+{
+  "global": {
+    "collateral": "Zekerheid",
+    "borrow": "Lenen",
+    "borrowing": "Lenen",
+    "balance": "Evenwicht",
+    "repay": "Terugbetalen",
+    "repaying": "Terugbetalen",
+    "markets": "Markets",
+    "min": "min",
+    "with": "met",
+    "approve": "Goedkeuren",
+    "approving": "Goedkeuren",
+    "goToApp": "Ga naar de App",
+    "learn": "Leren",
+    "myPositions": "Mijn posities",
+    "close": "Dichtbij",
+    "success": "Succes",
+    "back": "Rug",
+    "debt": "Schuld",
+    "manage": "Beheren",
+    "liquidate": "Liquideren",
+    "max": "max",
+    "confirm": "Confirm",
+    "supply": "Leveren",
+    "supplying": "Leveren",
+    "withdraw": "Terugtrekken",
+    "withdrawing": "Intrekken",
+    "deltaRatiosModal": {
+      "title": "Wijzigingen in positieverhouding"
+    },
+    "approvalModal": {
+      "title": "U moet eerst een bestedingslimiet goedkeuren.",
+      "infiniteApprove": "Oneindig goedkeuren"
+    },
+    "successModal": {
+      "title": "Transactie succesvol",
+      "suppliedSuccessDescription": "U heeft met succes {{amount}} {{assetName}} geleverd",
+      "suppliedWithdrawnDescription": "U heeft met succes {{amount}} {{assetName}} opgenomen"
+    },
+    "capCollateralModal": {
+      "title": "Onderpandlimiet",
+      "description": "Het totale bedrag van {{assetName}} dat u als onderpand verstrekt, is groter dan {{cap}} {{assetName}}. Deze limiet is ingesteld omdat de contracten nog niet geauditeerd zijn en we het risico willen afdekken. Houd er rekening mee dat de alfaversie alleen bedoeld is om de werking van het protocol in reële omstandigheden te demonstreren. Een volwaardige versie zal binnenkort beschikbaar zijn."
+    },
+    "actionTypes": {
+      "alle": "Alle",
+      "deposit": "Borg",
+      "borrow": "Lenen",
+      "payback": "Terugbetaling",
+      "withdraw": "Terugtrekken",
+      "liquidation": "Liquidatie"
+    },
+    "providers": {
+      "aave": "Aave",
+      "compound": "Compound",
+      "ironbank": "IronBank",
+      "fuse3": "FusePool3",
+      "fuse6": "FusePool6",
+      "fuse7": "FusePool7",
+      "fuse8": "FusePool8",
+      "fuse18": "FusePool18",
+      "scream": "Scream",
+      "cream": "Cream",
+      "geist": "Geist",
+      "hundred": "Hundred"
+    }
+  },
+  "header": {
+    "claimMyNft": "Claim mijn NFT",
+    "disconnect": "Loskoppelen",
+    "changeWallet": "Portemonnee wijzigen"
+  },
+  "homepage": {
+    "landing": {
+      "siteDescription": "Het protocol voor automatische herfinanciering van leningen"
+    },
+    "secondPage": {
+      "title_borrowRates": "Leningstarieven",
+      "title_fluctuate": "Fluctueren",
+      "title_allTheTime": "De Hele Tijd",
+      "description": "Ooit geleend in DeFi? Een lening afsluiten tegen 5%<br/> en kort daarna 15% betalen is een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van leningaanbieders is een vervelende taak,<br/> herfinanciering als de tarieven veranderen is duur in gas en tijd.",
+      "descriptionMobile": "Ooit geleend in DeFi?<br/> Een lening afsluiten tegen 5% en<br/> kort daarna 15% betalen is<br/> een dagelijkse realiteit.<br/> <br/> Het handmatig vergelijken van<br/> leningaanbieders is een vervelende taak,<br/> herfinanciering als de tarieven<br/> veranderen is duur in gas en tijd."
+    },
+    "thirdPage": {
+      "title_fujiConstantly": "Fuji Constant",
+      "title_scans": "Scant",
+      "title_borrow": "Leningen",
+      "title_markets": "Markten",
+      "description": "Door uw lening via Fuji te routeren, krijgt u<br/> de beste leenrente, geaggregeerd over alle aanbieders. <br/><br/>Betere mogelijkheid? Het protocol automatisch<br/> herfinanciert de hele pool van leningen tot de nieuwe laagste APR.",
+      "descriptionMobile": "Door uw lening via Fuji<br/> te routeren, krijgt u <br/>de beste leenrente,<br/> geaggregeerd over alle aanbieders. <br/><br/>Betere mogelijkheid?<br/> Het protocol automatisch<br/> herfinanciert de hele pool van<br/> leningen tot de nieuwe laagste APR."
+    },
+    "fourthPage": {
+      "title_allInOne": "Alles in een",
+      "title_smart": "Slim",
+      "title_borrow": "Lenen",
+      "description_1": "Geaggregeerde APR lenen",
+      "description_2": "Automatische herfinanciering van leningen",
+      "description_3": "Routing van niet-custodiale leningen",
+      "description_4": "Kortingen op gaskosten"
+    }
+  },
+  "initBorrow": {
+    "amountToBorrow": "Bedrag te lenen",
+    "yourBalance": "Je balans",
+    "liquidityNotification": "De liquiditeit voor deze transactie is afkomstig van",
+    "helper": "De liquiditeit voor deze transactie is afkomstig van <1>{{provider}}</1>",
+    "insufficientBorrow": "Typ het bedrag a.u.b. minimaal 1",
+    "typeAmountOptional": "Typ bedrag (optioneel)",
+    "collateralRequiredAmount": "Typ het bedrag dat u als onderpand wilt geven",
+    "insufficientBalance": "Onvoldoende <1>{{collateralName}}</1>-saldo",
+    "insufficientCollateral": "Geef ten minste <1>{{neededCollateral}}</1> op als onderpand",
+    "dialog": {
+      "transactionDescription": "Uw transactie is verwerkt, u kunt nu uw positie controleren.",
+      "checkMyPositions": "Controleer mijn posities"
+    }
+  },
+  "howItWorks": {
+    "title": "Hoe het werkt",
+    "description": "Met Fuji verlaagt u uw leenkosten met <1>~10%</1>. Het protocol <1>volgt</1> voortdurend de leenmarkten en <1>herfinanciert</1> automatisch zijn schuldposities tegen de best beschikbare tarieven."
+  },
+  "healthFactor": {
+    "title": "Gezondheidsfactor",
+    "tooltip": "De gezondheidsfactor vertegenwoordigt de veiligheid van uw lening, afgeleid van het aandeel van het onderpand versus het geleende bedrag.<br /><1>Houd het boven de 1 om liquidatie te voorkomen.</1>",
+    "borrowLimitUsed": "Gebruikte leenlimiet",
+    "showMore": "Toon meer",
+    "showLess": "Toon minder",
+    "currentLoanToValue": {
+      "title": "Huidige lening-naar-waarde",
+      "tooltip": "De maximale lening-tot-waarde-ratio vertegenwoordigt de maximale leenlimiet. <br />Max. LTV van {{threshold}}% betekent dat de gebruiker tot ${{threshold}} kan lenen in de hoofdvaluta voor elke $100 aan onderpand.<br /><5>Met een LTV {{ threshold }}% erboven riskeren ze een liquidatie.</5>"
+    },
+    "ltvLiquidationThreshold": "LTV-liquidatiedrempel",
+    "currentCollateralPrice": "Huidige {{collateral}} prijs",
+    "collateralLiquidationPrice": "{{collateral}} liquidatieprijs"
+  },
+  "apr": {
+    "tooltip": "Live leenrentes ophalen van onderliggende protocollen die liquiditeit bieden."
+  },
+  "disclaimerPopup": {
+    "title": "Veiligheidsmededeling",
+    "description": "Houd er rekening mee dat de huidige versie van de contracten niet volledig is gecontroleerd. Gebruik op eigen risico.",
+    "checkDescription": "Door verder te gaan, accepteert u onze <1/> <2>Gebruiksvoorwaarden</2> en bevestigt u dat u de risico's begrijpt",
+    "accept": "Aanvaarden"
+  },
+  "footer": {
+    "about": "Over",
+    "documentation": "Documentatie"
+  },
+  "collateralForm": {
+    "availableToSupply": "Beschikbaar voor levering:",
+    "availableToWithdraw": "Beschikbaar om in te trekken:",
+    "tooltip": "<4>Bieden</4> meer {{collateralAssetName}} als onderpand of <4>opnemen</4> wat niet is vergrendeld voor uw leningen.",
+    "errors": {
+      "insufficientAmount": "Typ alstublieft een bedrag naar {{action}}",
+      "insufficientBalanceToSupply": "Onvoldoende saldo {{collateralAssetName}}",
+      "insufficientBalanceToWithdraw": "U kunt max. opnemen: {{leftCollateral}} {{collateralAssetName}}"
+    }
+  },
+  "debtForm": {
+    "availableToRepay": "Beschikbaar om terug te betalen:",
+    "availableToBorrow": "Beschikbaar om te lenen:",
+    "tooltip": "<4>Terugbetalen</4> {{borrowAssetName}} van uw portefeuillesaldo of <4>leen</4> meer van uw portemonnee tegen uw gratis onderpand.",
+    "errors": {
+      "insufficientAmount": "Typ alstublieft een bedrag dat u wilt {{action}}",
+      "insufficientBalanceToRepay": "U kunt max {{maxToRepay}} {{borrowAssetName}} terugbetalen",
+      "insufficientBalanceToBorrow": "U kunt maximaal <1>{{leftToBorrow}} {{borrowAssetName}}</1> lenen. Geef meer onderpand!"
+    }
+  },
+  "deltaPositionRatios": {
+    "borrowLimit": "Leenlimiet",
+    "loanToValue": "Lening-naar-waarde",
+    "assetLiquidationPrice": "{{assetName}} liquidatieprijs"
+  },
+  "flashClose": {
+    "title": "Flash Sluiten",
+    "description": "Gebruik een flitslening om uw schuld in één keer terug te betalen.",
+    "tooltip": "Betaal uw schuldpositie terug uit uw onderpand door middel van een flitslening. Tarief: 1%",
+    "dialog": {
+      "confirmation": "Uw transactie is verwerkt.",
+      "description": "U staat op het punt uw schuld terug te betalen door een deel van uw onderpand te verkopen. We gaan daarvoor een flitslening gebruiken. <1 /><2 /> <3>Vergoeding: 1%</3>"
+    }
+  },
+  "history": {
+    "title": "Geschiedenis",
+    "date": "Datum",
+    "action": "Actie",
+    "amount": "Hoeveelheid",
+    "details": "Details",
+    "noTransactions": "Geen transacties",
+    "explorer": "Ontdekkingsreiziger"
+  }
+}

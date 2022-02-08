@@ -24,7 +24,7 @@ i18n
 
     react: {
       // Turn off the use of React Suspense
-      useSuspense: true,
+      useSuspense: false,
     },
   });
 

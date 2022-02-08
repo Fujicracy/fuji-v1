@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import map from 'lodash/map';
-import orderBy from 'lodash/orderBy';
 import { useHistory } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
+import { useTranslation, Trans } from 'react-i18next';
 import { formatUnits } from '@ethersproject/units';
 import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { useAuth, useResources, useContractLoader } from 'hooks';
 import { CallContractFunction } from 'helpers';
 import { Flex } from 'rebass';
-import { useMediaQuery } from 'react-responsive';
-import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+import { map, orderBy } from 'lodash';
 
-import { PositionElement, PositionActions, ProvidersList, SelectMarket } from 'components';
+import { useAuth, useResources, useContractLoader } from 'hooks';
+import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
+import { PositionElement, PositionActions, ProvidersList, SelectMarket, Label } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CHAIN_NAMES } from 'consts';
 import { GridContainer, GridNewPosition, PositionsBoard, GridOnePosition } from './styles';
 
@@ -29,6 +29,8 @@ function MyPositions() {
   });
 
   const [positions, setPositions] = useState([]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     let mounted = true;
@@ -105,7 +107,9 @@ function MyPositions() {
         <Grid item md={8} sm={12} xs={12}>
           <Grid container direction="column" justifyContent="center">
             <SectionTitle fontSize={isMobile ? '14px' : isTablet ? '24px' : '16px'}>
-              My positions
+              <Trans i18nKey="global.myPositions" t={t}>
+                My positions
+              </Trans>
             </SectionTitle>
             <PositionsBoard>
               {hasPosition() ? (
@@ -128,7 +132,9 @@ function MyPositions() {
                             alignItems="center"
                             width="30%"
                           >
-                            <>Collateral</>
+                            <Trans i18nKey="global.collateral" t={t}>
+                              Collateral
+                            </Trans>
                           </SectionTitle>
                           <SectionTitle
                             fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
@@ -136,7 +142,9 @@ function MyPositions() {
                             alignItems="center"
                             width="30%"
                           >
-                            <>Debt</>
+                            <Trans i18nKey="global.debt" t={t}>
+                              Debt
+                            </Trans>
                           </SectionTitle>
                           <SectionTitle
                             fontSize={isMobile ? '8px' : isTablet ? '14px' : '16px'}
@@ -145,7 +153,9 @@ function MyPositions() {
                             width="40%"
                             textAlign="center"
                           >
-                            <>Health Factor</>
+                            <Trans i18nKey="healthFactor.title" t={t}>
+                              Health Factor
+                            </Trans>
                           </SectionTitle>
                         </Flex>
                       </Grid>
@@ -189,7 +199,11 @@ function MyPositions() {
               )}
               <GridNewPosition item onClick={() => history.push(`/dashboard/init-borrow`)}>
                 <AddIcon />
-                Borrow
+                <Label lineHeight="125%">
+                  <Trans i18nKey="global.borrow" t={t}>
+                    Borrow
+                  </Trans>
+                </Label>
               </GridNewPosition>
             </PositionsBoard>
           </Grid>

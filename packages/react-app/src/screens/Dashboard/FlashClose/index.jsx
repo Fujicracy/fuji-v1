@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
+import { useMediaQuery } from 'react-responsive';
+import { Flex } from 'rebass';
 import { parseUnits } from '@ethersproject/units';
 // import TextField from '@material-ui/core/TextField';
 import {
@@ -20,13 +23,9 @@ import {
   CHAIN_NAMES,
 } from 'consts';
 import { Transactor, GasEstimator } from 'helpers';
-import { useMediaQuery } from 'react-responsive';
-
 import { useAuth, useContractLoader } from 'hooks';
 
-import { Flex } from 'rebass';
 import { SectionTitle, Tooltip, Button } from 'components';
-
 import { FlashCloseContainer, RepayButton, Description } from './styles';
 
 const providerIndexes = {
@@ -75,6 +74,8 @@ function FlashClose({ position }) {
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
 
+  const { t } = useTranslation();
+
   const vault = position.vault;
 
   const decimals = vault.borrowAsset.decimals;
@@ -117,16 +118,32 @@ function FlashClose({ position }) {
         >
           <HighlightOffIcon />
         </div>
-        <DialogTitle id="form-dialog-title">{confirmation ? 'Success' : 'Flash Close'}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {confirmation ? (
+            <Trans i18nKey="global.success" t={t}>
+              Success
+            </Trans>
+          ) : (
+            <Trans i18nKey="flashClose.title" t={t}>
+              Flash Close
+            </Trans>
+          )}
+        </DialogTitle>
         <DialogContent>
           {confirmation ? (
-            <DialogContentText>Your transaction has been processed.</DialogContentText>
+            <DialogContentText>
+              <Trans i18nKey="flashClose.dialog.confirmation" t={t}>
+                Your transaction has been processed.
+              </Trans>
+            </DialogContentText>
           ) : (
             <DialogContentText>
-              You are about to repay your debt by selling part of your collateral. We are going to
-              use a flash loan for that purpose. <br />
-              <br />
-              <span className="bold">Fee: 1%</span>
+              <Trans i18nKey="flashClose.dialog.description" t={t}>
+                You are about to repay your debt by selling part of your collateral. We are going to
+                use a flash loan for that purpose. <br />
+                <br />
+                <span className="bold">Fee: 1%</span>
+              </Trans>
             </DialogContentText>
           )}
         </DialogContent>
@@ -170,20 +187,28 @@ function FlashClose({ position }) {
       <FlashCloseContainer>
         <Flex mb="0.5rem">
           <SectionTitle fontSize={isMobile ? '16px' : isTablet ? '20px' : '16px'}>
-            Flash Close
+            <Trans i18nKey="flashClose.title" t={t}>
+              Flash Close
+            </Trans>
           </SectionTitle>
           {!isMobile && !isTablet && (
             <Tooltip>
               <InfoOutlinedIcon />
               <span>
-                Repay your debt position from your collateral by using a flash loan. Fee: 1%
+                <Trans i18nKey="flashClose.tooltip" t={t}>
+                  Repay your debt position from your collateral by using a flash loan. Fee: 1%
+                </Trans>
               </span>
             </Tooltip>
           )}
         </Flex>
 
         <Flex alignItems="center" justifyContent="space-between" mt="1rem">
-          <Description>Use a flash loan to repay your debt in a single transaction.</Description>
+          <Description>
+            <Trans i18nKey="flashClose.description" t={t}>
+              Use a flash loan to repay your debt in a single transaction.
+            </Trans>
+          </Description>
 
           <Flex>
             <RepayButton
@@ -192,7 +217,9 @@ function FlashClose({ position }) {
                 setAmount('-1');
               }}
             >
-              Repay
+              <Trans i18nKey="global.repay" t={t}>
+                Repay
+              </Trans>
             </RepayButton>
           </Flex>
         </Flex>

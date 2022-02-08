@@ -122,7 +122,6 @@ const TRANSACTION_ACTIONS = {
   WITHDRAW: 'Withdraw',
   LIQUIDATION: 'Liquidation',
 };
-const TRANSACTION_TYPES = Object.keys(TRANSACTION_ACTIONS).map(key => TRANSACTION_ACTIONS[key]);
 
 const EXPLORER_INFOS = {
   [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
@@ -149,7 +148,6 @@ export {
   MERKLE_DIST_ADDR,
   FUJIFLOPS_NFT_ADDR,
   TRANSACTION_ACTIONS,
-  TRANSACTION_TYPES,
   EXPLORER_INFOS,
   DESKTOP_MINIMUM_HEIGHT,
 };
