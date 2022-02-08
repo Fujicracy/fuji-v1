@@ -17,9 +17,9 @@ export const BREAKPOINTS = {
 };
 
 export const fujiMedia = generateMedia({
-  small: '768px',
-  medium: '1440px',
-  large: '1920px',
+  small: '767px',
+  medium: '1439px',
+  large: '1919px',
 });
 const DEPLOYMENT_TYPES = {
   CORE: 'core',
