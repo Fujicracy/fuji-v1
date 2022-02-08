@@ -15,9 +15,15 @@ import upArrowIcon from './icons/up_arrow.svg';
 import comingSoonIcon from './icons/coming-soon.svg';
 import barIcon from './icons/bar.svg';
 // App Images
-import fujiLanding from './images/home/fujiLanding.svg';
+import fujiLanding1 from './images/home/fujiLanding1.svg';
 import fujiLandingMobile from './images/home/fujiLandingMobile.svg';
 import fujiLandingTablet from './images/home/fujiLandingTablet.svg';
+import fujiAliceMobile from './images/home/fujiAliceMobile.svg';
+
+import fujiAlice1 from './images/home/fujiAlice1.svg';
+import fujiLanding2 from './images/home/fujiLanding2.svg';
+import fujiAlice2 from './images/home/fujiAlice2.svg';
+
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
@@ -53,6 +59,8 @@ import notFoundIcon from './icons/not-found-404.svg';
 import infoStep1 from './images/info/step1.png';
 import infoStep2 from './images/info/step2.png';
 
+import * as scrollDownAnimation from './animation/scroll-down-animation.json';
+
 export const infoIcons = {
   step1: infoStep1,
   step2: infoStep2,
@@ -81,10 +89,15 @@ export {
   downArrowIcon,
   upArrowIcon,
   barIcon,
-  // Images
-  fujiLanding,
+  // Landing Images
+  fujiLanding1,
   fujiLandingMobile,
   fujiLandingTablet,
+  fujiAliceMobile,
+  fujiAlice1,
+  fujiLanding2,
+  fujiAlice2,
+  // Images
   partnerDelphi,
   partnerMaven,
   partnerCapital,
@@ -106,4 +119,5 @@ export {
   // Markets
   marketFuseIcon,
   marketCoreIcon,
+  scrollDownAnimation,
 };
