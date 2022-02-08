@@ -134,6 +134,7 @@ function InitBorrow() {
 
   useEffect(() => {
     async function fetchDatas() {
+      // TODO: Use promise.all to fetch in // all data and speed up the update
       setActiveProvider(await CallContractFunction(contracts, vault.name, 'activeProvider'));
 
       setCollateralBalance(
