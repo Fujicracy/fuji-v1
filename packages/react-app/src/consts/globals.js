@@ -17,6 +17,7 @@ export const BREAKPOINTS = {
 };
 
 export const fujiMedia = generateMedia({
+  mobile: '450px',
   small: '768px',
   medium: '1440px',
   large: '1920px',
