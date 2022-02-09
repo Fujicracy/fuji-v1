@@ -61,6 +61,8 @@ import infoStep2 from './images/info/step2.png';
 
 import * as scrollDownAnimation from './animation/scroll-down-animation.json';
 
+import nftGameStorDecoration from './images/nft-game/storeDecoration.svg';
+
 export const infoIcons = {
   step1: infoStep1,
   step2: infoStep2,
@@ -120,4 +122,5 @@ export {
   marketFuseIcon,
   marketCoreIcon,
   scrollDownAnimation,
+  nftGameStorDecoration,
 };
