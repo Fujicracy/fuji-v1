@@ -11,14 +11,6 @@ const Container = styled.div`
   position: relative;
   padding: 10px;
 
-  &:before {
-    display: block;
-    position: fixed;
-    content: url(${decorationSvg});
-    top: 180px;
-    left: 0px;
-  }
-
   ${fujiMedia.greaterThan('mobile')`
     background: rgba(25, 25, 25, 0.56);
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -151,9 +143,25 @@ const ClimbingSpeedPer = styled.p`
   }
 `;
 
+const Decoration = styled.img`
+  position: absolute;
+  opacity: 0.56;
+  top: 74px;
+`;
+const LeftDecoration = styled(Decoration)`
+  left: 0px;
+`;
+const RightDecoration = styled(Decoration)`
+  right: 0px;
+  transform: rotateY(0.5turn);
+`;
+
 function Profile() {
   return (
     <Container>
+      <LeftDecoration src={decorationSvg} />
+      <RightDecoration src={decorationSvg} />
+
       <Username>
         {/* TODO: Edit button */}
         GringoClimb69 <img src={editSVG} alt="edit username" />
