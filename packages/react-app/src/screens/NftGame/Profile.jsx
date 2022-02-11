@@ -11,7 +11,7 @@ const Container = styled.div`
   position: relative;
   padding: 10px;
 
-  ${fujiMedia.greaterThan('mobile')`
+  ${fujiMedia.greaterThan('small')`
     background: rgba(25, 25, 25, 0.56);
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
@@ -31,7 +31,7 @@ const Username = styled.div`
   font-size: 20px;
   text-align: center;
   margin-bottom: 24px;
-  ${fujiMedia.greaterThan('mobile')`
+  ${fujiMedia.greaterThan('small')`
     margin-top: 16px;
   `}
 `;
@@ -114,7 +114,7 @@ const ClimbingSpeed = styled.div`
   padding: 24px;
   margin: 24px;
 
-  ${fujiMedia.lessThan('mobile')`
+  ${fujiMedia.lessThan('small')`
     background: rgba(25, 25, 25, 0.56);
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
