@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { Image } from 'rebass';
 import { fujiMedia } from 'consts';
+import { themeGet } from '@styled-system/theme-get';
 
 export const DecorationImage = styled(Image)`
   position: absolute;
@@ -12,14 +13,19 @@ export const DecorationImage = styled(Image)`
   `}
 `;
 
-export const Flex = styled.ul`
+export const NavigationContainer = styled.ul`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 8px;
+
+  ${fujiMedia.lessThan('small')`
+    justify-content: center;
+  `}
 `;
 
 export const StyledNavLink = styled(NavLink)`
-  padding: 8px 24px;
+  margin: 0px 12px;
+  padding: 4px;
 
   display: block;
   font-size: 14px;
@@ -32,4 +38,16 @@ export const StyledNavLink = styled(NavLink)`
     box-sizing: border-box;
     border-radius: 30px;
   }
+
+  ${fujiMedia.greaterThan('small')`
+
+    border-bottom: 4px solid white;
+    &.active {
+      background: transparent;
+      border: none;
+      border-bottom: 4px solid ${themeGet('colors.primary')};
+      box-sizing: border-box;
+      border-radius: 0px;
+    }
+  `}
 `;
