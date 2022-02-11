@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { fujiMedia } from 'consts';
 
 import crownSVG from 'assets/images/nft-game/crown.svg';
+import themeGet from '@styled-system/theme-get';
 
-// TODO: Use vars in style
 export const Container = styled.div`
   position: relative;
   padding: 10px;
 
   ${fujiMedia.greaterThan('small')`
-    background: rgba(25, 25, 25, 0.56);
+    background: ${themeGet('colors.dark09')};
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
+    /* Note: backdrop-filter has minimal browser support */
     backdrop-filter: blur(6px);
     
-    /* Note: backdrop-filter has minimal browser support */
     border-radius: 8px;
     padding: 24px
 
@@ -73,6 +73,7 @@ export const Stats = styled.div`
   margin: 1rem 80px;
 `;
 
+// TODO: Shall we add color #fa266c to theme colors ? Or simply create a UI component ?
 export const StatsPoints = styled.div`
   font-weight: bold;
   font-size: 32px;
