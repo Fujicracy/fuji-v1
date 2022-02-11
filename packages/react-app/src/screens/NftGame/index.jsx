@@ -1,7 +1,9 @@
 import React from 'react';
+// import { Flex } from 'rebass';
 import styled from 'styled-components';
 import { NavLink, Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import { BackgroundEffect } from 'components';
 import Header from 'components/Header';
 import Profile from './Profile';
 import Inventory from './Inventory';
@@ -50,17 +52,28 @@ function NftGame() {
         </ul>
       </Flex>
 
-      <Switch>
-        <Route exact path={path}>
-          <Profile />
-        </Route>
-        <Route path={`${path}/store`}>
-          <Store />
-        </Route>
-        <Route path={`${path}/inventory`}>
-          <Inventory />
-        </Route>
-      </Switch>
+      <Flex>
+        <Switch>
+          <BackRoute exact path={path}>
+            <Profile />
+          </BackRoute>
+          <BackRoute path={`${path}/store`}>
+            <Store />
+          </BackRoute>
+          <BackRoute path={`${path}/inventory`}>
+            <Inventory />
+          </BackRoute>
+        </Switch>
+      </Flex>
+    </>
+  );
+}
+
+function BackRoute({ children, ...rest }) {
+  return (
+    <>
+      <Route {...rest} render={() => children} />
+      <BackgroundEffect />
     </>
   );
 }

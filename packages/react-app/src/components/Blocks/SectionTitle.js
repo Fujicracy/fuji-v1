@@ -7,7 +7,12 @@ const SectionTitle = styled(Box)`
   line-height: ${props => (props.lineHeight ? props.lineHeight : '120%')};
   display: flex;
   align-items: center;
-  color: ${props => (props.color ? props.color : themeGet('colors.text100'))};
+  color: ${props =>
+    props.primary
+      ? 'rgba(250, 38, 108, 1)'
+      : props.color
+      ? props.color
+      : themeGet('colors.text100')};
   font-size: ${props => (props.fontSize ? props.fontSize : '16px')};
   justify-content: ${props => props.justifyContent && props.justifyContent};
   align-items: ${props => props.alignItems && props.alignItems};
