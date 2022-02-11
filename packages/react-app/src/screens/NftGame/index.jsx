@@ -1,5 +1,8 @@
-import React from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+
+import { useMediaQuery } from 'react-responsive';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { BackgroundEffect } from 'components';
 import Header from 'components/Header';
@@ -10,17 +13,31 @@ import { StyledNavLink, Flex } from './styles';
 
 function NftGame() {
   const { path } = useRouteMatch();
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+
+  useEffect(() => {
+    if (!isMobile) {
+      console.log('redirecting');
+      <Redirect
+        to={{
+          pathname: `${path}/store`,
+        }}
+      />;
+    }
+  }, [isMobile, path]);
 
   return (
     <>
       <Header />
 
       <Flex>
-        <ul>
-          <StyledNavLink exact to={path}>
-            Profile
-          </StyledNavLink>
-        </ul>
+        {isMobile && (
+          <ul>
+            <StyledNavLink exact to={path}>
+              Profile
+            </StyledNavLink>
+          </ul>
+        )}
         <ul>
           <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
         </ul>
@@ -32,6 +49,9 @@ function NftGame() {
       <Flex>
         <Switch>
           <BackRoute exact path={path}>
+            {isMobile ? <Redirect to={`${path}/profile`} /> : <Redirect to={`${path}/store`} />}
+          </BackRoute>
+          <BackRoute path={`${path}/profile`}>
             <Profile />
           </BackRoute>
           <BackRoute path={`${path}/store`}>
