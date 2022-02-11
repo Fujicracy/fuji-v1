@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { space } from 'styled-system';
+// import { fujiMedia } from 'consts';
 
 export const Container = styled.div`
-  width: 240px;
-  height: 360px;
-
   border: ${props => (props.themeColor === 'legendary' ? 'none' : '2px solid')};
   border-color: ${props => (props.themeColor ? props.themeColor : 'rgba(0, 194, 255, 1)')};
 
