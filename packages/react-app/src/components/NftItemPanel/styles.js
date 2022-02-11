@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { space } from 'styled-system';
-// import { fujiMedia } from 'consts';
+import { fujiMedia } from 'consts';
+import { Flex } from 'rebass';
+import { SectionTitle } from '../Blocks';
 
 export const Container = styled.div`
-  border: ${props => (props.themeColor === 'legendary' ? 'none' : '2px solid')};
+  border: ${props => (props.type === 'legendary' ? 'none' : '2px solid')};
   border-color: ${props => (props.themeColor ? props.themeColor : 'rgba(0, 194, 255, 1)')};
 
   background: ${props =>
@@ -19,8 +21,13 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 24px;
 
-  color: ${themeGet('colors.text100')};
+  color: ${props => (props.type === 'legendary' ? 'black' : themeGet('colors.text100'))};
+
+  ${fujiMedia.lessThan('small')`
+    padding: 24px;
+  `}
 `;
 
 export const ItemPanel = styled.div`
@@ -60,4 +67,28 @@ export const BuyButton = styled.div`
   border-radius: 30px;
 
   ${space}
+`;
+
+export const LegendaryItemsContainter = styled(Flex)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+
+  ${fujiMedia.lessThan('small')`
+    width: 100%;
+    flex-direction: row;
+    margin-top: 12px !important;
+    justify-content: ${props => (props.position === 'right' ? 'flex-end' : 'flex-start')};
+  `}
+`;
+
+export const LegendarySection = styled(SectionTitle)`
+  margin-top: 8px !important;
+  font-size: 14px;
+
+  ${fujiMedia.lessThan('small')`
+    margin-left: 8px !important;
+  `}
 `;

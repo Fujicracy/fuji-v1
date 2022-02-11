@@ -12,7 +12,8 @@ import LandingHeader from './LandingHeader';
 import TransactionHistory from './TransactionHistory';
 import ToggleSwitch from './ToggleSwitch';
 import Description from './Description';
-import NftItemPanel from './NftItemPanel';
+
+export * from './NftItemPanel';
 
 export * from './Blocks';
 export * from './UI';
@@ -32,5 +33,4 @@ export {
   TransactionHistory,
   ToggleSwitch,
   Description,
-  NftItemPanel,
 };
