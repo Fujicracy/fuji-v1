@@ -1,7 +1,7 @@
 import React from 'react';
 import { BlackBoxContainer, Description, NftItemPanel, SectionTitle } from 'components';
 import { Flex, Image } from 'rebass';
-import { nftGameStorDecoration } from 'assets/images';
+import { nftGameStoreDecoration } from 'assets/images';
 
 function Store() {
   return (
@@ -22,7 +22,7 @@ function Store() {
             <br /> When you open a crate you can get nothing, free points or booster cardss
           </SectionTitle>
         </Flex>
-        <Image src={nftGameStorDecoration} alt="flask" />
+        <Image src={nftGameStoreDecoration} alt="flask" />
       </Flex>
 
       <Description
