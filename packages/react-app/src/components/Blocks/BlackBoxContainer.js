@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { size, background } from 'styled-system';
+import { size, background, borderRadius, color, height } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import PropTypes from 'prop-types';
@@ -24,6 +24,9 @@ const BlackBoxContainer = styled(Box).attrs(props => ({
   border-bottom: ${props => props.noBottomBorder && 'none'};
   ${size};
   ${background};
+  ${borderRadius};
+  ${color};
+  ${height};
 
   ${fujiMedia.lessThan('small')`
     border-radius: 14px;

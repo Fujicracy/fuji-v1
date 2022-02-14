@@ -9,11 +9,11 @@ import {
 } from 'components';
 
 import { Flex } from 'rebass';
-import { nftGameStoreDecoration } from 'assets/images';
+import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Grid } from '@material-ui/core';
-import { DecorationImage } from './styles';
+import { StoreDecoration } from './styles';
 
 function Store() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -23,6 +23,7 @@ function Store() {
       maxWidth="860px"
       p={isMobile ? '24px' : '40px'}
       hasBlackContainer={!isMobile}
+      borderRadius="8px"
     >
       <Flex justifyContent="space-between">
         <Flex flexDirection="column">
@@ -45,7 +46,7 @@ function Store() {
             <br /> When you open a crate you can get nothing, free points or booster cardss
           </SectionTitle>
         </Flex>
-        <DecorationImage src={nftGameStoreDecoration} alt="flask" />
+        <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
       </Flex>
       {!isMobile && (
         <Description

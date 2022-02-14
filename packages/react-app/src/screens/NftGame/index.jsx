@@ -33,7 +33,7 @@ function NftGame() {
 
       <Flex flexDirection="row" justifyContent="center">
         {!isMobile && (
-          <Flex marginRight="48px">
+          <Flex margin="24px 48px 0px 0px">
             <Profile />
           </Flex>
         )}
