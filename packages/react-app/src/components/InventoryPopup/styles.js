@@ -31,6 +31,7 @@ export const StyledModal = Modal.styled`
   transition : all 0.3s ease-in-out;
   color: ${themeGet('colors.text64')};
   flex-direction: column;
+  opacity: ${props => props.opacity}
 
   ${fujiMedia.lessThan('small')`
     width:100%;

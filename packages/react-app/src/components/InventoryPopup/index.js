@@ -1,14 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { Image, Flex } from 'rebass';
-import Cookies from 'js-cookie';
-import { flaskIcon, closeIcon, commonMask, epicMask, legendaryMask } from 'assets/images';
-import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { Flex } from 'rebass';
+import { commonMask, epicMask, legendaryMask } from 'assets/images';
+import { INVENTORY_TYPE } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
-import { Label, BlackButton, CheckBox, NavTextLink } from '../UI';
-import { StyledModal, ContentContainer, OpacityImage, ItemPanel, CloseButton } from './styles';
+import { BlackButton } from '../UI';
+import { StyledModal, OpacityImage, ItemPanel, CloseButton } from './styles';
 
 const InventoryPopup = ({
   isOpen,
@@ -19,19 +16,6 @@ const InventoryPopup = ({
   type = INVENTORY_TYPE.COMMON,
 }) => {
   const [opacity, setOpacity] = useState(0);
-  const [checked, setChecked] = useState(false);
-
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const isTablet = useMediaQuery({
-    minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
-    maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
-  });
-
-  function toggleModal() {
-    setOpacity(0);
-    onSubmit(checked);
-    Cookies.set('confirm_disclaim', checked);
-  }
 
   function afterOpen() {
     setTimeout(() => {
@@ -45,10 +29,6 @@ const InventoryPopup = ({
       setTimeout(resolve, 300);
     });
   }
-
-  const handleCheckboxChange = event => {
-    setChecked(event.target.checked);
-  };
 
   const themeColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
 
@@ -68,6 +48,7 @@ const InventoryPopup = ({
       afterOpen={afterOpen}
       beforeClose={beforeClose}
       backgroundColor={backColor}
+      opacity={opacity}
     >
       <OpacityImage src={backMask} height="100%" />
       <CloseButton onClick={() => onClose()} />
@@ -83,7 +64,9 @@ const InventoryPopup = ({
         </SectionTitle>
         <ItemPanel />
       </Flex>
-      <BlackButton mt="24px">Redeem</BlackButton>
+      <BlackButton mt="24px" onClick={onSubmit}>
+        Redeem
+      </BlackButton>
     </StyledModal>
   );
 };
