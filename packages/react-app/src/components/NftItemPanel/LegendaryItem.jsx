@@ -36,7 +36,7 @@ const LegendaryItem = ({ points, description }) => {
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
-        <Flex flexDirection="row" alignItems="center" width="100%">
+        <Flex flexDirection="row" alignItems="center" justifyContent="center" width="100%">
           <CountButton>+</CountButton>
           <SectionTitle ml={1} mr={1} color={themeColor}>
             0
