@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
 import {
   BlackBoxContainer,
-  Description,
   InventoryItem,
   IntenseSpan,
   InventoryPopup,
@@ -11,14 +9,11 @@ import {
   SectionTitle,
 } from 'components';
 
-import { Flex, Image } from 'rebass';
-import { nftGameStoreDecorationImage, commonMask } from 'assets/images';
+import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 import {
-  StoreDecoration,
-  TiledPanel,
   GearSetItem,
   GearSetNumber,
   GearSetContainer,
@@ -26,7 +21,7 @@ import {
   HorizontalLine,
 } from './styles';
 
-const GearSet = ({ tileText, backgroundColor }) => {
+const GearSet = () => {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <GearSetContainer>
