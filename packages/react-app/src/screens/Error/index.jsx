@@ -18,7 +18,6 @@ function Error() {
   const { address, connectAccount, networkId } = useAuth();
   const { from } = location.state || { from: { pathname: '/dashboard' } };
 
-  // const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,

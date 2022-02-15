@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { fujiMedia } from 'consts';
 
 const BlackBoxContainer = styled(Box).attrs(props => ({
-  // px: props.hasBlackContainer ? 4 : 0,
   bg: props.hasBlackContainer ? themeGet('colors.dark56')(props) : 'transparent',
 }))`
   border: ${props => props.hasBlackContainer && `0.1rem solid rgba(255, 255, 255, 0.05)`};
