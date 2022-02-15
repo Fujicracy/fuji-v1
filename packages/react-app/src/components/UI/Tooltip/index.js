@@ -68,6 +68,6 @@ export const Tooltip = styled.div`
 
 export const IntenseSpan = styled.span`
   font-weight: 600;
-  color: ${props => (props.primary ? themeGet('colors.primary') : 'inherit')};
+  color: ${props => (props.primary ? themeGet('colors.primary') : props.color || 'inherit')};
   ${fontSize} ${space};
 `;

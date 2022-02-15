@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { Box } from 'rebass';
 import { BaseModalBackground } from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
-// import { fujiMedia } from 'consts';
 
 export const Container = styled(Box)`
   min-height: 100vh;

@@ -1,66 +1,84 @@
 import React from 'react';
+import { Flex, Image } from 'rebass';
 
-import editSVG from 'assets/images/icons/edit.svg';
-import decorationSvg from 'assets/images/nft-game/decorations.svg';
-
+import { useMediaQuery } from 'react-responsive';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BlackBoxContainer, Label, SectionTitle } from 'components';
+import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
-  ClimbingSpeed,
   ClimbingSpeedPer,
-  ClimbingSpeedText,
-  ClimbingSpeedTitle,
-  Container,
-  LeftDecoration,
-  Position,
-  PositionNumber,
-  PositionText,
-  RightDecoration,
-  Stats,
-  StatsLegend,
+  ProfileDecoration,
   StatsPoints,
   StatsBoost,
-  Username,
-} from './Profile.style';
+  HorizontalLine,
+} from './styles';
 
 function Profile() {
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+
   return (
-    <Container>
-      <LeftDecoration src={decorationSvg} />
-      <RightDecoration src={decorationSvg} />
+    <BlackBoxContainer
+      maxWidth={!isMobile && '340px'}
+      p="40px 24px"
+      hasBlackContainer={!isMobile}
+      borderRadius="8px"
+      color="white"
+      height="fit-content"
+    >
+      <ProfileDecoration left src={profileDecorationImage} />
+      <ProfileDecoration right src={profileDecorationImage} />
 
-      <Username>
-        {/* TODO: Edit button */}
-        GringoClimb69 <img src={editSVG} alt="edit username" />
-      </Username>
+      <Flex alignItems="center" justifyContent="center">
+        <SectionTitle fontSize="24px" lineHeight="36px">
+          GringoClimb69
+        </SectionTitle>
+        <Image src={editIcon} alt="edit username" marginLeft={2} />
+      </Flex>
 
-      <Position>
-        <PositionNumber>12</PositionNumber>
-        <PositionText>Position</PositionText>
-      </Position>
+      <Flex flexDirection="column" alignItems="center" marginTop="36px">
+        <Image src={crownImage} />
+        <StatsPoints fontSize="40px" color="white" mt={2}>
+          12
+        </StatsPoints>
+        <Label color="white" mt={1}>
+          Position
+        </Label>
+      </Flex>
 
-      <Stats>
-        <div>
+      <Flex justifyContent="center" mt="24px">
+        <Flex flexDirection="column">
           <StatsPoints>23 459</StatsPoints>
-          <StatsLegend>Points</StatsLegend>
-        </div>
-        <div>
+          <Label textAlign="left" color="white" fontSize="14px">
+            Points
+          </Label>
+        </Flex>
+        <Flex flexDirection="column" ml="40px">
           <StatsBoost>60%</StatsBoost>
-          <StatsLegend>Boost</StatsLegend>
-        </div>
-      </Stats>
-
-      <ClimbingSpeed>
-        <ClimbingSpeedTitle>Climbing speed</ClimbingSpeedTitle>
-        <ClimbingSpeedText>
+          <Label textAlign="left" color="white" fontSize="14px">
+            Boost
+          </Label>
+        </Flex>
+      </Flex>
+      {!isMobile && <HorizontalLine />}
+      <BlackBoxContainer
+        hasBlackContainer={isMobile}
+        padding={isMobile && '24px'}
+        mt={isMobile && '40px'}
+      >
+        <SectionTitle fontSize="24px">Climbing speed</SectionTitle>
+        <Label fontSize="12px" color="white" textAlign="left" mt={1} mb={1} lineHeight="18px">
           The climbing speed is the lorem ipsum of the dolor sit amen.
-        </ClimbingSpeedText>
+        </Label>
+
         <ClimbingSpeedPer>
           <strong>87,843m</strong> per week
         </ClimbingSpeedPer>
+
         <ClimbingSpeedPer>
           <strong>12,549m</strong> per day
         </ClimbingSpeedPer>
-      </ClimbingSpeed>
-    </Container>
+      </BlackBoxContainer>
+    </BlackBoxContainer>
   );
 }
 
