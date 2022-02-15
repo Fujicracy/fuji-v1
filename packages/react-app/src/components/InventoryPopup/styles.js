@@ -34,8 +34,9 @@ export const StyledModal = Modal.styled`
   opacity: ${props => props.opacity};
 
   ${fujiMedia.lessThan('small')`
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
     justify-content: space-between;
   `}
   ${fujiMedia.between('small', 'medium')`
