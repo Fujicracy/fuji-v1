@@ -1,10 +1,10 @@
 import React from 'react';
-import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+// import { useMediaQuery } from 'react-responsive';
+// import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { SunEffect } from './styles';
 
 const BackgroundEffect = () => {
-  const isDesktop = useMediaQuery({ minWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
-  return <SunEffect isShow={isDesktop} />;
+  // const isDesktop = useMediaQuery({ minWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber });
+  return <SunEffect isShow />;
 };
 export default BackgroundEffect;

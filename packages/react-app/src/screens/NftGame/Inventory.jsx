@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   BlackBoxContainer,
   Description,
-  GeneralItem,
+  InventoryItem,
   IntenseSpan,
+  InventoryPopup,
   Label,
-  LegendaryItem,
   SectionTitle,
 } from 'components';
 
 import { Flex, Image } from 'rebass';
-import { nftGameStoreDecorationImage } from 'assets/images';
+import { nftGameStoreDecorationImage, commonMask } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 import {
-  FujiMark,
   StoreDecoration,
   TiledPanel,
   GearSetItem,
@@ -49,7 +48,18 @@ const GearSet = ({ tileText, backgroundColor }) => {
 };
 function Inventory() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const [inventoryType, setInventoryType] = useState('');
+  const [inventoryPoints, setInventoryPoints] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inventoryTitle, setInventoryTitle] = useState('');
 
+  const onClickInventory = (type, points) => {
+    setInventoryType(type);
+    setInventoryPoints(points);
+
+    setInventoryTitle(type);
+    setIsModalOpen(true);
+  };
   return (
     <BlackBoxContainer
       width="860px"
@@ -62,18 +72,49 @@ function Inventory() {
           You have <IntenseSpan primary>3 crates</IntenseSpan> to open
         </Label>
         <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={6} md={4}>
-            <GeneralItem type="common" title="Common" points={1000} description="Energy points" />
+          <Grid item xs={6} md={3}>
+            <InventoryItem
+              type={INVENTORY_TYPE.COMMON}
+              title={INVENTORY_TYPE.COMMON}
+              points={1000}
+              description="Energy points"
+              onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+            />
           </Grid>
-          <Grid item xs={6} md={4}>
-            <GeneralItem type="epic" title="Epic" points={2500} description="Energy points" />
+          <Grid item xs={6} md={3}>
+            <InventoryItem
+              type={INVENTORY_TYPE.COMMON}
+              title={INVENTORY_TYPE.COMMON}
+              points={1000}
+              description="Energy points"
+              onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+            />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <LegendaryItem
-              type="legendary"
-              title="Legendary"
+          <Grid item xs={6} md={3}>
+            <InventoryItem
+              type={INVENTORY_TYPE.EPIC}
+              title={INVENTORY_TYPE.EPIC}
               points={2500}
               description="Energy points"
+              onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <InventoryItem
+              type={INVENTORY_TYPE.EPIC}
+              title={INVENTORY_TYPE.EPIC}
+              points={2500}
+              description="Energy points"
+              onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
+            />
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <InventoryItem
+              type={INVENTORY_TYPE.LEGENDARY}
+              title={INVENTORY_TYPE.LEGENDARY}
+              points={2500}
+              description="Energy points"
+              onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
             />
           </Grid>
         </Grid>
@@ -92,6 +133,16 @@ function Inventory() {
           ))}
         </Grid>
       </Flex>
+      {inventoryType && (
+        <InventoryPopup
+          isOpen={isModalOpen}
+          onSubmit={() => console.log('clicked')}
+          onClose={() => setIsModalOpen(false)}
+          title={inventoryTitle}
+          type={inventoryType}
+          points={inventoryPoints}
+        />
+      )}
     </BlackBoxContainer>
   );
 }

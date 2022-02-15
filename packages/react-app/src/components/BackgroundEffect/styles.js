@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { fujiMedia } from 'consts';
 
 export const SunEffect = styled.div`
   z-index: -1;
@@ -14,4 +15,8 @@ export const SunEffect = styled.div`
   box-shadow: 0px -90px 50px rgba(238, 2, 70, 0.08);
   filter: blur(16px);
   display: ${props => (props.isShow ? 'block' : 'none')};
+
+  ${fujiMedia.lessThan('small')`
+    top: 125%;
+  `}
 `;

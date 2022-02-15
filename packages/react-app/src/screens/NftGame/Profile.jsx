@@ -35,7 +35,7 @@ function Profile() {
         <Image src={editIcon} alt="edit username" marginLeft={2} />
       </Flex>
 
-      <Flex flexDirection="column" alignItems="center" marginTop="37px">
+      <Flex flexDirection="column" alignItems="center" marginTop="36px">
         <Image src={crownImage} />
         <StatsPoints fontSize="40px" color="white" mt={2}>
           12

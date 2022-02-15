@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { useMediaQuery } from 'react-responsive';
@@ -16,21 +16,10 @@ function NftGame() {
   const { path } = useRouteMatch();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  useEffect(() => {
-    if (!isMobile) {
-      console.log('redirecting');
-      <Redirect
-        to={{
-          pathname: `${path}/store`,
-        }}
-      />;
-    }
-  }, [isMobile, path]);
-
   return (
     <>
       <Header />
-
+      <BackgroundEffect />
       <Flex flexDirection="row" justifyContent="center">
         {!isMobile && (
           <Flex margin="24px 48px 0px 0px">
@@ -54,31 +43,22 @@ function NftGame() {
 
           <Flex justifyContent="center">
             <Switch>
-              <BackRoute exact path={path}>
+              <Route exact path={path}>
                 {isMobile ? <Redirect to={`${path}/profile`} /> : <Redirect to={`${path}/store`} />}
-              </BackRoute>
-              <BackRoute path={`${path}/profile`}>
-                <Profile />
-              </BackRoute>
-              <BackRoute path={`${path}/store`}>
+              </Route>
+              <Route path={`${path}/profile`}>
+                {!isMobile ? <Redirect to={`${path}/store`} /> : <Profile />}
+              </Route>
+              <Route path={`${path}/store`}>
                 <Store />
-              </BackRoute>
-              <BackRoute path={`${path}/inventory`}>
+              </Route>
+              <Route path={`${path}/inventory`}>
                 <Inventory />
-              </BackRoute>
+              </Route>
             </Switch>
           </Flex>
         </Flex>
       </Flex>
-    </>
-  );
-}
-
-function BackRoute({ children, ...rest }) {
-  return (
-    <>
-      <Route {...rest} render={() => children} />
-      <BackgroundEffect />
     </>
   );
 }

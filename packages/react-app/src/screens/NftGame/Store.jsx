@@ -4,14 +4,14 @@ import {
   BlackBoxContainer,
   Description,
   GeneralItem,
-  LegendaryItem,
   SectionTitle,
+  LegendaryItem,
 } from 'components';
 
 import { Flex } from 'rebass';
 import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 import { StoreDecoration } from './styles';
 
@@ -58,18 +58,23 @@ function Store() {
       <Flex mt={isMobile ? '32px' : '40px'}>
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={6} md={4}>
-            <GeneralItem type="common" title="Common" points={1000} description="Energy points" />
+            <GeneralItem
+              type={INVENTORY_TYPE.COMMON}
+              title={INVENTORY_TYPE.COMMON}
+              points={1000}
+              description="Energy points"
+            />
           </Grid>
           <Grid item xs={6} md={4}>
-            <GeneralItem type="epic" title="Epic" points={2500} description="Energy points" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <LegendaryItem
-              type="legendary"
-              title="Legendary"
+            <GeneralItem
+              type={INVENTORY_TYPE.EPIC}
+              title={INVENTORY_TYPE.EPIC}
               points={2500}
               description="Energy points"
             />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <LegendaryItem points={2500} description="Energy points" />
           </Grid>
         </Grid>
       </Flex>

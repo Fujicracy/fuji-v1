@@ -109,26 +109,6 @@ export const ProfileDecoration = styled.img`
   transform: ${props => props.right && 'rotateY(0.5turn)'};
 `;
 
-export const FujiMark = styled.div`
-  position: absolute;
-  width: 127px;
-  height: 17px;
-
-  font-family: Sofia Pro;
-  font-style: italic;
-  font-weight: 900;
-  font-size: 14px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  color: white;
-
-  backdrop-filter: blur(8px);
-  transform: rotate(-90deg);
-`;
-
 export const TiledPanel = styled.div`
   width: 168px;
   height: 256px;
@@ -170,7 +150,7 @@ export const GearSetBadge = styled.div`
   position: absolute;
   right: -8px;
   top: -8px;
-  z-index: 9998;
+  z-index: 5;
 `;
 
 export const GearSetNumber = styled.div`
@@ -185,5 +165,5 @@ export const GearSetNumber = styled.div`
   position: absolute;
   right: -8px;
   top: -8px;
-  z-index: 9999;
+  z-index: 10;
 `;
