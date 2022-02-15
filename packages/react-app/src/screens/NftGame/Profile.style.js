@@ -7,6 +7,7 @@ import themeGet from '@styled-system/theme-get';
 export const Container = styled.div`
   position: relative;
   padding: 10px;
+  color: ${themeGet('colors.text100')};
 
   ${fujiMedia.greaterThan('small')`
     background: ${themeGet('colors.dark09')};
