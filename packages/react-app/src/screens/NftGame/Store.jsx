@@ -14,8 +14,10 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 import { StoreDecoration } from './styles';
+import { usePoints } from './NftGame.hooks';
 
 function Store() {
+  const points = usePoints();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
@@ -29,7 +31,7 @@ function Store() {
         <Flex flexDirection="column">
           <Flex alignItems="bottom">
             <SectionTitle primary fontSize="32px">
-              23,459
+              {points.toLocaleString('en-US')}
             </SectionTitle>
             <SectionTitle fontWeight="light" ml={2} mt={2}>
               Energy points

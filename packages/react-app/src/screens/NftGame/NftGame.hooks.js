@@ -21,6 +21,7 @@ export function usePoints() {
 
 export function useClimbingSpeed() {
   const { address } = useAuth();
+  console.log({ address });
   const contracts = useContractLoader();
   const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
 
@@ -31,8 +32,10 @@ export function useClimbingSpeed() {
 
   useEffect(() => {
     if (userdata[1]) {
+      console.log({ userdata });
       const climbingSpeedPerDay = Number(formatUnits(userdata[1], 5)) * 60 * 60 * 24;
       const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
+      console.log({ climbingSpeedPerDay, climbingSpeedPerWeek });
       setclimbingSpeed({ climbingSpeedPerDay, climbingSpeedPerWeek });
     }
   }, [userdata]);

@@ -12,7 +12,7 @@ import {
   StatsBoost,
   HorizontalLine,
 } from './styles';
-import { useClimbingSpeed, usePoints } from './NftGame';
+import { useClimbingSpeed, usePoints } from './NftGame.hooks';
 
 function Profile() {
   const points = usePoints();
