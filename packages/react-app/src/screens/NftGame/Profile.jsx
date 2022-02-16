@@ -20,16 +20,15 @@ function Profile() {
   const contracts = useContractLoader();
 
   const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
-  const points = debtBalance ? formatUnits(debtBalance, 5) : 0;
+  const points = debtBalance ? Number(formatUnits(debtBalance, 5)) : 0;
 
   const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
-  const climbingSpeedPerDay = userdata[1]
-    ? formatUnits(userdata[1].toNumber(), 5) * 60 * 60 * 24
-    : 0;
+  const climbingSpeedPerDay = userdata[1] ? Number(formatUnits(userdata[1], 5)) * 60 * 60 * 24 : 0;
   const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
 
   const boost = 0; // in percent
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  console.count('Profile render');
 
   return (
     <BlackBoxContainer
@@ -62,13 +61,13 @@ function Profile() {
 
       <Flex justifyContent="center" mt="24px">
         <Flex flexDirection="column">
-          <StatsPoints>23 459</StatsPoints>
+          <StatsPoints>{points.toLocaleString('en-US')}</StatsPoints>
           <Label textAlign="left" color="white" fontSize="14px">
             Points
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>60%</StatsBoost>
+          <StatsBoost>{boost}%</StatsBoost>
           <Label textAlign="left" color="white" fontSize="14px">
             Boost
           </Label>
