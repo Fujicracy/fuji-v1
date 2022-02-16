@@ -1,46 +1,56 @@
 import React from 'react';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { SectionTitle } from '../Blocks';
 import {
-  Container,
   ItemPanel,
   BuyButton,
   CountButton,
   LegendaryItemsContainter,
-  LegendarySection,
+  LegendaryContainer,
 } from './styles';
 
-const LegendaryItem = ({ type = 'common', title, points, description }) => {
-  const themeColor = '#000000';
+const LegendaryItem = ({ points, description }) => {
+  const themeColor = 'white';
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
-    <Container themeColor={themeColor} type={type}>
+    <LegendaryContainer color={themeColor} backgroundColor="#A5243D">
       <LegendaryItemsContainter>
         <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
-          {title}
+          Legendary
         </SectionTitle>
-        <LegendarySection color={themeColor}>{points.toLocaleString()}</LegendarySection>
-        <LegendarySection color={themeColor}>{description}</LegendarySection>
+        <SectionTitle color={themeColor} mt={2} fontSize="14px">
+          {isMobile ? `${points.toLocaleString()} ${description}` : points.toLocaleString()}
+        </SectionTitle>
+        {!isMobile && (
+          <SectionTitle color={themeColor} mt={2} fontSize="14px">
+            {description}
+          </SectionTitle>
+        )}
       </LegendaryItemsContainter>
 
-      <ItemPanel mt={3} />
+      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} />
       <LegendaryItemsContainter
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
-        <Flex flexDirection="row">
+        <Flex flexDirection="row" alignItems="center" justifyContent="center" width="100%">
           <CountButton>+</CountButton>
           <SectionTitle ml={1} mr={1} color={themeColor}>
             0
           </SectionTitle>
           <CountButton>-</CountButton>
+          {isMobile && (
+            <BuyButton block margin="0px 0px 0px 16px" width="70%">
+              Buy
+            </BuyButton>
+          )}
         </Flex>
-        <BuyButton margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}>Buy</BuyButton>
+        {!isMobile && <BuyButton margin="16px 0px 0px">Buy</BuyButton>}
       </LegendaryItemsContainter>
-    </Container>
+    </LegendaryContainer>
   );
 };
 

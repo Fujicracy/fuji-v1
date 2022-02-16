@@ -5,7 +5,6 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
 import { useContractLoader, useAuth, useResources, useContractReader } from 'hooks';
-// import { CallContractFunction } from 'helpers';
 
 import Error from '../Error';
 

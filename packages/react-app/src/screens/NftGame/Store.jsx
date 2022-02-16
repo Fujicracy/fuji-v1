@@ -4,16 +4,16 @@ import {
   BlackBoxContainer,
   Description,
   GeneralItem,
-  LegendaryItem,
   SectionTitle,
+  LegendaryItem,
 } from 'components';
 
 import { Flex } from 'rebass';
-import { nftGameStoreDecoration } from 'assets/images';
+import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
-import { DecorationImage } from './styles';
+import { StoreDecoration } from './styles';
 
 function Store() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -23,6 +23,7 @@ function Store() {
       maxWidth="860px"
       p={isMobile ? '24px' : '40px'}
       hasBlackContainer={!isMobile}
+      borderRadius="8px"
     >
       <Flex justifyContent="space-between">
         <Flex flexDirection="column">
@@ -45,7 +46,7 @@ function Store() {
             <br /> When you open a crate you can get nothing, free points or booster cardss
           </SectionTitle>
         </Flex>
-        <DecorationImage src={nftGameStoreDecoration} alt="flask" />
+        <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
       </Flex>
       {!isMobile && (
         <Description
@@ -57,18 +58,23 @@ function Store() {
       <Flex mt={isMobile ? '32px' : '40px'}>
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={6} md={4}>
-            <GeneralItem type="common" title="Common" points={1000} description="Energy points" />
+            <GeneralItem
+              type={INVENTORY_TYPE.COMMON}
+              title={INVENTORY_TYPE.COMMON}
+              points={1000}
+              description="Energy points"
+            />
           </Grid>
           <Grid item xs={6} md={4}>
-            <GeneralItem type="epic" title="Epic" points={2500} description="Energy points" />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <LegendaryItem
-              type="legendary"
-              title="Legendary"
+            <GeneralItem
+              type={INVENTORY_TYPE.EPIC}
+              title={INVENTORY_TYPE.EPIC}
               points={2500}
               description="Energy points"
             />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <LegendaryItem points={2500} description="Energy points" />
           </Grid>
         </Grid>
       </Flex>

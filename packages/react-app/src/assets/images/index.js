@@ -61,7 +61,14 @@ import infoStep2 from './images/info/step2.png';
 
 import * as scrollDownAnimation from './animation/scroll-down-animation.json';
 
-import nftGameStoreDecoration from './images/nft-game/storeDecoration.svg';
+// NFT-Game
+import editIcon from './icons/edit.svg';
+import nftGameStoreDecorationImage from './images/nft-game/store-decoration.svg';
+import crownImage from './images/nft-game/crown.svg';
+import profileDecorationImage from './images/nft-game/profile-decoration.svg';
+import commonMask from './images/nft-game/common-mask.svg';
+import epicMask from './images/nft-game/epic-mask.svg';
+import legendaryMask from './images/nft-game/legendary-mask.svg';
 
 export const infoIcons = {
   step1: infoStep1,
@@ -122,5 +129,12 @@ export {
   marketFuseIcon,
   marketCoreIcon,
   scrollDownAnimation,
-  nftGameStoreDecoration,
+  // nft-game
+  editIcon,
+  crownImage,
+  nftGameStoreDecorationImage,
+  profileDecorationImage,
+  commonMask,
+  epicMask,
+  legendaryMask,
 };

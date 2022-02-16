@@ -132,6 +132,12 @@ const EXPLORER_INFOS = {
 
 const DESKTOP_MINIMUM_HEIGHT = 550;
 
+const INVENTORY_TYPE = {
+  COMMON: 'Common',
+  EPIC: 'Epic',
+  LEGENDARY: 'Legendary',
+};
+
 export {
   CHAIN,
   CHAIN_ID,
@@ -152,4 +158,5 @@ export {
   TRANSACTION_TYPES,
   EXPLORER_INFOS,
   DESKTOP_MINIMUM_HEIGHT,
+  INVENTORY_TYPE,
 };

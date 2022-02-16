@@ -1,21 +1,18 @@
 import styled from 'styled-components';
-import { themeGet } from '@styled-system/theme-get';
-import { space } from 'styled-system';
-import { fujiMedia } from 'consts';
-import { Flex } from 'rebass';
-import { SectionTitle } from '../Blocks';
+import { space, color, padding, width } from 'styled-system';
+import { Image, Flex } from 'rebass';
+import { INVENTORY_TYPE, fujiMedia } from 'consts';
 
 export const Container = styled.div`
-  border: ${props => (props.type === 'legendary' ? 'none' : '2px solid')};
-  border-color: ${props => (props.themeColor ? props.themeColor : 'rgba(0, 194, 255, 1)')};
+  border: none;
+  position: relative;
 
-  background: ${props =>
-    props.type === 'legendary'
-      ? 'radial-gradient(471.87% 2659.72% at 2.99% -164.06%, #C49210 0%, #FCDD99 19.39%, #F8BB17 36.38%, #DB9F00 62.46%, #FAD27A 75.35%, #F8BB17 87.44%, #C49210 100%)'
-      : 'transparent'};
+  width: ${props => (props.mode === 'inventory' ? '172px' : '100%')};
+  height: ${props => (props.mode === 'inventory' ? '256px' : '360')};
 
   box-sizing: border-box;
   border-radius: 8px;
+  background-color: ${props => props.backgroundColor || 'white'};
 
   display: flex;
   flex-direction: column;
@@ -23,11 +20,37 @@ export const Container = styled.div`
   align-items: center;
   padding: 24px;
 
-  color: ${props => (props.type === 'legendary' ? 'black' : themeGet('colors.text100'))};
+  cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
+
+  ${color};
+  ${padding};
+  z-index: 1;
+`;
+
+export const LegendaryContainer = styled.div`
+  border: none;
+  position: relative;
+
+  width: ${props => (props.mode === 'inventory' ? '172px' : '100%')};
+  height: ${props => (props.mode === 'inventory' ? '256px' : '360px')};
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: ${props => props.backgroundColor || 'white'};
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+
+  cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
   ${fujiMedia.lessThan('small')`
-    padding: 24px;
+    justify-content: space-between;
+    height: 250px;
   `}
+  ${color};
+  ${padding};
 `;
 
 export const ItemPanel = styled.div`
@@ -36,7 +59,12 @@ export const ItemPanel = styled.div`
 
   background-color: rgb(32, 32, 32);
   border-radius: 8px;
+  margin-top: 16px;
 
+  ${fujiMedia.lessThan('small')`
+    position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
+    right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};
+  `}
   ${space}
 `;
 
@@ -49,7 +77,9 @@ export const CountButton = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.32);
+  background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
+
+  cursor: pointer;
 
   ${space}
 `;
@@ -63,10 +93,60 @@ export const BuyButton = styled.div`
   justify-content: center;
   align-items: center;
 
-  background: rgba(255, 255, 255, 0.32);
   border-radius: 30px;
+  background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
 
-  ${space}
+  cursor: pointer;
+
+  ${space};
+  ${width};
+`;
+
+export const OpacityImage = styled(Image)`
+  position: absolute;
+  opacity: 0.15;
+  height: 100% !important;
+  left: 0;
+  top: 0;
+`;
+
+export const MarkContainer = styled.div`
+  backdrop-filter: blur(8px);
+
+  width: 100% !important;
+  height: 100% !important;
+  border: 3px solid
+    ${props =>
+      props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+  box-sizing: border-box;
+  border-radius: 8px;
+`;
+
+export const FujiMark = styled.div`
+  position: absolute;
+  padding: 0 5px;
+  right: ${props => props.right && '-43px'};
+  bottom: ${props => props.right && '90px'};
+
+  left: ${props => props.left && '-43px'};
+  top: ${props => props.left && '90px'};
+
+  font-family: Sofia Pro;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 14px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: ${props =>
+    props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+
+  backdrop-filter: blur(8px);
+  transform: rotate(-90deg);
+
+  z-index: 3;
 `;
 
 export const LegendaryItemsContainter = styled(Flex)`
@@ -78,17 +158,7 @@ export const LegendaryItemsContainter = styled(Flex)`
 
   ${fujiMedia.lessThan('small')`
     width: 100%;
-    flex-direction: row;
     margin-top: 12px !important;
-    justify-content: ${props => (props.position === 'right' ? 'flex-end' : 'flex-start')};
-  `}
-`;
-
-export const LegendarySection = styled(SectionTitle)`
-  margin-top: 8px !important;
-  font-size: 14px;
-
-  ${fujiMedia.lessThan('small')`
-    margin-left: 8px !important;
+    align-items: flex-start;
   `}
 `;
