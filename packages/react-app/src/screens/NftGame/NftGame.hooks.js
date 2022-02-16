@@ -6,15 +6,10 @@ export function usePoints() {
   const { address } = useAuth();
   const contracts = useContractLoader();
   const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
+  const newPoints = debtBalance ? Number(formatUnits(debtBalance, 5)) : 0;
 
   const [points, setPoints] = useState(0);
-
-  useEffect(() => {
-    if (debtBalance) {
-      const newPoints = Number(formatUnits(debtBalance, 5));
-      setPoints(newPoints);
-    }
-  }, [debtBalance]);
+  useEffect(() => setPoints(newPoints), [newPoints]);
 
   return points;
 }
@@ -23,19 +18,14 @@ export function useClimbingSpeed() {
   const { address } = useAuth();
   const contracts = useContractLoader();
   const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
+  const climbingSpeedPerDay = userdata[1] ? Number(formatUnits(userdata[1], 5)) * 60 * 60 * 24 : 0;
+  const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
 
-  const [climbingSpeed, setclimbingSpeed] = useState({
-    climbingSpeedPerDay: 0,
-    climbingSpeedPerWeek: 0,
-  });
-
-  useEffect(() => {
-    if (userdata[1]) {
-      const climbingSpeedPerDay = Number(formatUnits(userdata[1], 5)) * 60 * 60 * 24;
-      const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
-      setclimbingSpeed({ climbingSpeedPerDay, climbingSpeedPerWeek });
-    }
-  }, [userdata]);
+  const [climbingSpeed, setclimbingSpeed] = useState({ climbingSpeedPerDay, climbingSpeedPerWeek });
+  useEffect(
+    () => setclimbingSpeed({ climbingSpeedPerDay, climbingSpeedPerWeek }),
+    [climbingSpeedPerDay, climbingSpeedPerWeek],
+  );
 
   return climbingSpeed;
 }
