@@ -3,9 +3,9 @@
 /* eslint-disable import/no-dynamic-require */
 import { Contract } from '@ethersproject/contracts';
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from 'hooks';
 import { ASSETS } from 'consts/assets';
 import { ERC20_ABI } from 'consts/abis';
+import { useAuth } from './Auth';
 
 const loadContractFrom = (contracts, contractName, signer) => {
   const address = contracts[contractName].address;
