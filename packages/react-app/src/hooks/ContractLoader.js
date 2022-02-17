@@ -18,7 +18,7 @@ const loadContractFrom = (contracts, contractName, signer) => {
   return contract;
 };
 
-export default function useContractLoader() {
+export function useContractLoader() {
   const { provider: providerOrSigner, networkId, networkName, deployment } = useAuth();
   const isMounted = useRef(false);
 

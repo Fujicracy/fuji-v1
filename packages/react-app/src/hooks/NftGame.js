@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useAuth, useContractLoader, useContractReader } from 'hooks';
 import { formatUnits } from '@ethersproject/units';
+import { useAuth, useContractLoader, useContractReader } from 'hooks';
 
 export function usePoints() {
   const { address } = useAuth();

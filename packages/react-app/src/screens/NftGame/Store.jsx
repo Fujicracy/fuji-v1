@@ -13,8 +13,9 @@ import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
+
+import { usePoints } from 'hooks';
 import { StoreDecoration } from './styles';
-import { usePoints } from './NftGame.hooks';
 
 function Store() {
   const points = usePoints();

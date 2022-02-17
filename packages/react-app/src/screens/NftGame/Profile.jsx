@@ -4,6 +4,7 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
+import { useClimbingSpeed, usePoints } from 'hooks';
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
@@ -12,7 +13,6 @@ import {
   StatsBoost,
   HorizontalLine,
 } from './styles';
-import { useClimbingSpeed, usePoints } from './NftGame.hooks';
 
 function Profile() {
   const points = usePoints();
