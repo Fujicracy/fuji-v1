@@ -31,8 +31,8 @@ function Store() {
             <SectionTitle primary fontSize="32px">
               23,459
             </SectionTitle>
-            <SectionTitle fontWeight="light" ml={2} mt={2}>
-              Energy points
+            <SectionTitle fontSize="14px" fontWeight="light" ml={2} mt={2} spanFontSize="12px">
+              Meter points <span>(?)</span>
             </SectionTitle>
           </Flex>
 
@@ -55,14 +55,14 @@ function Store() {
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
         />
       )}
-      <Flex mt={isMobile ? '32px' : '40px'}>
+      <Flex mt={isMobile ? '20px' : '40px'}>
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={6} md={4}>
             <GeneralItem
               type={INVENTORY_TYPE.COMMON}
               title={INVENTORY_TYPE.COMMON}
               points={1000}
-              description="Energy points"
+              description="Meter points"
             />
           </Grid>
           <Grid item xs={6} md={4}>
@@ -70,11 +70,11 @@ function Store() {
               type={INVENTORY_TYPE.EPIC}
               title={INVENTORY_TYPE.EPIC}
               points={2500}
-              description="Energy points"
+              description="Meter points"
             />
           </Grid>
           <Grid item xs={12} md={4}>
-            <LegendaryItem points={2500} description="Energy points" />
+            <LegendaryItem points={2500} description="Meter points" />
           </Grid>
         </Grid>
       </Flex>

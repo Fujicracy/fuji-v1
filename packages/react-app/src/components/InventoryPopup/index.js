@@ -14,6 +14,7 @@ const InventoryPopup = ({
   points,
   onClose,
   type = INVENTORY_TYPE.COMMON,
+  description = 'Meter Points',
 }) => {
   const [opacity, setOpacity] = useState(0);
 
@@ -59,8 +60,15 @@ const InventoryPopup = ({
         <SectionTitle color={themeColor} fontSize="32px" fontWeight="bold" mt="48px">
           {title}
         </SectionTitle>
-        <SectionTitle color={themeColor} fontSize="20px" mt="24px">
-          {points.toLocaleString()}
+        <SectionTitle
+          color={themeColor}
+          fontSize="20px"
+          mt="24px"
+          spanColor={themeColor}
+          spanFontSize="14px"
+          alignItems="baseline"
+        >
+          {points.toLocaleString()} <span>{description}</span>
         </SectionTitle>
         <ItemPanel />
       </Flex>

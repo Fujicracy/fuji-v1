@@ -49,17 +49,17 @@ function Profile() {
         <Flex flexDirection="column">
           <StatsPoints>23 459</StatsPoints>
           <Label textAlign="left" color="white" fontSize="14px">
-            Points
+            Meter Points
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>60%</StatsBoost>
+          <StatsBoost>1.2X</StatsBoost>
           <Label textAlign="left" color="white" fontSize="14px">
-            Boost
+            Boost Score
           </Label>
         </Flex>
       </Flex>
-      {!isMobile && <HorizontalLine />}
+      {!isMobile && <HorizontalLine margin="40px 0px" />}
       <BlackBoxContainer
         hasBlackContainer={isMobile}
         padding={isMobile && '24px'}

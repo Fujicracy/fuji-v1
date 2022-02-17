@@ -24,6 +24,7 @@ const SectionTitle = styled(Box)`
   > span {
     margin-left: ${props => (props.spanMargin ? props.spanMargin : '4px')};
     color: ${props => (props.spanColor ? props.spanColor : themeGet('colors.pink'))};
+    font-size: ${props => (props.spanFontSize ? props.spanFontSize : '16px')};
   }
   ${space}
   ${width}
