@@ -77,11 +77,11 @@ function Profile() {
         </Label>
 
         <ClimbingSpeedPer>
-          <strong>{climbingSpeedPerWeek?.toLocaleString('en-US')}</strong> points per week
+          <strong>{climbingSpeedPerWeek?.toLocaleString('en-US')}</strong> meter points per week
         </ClimbingSpeedPer>
 
         <ClimbingSpeedPer>
-          <strong>{climbingSpeedPerDay?.toLocaleString('en-US')}</strong> points per day
+          <strong>{climbingSpeedPerDay?.toLocaleString('en-US')}</strong> meter points per day
         </ClimbingSpeedPer>
       </BlackBoxContainer>
     </BlackBoxContainer>
