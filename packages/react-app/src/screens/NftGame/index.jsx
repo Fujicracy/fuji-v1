@@ -25,7 +25,7 @@ const ClaimHeader = () => {
     >
       <HeaderBackContainer>
         <NavBackLink m={0}>
-          <ArrowBackIosOutlinedIcon fontSize="18" />
+          <ArrowBackIosOutlinedIcon />
         </NavBackLink>
       </HeaderBackContainer>
       <SectionTitle>Claim NFT</SectionTitle>
