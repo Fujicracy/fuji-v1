@@ -19,6 +19,7 @@ import {
   GearSetContainer,
   GearSetBadge,
   HorizontalLine,
+  RotateContainer,
 } from './styles';
 
 const GearSet = () => {
@@ -66,60 +67,65 @@ function Inventory() {
         <Label color="white" fontSize="24px" marginBottom="24px">
           You have <IntenseSpan primary>3 crates</IntenseSpan> to open
         </Label>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={6} md={3}>
-            <InventoryItem
-              type={INVENTORY_TYPE.COMMON}
-              title={INVENTORY_TYPE.COMMON}
-              points={1000}
-              description="Energy points"
-              onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
-            />
+        {isMobile ? (
+          <Flex position="relative" mt={3}>
+            <RotateContainer left>
+              <InventoryItem onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)} />
+            </RotateContainer>
+            <RotateContainer right>
+              <InventoryItem
+                type={INVENTORY_TYPE.EPIC}
+                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
+              />
+            </RotateContainer>
+            <RotateContainer center>
+              <InventoryItem
+                type={INVENTORY_TYPE.LEGENDARY}
+                onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
+              />
+            </RotateContainer>
+          </Flex>
+        ) : (
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item xs={6} md={3}>
+              <InventoryItem
+                type={INVENTORY_TYPE.COMMON}
+                onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+              />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <InventoryItem
+                type={INVENTORY_TYPE.COMMON}
+                onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+              />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <InventoryItem
+                type={INVENTORY_TYPE.EPIC}
+                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
+              />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <InventoryItem
+                type={INVENTORY_TYPE.EPIC}
+                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
+              />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <InventoryItem
+                type={INVENTORY_TYPE.LEGENDARY}
+                onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6} md={3}>
-            <InventoryItem
-              type={INVENTORY_TYPE.COMMON}
-              title={INVENTORY_TYPE.COMMON}
-              points={1000}
-              description="Energy points"
-              onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
-            />
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <InventoryItem
-              type={INVENTORY_TYPE.EPIC}
-              title={INVENTORY_TYPE.EPIC}
-              points={2500}
-              description="Energy points"
-              onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
-            />
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <InventoryItem
-              type={INVENTORY_TYPE.EPIC}
-              title={INVENTORY_TYPE.EPIC}
-              points={2500}
-              description="Energy points"
-              onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
-            />
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <InventoryItem
-              type={INVENTORY_TYPE.LEGENDARY}
-              title={INVENTORY_TYPE.LEGENDARY}
-              points={2500}
-              description="Energy points"
-              onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
-            />
-          </Grid>
-        </Grid>
+        )}
       </Flex>
 
       <Flex flexDirection="column" alignItems="flex-start" marginTop="36px">
-        <Label color="white" fontSize={5}>
+        <Label color="white" fontSize={5} fontWeight={500}>
           Climbing gear set
         </Label>
-        <HorizontalLine />
+        <HorizontalLine margin="8px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
             <Grid item xs={6} md={3}>

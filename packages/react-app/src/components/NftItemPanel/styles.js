@@ -8,7 +8,7 @@ export const Container = styled.div`
   position: relative;
 
   width: ${props => (props.mode === 'inventory' ? '172px' : '100%')};
-  height: ${props => (props.mode === 'inventory' ? '256px' : '360')};
+  height: ${props => (props.mode === 'inventory' ? '256px' : '360px')};
 
   box-sizing: border-box;
   border-radius: 8px;
@@ -22,9 +22,13 @@ export const Container = styled.div`
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
+  ${fujiMedia.lessThan('small')`
+    padding: 16px;
+    height: 240px;
+  `}
+
   ${color};
   ${padding};
-  z-index: 1;
 `;
 
 export const LegendaryContainer = styled.div`
@@ -47,15 +51,16 @@ export const LegendaryContainer = styled.div`
 
   ${fujiMedia.lessThan('small')`
     justify-content: space-between;
-    height: 250px;
+    height: 160px;
+    padding: 16px;
   `}
   ${color};
   ${padding};
 `;
 
 export const ItemPanel = styled.div`
-  width: 124px;
-  height: 132px;
+  width: 140px;
+  height: 140px;
 
   background-color: rgb(32, 32, 32);
   border-radius: 8px;
@@ -64,7 +69,12 @@ export const ItemPanel = styled.div`
   ${fujiMedia.lessThan('small')`
     position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
     right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};
+    margin-top: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '0px'};
+
+    width: 80px;
+    height: 80px;
   `}
+
   ${space}
 `;
 
@@ -85,8 +95,8 @@ export const CountButton = styled.div`
 `;
 
 export const BuyButton = styled.div`
-  width: 100px;
-  height: 30px;
+  width: 100%;
+  height: 32px;
 
   display: flex;
   flex-direction: row;
@@ -154,11 +164,9 @@ export const LegendaryItemsContainter = styled(Flex)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 16px;
 
   ${fujiMedia.lessThan('small')`
     width: 100%;
-    margin-top: 12px !important;
     align-items: flex-start;
   `}
 `;
