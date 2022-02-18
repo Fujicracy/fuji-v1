@@ -65,7 +65,7 @@ export const HorizontalLine = styled.div`
   padding: 0px 24px;
   width: 100%;
 
-  ${margin}
+  ${margin};
 `;
 
 export const StatsPoints = styled.div`
@@ -87,8 +87,8 @@ export const StatsPoints = styled.div`
     bottom: 8px;
     left: 8px;
   }
-  ${fontSize}
-  ${margin}
+  ${fontSize};
+  ${margin};
 `;
 
 export const StatsBoost = styled(StatsPoints)`

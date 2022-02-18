@@ -13,18 +13,18 @@ const SectionTitle = styled(Box)`
       : props.color
       ? props.color
       : themeGet('colors.text100')};
-  font-size: ${props => (props.fontSize ? props.fontSize : '16px')};
+  font-size: ${props => props.fontSize || '16px'};
   justify-content: ${props => props.justifyContent && props.justifyContent};
   align-items: ${props => props.alignItems && props.alignItems};
   width: ${props => props.width && props.width};
-  font-weight: ${props => (props.fontWeight ? props.fontWeight : 600)};
+  font-weight: ${props => props.fontWeight || 600};
   text-align: ${props => props.textAlign && props.textAlign};
-  font-family: ${props => (props.fontFamily ? props.fontFamily : 'inherit')};
+  font-family: ${props => props.fontFamily || 'inherit'};
 
   > span {
-    margin-left: ${props => (props.spanMargin ? props.spanMargin : '4px')};
-    color: ${props => (props.spanColor ? props.spanColor : themeGet('colors.pink'))};
-    font-size: ${props => (props.spanFontSize ? props.spanFontSize : '16px')};
+    margin-left: ${props => props.spanMargin || '4px'};
+    color: ${props => props.spanColor || themeGet('colors.pink')};
+    font-size: ${props => props.spanFontSize || '16px'};
   }
   ${space}
   ${width}
