@@ -4,6 +4,8 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
+import { intToString } from 'helpers';
+import { useClimbingSpeed, usePoints } from 'hooks';
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
@@ -14,7 +16,16 @@ import {
 } from './styles';
 
 function Profile() {
+  const points = usePoints();
+  const { climbingSpeedPerDay, climbingSpeedPerWeek } = useClimbingSpeed();
+
+  const roundedPoints = intToString(points);
+  const roundedPerDay = intToString(climbingSpeedPerDay);
+  const roundedPerWeek = intToString(climbingSpeedPerWeek);
+
+  const boost = 0; // in percent
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  console.count('Profile render');
 
   return (
     <BlackBoxContainer
@@ -47,13 +58,13 @@ function Profile() {
 
       <Flex justifyContent="center" mt="24px">
         <Flex flexDirection="column">
-          <StatsPoints>23 459</StatsPoints>
+          <StatsPoints>{roundedPoints}</StatsPoints>
           <Label textAlign="left" color="white" fontSize="14px">
             Meter Points
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>1.2X</StatsBoost>
+          <StatsBoost>{boost}%</StatsBoost>
           <Label textAlign="left" color="white" fontSize="14px">
             Boost Score
           </Label>
@@ -71,11 +82,11 @@ function Profile() {
         </Label>
 
         <ClimbingSpeedPer>
-          <strong>87,843m</strong> per week
+          <strong>{roundedPerWeek}</strong> meter points per week
         </ClimbingSpeedPer>
 
         <ClimbingSpeedPer>
-          <strong>12,549m</strong> per day
+          <strong>{roundedPerDay}</strong> meter points per day
         </ClimbingSpeedPer>
       </BlackBoxContainer>
     </BlackBoxContainer>
