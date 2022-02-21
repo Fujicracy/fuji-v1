@@ -19,7 +19,7 @@ export const NavigationContainer = styled.ul`
   display: flex;
   justify-content: flex-start;
   padding: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 
   ${fujiMedia.lessThan('small')`
     justify-content: center;
@@ -35,6 +35,8 @@ export const StyledNavLink = styled(NavLink)`
   line-height: 21px;
   color: white;
 
+  position: relative;
+
   &.active {
     background: rgba(255, 255, 255, 0.16);
     border: 1px solid #e9024d;
@@ -42,8 +44,12 @@ export const StyledNavLink = styled(NavLink)`
     border-radius: 30px;
   }
 
+  > span {
+    font-size: 14px;
+    color: #fe3477;
+  }
+
   ${fujiMedia.greaterThan('small')`
-    border-bottom: 4px solid white;
     &.active {
       background: transparent;
       border: none;
@@ -57,8 +63,9 @@ export const StyledNavLink = styled(NavLink)`
 export const HorizontalLine = styled.div`
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   padding: 0px 24px;
-  margin: 40px 0px;
   width: 100%;
+
+  ${margin};
 `;
 
 export const StatsPoints = styled.div`
@@ -80,8 +87,8 @@ export const StatsPoints = styled.div`
     bottom: 8px;
     left: 8px;
   }
-  ${fontSize}
-  ${margin}
+  ${fontSize};
+  ${margin};
 `;
 
 export const StatsBoost = styled(StatsPoints)`
@@ -151,7 +158,7 @@ export const GearSetBadge = styled.div`
   position: absolute;
   right: -8px;
   top: -8px;
-  z-index: 5;
+  z-index: 1;
 `;
 
 export const GearSetNumber = styled.div`
@@ -166,5 +173,29 @@ export const GearSetNumber = styled.div`
   position: absolute;
   right: -8px;
   top: -8px;
-  z-index: 10;
+  z-index: 2;
+`;
+
+export const RotateContainer = styled.div`
+  transform: ${props =>
+    `translate(${props.left ? '20px, 0' : props.right ? '-20px, 0' : '50%, -10px'})  rotate(${
+      props.left ? '-16deg' : props.right ? '16deg' : '0deg'
+    })`};
+  position: ${props => (props.center ? 'absolute' : 'inherit')};
+`;
+
+export const HeaderBackContainer = styled.div`
+  position: absolute;
+  left: 16px;
+`;
+
+export const HightLightBadge = styled.div`
+  position: absolute;
+
+  width: 8px;
+  height: 8px;
+  background: #f0014f;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
 `;

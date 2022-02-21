@@ -5,20 +5,41 @@ import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
-import { BackgroundEffect } from 'components';
-import Header from 'components/Header';
+import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
+
+import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+
 import Profile from './Profile';
 import Inventory from './Inventory';
 import Store from './Store';
-import { StyledNavLink, NavigationContainer } from './styles';
+import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
+const ClaimHeader = () => {
+  return (
+    <Flex
+      height="56px"
+      padding="16px"
+      justifyContent="center"
+      alignItems="center"
+      position="relative"
+    >
+      <HeaderBackContainer>
+        <NavBackLink m={0}>
+          <ArrowBackIosOutlinedIcon />
+        </NavBackLink>
+      </HeaderBackContainer>
+      <SectionTitle>Claim NFT</SectionTitle>
+    </Flex>
+  );
+};
 function NftGame() {
   const { path } = useRouteMatch();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
+  const inventoryCount = 6;
   return (
     <>
-      <Header />
+      {isMobile ? <ClaimHeader /> : <Header />}
       <BackgroundEffect />
       <Flex flexDirection="row" justifyContent="center">
         {!isMobile && (
@@ -37,7 +58,11 @@ function NftGame() {
               <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
             </ul>
             <ul>
-              <StyledNavLink to={`${path}/inventory`}>Inventory</StyledNavLink>
+              <StyledNavLink to={`${path}/inventory`}>
+                Inventory
+                {inventoryCount > 0 &&
+                  (isMobile ? <HightLightBadge /> : <span>{` (${inventoryCount})`}</span>)}
+              </StyledNavLink>
             </ul>
           </NavigationContainer>
 

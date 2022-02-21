@@ -21,14 +21,15 @@ const LegendaryItem = ({ points, description }) => {
         <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
           Legendary
         </SectionTitle>
-        <SectionTitle color={themeColor} mt={2} fontSize="14px">
-          {isMobile ? `${points.toLocaleString()} ${description}` : points.toLocaleString()}
+        <SectionTitle
+          color={themeColor}
+          fontSize="16px"
+          mt={2}
+          spanFontSize="10px"
+          spanColor={themeColor}
+        >
+          {points.toLocaleString()} <span>{description}</span>
         </SectionTitle>
-        {!isMobile && (
-          <SectionTitle color={themeColor} mt={2} fontSize="14px">
-            {description}
-          </SectionTitle>
-        )}
       </LegendaryItemsContainter>
 
       <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} />
@@ -37,11 +38,11 @@ const LegendaryItem = ({ points, description }) => {
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
         <Flex flexDirection="row" alignItems="center" justifyContent="center" width="100%">
-          <CountButton>+</CountButton>
+          <CountButton>-</CountButton>
           <SectionTitle ml={1} mr={1} color={themeColor}>
             0
           </SectionTitle>
-          <CountButton>-</CountButton>
+          <CountButton>+</CountButton>
           {isMobile && (
             <BuyButton block margin="0px 0px 0px 16px" width="70%">
               Buy
