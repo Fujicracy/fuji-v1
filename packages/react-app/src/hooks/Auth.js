@@ -12,7 +12,7 @@ import {
   CHAINS,
   CHAIN_NAMES,
   DEPLOYMENT_TYPES,
-} from 'consts/globals';
+} from 'consts';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
