@@ -99,11 +99,12 @@ export const StatsBoost = styled(StatsPoints)`
 `;
 
 export const ClimbingSpeedPer = styled.p`
-  font-size: 20px;
+  font-size: 14px;
   line-height: 30px;
   margin-top: 12px;
   & > strong {
     color: #fa266c;
+    font-size: 20px;
   }
 `;
 

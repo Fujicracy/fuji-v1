@@ -13,9 +13,12 @@ import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
+
+import { usePoints } from 'hooks';
 import { StoreDecoration } from './styles';
 
 function Store() {
+  const points = usePoints();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
@@ -29,7 +32,7 @@ function Store() {
         <Flex flexDirection="column">
           <Flex alignItems="bottom">
             <SectionTitle primary fontSize="32px">
-              23,459
+              {points.toLocaleString('en-US')}
             </SectionTitle>
             <SectionTitle fontSize="14px" fontWeight="light" ml={2} mt={2} spanFontSize="12px">
               Meter points <span>(?)</span>
