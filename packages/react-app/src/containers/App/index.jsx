@@ -10,7 +10,6 @@ import { useMediaQuery } from 'react-responsive';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
-import Infos from 'screens/Infos';
 import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
@@ -50,9 +49,6 @@ function App() {
                 <ProvideAuth>
                   <About />
                 </ProvideAuth>
-              </Route>
-              <Route path="/info">
-                <Infos />
               </Route>
               <Route path="/claim-nft">
                 <ProvideAuth>
