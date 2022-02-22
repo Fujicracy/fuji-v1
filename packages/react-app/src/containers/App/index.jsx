@@ -26,6 +26,7 @@ function App() {
   const isMobileOrTablet = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+  const year = new Date().getFullYear();
 
   return (
     <ThemeProvider theme={theme}>
@@ -37,17 +38,17 @@ function App() {
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route path="/dashboard">
-                <ProvideAuth>
-                  <Dashboard />
-                </ProvideAuth>
-              </Route>
               <Route path="/team">
                 <Team />
               </Route>
               <Route path="/about">
                 <ProvideAuth>
                   <About />
+                </ProvideAuth>
+              </Route>
+              <Route path="/dashboard">
+                <ProvideAuth>
+                  <Dashboard />
                 </ProvideAuth>
               </Route>
               <Route path="/claim-nft">
@@ -72,7 +73,7 @@ function App() {
                     <NavText>About</NavText>
                   </NavLink>
                   <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                  <Label fontSize={12}>© FujiDAO 2021</Label>
+                  <Label fontSize={12}>© FujiDAO {year}</Label>
                 </NavUnlisted>
               </footer>
             )}
