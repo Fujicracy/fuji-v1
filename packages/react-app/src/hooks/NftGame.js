@@ -26,29 +26,28 @@ export function useClimbingSpeed() {
 export function useCrateCounts() {
   const { address } = useAuth();
   const contracts = useContractLoader();
-  console.log({ contracts });
   const unformattedCommonCrateAmount = useContractReader(contracts, 'NFTGame', 'balanceOf', [
     address,
     CRATE_CONTRACT_IDS.COMMON,
   ]);
   const commonCrateAmount = unformattedCommonCrateAmount
-    ? Number(formatUnits(unformattedCommonCrateAmount, 5))
+    ? Number(formatUnits(unformattedCommonCrateAmount, 0))
     : 0;
 
   const unformattedEpicCrateAmount = useContractReader(contracts, 'NFTGame', 'balanceOf', [
     address,
-    CRATE_CONTRACT_IDS.COMMON,
+    CRATE_CONTRACT_IDS.EPIC,
   ]);
   const epicCrateAmount = unformattedEpicCrateAmount
-    ? Number(formatUnits(unformattedEpicCrateAmount, 5))
+    ? Number(formatUnits(unformattedEpicCrateAmount, 0))
     : 0;
 
   const unformattedLegendaryCrateAmount = useContractReader(contracts, 'NFTGame', 'balanceOf', [
     address,
-    CRATE_CONTRACT_IDS.COMMON,
+    CRATE_CONTRACT_IDS.LEGENDARY,
   ]);
   const legendaryCrateAmount = unformattedLegendaryCrateAmount
-    ? Number(formatUnits(unformattedLegendaryCrateAmount, 5))
+    ? Number(formatUnits(unformattedLegendaryCrateAmount, 0))
     : 0;
 
   const totalCrateAmount = commonCrateAmount + epicCrateAmount + legendaryCrateAmount;
