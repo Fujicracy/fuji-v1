@@ -42,9 +42,7 @@ function App() {
                 <Team />
               </Route>
               <Route path="/about">
-                <ProvideAuth>
-                  <About />
-                </ProvideAuth>
+                <About />
               </Route>
               <Route path="/dashboard">
                 <ProvideAuth>
