@@ -77,7 +77,7 @@ function Infos() {
 
   return (
     <>
-      <LandingHeader />
+      <LandingHeader isShowLogo />
       <Container className={classes.container}>
         <Grid container className={classes.section}>
           <Grid item md={12} className={classes.item}>
