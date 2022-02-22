@@ -20,6 +20,7 @@ import {
   GearSetBadge,
   HorizontalLine,
   RotateContainer,
+  GridItem,
 } from './styles';
 
 const GearSet = () => {
@@ -56,6 +57,10 @@ function Inventory() {
     setInventoryTitle(type);
     setIsModalOpen(true);
   };
+
+  const onRedeem = () => {
+    console.log('redeem');
+  };
   return (
     <BlackBoxContainer
       width="860px"
@@ -86,37 +91,37 @@ function Inventory() {
             </RotateContainer>
           </Flex>
         ) : (
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item xs={6} md={3}>
+          <Grid container alignItems="center" justifyContent="center" spacing={2}>
+            <GridItem item xs={6} md={3}>
               <InventoryItem
                 type={INVENTORY_TYPE.COMMON}
                 onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
               />
-            </Grid>
-            <Grid item xs={6} md={3}>
+            </GridItem>
+            <GridItem item xs={6} md={3}>
               <InventoryItem
                 type={INVENTORY_TYPE.COMMON}
                 onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
               />
-            </Grid>
-            <Grid item xs={6} md={3}>
+            </GridItem>
+            <GridItem item xs={6} md={3}>
               <InventoryItem
                 type={INVENTORY_TYPE.EPIC}
                 onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
               />
-            </Grid>
-            <Grid item xs={6} md={3}>
+            </GridItem>
+            <GridItem item xs={6} md={3}>
               <InventoryItem
                 type={INVENTORY_TYPE.EPIC}
                 onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
               />
-            </Grid>
-            <Grid item xs={6} md={3}>
+            </GridItem>
+            <GridItem item xs={6} md={3}>
               <InventoryItem
                 type={INVENTORY_TYPE.LEGENDARY}
                 onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
               />
-            </Grid>
+            </GridItem>
           </Grid>
         )}
       </Flex>
@@ -137,11 +142,12 @@ function Inventory() {
       {inventoryType && (
         <InventoryPopup
           isOpen={isModalOpen}
-          onSubmit={() => console.log('clicked')}
+          onSubmit={onRedeem}
           onClose={() => setIsModalOpen(false)}
           title={inventoryTitle}
           type={inventoryType}
           points={inventoryPoints}
+          isRedeemed
         />
       )}
     </BlackBoxContainer>
