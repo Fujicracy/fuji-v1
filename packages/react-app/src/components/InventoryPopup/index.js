@@ -9,12 +9,13 @@ import { StyledModal, OpacityImage, ItemPanel, CloseButton } from './styles';
 
 const InventoryPopup = ({
   isOpen,
-  onSubmit,
+  onRedeem,
   title,
   points,
   onClose,
   type = INVENTORY_TYPE.COMMON,
   description = 'Meter Points',
+  isRedeemed = false,
 }) => {
   const [opacity, setOpacity] = useState(0);
 
@@ -72,9 +73,15 @@ const InventoryPopup = ({
         </SectionTitle>
         <ItemPanel />
       </Flex>
-      <BlackButton mt="24px" onClick={onSubmit}>
-        Redeem
-      </BlackButton>
+      {isRedeemed ? (
+        <BlackButton mt="24px" onClick={onClose}>
+          Go to your inventory
+        </BlackButton>
+      ) : (
+        <BlackButton mt="24px" onClick={onRedeem}>
+          Redeem
+        </BlackButton>
+      )}
     </StyledModal>
   );
 };
