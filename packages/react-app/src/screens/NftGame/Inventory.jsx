@@ -11,8 +11,9 @@ import {
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
+import { useContractLoader, useCrateCounts } from 'hooks';
 import {
   GearSetItem,
   GearSetNumber,
@@ -48,19 +49,59 @@ function Inventory() {
   const [inventoryType, setInventoryType] = useState('');
   const [inventoryPoints, setInventoryPoints] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [inventoryTitle, setInventoryTitle] = useState('');
+
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const contracts = useContractLoader();
+
+  const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount } = useCrateCounts();
+
+  // useEffect(() => {
+  //   async function init() {
+  //     if (contracts) {
+  //       try {
+  //         await contracts.NFTInteractions.getCrates(1, 2);
+  //         await contracts.NFTInteractions.getCrates(2, 2);
+  //         await contracts.NFTInteractions.getCrates(3, 2);
+  //       } catch (error) {
+  //         console.error({ error });
+  //       }
+  //     }
+  //   }
+
+  //   init();
+  // }, [contracts]);
 
   const onClickInventory = (type, points) => {
     setInventoryType(type);
     setInventoryPoints(points);
 
-    setInventoryTitle(type);
     setIsModalOpen(true);
   };
 
-  const onRedeem = () => {
-    console.log('redeem');
+  const onClosePopup = () => {
+    setIsModalOpen(false);
+    setIsRedeeming(false);
   };
+
+  const onRedeem = async type => {
+    if (contracts) {
+      setIsRedeeming(true);
+      const crateId =
+        type === INVENTORY_TYPE.COMMON
+          ? CRATE_CONTRACT_IDS.COMMON
+          : type === INVENTORY_TYPE.EPIC
+          ? CRATE_CONTRACT_IDS.EPIC
+          : CRATE_CONTRACT_IDS.LEGENDARY;
+      try {
+        await contracts.NFTInteractions.openCrate(crateId, 1);
+      } catch (error) {
+        console.error({ error });
+        setIsRedeeming(false);
+      }
+      setIsRedeeming(false);
+    }
+  };
+
   return (
     <BlackBoxContainer
       width="860px"
@@ -92,36 +133,33 @@ function Inventory() {
           </Flex>
         ) : (
           <Grid container alignItems="center" justifyContent="center" spacing={2}>
-            <GridItem item xs={6} md={3}>
-              <InventoryItem
-                type={INVENTORY_TYPE.COMMON}
-                onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
-              />
-            </GridItem>
-            <GridItem item xs={6} md={3}>
-              <InventoryItem
-                type={INVENTORY_TYPE.COMMON}
-                onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
-              />
-            </GridItem>
-            <GridItem item xs={6} md={3}>
-              <InventoryItem
-                type={INVENTORY_TYPE.EPIC}
-                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
-              />
-            </GridItem>
-            <GridItem item xs={6} md={3}>
-              <InventoryItem
-                type={INVENTORY_TYPE.EPIC}
-                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
-              />
-            </GridItem>
-            <GridItem item xs={6} md={3}>
-              <InventoryItem
-                type={INVENTORY_TYPE.LEGENDARY}
-                onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
-              />
-            </GridItem>
+            {commonCrateAmount > 0 &&
+              [...Array(commonCrateAmount).keys()].map(index => (
+                <GridItem item xs={6} md={3} key={`commonCrate-${index}`}>
+                  <InventoryItem
+                    type={INVENTORY_TYPE.COMMON}
+                    onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+                  />
+                </GridItem>
+              ))}
+            {epicCrateAmount > 0 &&
+              [...Array(epicCrateAmount).keys()].map(index => (
+                <GridItem item xs={6} md={3} key={`epicCrate-${index}`}>
+                  <InventoryItem
+                    type={INVENTORY_TYPE.EPIC}
+                    onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 2500)}
+                  />
+                </GridItem>
+              ))}
+            {legendaryCrateAmount > 0 &&
+              [...Array(legendaryCrateAmount).keys()].map(index => (
+                <GridItem item xs={6} md={3} key={`legendaryCrate-${index}`}>
+                  <InventoryItem
+                    type={INVENTORY_TYPE.LEGENDARY}
+                    onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 5000)}
+                  />
+                </GridItem>
+              ))}
           </Grid>
         )}
       </Flex>
@@ -132,8 +170,8 @@ function Inventory() {
         </Label>
         <HorizontalLine margin="8px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
-            <Grid item xs={6} md={3}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(index => (
+            <Grid item xs={6} md={3} key={`gearSet-${index}`}>
               <GearSet />
             </Grid>
           ))}
@@ -143,11 +181,11 @@ function Inventory() {
         <InventoryPopup
           isOpen={isModalOpen}
           onSubmit={onRedeem}
-          onClose={() => setIsModalOpen(false)}
-          title={inventoryTitle}
+          onClose={onClosePopup}
+          title={inventoryType}
           type={inventoryType}
           points={inventoryPoints}
-          isRedeemed
+          isLoading={isRedeeming}
         />
       )}
     </BlackBoxContainer>
