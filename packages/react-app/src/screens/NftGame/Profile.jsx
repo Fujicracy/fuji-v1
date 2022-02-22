@@ -25,7 +25,6 @@ function Profile() {
 
   const boost = 0; // in percent
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  console.count('Profile render');
 
   return (
     <BlackBoxContainer
