@@ -37,10 +37,8 @@ function NftGame() {
   const { path } = useRouteMatch();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount } =
-    useCrateCounts();
+  const { totalCrateAmount } = useCrateCounts();
 
-  console.log({ commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount });
   return (
     <>
       {isMobile ? <ClaimHeader /> : <Header />}
