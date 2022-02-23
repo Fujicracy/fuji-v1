@@ -21,3 +21,11 @@ export function useClimbingSpeed() {
 
   return { climbingSpeedPerDay, climbingSpeedPerWeek };
 }
+
+export function useBoost() {
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const userdata = useContractReader(contracts, 'NFTInteractions', 'computeBoost', [address]);
+
+  return userdata ? formatUnits(userdata, 'wei') / 100 : undefined;
+}
