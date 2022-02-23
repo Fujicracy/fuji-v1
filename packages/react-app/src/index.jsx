@@ -1,16 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import App from 'containers/App/index';
 import './index.css';
 
-// let subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 
-// const client = new ApolloClient({
-// uri: subgraphUri,
-// cache: new InMemoryCache()
-// });
+Sentry.init({
+  environment: process.env.NODE_ENV,
+
+  dsn: 'https://def3a0781a2940928ac17e8f25b03dea@o1151449.ingest.sentry.io/6228136',
+  integrations: [new BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 const theme = createTheme({
   breakpoints: {
