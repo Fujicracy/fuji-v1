@@ -1,14 +1,18 @@
 /* eslint-disable no-await-in-loop */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useContractLoader, useAuth } from 'hooks';
 import { ASSETS, CHAIN_IDS, TRANSACTION_ACTIONS } from 'consts';
 import { formatUnits } from '@ethersproject/units';
 import usePoller from './Poller';
 
 export default function useTransactionHistory(vaultName, action, pollTime = 4000) {
-  const [transactionHistories, setTransactionHistories] = useState([]);
+  const [transactionHistories, setTransactionHistories] = useState(undefined);
   const contracts = useContractLoader();
   const { address, networkName, networkId } = useAuth();
+
+  useEffect(() => {
+    setTransactionHistories(undefined);
+  }, [vaultName, action]);
 
   usePoller(
     async () => {
@@ -94,5 +98,5 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
     vaultName,
   );
 
-  return transactionHistories;
+  return { transactionHistories };
 }

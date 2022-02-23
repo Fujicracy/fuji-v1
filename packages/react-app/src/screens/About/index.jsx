@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { LandingHeader } from 'components';
 import {
   linkedinIcon,
   teamBoyanPhoto,
@@ -11,7 +12,6 @@ import {
   partnerMaven,
   partnerSpartan,
 } from 'assets/images';
-import { Header } from 'components';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -77,7 +77,7 @@ function Infos() {
 
   return (
     <>
-      <Header />
+      <LandingHeader isShowLogo />
       <Container className={classes.container}>
         <Grid container className={classes.section}>
           <Grid item md={12} className={classes.item}>

@@ -39,7 +39,7 @@ const VAULTS = {
     ],
     name: 'VaultFTMDAI',
     title: 'FTM-DAI',
-    threshold: 45,
+    threshold: 60,
   },
   [VAULTS_NAMES.VaultFTMUSDC]: {
     borrowAsset: ASSETS[ASSET_NAME.USDC],
@@ -54,7 +54,7 @@ const VAULTS = {
     ],
     name: 'VaultFTMUSDC',
     title: 'FTM-USDC',
-    threshold: 45,
+    threshold: 60,
   },
   [VAULTS_NAMES.VaultWBTCDAI]: {
     borrowAsset: ASSETS[ASSET_NAME.DAI],

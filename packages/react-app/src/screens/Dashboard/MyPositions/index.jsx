@@ -175,12 +175,13 @@ function MyPositions() {
                     <GridOnePosition
                       key={`${position.vault.borrowAsset.name}-${position.vault.collateralAsset.name}`}
                       item
-                      onClick={() => {
-                        return (
-                          (isMobile || isTablet) &&
-                          history.push(`/dashboard/position?vaultAddress=${position.vaultAddress}`)
-                        );
-                      }}
+                      onClick={() =>
+                        isMobile || isTablet
+                          ? history.push(
+                              `/dashboard/position?vaultAddress=${position.vaultAddress}`,
+                            )
+                          : undefined
+                      }
                     >
                       <PositionElement actionType={PositionActions.Manage} position={position} />
                     </GridOnePosition>
