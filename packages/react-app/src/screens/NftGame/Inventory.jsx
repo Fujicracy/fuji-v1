@@ -9,7 +9,7 @@ import {
   SectionTitle,
 } from 'components';
 
-// import { WrapperBuilder } from 'redstone-evm-connector';
+import { WrapperBuilder } from 'redstone-evm-connector';
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -17,8 +17,6 @@ import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } fro
 import { Grid } from '@material-ui/core';
 
 import { useContractLoader, useCrateCounts, useAuth } from 'hooks';
-
-import { Transactor } from 'helpers';
 
 import {
   GearSetItem,
@@ -62,7 +60,6 @@ function Inventory() {
   const contracts = useContractLoader();
 
   const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount } = useCrateCounts();
-  const tx = Transactor(provider);
 
   const onClickInventory = (type, points) => {
     setInventoryType(type);
@@ -88,13 +85,12 @@ function Inventory() {
 
       console.log({ address, crateId });
       try {
-        // const wrappednftinteractions = WrapperBuilder.wrapLite(
-        //   contracts.NFTInteractions.connect(address),
-        // ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
+        const wrappednftinteractions = WrapperBuilder.wrapLite(
+          contracts.NFTInteractions.connect(provider.getSigner(address)),
+        ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
-        // console.log({ wrappednftinteractions });
-        // await wrappednftinteractions.openCrate(crateId, 1);
-        await tx(contracts.NFTInteractions.connect(address).openCrate(crateId, 1));
+        const result = await wrappednftinteractions.openCrate(crateId, 1);
+        console.log({ result });
       } catch (error) {
         console.error({ error });
         setIsRedeeming(false);
