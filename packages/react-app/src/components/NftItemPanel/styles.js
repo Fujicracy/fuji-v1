@@ -164,9 +164,9 @@ export const LegendaryItemsContainter = styled(Flex)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 
   ${fujiMedia.lessThan('small')`
-    width: 100%;
     align-items: flex-start;
   `}
 `;

@@ -11,16 +11,36 @@ import {
 import { Flex } from 'rebass';
 import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
-import { usePoints } from 'hooks';
+import { usePoints, useContractLoader, useAuth } from 'hooks';
+import { Transactor } from 'helpers';
 import { StoreDecoration } from './styles';
 
 function Store() {
   const points = usePoints();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const contracts = useContractLoader();
 
+  const { provider } = useAuth();
+
+  const tx = Transactor(provider);
+
+  const mintInventory = async (type, amount) => {
+    if (amount <= 0) return;
+    const crateId =
+      type === INVENTORY_TYPE.COMMON
+        ? CRATE_CONTRACT_IDS.COMMON
+        : type === INVENTORY_TYPE.EPIC
+        ? CRATE_CONTRACT_IDS.EPIC
+        : CRATE_CONTRACT_IDS.LEGENDARY;
+    try {
+      await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
+    } catch (error) {
+      console.error('minting inventory error:', { error });
+    }
+  };
   return (
     <BlackBoxContainer
       maxWidth="860px"
@@ -46,7 +66,7 @@ function Store() {
             fontSize={isMobile ? '12px' : '16px'}
           >
             Burn energy points and buy a crate.
-            <br /> When you open a crate you can get nothing, free points or booster cardss
+            <br /> When you open a crate you can get nothing, free points or booster cards
           </SectionTitle>
         </Flex>
         <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
@@ -66,6 +86,7 @@ function Store() {
               title={INVENTORY_TYPE.COMMON}
               points={1000}
               description="Meter points"
+              onBuy={mintInventory}
             />
           </Grid>
           <Grid item xs={6} md={4}>
@@ -74,10 +95,11 @@ function Store() {
               title={INVENTORY_TYPE.EPIC}
               points={2500}
               description="Meter points"
+              onBuy={mintInventory}
             />
           </Grid>
           <Grid item xs={12} md={4}>
-            <LegendaryItem points={2500} description="Meter points" />
+            <LegendaryItem points={2500} description="Meter points" onBuy={mintInventory} />
           </Grid>
         </Grid>
       </Flex>
