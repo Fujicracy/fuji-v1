@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Flex, Image } from 'rebass';
-
 import { useMediaQuery } from 'react-responsive';
+
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
 import { intToString } from 'helpers';
-import { useClimbingSpeed, usePoints } from 'hooks';
+import { useAuth, useClimbingSpeed, usePoints } from 'hooks';
+
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
@@ -13,9 +14,13 @@ import {
   StatsPoints,
   StatsBoost,
   HorizontalLine,
+  PseudoInput,
 } from './styles';
 
 function Profile() {
+  const { address } = useAuth();
+  const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
+
   const points = usePoints();
   const { climbingSpeedPerDay, climbingSpeedPerWeek } = useClimbingSpeed();
 
@@ -25,7 +30,10 @@ function Profile() {
 
   const boost = 0; // in percent
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  console.count('Profile render');
+
+  const [isEditable, setIsEditable] = useState(false);
+  const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo'));
+  useEffect(() => localStorage.setItem('customPseudo', customPseudo), [customPseudo]);
 
   return (
     <BlackBoxContainer
@@ -40,10 +48,28 @@ function Profile() {
       <ProfileDecoration right src={profileDecorationImage} />
 
       <Flex alignItems="center" justifyContent="center">
-        <SectionTitle fontSize="24px" lineHeight="36px">
-          GringoClimb69
-        </SectionTitle>
-        <Image src={editIcon} alt="edit username" marginLeft={2} />
+        {isEditable ? (
+          <PseudoInput
+            autoFocus
+            onFocus={e => e.currentTarget.select()}
+            value={customPseudo}
+            onChange={e => setCustomPseudo(e.target.value)}
+            onKeyUp={e => e.key === 'Enter' && setIsEditable(false)}
+            onBlur={() => setIsEditable(false)}
+          />
+        ) : (
+          <>
+            <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
+              {customPseudo || formattedAddress}
+            </SectionTitle>
+            <Image
+              src={editIcon}
+              alt="edit username"
+              marginLeft={2}
+              onClick={() => setIsEditable(true)}
+            />
+          </>
+        )}
       </Flex>
 
       <Flex flexDirection="column" alignItems="center" marginTop="36px">
