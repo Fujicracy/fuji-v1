@@ -49,10 +49,12 @@ async function getProviderIndex(vault, contracts, networkName) {
       index = providerIndexes.CREAM;
     }
   } else if (networkName === CHAIN_NAMES.FANTOM) {
-    const cream = PROVIDERS[PROVIDER_TYPE.CREAM].name;
-    const creamAddr = contracts[cream].address;
-    index =
-      activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
+    // CREAM flashloans are paused
+    // const cream = PROVIDERS[PROVIDER_TYPE.CREAM].name;
+    // const creamAddr = contracts[cream].address;
+    // index =
+    // activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
+    index = providerIndexes.AAVE;
   }
 
   return index;
