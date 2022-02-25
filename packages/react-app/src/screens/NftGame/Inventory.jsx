@@ -59,7 +59,8 @@ function Inventory() {
   const [isRedeeming, setIsRedeeming] = useState(false);
   const contracts = useContractLoader();
 
-  const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount } = useCrateCounts();
+  const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount } =
+    useCrateCounts();
 
   const onClickInventory = (type, points) => {
     setInventoryType(type);
@@ -108,7 +109,7 @@ function Inventory() {
     >
       <Flex flexDirection="column" alignItems="flex-start">
         <Label color="white" fontSize="24px" marginBottom="24px">
-          You have <IntenseSpan primary>3 crates</IntenseSpan> to open
+          You have <IntenseSpan primary>{totalCrateAmount} crates</IntenseSpan> to open
         </Label>
         {isMobile ? (
           <Flex position="relative" mt={3}>
