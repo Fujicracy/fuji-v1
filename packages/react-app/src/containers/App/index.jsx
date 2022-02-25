@@ -10,7 +10,6 @@ import { useMediaQuery } from 'react-responsive';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
-import Infos from 'screens/Infos';
 import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
@@ -27,6 +26,7 @@ function App() {
   const isMobileOrTablet = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
+  const year = new Date().getFullYear();
 
   return (
     <ThemeProvider theme={theme}>
@@ -38,21 +38,16 @@ function App() {
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route path="/dashboard">
-                <ProvideAuth>
-                  <Dashboard />
-                </ProvideAuth>
-              </Route>
               <Route path="/team">
                 <Team />
               </Route>
               <Route path="/about">
-                <ProvideAuth>
-                  <About />
-                </ProvideAuth>
+                <About />
               </Route>
-              <Route path="/info">
-                <Infos />
+              <Route path="/dashboard">
+                <ProvideAuth>
+                  <Dashboard />
+                </ProvideAuth>
               </Route>
               <Route path="/claim-nft">
                 <ProvideAuth>
@@ -76,7 +71,7 @@ function App() {
                     <NavText>About</NavText>
                   </NavLink>
                   <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                  <Label fontSize={12}>© FujiDAO 2021</Label>
+                  <Label fontSize={12}>© FujiDAO {year}</Label>
                 </NavUnlisted>
               </footer>
             )}
