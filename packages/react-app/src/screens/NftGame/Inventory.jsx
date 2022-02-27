@@ -57,6 +57,7 @@ function Inventory() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const [isRedeemed, setIsRedeemed] = useState(false);
   const contracts = useContractLoader();
 
   const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount } =
@@ -66,6 +67,7 @@ function Inventory() {
     setInventoryType(type);
     setInventoryPoints(points);
 
+    setIsRedeemed(false);
     setIsModalOpen(true);
   };
 
@@ -84,14 +86,16 @@ function Inventory() {
           ? CRATE_CONTRACT_IDS.EPIC
           : CRATE_CONTRACT_IDS.LEGENDARY;
 
-      console.log({ address, crateId });
       try {
         const wrappednftinteractions = WrapperBuilder.wrapLite(
           contracts.NFTInteractions.connect(provider.getSigner(address)),
         ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
         const result = await wrappednftinteractions.openCrate(crateId, 1);
-        console.log({ result });
+
+        if (result.hash) {
+          setIsRedeemed(true);
+        }
       } catch (error) {
         console.error({ error });
         setIsRedeeming(false);
@@ -184,6 +188,7 @@ function Inventory() {
           type={inventoryType}
           points={inventoryPoints}
           isLoading={isRedeeming}
+          isRedeemed={isRedeemed}
         />
       )}
     </BlackBoxContainer>
