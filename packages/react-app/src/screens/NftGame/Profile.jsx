@@ -58,7 +58,7 @@ function Profile() {
             onBlur={() => setIsEditable(false)}
           />
         ) : (
-          <>
+          <Flex height="54px" justifyContent="center" alignItems="center">
             <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
               {customPseudo || formattedAddress}
             </SectionTitle>
@@ -67,8 +67,9 @@ function Profile() {
               alt="edit username"
               marginLeft={2}
               onClick={() => setIsEditable(true)}
+              height="24px"
             />
-          </>
+          </Flex>
         )}
       </Flex>
 
