@@ -5,7 +5,8 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
 import { intToString } from 'helpers';
-import { useBoost, useAuth, useClimbingSpeed, usePoints } from 'hooks';
+
+import { useProfileInfo, useAuth } from 'hooks';
 
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
@@ -19,16 +20,14 @@ import {
 
 function Profile() {
   const { address } = useAuth();
-  const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
-  const points = usePoints();
-  const { climbingSpeedPerDay, climbingSpeedPerWeek } = useClimbingSpeed();
+  const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
+  const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
   const roundedPoints = intToString(points);
   const roundedPerDay = intToString(climbingSpeedPerDay);
   const roundedPerWeek = intToString(climbingSpeedPerWeek);
 
-  const boost = useBoost();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const [isEditable, setIsEditable] = useState(false);

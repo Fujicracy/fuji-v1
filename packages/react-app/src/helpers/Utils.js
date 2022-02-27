@@ -6,7 +6,7 @@ export function calcResponsiveSize(ratio, size) {
   return Math.min(ratio.xAxios * size, ratio.yAxios * size, size);
 }
 
-export function fixDecimal(num, decimalCount) {
+export function fixDecimal(num, decimalCount = 3) {
   const temp = Number(num);
   if (!temp) return 0;
 
@@ -15,7 +15,7 @@ export function fixDecimal(num, decimalCount) {
   return parseFloat(fixedString);
 }
 
-export function fixDecimalString(num, decimalCount) {
+export function fixDecimalString(num, decimalCount = 3) {
   const temp = Number(num);
   if (Number.isNaN(temp)) return '';
 
@@ -30,7 +30,7 @@ export function fixDecimalString(num, decimalCount) {
  */
 export function intToString(num) {
   if (num < 1000) {
-    return num.toFixed(2);
+    return fixDecimal(num, 3);
   }
 
   const strNum = num.toString().replace(/[^0-9.]/g, '');
@@ -49,5 +49,8 @@ export function intToString(num) {
       break;
     }
   }
-  return (strNum / si[index].v).toFixed(2) + si[index].s;
+
+  const result = fixDecimal(strNum / si[index].v) + si[index].s;
+
+  return result;
 }

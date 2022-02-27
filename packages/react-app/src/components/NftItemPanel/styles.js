@@ -91,6 +91,10 @@ export const CountButton = styled.div`
 
   cursor: pointer;
 
+  &:hover {
+    opacity: 0.8;
+  }
+
   ${space}
 `;
 
@@ -107,6 +111,10 @@ export const BuyButton = styled.div`
   background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
 
   cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   ${space};
   ${width};
@@ -164,9 +172,9 @@ export const LegendaryItemsContainter = styled(Flex)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 
   ${fujiMedia.lessThan('small')`
-    width: 100%;
     align-items: flex-start;
   `}
 `;

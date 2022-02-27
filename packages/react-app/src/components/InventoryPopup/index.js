@@ -15,6 +15,8 @@ const InventoryPopup = ({
   onClose,
   type = INVENTORY_TYPE.COMMON,
   description = 'Meter Points',
+  isRedeemed = false,
+  isLoading = false,
 }) => {
   const [opacity, setOpacity] = useState(0);
 
@@ -52,7 +54,7 @@ const InventoryPopup = ({
       opacity={opacity}
     >
       <OpacityImage src={backMask} height="100%" />
-      <CloseButton onClick={() => onClose()} />
+      <CloseButton onClick={isLoading ? undefined : onClose} />
       <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
         Crates Opening
       </SectionTitle>
@@ -72,8 +74,13 @@ const InventoryPopup = ({
         </SectionTitle>
         <ItemPanel />
       </Flex>
-      <BlackButton mt="24px" onClick={onSubmit}>
-        Redeem
+
+      <BlackButton
+        mt="24px"
+        onClick={() => (isRedeemed ? onClose() : onSubmit(type))}
+        disabled={isLoading}
+      >
+        {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}
       </BlackButton>
     </StyledModal>
   );

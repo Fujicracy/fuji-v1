@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { Image } from 'rebass';
 import { fujiMedia } from 'consts';
 import { themeGet } from '@styled-system/theme-get';
+import { Grid } from '@material-ui/core';
 
 export const StoreDecoration = styled(Image)`
   position: absolute;
@@ -198,6 +199,12 @@ export const HightLightBadge = styled.div`
   border-radius: 50%;
   top: 0;
   right: 0;
+`;
+
+export const GridItem = styled(Grid)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const PseudoInput = styled.input`
