@@ -28,7 +28,8 @@ const LegendaryItem = ({ points, description, onBuy }) => {
 
     try {
       setIsBuying(true);
-      await onBuy(INVENTORY_TYPE.LEGENDARY, amount);
+      const res = await onBuy(INVENTORY_TYPE.LEGENDARY, amount);
+      if (res) setAmount(0);
     } catch (error) {
       console.error('minting inventory error:', { error });
     }

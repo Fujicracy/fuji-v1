@@ -26,7 +26,8 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
 
     try {
       setIsBuying(true);
-      await onBuy(type, amount);
+      const res = await onBuy(type, amount);
+      if (res) setAmount(0);
     } catch (error) {
       console.error('minting inventory error:', { error });
     }
