@@ -5,7 +5,9 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
 import { intToString } from 'helpers';
+
 import { useProfileInfo, useAuth } from 'hooks';
+
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
@@ -18,6 +20,7 @@ import {
 
 function Profile() {
   const { address } = useAuth();
+
   const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
   const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
