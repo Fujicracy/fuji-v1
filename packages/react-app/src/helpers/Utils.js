@@ -30,7 +30,7 @@ export function fixDecimalString(num, decimalCount) {
  */
 export function intToString(num) {
   if (num < 1000) {
-    return num.toFixed(2);
+    return num.toFixed(3);
   }
 
   const strNum = num.toString().replace(/[^0-9.]/g, '');

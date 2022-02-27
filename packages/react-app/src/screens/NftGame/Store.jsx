@@ -14,12 +14,12 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
-import { usePoints, useContractLoader, useAuth } from 'hooks';
+import { useProfileInfo, useContractLoader, useAuth } from 'hooks';
 import { Transactor } from 'helpers';
 import { StoreDecoration } from './styles';
 
 function Store() {
-  const points = usePoints();
+  const { points } = useProfileInfo();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const contracts = useContractLoader();
 
@@ -28,7 +28,7 @@ function Store() {
   const tx = Transactor(provider);
 
   const mintInventory = async (type, amount) => {
-    if (amount <= 0) return;
+    if (amount <= 0) return false;
     const crateId =
       type === INVENTORY_TYPE.COMMON
         ? CRATE_CONTRACT_IDS.COMMON
@@ -36,11 +36,15 @@ function Store() {
         ? CRATE_CONTRACT_IDS.EPIC
         : CRATE_CONTRACT_IDS.LEGENDARY;
     try {
-      await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
+      const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
+      return !!txResult.hash;
     } catch (error) {
       console.error('minting inventory error:', { error });
     }
+
+    return false;
   };
+
   return (
     <BlackBoxContainer
       maxWidth="860px"

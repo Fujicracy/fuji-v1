@@ -5,7 +5,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
 import { intToString } from 'helpers';
-import { useClimbingSpeed, usePoints } from 'hooks';
+import { useProfileInfo } from 'hooks';
 import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
@@ -16,14 +16,12 @@ import {
 } from './styles';
 
 function Profile() {
-  const points = usePoints();
-  const { climbingSpeedPerDay, climbingSpeedPerWeek } = useClimbingSpeed();
+  const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
 
   const roundedPoints = intToString(points);
   const roundedPerDay = intToString(climbingSpeedPerDay);
   const roundedPerWeek = intToString(climbingSpeedPerWeek);
 
-  const boost = 0; // in percent
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
@@ -63,7 +61,7 @@ function Profile() {
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>{boost}%</StatsBoost>
+          <StatsBoost>{boost}x</StatsBoost>
           <Label textAlign="left" color="white" fontSize="14px">
             Boost Score
           </Label>
