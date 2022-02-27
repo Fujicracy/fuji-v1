@@ -199,3 +199,29 @@ export const HightLightBadge = styled.div`
   top: 0;
   right: 0;
 `;
+
+export const PseudoInput = styled.input`
+  margin: 0;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 36px;
+  height: 54px;
+  text-align: center;
+  max-width: 100%;
+
+  border-color: ${props => (props.error ? 'red' : 'black')};
+  outline: none;
+  &:hover {
+    border: none;
+    outline: none;
+  }
+
+  &:focus,
+  &:focus-within {
+    border: 1px solid ${themeGet('colors.primary')};
+  }
+`;
