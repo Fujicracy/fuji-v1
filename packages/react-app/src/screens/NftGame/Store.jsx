@@ -37,7 +37,7 @@ function Store() {
         : CRATE_CONTRACT_IDS.LEGENDARY;
     try {
       const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
-      return !!txResult.hash;
+      return txResult && !!txResult?.hash;
     } catch (error) {
       console.error('minting inventory error:', { error });
     }
@@ -103,7 +103,7 @@ function Store() {
             />
           </Grid>
           <Grid item xs={12} md={4}>
-            <LegendaryItem points={2500} description="Meter points" onBuy={mintInventory} />
+            <LegendaryItem points={5000} description="Meter points" onBuy={mintInventory} />
           </Grid>
         </Grid>
       </Flex>

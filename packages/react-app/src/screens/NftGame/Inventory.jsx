@@ -63,6 +63,16 @@ function Inventory() {
   const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount } =
     useCrateCounts();
 
+  const inventoryCards = [
+    { type: INVENTORY_TYPE.COMMON, points: 1000, available: commonCrateAmount > 0 },
+    { type: INVENTORY_TYPE.EPIC, points: 2500, available: epicCrateAmount > 0 },
+    { type: INVENTORY_TYPE.LEGENDARY, points: 5000, available: legendaryCrateAmount > 0 },
+  ];
+
+  const availableInventories = inventoryCards.filter(inventory => inventory.available === true);
+  const availableInventoryTypeCounts = availableInventories.length;
+
+  console.log({ availableInventories });
   const onClickInventory = (type, points) => {
     setInventoryType(type);
     setInventoryPoints(points);
@@ -116,22 +126,54 @@ function Inventory() {
           You have <IntenseSpan primary>{totalCrateAmount} crates</IntenseSpan> to open
         </Label>
         {isMobile ? (
-          <Flex position="relative" mt={3}>
-            <RotateContainer left>
-              <InventoryItem onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)} />
-            </RotateContainer>
-            <RotateContainer right>
-              <InventoryItem
-                type={INVENTORY_TYPE.EPIC}
-                onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 1000)}
-              />
-            </RotateContainer>
-            <RotateContainer center>
-              <InventoryItem
-                type={INVENTORY_TYPE.LEGENDARY}
-                onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 1000)}
-              />
-            </RotateContainer>
+          <Flex position="relative" mt={3} justifyContent="center" alignItems="center" width="100%">
+            {availableInventoryTypeCounts > 0 &&
+              (availableInventoryTypeCounts === 1 ? (
+                <InventoryItem
+                  type={availableInventories[0].type}
+                  onClick={() =>
+                    onClickInventory(availableInventories[0].type, availableInventories[0].points)
+                  }
+                />
+              ) : (
+                <>
+                  <RotateContainer left>
+                    <InventoryItem
+                      type={availableInventories[0].type}
+                      onClick={() =>
+                        onClickInventory(
+                          availableInventories[0].type,
+                          availableInventories[0].points,
+                        )
+                      }
+                    />
+                  </RotateContainer>
+                  <RotateContainer right>
+                    <InventoryItem
+                      type={availableInventories[1].type}
+                      onClick={() =>
+                        onClickInventory(
+                          availableInventories[1].type,
+                          availableInventories[1].points,
+                        )
+                      }
+                    />
+                  </RotateContainer>
+                  {availableInventoryTypeCounts === 3 && (
+                    <RotateContainer center>
+                      <InventoryItem
+                        type={availableInventories[2].type}
+                        onClick={() =>
+                          onClickInventory(
+                            availableInventories[2].type,
+                            availableInventories[2].points,
+                          )
+                        }
+                      />
+                    </RotateContainer>
+                  )}
+                </>
+              ))}
           </Flex>
         ) : (
           <Grid container alignItems="center" justifyContent="center" spacing={2}>

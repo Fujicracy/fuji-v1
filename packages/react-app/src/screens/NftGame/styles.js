@@ -179,7 +179,7 @@ export const GearSetNumber = styled.div`
 
 export const RotateContainer = styled.div`
   transform: ${props =>
-    `translate(${props.left ? '20px, 0' : props.right ? '-20px, 0' : '50%, -10px'})  rotate(${
+    `translate(${props.left ? '20px, 0' : props.right ? '-20px, 0' : '0px, -10px'})  rotate(${
       props.left ? '-16deg' : props.right ? '16deg' : '0deg'
     })`};
   position: ${props => (props.center ? 'absolute' : 'inherit')};
