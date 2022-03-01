@@ -16,7 +16,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
-import { useContractLoader, useCrateCounts, useAuth } from 'hooks';
+import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
 import {
   GearSetItem,
@@ -60,19 +60,29 @@ function Inventory() {
   const [isRedeemed, setIsRedeemed] = useState(false);
   const contracts = useContractLoader();
 
-  const { commonCrateAmount, epicCrateAmount, legendaryCrateAmount, totalCrateAmount } =
-    useCrateCounts();
+  const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
 
   const inventoryCards = [
-    { type: INVENTORY_TYPE.COMMON, points: 1000, available: commonCrateAmount > 0 },
-    { type: INVENTORY_TYPE.EPIC, points: 2500, available: epicCrateAmount > 0 },
-    { type: INVENTORY_TYPE.LEGENDARY, points: 5000, available: legendaryCrateAmount > 0 },
+    {
+      type: INVENTORY_TYPE.COMMON,
+      points: cratesPrices[INVENTORY_TYPE.COMMON],
+      available: cratesAmount[INVENTORY_TYPE.COMMON] > 0,
+    },
+    {
+      type: INVENTORY_TYPE.EPIC,
+      points: cratesPrices[INVENTORY_TYPE.EPIC],
+      available: cratesAmount[INVENTORY_TYPE.EPIC] > 0,
+    },
+    {
+      type: INVENTORY_TYPE.LEGENDARY,
+      points: cratesPrices[INVENTORY_TYPE.LEGENDARY],
+      available: cratesAmount[INVENTORY_TYPE.LEGENDARY] > 0,
+    },
   ];
 
   const availableInventories = inventoryCards.filter(inventory => inventory.available === true);
   const availableInventoryTypeCounts = availableInventories.length;
 
-  console.log({ availableInventories });
   const onClickInventory = (type, points) => {
     setInventoryType(type);
     setInventoryPoints(points);
@@ -123,7 +133,7 @@ function Inventory() {
     >
       <Flex flexDirection="column" alignItems="flex-start">
         <Label color="white" fontSize="24px" marginBottom="24px">
-          You have <IntenseSpan primary>{totalCrateAmount} crates</IntenseSpan> to open
+          You have <IntenseSpan primary>{cratesAmount.total} crates</IntenseSpan> to open
         </Label>
         {isMobile ? (
           <Flex position="relative" mt={3} justifyContent="center" alignItems="center" width="100%">
@@ -177,30 +187,39 @@ function Inventory() {
           </Flex>
         ) : (
           <Grid container alignItems="center" justifyContent="center" spacing={2}>
-            {commonCrateAmount > 0 &&
-              [...Array(commonCrateAmount).keys()].map(index => (
+            {cratesAmount[INVENTORY_TYPE.COMMON] > 0 &&
+              [...Array(cratesAmount[INVENTORY_TYPE.COMMON]).keys()].map(index => (
                 <GridItem item xs={6} md={3} key={`commonCrate-${index}`}>
                   <InventoryItem
                     type={INVENTORY_TYPE.COMMON}
-                    onClick={() => onClickInventory(INVENTORY_TYPE.COMMON, 1000)}
+                    onClick={() =>
+                      onClickInventory(INVENTORY_TYPE.COMMON, cratesPrices[INVENTORY_TYPE.COMMON])
+                    }
                   />
                 </GridItem>
               ))}
-            {epicCrateAmount > 0 &&
-              [...Array(epicCrateAmount).keys()].map(index => (
+            {cratesAmount[INVENTORY_TYPE.EPIC] > 0 &&
+              [...Array(cratesAmount[INVENTORY_TYPE.EPIC]).keys()].map(index => (
                 <GridItem item xs={6} md={3} key={`epicCrate-${index}`}>
                   <InventoryItem
                     type={INVENTORY_TYPE.EPIC}
-                    onClick={() => onClickInventory(INVENTORY_TYPE.EPIC, 2500)}
+                    onClick={() =>
+                      onClickInventory(INVENTORY_TYPE.EPIC, cratesPrices[INVENTORY_TYPE.EPIC])
+                    }
                   />
                 </GridItem>
               ))}
-            {legendaryCrateAmount > 0 &&
-              [...Array(legendaryCrateAmount).keys()].map(index => (
+            {cratesAmount[INVENTORY_TYPE.LEGENDARY] > 0 &&
+              [...Array(cratesAmount[INVENTORY_TYPE.LEGENDARY]).keys()].map(index => (
                 <GridItem item xs={6} md={3} key={`legendaryCrate-${index}`}>
                   <InventoryItem
                     type={INVENTORY_TYPE.LEGENDARY}
-                    onClick={() => onClickInventory(INVENTORY_TYPE.LEGENDARY, 5000)}
+                    onClick={() =>
+                      onClickInventory(
+                        INVENTORY_TYPE.LEGENDARY,
+                        cratesPrices[INVENTORY_TYPE.LEGENDARY],
+                      )
+                    }
                   />
                 </GridItem>
               ))}

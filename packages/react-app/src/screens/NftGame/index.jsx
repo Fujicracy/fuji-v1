@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { useCrateCounts } from 'hooks';
+import { useCratesInfo } from 'hooks';
 
 import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
 
@@ -37,7 +37,7 @@ function NftGame() {
   const { path } = useRouteMatch();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const { totalCrateAmount } = useCrateCounts();
+  const { amounts } = useCratesInfo();
 
   return (
     <>
@@ -62,8 +62,8 @@ function NftGame() {
             <ul>
               <StyledNavLink to={`${path}/inventory`}>
                 Inventory
-                {totalCrateAmount > 0 &&
-                  (isMobile ? <HightLightBadge /> : <span>{` (${totalCrateAmount})`}</span>)}
+                {amounts.total > 0 &&
+                  (isMobile ? <HightLightBadge /> : <span>{` (${amounts.total})`}</span>)}
               </StyledNavLink>
             </ul>
           </NavigationContainer>
