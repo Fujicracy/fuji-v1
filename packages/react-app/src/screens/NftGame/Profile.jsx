@@ -56,7 +56,6 @@ function Profile() {
             onFocus={e => e.currentTarget.select()}
             value={customPseudo}
             onChange={e => {
-              console.log({ target: e?.target?.value });
               setCustomPseudo(e?.target?.value);
             }}
             onKeyUp={e => e.key === 'Enter' && setIsEditable(false)}
