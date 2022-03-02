@@ -32,7 +32,10 @@ function Profile() {
 
   const [isEditable, setIsEditable] = useState(false);
   const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo'));
-  useEffect(() => localStorage.setItem('customPseudo', customPseudo), [customPseudo]);
+  useEffect(
+    () => (customPseudo ? localStorage.setItem('customPseudo', customPseudo) : undefined),
+    [customPseudo],
+  );
 
   return (
     <BlackBoxContainer
@@ -52,7 +55,9 @@ function Profile() {
             autoFocus
             onFocus={e => e.currentTarget.select()}
             value={customPseudo}
-            onChange={e => setCustomPseudo(e.target.value)}
+            onChange={e => {
+              setCustomPseudo(e?.target?.value);
+            }}
             onKeyUp={e => e.key === 'Enter' && setIsEditable(false)}
             onBlur={() => setIsEditable(false)}
           />
@@ -90,7 +95,7 @@ function Profile() {
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>{boost}x</StatsBoost>
+          <StatsBoost>{boost ? `${boost}x` : '?'}</StatsBoost>
           <Label textAlign="left" color="white" fontSize="14px">
             Boost Score
           </Label>

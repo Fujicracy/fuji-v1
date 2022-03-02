@@ -47,6 +47,8 @@ const LegendaryItem = ({ points, description, onBuy }) => {
           mt={2}
           spanFontSize="10px"
           spanColor={themeColor}
+          lineHeight="12px"
+          alignItems="baseline"
         >
           {points.toLocaleString()} <span>{description}</span>
         </SectionTitle>

@@ -35,7 +35,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
   };
   return (
     <Container backgroundColor={backColor} color={foreColor} mode="general">
-      <SectionTitle lineHeight="18px" color={foreColor} fontSize="20px" fontWeight="bold">
+      <SectionTitle color={foreColor} fontSize="20px" fontWeight="bold">
         {title}
       </SectionTitle>
       <SectionTitle

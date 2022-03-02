@@ -14,7 +14,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
-import { useProfileInfo, useContractLoader, useAuth } from 'hooks';
+import { useProfileInfo, useContractLoader, useAuth, useCratesInfo } from 'hooks';
 import { Transactor } from 'helpers';
 import { StoreDecoration } from './styles';
 
@@ -24,6 +24,7 @@ function Store() {
   const contracts = useContractLoader();
 
   const { provider } = useAuth();
+  const { prices: cratesPrices } = useCratesInfo();
 
   const tx = Transactor(provider);
 
@@ -37,7 +38,7 @@ function Store() {
         : CRATE_CONTRACT_IDS.LEGENDARY;
     try {
       const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
-      return !!txResult.hash;
+      return txResult && !!txResult?.hash;
     } catch (error) {
       console.error('minting inventory error:', { error });
     }
@@ -88,7 +89,7 @@ function Store() {
             <GeneralItem
               type={INVENTORY_TYPE.COMMON}
               title={INVENTORY_TYPE.COMMON}
-              points={1000}
+              points={cratesPrices[INVENTORY_TYPE.COMMON]}
               description="Meter points"
               onBuy={mintInventory}
             />
@@ -97,13 +98,17 @@ function Store() {
             <GeneralItem
               type={INVENTORY_TYPE.EPIC}
               title={INVENTORY_TYPE.EPIC}
-              points={2500}
+              points={cratesPrices[INVENTORY_TYPE.EPIC]}
               description="Meter points"
               onBuy={mintInventory}
             />
           </Grid>
           <Grid item xs={12} md={4}>
-            <LegendaryItem points={2500} description="Meter points" onBuy={mintInventory} />
+            <LegendaryItem
+              points={cratesPrices[INVENTORY_TYPE.LEGENDARY]}
+              description="Meter points"
+              onBuy={mintInventory}
+            />
           </Grid>
         </Grid>
       </Flex>
