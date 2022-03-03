@@ -133,121 +133,134 @@ function Inventory() {
       borderRadius="8px"
       mb="88px"
     >
-      <Flex flexDirection="column" alignItems="flex-start">
-        <Label color="white" fontSize="24px" marginBottom="24px">
-          You have <IntenseSpan primary>{cratesAmount.total} crates</IntenseSpan> to open
-        </Label>
-        {isMobile ? (
-          <Flex position="relative" mt={3} justifyContent="center" alignItems="center" width="100%">
-            {availableInventoryTypeCounts > 0 &&
-              (availableInventoryTypeCounts === 1 ? (
-                <InventoryItem
-                  type={availableInventories[0].type}
-                  onClick={() =>
-                    onClickInventory(availableInventories[0].type, availableInventories[0].points)
-                  }
-                />
-              ) : (
-                <>
-                  <RotateContainer left>
-                    <InventoryItem
-                      type={availableInventories[0].type}
-                      onClick={() =>
-                        onClickInventory(
-                          availableInventories[0].type,
-                          availableInventories[0].points,
-                        )
-                      }
-                    />
-                  </RotateContainer>
-                  <RotateContainer right>
-                    <InventoryItem
-                      type={availableInventories[1].type}
-                      onClick={() =>
-                        onClickInventory(
-                          availableInventories[1].type,
-                          availableInventories[1].points,
-                        )
-                      }
-                    />
-                  </RotateContainer>
-                  {availableInventoryTypeCounts === 3 && (
-                    <RotateContainer center>
+      {cratesAmount.total > 0 && (
+        <Flex flexDirection="column" alignItems="flex-start" marginBottom="36px">
+          <Label color="white" fontSize="24px" marginBottom="24px">
+            You have <IntenseSpan primary>{cratesAmount.total} crates</IntenseSpan> to open
+          </Label>
+
+          {isMobile ? (
+            <Flex
+              position="relative"
+              mt={3}
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+            >
+              {availableInventoryTypeCounts > 0 &&
+                (availableInventoryTypeCounts === 1 ? (
+                  <InventoryItem
+                    type={availableInventories[0].type}
+                    onClick={() =>
+                      onClickInventory(availableInventories[0].type, availableInventories[0].points)
+                    }
+                  />
+                ) : (
+                  <>
+                    <RotateContainer left>
                       <InventoryItem
-                        type={availableInventories[2].type}
+                        type={availableInventories[0].type}
                         onClick={() =>
                           onClickInventory(
-                            availableInventories[2].type,
-                            availableInventories[2].points,
+                            availableInventories[0].type,
+                            availableInventories[0].points,
                           )
                         }
                       />
                     </RotateContainer>
-                  )}
-                </>
-              ))}
-          </Flex>
-        ) : (
-          <Grid container alignItems="center" justifyContent="center" spacing={2}>
-            {cratesAmount[INVENTORY_TYPE.COMMON] > 0 &&
-              [...Array(cratesAmount[INVENTORY_TYPE.COMMON]).keys()].map(index => (
-                <GridItem item xs={6} md={3} key={`commonCrate-${index}`}>
-                  <InventoryItem
-                    type={INVENTORY_TYPE.COMMON}
-                    onClick={() =>
-                      onClickInventory(INVENTORY_TYPE.COMMON, cratesPrices[INVENTORY_TYPE.COMMON])
-                    }
-                  />
-                </GridItem>
-              ))}
-            {cratesAmount[INVENTORY_TYPE.EPIC] > 0 &&
-              [...Array(cratesAmount[INVENTORY_TYPE.EPIC]).keys()].map(index => (
-                <GridItem item xs={6} md={3} key={`epicCrate-${index}`}>
-                  <InventoryItem
-                    type={INVENTORY_TYPE.EPIC}
-                    onClick={() =>
-                      onClickInventory(INVENTORY_TYPE.EPIC, cratesPrices[INVENTORY_TYPE.EPIC])
-                    }
-                  />
-                </GridItem>
-              ))}
-            {cratesAmount[INVENTORY_TYPE.LEGENDARY] > 0 &&
-              [...Array(cratesAmount[INVENTORY_TYPE.LEGENDARY]).keys()].map(index => (
-                <GridItem item xs={6} md={3} key={`legendaryCrate-${index}`}>
-                  <InventoryItem
-                    type={INVENTORY_TYPE.LEGENDARY}
-                    onClick={() =>
-                      onClickInventory(
-                        INVENTORY_TYPE.LEGENDARY,
-                        cratesPrices[INVENTORY_TYPE.LEGENDARY],
-                      )
-                    }
-                  />
-                </GridItem>
-              ))}
-          </Grid>
-        )}
-      </Flex>
+                    <RotateContainer right>
+                      <InventoryItem
+                        type={availableInventories[1].type}
+                        onClick={() =>
+                          onClickInventory(
+                            availableInventories[1].type,
+                            availableInventories[1].points,
+                          )
+                        }
+                      />
+                    </RotateContainer>
+                    {availableInventoryTypeCounts === 3 && (
+                      <RotateContainer center>
+                        <InventoryItem
+                          type={availableInventories[2].type}
+                          onClick={() =>
+                            onClickInventory(
+                              availableInventories[2].type,
+                              availableInventories[2].points,
+                            )
+                          }
+                        />
+                      </RotateContainer>
+                    )}
+                  </>
+                ))}
+            </Flex>
+          ) : (
+            <Grid container alignItems="center" justifyContent="center" spacing={2}>
+              {cratesAmount[INVENTORY_TYPE.COMMON] > 0 &&
+                [...Array(cratesAmount[INVENTORY_TYPE.COMMON]).keys()].map(index => (
+                  <GridItem item xs={6} md={3} key={`commonCrate-${index}`}>
+                    <InventoryItem
+                      type={INVENTORY_TYPE.COMMON}
+                      onClick={() =>
+                        onClickInventory(INVENTORY_TYPE.COMMON, cratesPrices[INVENTORY_TYPE.COMMON])
+                      }
+                    />
+                  </GridItem>
+                ))}
+              {cratesAmount[INVENTORY_TYPE.EPIC] > 0 &&
+                [...Array(cratesAmount[INVENTORY_TYPE.EPIC]).keys()].map(index => (
+                  <GridItem item xs={6} md={3} key={`epicCrate-${index}`}>
+                    <InventoryItem
+                      type={INVENTORY_TYPE.EPIC}
+                      onClick={() =>
+                        onClickInventory(INVENTORY_TYPE.EPIC, cratesPrices[INVENTORY_TYPE.EPIC])
+                      }
+                    />
+                  </GridItem>
+                ))}
+              {cratesAmount[INVENTORY_TYPE.LEGENDARY] > 0 &&
+                [...Array(cratesAmount[INVENTORY_TYPE.LEGENDARY]).keys()].map(index => (
+                  <GridItem item xs={6} md={3} key={`legendaryCrate-${index}`}>
+                    <InventoryItem
+                      type={INVENTORY_TYPE.LEGENDARY}
+                      onClick={() =>
+                        onClickInventory(
+                          INVENTORY_TYPE.LEGENDARY,
+                          cratesPrices[INVENTORY_TYPE.LEGENDARY],
+                        )
+                      }
+                    />
+                  </GridItem>
+                ))}
+            </Grid>
+          )}
+        </Flex>
+      )}
 
-      <Flex flexDirection="column" alignItems="flex-start" marginTop="36px">
+      <Flex flexDirection="column" alignItems="flex-start">
         <Label color="white" fontSize={5} fontWeight={500}>
           Climbing gear set
         </Label>
-        <Label
-          color="white"
-          fontSize="14px"
-          fontWeight={500}
-          mt="8px"
-          textAlign="left"
-          lineHeight="20px"
-        >
-          Gear can be minted when opening crates. {isMobile && <br />}To buy crates please go to the{' '}
-          <NavLink to="/nft-game/store">
-            <IntenseSpan primary underline>
-              store
-            </IntenseSpan>
-          </NavLink>
-        </Label>
+
+        {cratesAmount.total === 0 && (
+          <Label
+            color="white"
+            fontSize="14px"
+            fontWeight={500}
+            mt="8px"
+            textAlign="left"
+            lineHeight="20px"
+          >
+            Gear can be minted when opening crates. {isMobile && <br />}To buy crates please go to
+            the{' '}
+            <NavLink to="/nft-game/store">
+              <IntenseSpan primary underline>
+                store
+              </IntenseSpan>
+            </NavLink>
+          </Label>
+        )}
 
         <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
