@@ -130,6 +130,7 @@ function Inventory() {
       p={isMobile ? '24px' : '40px'}
       hasBlackContainer={!isMobile}
       borderRadius="8px"
+      mb="88px"
     >
       <Flex flexDirection="column" alignItems="flex-start">
         <Label color="white" fontSize="24px" marginBottom="24px">

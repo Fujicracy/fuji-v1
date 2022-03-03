@@ -52,6 +52,7 @@ function Store() {
       p={isMobile ? '24px' : '40px'}
       hasBlackContainer={!isMobile}
       borderRadius="8px"
+      mb="88px"
     >
       <Flex justifyContent="space-between">
         <Flex flexDirection="column">
