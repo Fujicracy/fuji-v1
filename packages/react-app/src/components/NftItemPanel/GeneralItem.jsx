@@ -3,6 +3,7 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { giftBox } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label } from '../UI';
 import { Container, ItemPanel, BuyButton, CountButton } from './styles';
@@ -13,8 +14,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const backColor =
-    type === INVENTORY_TYPE.COMMON ? 'white' : type === INVENTORY_TYPE.EPIC ? '#735CDD' : '#A5243D';
+  const backColor = type === INVENTORY_TYPE.COMMON ? 'white' : '#735CDD';
   const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
   const buttonColor =
     type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
@@ -50,7 +50,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
         {points.toLocaleString()} <span>{description}</span>
       </SectionTitle>
 
-      <ItemPanel mt={isMobile ? '8px' : '16px'} />
+      <ItemPanel src={giftBox} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
         flexDirection="column"

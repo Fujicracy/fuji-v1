@@ -58,18 +58,19 @@ export const LegendaryContainer = styled.div`
   ${padding};
 `;
 
-export const ItemPanel = styled.div`
+export const ItemPanel = styled(Image)`
   width: 140px;
   height: 140px;
 
-  background-color: rgb(32, 32, 32);
   border-radius: 8px;
   margin-top: 16px;
+
+  mix-blend-mode: hard-light;
 
   ${fujiMedia.lessThan('small')`
     position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
     right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};
-    margin-top: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '0px'};
+    margin-top: ${props => (props.mode === INVENTORY_TYPE.LEGENDARY ? '0px' : '16px')};
 
     width: 80px;
     height: 80px;

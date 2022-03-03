@@ -70,6 +70,8 @@ import commonMask from './images/nft-game/common-mask.svg';
 import epicMask from './images/nft-game/epic-mask.svg';
 import legendaryMask from './images/nft-game/legendary-mask.svg';
 
+import giftBox from './images/nft-game/gift-box.svg';
+
 export const infoIcons = {
   step1: infoStep1,
   step2: infoStep2,
@@ -137,4 +139,5 @@ export {
   commonMask,
   epicMask,
   legendaryMask,
+  giftBox,
 };

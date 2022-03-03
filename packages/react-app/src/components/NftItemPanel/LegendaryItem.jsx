@@ -4,6 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { giftBox } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label } from '../UI';
 import {
@@ -54,7 +55,7 @@ const LegendaryItem = ({ points, description, onBuy }) => {
         </SectionTitle>
       </LegendaryItemsContainter>
 
-      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} />
+      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={giftBox} />
       <LegendaryItemsContainter
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
