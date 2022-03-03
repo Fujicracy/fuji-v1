@@ -15,11 +15,13 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const backColor = type === INVENTORY_TYPE.COMMON ? 'white' : '#735CDD';
-  const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
   const buttonColor =
     type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
 
   const isBuyButtonDisabled = isBuying || amount === 0;
+
+  const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
+  const disabledForeColor = type === INVENTORY_TYPE.COMMON ? 'gray' : 'rgb(255, 255, 255, 0.5)';
 
   const handleClickBuy = async () => {
     if (isBuying) return;
@@ -62,9 +64,11 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
           <CountButton
             backgroundColor={buttonColor}
             onClick={() => {
-              if (amount >= 1) setAmount(amount - 1);
+              if (!isBuying && amount >= 1) setAmount(amount - 1);
             }}
-            disabled={isBuying}
+            disabled={isBuyButtonDisabled}
+            foreColor={isBuying ? disabledForeColor : foreColor}
+            activeColor={backColor}
           >
             -
           </CountButton>
@@ -73,8 +77,10 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
           </Label>
           <CountButton
             backgroundColor={buttonColor}
-            onClick={() => setAmount(amount + 1)}
+            onClick={() => !isBuying && setAmount(amount + 1)}
             disabled={isBuying}
+            foreColor={isBuying ? disabledForeColor : foreColor}
+            activeColor={backColor}
           >
             +
           </CountButton>
@@ -82,6 +88,8 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
         <BuyButton
           mt={isMobile ? '12px' : '16px'}
           backgroundColor={buttonColor}
+          foreColor={isBuyButtonDisabled ? disabledForeColor : foreColor}
+          activeColor={backColor}
           disabled={isBuyButtonDisabled}
           onClick={handleClickBuy}
         >

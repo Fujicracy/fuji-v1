@@ -93,7 +93,12 @@ export const CountButton = styled.div`
   cursor: pointer;
 
   &:hover {
-    opacity: 0.8;
+    border: ${props => !props.disabled && `1px solid ${props.foreColor}`};
+  }
+
+  &:active {
+    background: ${props => !props.disabled && props.foreColor};
+    color: ${props => !props.disabled && props.activeColor};
   }
 
   ${space}
@@ -108,13 +113,20 @@ export const BuyButton = styled.div`
   justify-content: center;
   align-items: center;
 
+  font-weight: 500;
   border-radius: 30px;
   background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
 
   cursor: pointer;
+  color: ${props => props.foreColor};
 
   &:hover {
-    opacity: 0.8;
+    border: ${props => !props.disabled && `1px solid ${props.foreColor}`};
+  }
+
+  &:active {
+    background: ${props => !props.disabled && props.foreColor};
+    color: ${props => !props.disabled && props.activeColor};
   }
 
   ${space};
