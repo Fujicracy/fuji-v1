@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import {
   BlackBoxContainer,
@@ -232,7 +233,23 @@ function Inventory() {
         <Label color="white" fontSize={5} fontWeight={500}>
           Climbing gear set
         </Label>
-        <HorizontalLine margin="8px 0px 24px" />
+        <Label
+          color="white"
+          fontSize="14px"
+          fontWeight={500}
+          mt="8px"
+          textAlign="left"
+          lineHeight="20px"
+        >
+          Gear can be minted when opening crates. {isMobile && <br />}To buy crates please go to the{' '}
+          <NavLink to="/nft-game/store">
+            <IntenseSpan primary underline>
+              store
+            </IntenseSpan>
+          </NavLink>
+        </Label>
+
+        <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(index => (
             <Grid item xs={6} md={3} key={`gearSet-${index}`}>
