@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Flex } from 'rebass';
-import { commonMask, epicMask, legendaryMask } from 'assets/images';
+import { commonMaskImage, epicMaskImage, legendaryMaskImage } from 'assets/images';
 import { INVENTORY_TYPE } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
@@ -37,10 +37,10 @@ const InventoryPopup = ({
 
   const backMask =
     type === INVENTORY_TYPE.COMMON
-      ? commonMask
+      ? commonMaskImage
       : INVENTORY_TYPE.EPIC === 'epic'
-      ? epicMask
-      : legendaryMask;
+      ? epicMaskImage
+      : legendaryMaskImage;
 
   const backColor =
     type === INVENTORY_TYPE.COMMON ? 'white' : type === INVENTORY_TYPE.EPIC ? '#735CDD' : '#A5243D';

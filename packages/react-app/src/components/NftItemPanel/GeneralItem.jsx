@@ -3,7 +3,7 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
-import { giftBox } from 'assets/images';
+import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label } from '../UI';
 import { Container, ItemPanel, BuyButton, CountButton } from './styles';
@@ -52,7 +52,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
         {points.toLocaleString()} <span>{description}</span>
       </SectionTitle>
 
-      <ItemPanel src={giftBox} />
+      <ItemPanel src={giftBoxImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
         flexDirection="column"

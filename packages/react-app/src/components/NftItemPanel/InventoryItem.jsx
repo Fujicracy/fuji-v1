@@ -1,6 +1,6 @@
 import React from 'react';
 import { INVENTORY_TYPE } from 'consts';
-import { commonMask, epicMask, legendaryMask } from 'assets/images';
+import { commonMaskImage, epicMaskImage, legendaryMaskImage } from 'assets/images';
 
 import { Container, OpacityImage, MarkContainer, FujiMark } from './styles';
 
@@ -10,10 +10,10 @@ const InventoryItem = ({ type = INVENTORY_TYPE.COMMON, onClick }) => {
   const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
   const mask =
     type === INVENTORY_TYPE.EPIC
-      ? epicMask
+      ? epicMaskImage
       : type === INVENTORY_TYPE.LEGENDARY
-      ? legendaryMask
-      : commonMask;
+      ? legendaryMaskImage
+      : commonMaskImage;
 
   return (
     <Container
