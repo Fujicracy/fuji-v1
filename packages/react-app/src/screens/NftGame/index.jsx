@@ -53,26 +53,26 @@ function NftGame() {
         <Flex flexDirection="column" alignItems="left">
           <NavigationContainer>
             {isMobile && (
-              <ul>
+              <li>
                 <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
-              </ul>
+              </li>
             )}
-            <ul>
+            <li>
               <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <StyledNavLink to={`${path}/inventory`}>
                 Inventory
                 {amounts.total > 0 &&
                   (isMobile ? <HightLightBadge /> : <span>{` (${amounts.total})`}</span>)}
               </StyledNavLink>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <StyledNavLink to={`${path}/lock-points`}>Lock points</StyledNavLink>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <StyledNavLink to={`${path}/bond-factory`}>Bond factory</StyledNavLink>
-            </ul>
+            </li>
           </NavigationContainer>
 
           <Flex justifyContent="center">

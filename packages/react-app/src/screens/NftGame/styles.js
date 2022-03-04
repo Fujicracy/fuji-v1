@@ -17,10 +17,12 @@ export const StoreDecoration = styled(Image)`
 `;
 
 export const NavigationContainer = styled.ul`
-  display: flex;
+  display: -webkit-box;
   justify-content: flex-start;
   padding: 8px;
   margin-bottom: 18px;
+
+  overflow: scroll;
 
   ${fujiMedia.lessThan('small')`
     justify-content: center;
