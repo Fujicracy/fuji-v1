@@ -22,7 +22,7 @@ export const NavigationContainer = styled.ul`
   padding: 8px;
   margin-bottom: 18px;
 
-  overflow: scroll;
+  overflow-x: auto;
 
   ${fujiMedia.lessThan('small')`
     justify-content: center;
@@ -181,10 +181,12 @@ export const GearSetNumber = styled.div`
 
 export const RotateContainer = styled.div`
   transform: ${props =>
-    `translate(${props.left ? '20px, 0' : props.right ? '-20px, 0' : '0px, -10px'})  rotate(${
-      props.left ? '-16deg' : props.right ? '16deg' : '0deg'
+    `translate(${
+      props.position === 'left' ? '20px, 0' : props.position === 'right' ? '-20px, 0' : '0px, -10px'
+    }) rotate(${
+      props.position === 'left' ? '-16deg' : props.position === 'right' ? '16deg' : '0deg'
     })`};
-  position: ${props => (props.center ? 'absolute' : 'inherit')};
+  position: ${props => (props.position === 'center' ? 'absolute' : 'inherit')};
 `;
 
 export const HeaderBackContainer = styled.div`
