@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   BlackBoxContainer,
@@ -6,19 +7,46 @@ import {
   GeneralItem,
   SectionTitle,
   LegendaryItem,
+  ResultPopup,
 } from 'components';
 
 import { Flex } from 'rebass';
-import { nftGameStoreDecorationImage } from 'assets/images';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
 import { useProfileInfo, useContractLoader, useAuth, useCratesInfo } from 'hooks';
 import { Transactor } from 'helpers';
+import { nftGameStoreDecorationImage, happyIcon } from 'assets/images';
 import { StoreDecoration } from './styles';
 
+const ACTION_RESULT = {
+  NONE: 'none',
+  SUCCESS: 'success',
+  ERROR: 'error',
+};
+
+const ACTION_DESCRIPTIONS = {
+  [ACTION_RESULT.SUCCESS]: {
+    value: ACTION_RESULT.SUCCESS,
+    title: 'Congratulation!',
+    description:
+      'Your action have been processed by Fuji, you can now check your crates into your inventory.',
+    submitText: 'Inventory',
+    emotionIcon: happyIcon,
+  },
+  [ACTION_RESULT.ERROR]: {
+    value: ACTION_RESULT.ERROR,
+    title: 'Something is wrong',
+    description:
+      'An error occured during the transaction, it can be your credits number or a problem on our side.',
+    submitText: 'Try again',
+    emotionIcon: '',
+  },
+};
+
 function Store() {
+  const [actionResult, setActionResult] = useState(ACTION_RESULT.NONE);
   const { points } = useProfileInfo();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const contracts = useContractLoader();
@@ -28,8 +56,12 @@ function Store() {
 
   const tx = Transactor(provider);
 
+  const history = useHistory();
+
   const mintInventory = async (type, amount) => {
     if (amount <= 0) return false;
+    setActionResult(ACTION_RESULT.NONE);
+
     const crateId =
       type === INVENTORY_TYPE.COMMON
         ? CRATE_CONTRACT_IDS.COMMON
@@ -38,12 +70,24 @@ function Store() {
         : CRATE_CONTRACT_IDS.LEGENDARY;
     try {
       const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
-      return txResult && !!txResult?.hash;
+      const res = txResult && !!txResult?.hash;
+      setActionResult(res ? ACTION_RESULT.SUCCESS : ACTION_RESULT.ERROR);
+      return res;
     } catch (error) {
+      setActionResult(ACTION_RESULT.ERROR);
       console.error('minting inventory error:', { error });
     }
 
     return false;
+  };
+
+  const handleCloseModal = () => {
+    setActionResult(ACTION_RESULT.NONE);
+  };
+
+  const handleSubmitModal = result => {
+    setActionResult(ACTION_RESULT.NONE);
+    if (result === ACTION_RESULT.SUCCESS) history.push('/nft-game/inventory');
   };
 
   return (
@@ -113,6 +157,14 @@ function Store() {
           </Grid>
         </Grid>
       </Flex>
+      {[ACTION_RESULT.SUCCESS, ACTION_RESULT.ERROR].includes(actionResult) && (
+        <ResultPopup
+          isOpen
+          content={ACTION_DESCRIPTIONS[actionResult]}
+          onSubmit={handleSubmitModal}
+          onClose={handleCloseModal}
+        />
+      )}
     </BlackBoxContainer>
   );
 }
