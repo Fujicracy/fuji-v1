@@ -1,5 +1,5 @@
 import GeneralItem from './GeneralItem';
-import InventoryItem from './InventoryItem';
+import { InventoryItem, StackedInventoryItem } from './InventoryItem';
 import LegendaryItem from './LegendaryItem';
 
-export { GeneralItem, InventoryItem, LegendaryItem };
+export { GeneralItem, InventoryItem, StackedInventoryItem, LegendaryItem };

@@ -72,6 +72,7 @@ import legendaryMaskImage from './images/nft-game/legendary-mask.svg';
 
 import giftBoxImage from './images/nft-game/gift-box.svg';
 import happyIcon from './images/nft-game/happy.svg';
+import inventoryBadge from './images/nft-game/inventory-badge.svg';
 
 export const infoIcons = {
   step1: infoStep1,
@@ -142,4 +143,5 @@ export {
   legendaryMaskImage,
   giftBoxImage,
   happyIcon,
+  inventoryBadge,
 };

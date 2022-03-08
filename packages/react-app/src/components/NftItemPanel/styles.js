@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { space, color, padding, width } from 'styled-system';
+import { space, color, padding, width, height, opacity } from 'styled-system';
 import { Image, Flex } from 'rebass';
 import { INVENTORY_TYPE, fujiMedia } from 'consts';
+import { inventoryBadge } from 'assets/images';
 
 export const Container = styled.div`
   border: none;
@@ -29,6 +30,7 @@ export const Container = styled.div`
 
   ${color};
   ${padding};
+  ${opacity};
 `;
 
 export const LegendaryContainer = styled.div`
@@ -74,9 +76,11 @@ export const ItemPanel = styled(Image)`
 
     width: 80px;
     height: 80px;
-  `}
+  `};
 
-  ${space}
+  ${space};
+  ${height};
+  ${width};
 `;
 
 export const CountButton = styled.div`
@@ -144,13 +148,27 @@ export const OpacityImage = styled(Image)`
 export const MarkContainer = styled.div`
   backdrop-filter: blur(8px);
 
-  width: 100% !important;
-  height: 100% !important;
+  margin: 18px;
+  position: absolute;
+
+  width: calc(100% - 36px);
+  height: calc(100% - 36px);
   border: 3px solid
     ${props =>
       props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
   box-sizing: border-box;
   border-radius: 8px;
+`;
+
+export const BlackOverlay = styled.div`
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  mix-blend-mode: normal;
+  border-radius: 8px;
+
+  position: absolute;
+  ${opacity};
 `;
 
 export const FujiMark = styled.div`
@@ -176,8 +194,6 @@ export const FujiMark = styled.div`
 
   backdrop-filter: blur(8px);
   transform: rotate(-90deg);
-
-  z-index: 3;
 `;
 
 export const LegendaryItemsContainter = styled(Flex)`
@@ -190,4 +206,43 @@ export const LegendaryItemsContainter = styled(Flex)`
   ${fujiMedia.lessThan('small')`
     align-items: flex-start;
   `}
+`;
+
+export const Badge = styled.div`
+  display: flex;
+  justify-content: center;
+
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 21px;
+  padding-top: 12px;
+
+  position: absolute;
+  right: ${props => props.position === 'right' && '8px'};
+  left: ${props => props.position === 'left' && '8px'};
+  top: -8px;
+  width: 28px;
+  height: 42px;
+
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  background: url(${inventoryBadge}) no-repeat top center;
+`;
+
+export const StackedInventoryContainer = styled.div`
+  margin-left: ${props => (props.overlay ? -150 : 0)}px;
+
+  background: black;
+  mix-blend-mode: normal;
+  border-radius: 8px;
+  ${opacity}
+`;
+
+export const StackedContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: row-reverse;
 `;
