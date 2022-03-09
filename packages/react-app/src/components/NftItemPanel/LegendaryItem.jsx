@@ -15,7 +15,7 @@ import {
   LegendaryContainer,
 } from './styles';
 
-const LegendaryItem = ({ points, description, onBuy }) => {
+const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
 
@@ -23,7 +23,7 @@ const LegendaryItem = ({ points, description, onBuy }) => {
   const backColor = '#A5243D';
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const isBuyButtonDisabled = isBuying || amount === 0;
+  const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
   const disabledForeColor = 'rgb(255, 255, 255, 0.5)';
 
   const handleClickBuy = async () => {
@@ -80,7 +80,7 @@ const LegendaryItem = ({ points, description, onBuy }) => {
             foreColor={themeColor}
             activeColor={backColor}
             onClick={() => !isBuying && setAmount(amount + 1)}
-            disabled={isBuying}
+            disabled={isBuying || isLoading}
           >
             +
           </CountButton>

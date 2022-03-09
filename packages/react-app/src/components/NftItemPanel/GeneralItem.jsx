@@ -8,7 +8,14 @@ import { SectionTitle } from '../Blocks';
 import { Label } from '../UI';
 import { Container, ItemPanel, BuyButton, CountButton } from './styles';
 
-const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description, onBuy }) => {
+const GeneralItem = ({
+  type = INVENTORY_TYPE.COMMON,
+  title,
+  points,
+  description,
+  onBuy,
+  isLoading,
+}) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
 
@@ -18,7 +25,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
   const buttonColor =
     type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
 
-  const isBuyButtonDisabled = isBuying || amount === 0;
+  const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
 
   const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
   const disabledForeColor = type === INVENTORY_TYPE.COMMON ? 'gray' : 'rgb(255, 255, 255, 0.5)';
@@ -78,7 +85,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
           <CountButton
             backgroundColor={buttonColor}
             onClick={() => !isBuying && setAmount(amount + 1)}
-            disabled={isBuying}
+            disabled={isBuying || isLoading}
             foreColor={isBuying ? disabledForeColor : foreColor}
             activeColor={backColor}
           >

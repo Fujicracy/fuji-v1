@@ -71,7 +71,7 @@ export const IntenseSpan = styled.span`
   font-weight: 600;
   color: ${props => (props.primary ? themeGet('colors.primary') : props.color || 'inherit')};
   border: none;
-  border-bottom: ${props => (props.underline ? `1px solid` : 'inherit')};
+  border-bottom: ${props => (props.underline ? `1px solid` : 'none')};
   box-sizing: border-box;
 
   cursor: ${props => props.underline && 'pointer'};
