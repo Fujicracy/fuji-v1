@@ -158,10 +158,13 @@ function Inventory() {
                     {['left', 'right', 'center'].map(
                       (position, index) =>
                         index < availableInventories.length && (
-                          <RotateContainer position={position} key={`mobile-inventory-${position}`}>
+                          <RotateContainer
+                            position={position}
+                            key={`mobile-inventory-${position}`}
+                            onClick={() => onClickInventory(availableInventories[index])}
+                          >
                             <InventoryItem
                               type={availableInventories[index].type}
-                              onClick={() => onClickInventory(availableInventories[index])}
                               amount={availableInventories[index].amount}
                               badgePosition={position}
                             />
