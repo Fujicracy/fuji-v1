@@ -51,6 +51,7 @@ export const OpacityImage = styled(Image)`
   opacity: 0.08;
   left: 0;
   top: 0;
+  z-index: 0;
 `;
 
 export const CloseButton = styled(CloseOutlinedIcon)`

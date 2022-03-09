@@ -6,14 +6,8 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
-import { Label } from '../UI';
-import {
-  ItemPanel,
-  BuyButton,
-  CountButton,
-  LegendaryItemsContainter,
-  LegendaryContainer,
-} from './styles';
+import { Label, CountButton } from '../UI';
+import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
 
 const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);

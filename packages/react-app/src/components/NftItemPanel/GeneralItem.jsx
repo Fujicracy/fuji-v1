@@ -5,8 +5,8 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
 import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
-import { Label } from '../UI';
-import { Container, ItemPanel, BuyButton, CountButton } from './styles';
+import { Label, CountButton } from '../UI';
+import { Container, ItemPanel, BuyButton } from './styles';
 
 const GeneralItem = ({
   type = INVENTORY_TYPE.COMMON,

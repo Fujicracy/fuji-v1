@@ -54,8 +54,7 @@ const GearSet = () => {
 function Inventory() {
   const { address, provider } = useAuth();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const [clickedInventoryType, setClickedInventoryType] = useState('');
-  const [clickedInventoryPoints, setClickedInventoryPoints] = useState(0);
+  const [clickedInventory, setClickedInventory] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isRedeeming, setIsRedeeming] = useState(false);
@@ -67,27 +66,26 @@ function Inventory() {
   const inventories = [
     {
       type: INVENTORY_TYPE.COMMON,
-      points: cratesPrices[INVENTORY_TYPE.COMMON],
       amount: cratesAmount[INVENTORY_TYPE.COMMON],
+      price: cratesPrices[INVENTORY_TYPE.COMMON],
     },
     {
       type: INVENTORY_TYPE.EPIC,
-      points: cratesPrices[INVENTORY_TYPE.EPIC],
       amount: cratesAmount[INVENTORY_TYPE.EPIC],
+      price: cratesPrices[INVENTORY_TYPE.EPIC],
     },
     {
       type: INVENTORY_TYPE.LEGENDARY,
-      points: cratesPrices[INVENTORY_TYPE.LEGENDARY],
       amount: cratesAmount[INVENTORY_TYPE.LEGENDARY],
+      price: cratesPrices[INVENTORY_TYPE.LEGENDARY],
     },
   ];
 
   const availableInventories = inventories.filter(inventory => inventory.amount > 0);
   const availableInventoryTypeCounts = availableInventories.length;
 
-  const onClickInventory = (type, points) => {
-    setClickedInventoryType(type);
-    setClickedInventoryPoints(points);
+  const onClickInventory = inventory => {
+    setClickedInventory(inventory);
 
     setIsRedeemed(false);
     setIsModalOpen(true);
@@ -98,7 +96,7 @@ function Inventory() {
     setIsRedeeming(false);
   };
 
-  const onRedeem = async type => {
+  const onRedeem = async (type, amount) => {
     if (contracts) {
       setIsRedeeming(true);
       const crateId =
@@ -113,7 +111,7 @@ function Inventory() {
           contracts.NFTInteractions.connect(provider.getSigner(address)),
         ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
-        const result = await wrappednftinteractions.openCrate(crateId, 1);
+        const result = await wrappednftinteractions.openCrate(crateId, amount);
 
         console.log({ result });
         if (result.hash) {
@@ -153,9 +151,7 @@ function Inventory() {
                 (availableInventoryTypeCounts === 1 ? (
                   <InventoryItem
                     type={availableInventories[0].type}
-                    onClick={() =>
-                      onClickInventory(availableInventories[0].type, availableInventories[0].points)
-                    }
+                    onClick={() => onClickInventory(availableInventories[0])}
                   />
                 ) : (
                   <>
@@ -165,12 +161,7 @@ function Inventory() {
                           <RotateContainer position={position} key={`mobile-inventory-${position}`}>
                             <InventoryItem
                               type={availableInventories[index].type}
-                              onClick={() =>
-                                onClickInventory(
-                                  availableInventories[index].type,
-                                  availableInventories[index].points,
-                                )
-                              }
+                              onClick={() => onClickInventory(availableInventories[index])}
                               amount={availableInventories[index].amount}
                               badgePosition={position}
                             />
@@ -186,7 +177,7 @@ function Inventory() {
                 <GridItem item xs={6} md={4} key={`desktop-inventory-${inventory.type}`}>
                   <StackedInventoryItem
                     type={inventory.type}
-                    onClick={() => onClickInventory(inventory.type, inventory.points)}
+                    onClick={() => onClickInventory(inventory)}
                     amount={inventory.amount}
                   />
                 </GridItem>
@@ -229,14 +220,12 @@ function Inventory() {
           ))}
         </Grid>
       </Flex>
-      {clickedInventoryType && (
+      {clickedInventory.type && isModalOpen && (
         <InventoryPopup
           isOpen={isModalOpen}
           onSubmit={onRedeem}
           onClose={onClosePopup}
-          title={clickedInventoryType}
-          type={clickedInventoryType}
-          points={clickedInventoryPoints}
+          inventory={clickedInventory}
           isLoading={isRedeeming}
           isRedeemed={isRedeemed}
         />
