@@ -24,6 +24,7 @@ const ACTION_RESULT = {
   NONE: 'none',
   SUCCESS: 'success',
   ERROR: 'error',
+  NOT_ENOUGH_POINTS: 'not-enough',
 };
 
 const ACTION_DESCRIPTIONS = {
@@ -43,11 +44,18 @@ const ACTION_DESCRIPTIONS = {
     submitText: 'Try again',
     emotionIcon: '',
   },
+  [ACTION_RESULT.NOT_ENOUGH_POINTS]: {
+    value: ACTION_RESULT.NOT_ENOUGH_POINTS,
+    title: 'Not enough points',
+    description: `You don't have enough points to buy.`,
+    submitText: 'Back',
+    emotionIcon: '',
+  },
 };
 
 function Store() {
   const [actionResult, setActionResult] = useState(ACTION_RESULT.NONE);
-  const { points } = useProfileInfo();
+  const { points, isLoading } = useProfileInfo();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const contracts = useContractLoader();
 
@@ -68,6 +76,12 @@ function Store() {
         : type === INVENTORY_TYPE.EPIC
         ? CRATE_CONTRACT_IDS.EPIC
         : CRATE_CONTRACT_IDS.LEGENDARY;
+
+    if (cratesPrices[type] * amount > points) {
+      setActionResult(ACTION_RESULT.NOT_ENOUGH_POINTS);
+      return false;
+    }
+
     try {
       const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
       const res = txResult && !!txResult?.hash;
@@ -137,6 +151,7 @@ function Store() {
               points={cratesPrices[INVENTORY_TYPE.COMMON]}
               description="Meter points"
               onBuy={mintInventory}
+              isLoading={isLoading}
             />
           </Grid>
           <Grid item xs={6} md={4}>
@@ -146,6 +161,7 @@ function Store() {
               points={cratesPrices[INVENTORY_TYPE.EPIC]}
               description="Meter points"
               onBuy={mintInventory}
+              isLoading={isLoading}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -153,11 +169,12 @@ function Store() {
               points={cratesPrices[INVENTORY_TYPE.LEGENDARY]}
               description="Meter points"
               onBuy={mintInventory}
+              isLoading={isLoading}
             />
           </Grid>
         </Grid>
       </Flex>
-      {[ACTION_RESULT.SUCCESS, ACTION_RESULT.ERROR].includes(actionResult) && (
+      {actionResult !== ACTION_RESULT.NONE && (
         <ResultPopup
           isOpen
           content={ACTION_DESCRIPTIONS[actionResult]}
