@@ -44,7 +44,7 @@ const ResultPopup = ({ isOpen, onSubmit, onClose, content }) => {
       padding={0}
       blackShadow
     >
-      <Flex flexDirection="column" alignItems="center">
+      <Flex flexDirection="column" alignItems="center" justifyContent="center" width="100%">
         <EmotionImage src={content.emotionIcon} />
 
         <Flex flexDirection="column" alignItems="center" padding="32px">
