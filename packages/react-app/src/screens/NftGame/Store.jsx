@@ -16,7 +16,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } fro
 import { Grid } from '@material-ui/core';
 
 import { useProfileInfo, useContractLoader, useAuth, useCratesInfo } from 'hooks';
-import { Transactor } from 'helpers';
+import { Transactor, intToString } from 'helpers';
 import { nftGameStoreDecorationImage, happyIcon } from 'assets/images';
 import { StoreDecoration } from './styles';
 
@@ -116,7 +116,7 @@ function Store() {
         <Flex flexDirection="column">
           <Flex alignItems="bottom">
             <SectionTitle primary fontSize="32px">
-              {points.toLocaleString('en-US')}
+              {intToString(points)}
             </SectionTitle>
             <SectionTitle fontSize="14px" fontWeight="light" ml={2} mt={2} spanFontSize="12px">
               Meter points <span>(?)</span>
