@@ -83,15 +83,21 @@ function Store() {
     }
 
     try {
-      const txResult = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
-      const res = txResult && !!txResult?.hash;
-      setActionResult(res ? ACTION_RESULT.SUCCESS : ACTION_RESULT.ERROR);
-      return res;
+      const res = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
+
+      console.log({ res });
+      if (res && res.hash) {
+        const receipt = await res.wait();
+        if (receipt) {
+          setActionResult(ACTION_RESULT.SUCCESS);
+          return true;
+        }
+      }
     } catch (error) {
       setActionResult(ACTION_RESULT.ERROR);
       console.error('minting inventory error:', { error });
     }
-
+    setActionResult(ACTION_RESULT.ERROR);
     return false;
   };
 
