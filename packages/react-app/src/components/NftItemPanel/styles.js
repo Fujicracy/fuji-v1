@@ -195,7 +195,7 @@ export const Badge = styled.div`
   position: absolute;
   right: ${props => props.position === 'right' && '8px'};
   left: ${props => props.position === 'left' && '8px'};
-  top: -8px;
+  top: 0px;
   width: 28px;
   height: 42px;
 
