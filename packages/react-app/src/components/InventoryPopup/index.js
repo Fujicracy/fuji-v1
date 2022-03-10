@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import { Flex } from 'rebass';
-import { commonMask, epicMask, legendaryMask } from 'assets/images';
+import { commonMaskImage, epicMaskImage, legendaryMaskImage } from 'assets/images';
 import { INVENTORY_TYPE } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
-import { BlackButton } from '../UI';
+import { BlackButton, CountButton, Label } from '../UI';
 import { StyledModal, OpacityImage, ItemPanel, CloseButton } from './styles';
 
 const InventoryPopup = ({
   isOpen,
   onSubmit,
-  title,
-  points,
+  inventory,
   onClose,
-  type = INVENTORY_TYPE.COMMON,
   description = 'Meter Points',
   isRedeemed = false,
   isLoading = false,
 }) => {
   const [opacity, setOpacity] = useState(0);
+  const [amount, setAmount] = useState(inventory.amount);
 
   function afterOpen() {
     setTimeout(() => {
@@ -33,17 +32,28 @@ const InventoryPopup = ({
     });
   }
 
-  const themeColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
+  const themeColor = inventory.type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
 
   const backMask =
-    type === INVENTORY_TYPE.COMMON
-      ? commonMask
-      : INVENTORY_TYPE.EPIC === 'epic'
-      ? epicMask
-      : legendaryMask;
+    inventory.type === INVENTORY_TYPE.COMMON
+      ? commonMaskImage
+      : inventory.type === INVENTORY_TYPE.EPIC
+      ? epicMaskImage
+      : legendaryMaskImage;
 
   const backColor =
-    type === INVENTORY_TYPE.COMMON ? 'white' : type === INVENTORY_TYPE.EPIC ? '#735CDD' : '#A5243D';
+    inventory.type === INVENTORY_TYPE.COMMON
+      ? 'white'
+      : inventory.type === INVENTORY_TYPE.EPIC
+      ? '#735CDD'
+      : '#A5243D';
+
+  const countButtonColor =
+    inventory.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
+  const foreColor = inventory.type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
+  const disabledForeColor =
+    inventory.type === INVENTORY_TYPE.COMMON ? 'gray' : 'rgb(255, 255, 255, 0.5)';
+
   return (
     <StyledModal
       color={themeColor}
@@ -59,25 +69,63 @@ const InventoryPopup = ({
         Crates Opening
       </SectionTitle>
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        <SectionTitle color={themeColor} fontSize="32px" fontWeight="bold" mt="48px">
-          {title}
+        <SectionTitle color={themeColor} fontSize="32px" fontWeight="bold" mt="24px">
+          {inventory.type}
         </SectionTitle>
         <SectionTitle
           color={themeColor}
           fontSize="20px"
-          mt="24px"
+          mt="12px"
           spanColor={themeColor}
           spanFontSize="14px"
           alignItems="baseline"
         >
-          {points.toLocaleString()} <span>{description}</span>
+          {(amount * inventory.price).toLocaleString()} <span>{description}</span>
         </SectionTitle>
-        <ItemPanel />
+        <ItemPanel mt="16px" />
+      </Flex>
+
+      <Flex
+        flexDirection="row"
+        justifyContent="center"
+        alignItems="center"
+        mt="16px"
+        sx={{ zIndex: 5 }}
+      >
+        <Label color={foreColor} ml={1} mr={1}>
+          Open
+        </Label>
+        <CountButton
+          backgroundColor={countButtonColor}
+          onClick={() => {
+            if (!isLoading && amount >= 2) setAmount(amount - 1);
+          }}
+          disabled={isLoading || amount === 1}
+          foreColor={isLoading ? disabledForeColor : foreColor}
+          activeColor={backColor}
+        >
+          -
+        </CountButton>
+        <Label color={foreColor} ml={1} mr={1} width={20}>
+          {amount}
+        </Label>
+        <CountButton
+          backgroundColor={countButtonColor}
+          onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
+          disabled={isLoading || amount >= inventory.amount}
+          foreColor={isLoading ? disabledForeColor : foreColor}
+          activeColor={backColor}
+        >
+          +
+        </CountButton>
+        <Label color={foreColor} ml={1} mr={1}>
+          {amount > 1 ? 'Crates' : 'Crate'}
+        </Label>
       </Flex>
 
       <BlackButton
-        mt="24px"
-        onClick={() => (isRedeemed ? onClose() : onSubmit(type))}
+        mt="16px"
+        onClick={() => (isRedeemed ? onClose() : onSubmit(inventory.type, amount))}
         disabled={isLoading}
       >
         {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}

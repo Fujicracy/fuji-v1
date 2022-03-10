@@ -4,24 +4,21 @@ import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
-import { Label } from '../UI';
-import {
-  ItemPanel,
-  BuyButton,
-  CountButton,
-  LegendaryItemsContainter,
-  LegendaryContainer,
-} from './styles';
+import { Label, CountButton } from '../UI';
+import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
 
-const LegendaryItem = ({ points, description, onBuy }) => {
+const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
 
   const themeColor = 'white';
+  const backColor = '#A5243D';
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const isBuyButtonDisabled = isBuying || amount === 0;
+  const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
+  const disabledForeColor = 'rgb(255, 255, 255, 0.5)';
 
   const handleClickBuy = async () => {
     if (isBuying) return;
@@ -36,7 +33,7 @@ const LegendaryItem = ({ points, description, onBuy }) => {
     setIsBuying(false);
   };
   return (
-    <LegendaryContainer color={themeColor} backgroundColor="#A5243D">
+    <LegendaryContainer color={themeColor} backgroundColor={backColor}>
       <LegendaryItemsContainter>
         <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
           Legendary
@@ -54,7 +51,7 @@ const LegendaryItem = ({ points, description, onBuy }) => {
         </SectionTitle>
       </LegendaryItemsContainter>
 
-      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} />
+      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={giftBoxImage} />
       <LegendaryItemsContainter
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
@@ -62,16 +59,23 @@ const LegendaryItem = ({ points, description, onBuy }) => {
         <Flex flexDirection="row" alignItems="center" justifyContent="center" width="100%">
           <CountButton
             onClick={() => {
-              if (amount >= 1) setAmount(amount - 1);
+              if (amount >= 1 && !isBuying) setAmount(amount - 1);
             }}
-            disabled={isBuying}
+            disabled={isBuyButtonDisabled}
+            foreColor={themeColor}
+            activeColor={backColor}
           >
             -
           </CountButton>
           <Label color={themeColor} ml={1} mr={1} width={20}>
             {amount}
           </Label>
-          <CountButton onClick={() => setAmount(amount + 1)} disabled={isBuying}>
+          <CountButton
+            foreColor={themeColor}
+            activeColor={backColor}
+            onClick={() => !isBuying && setAmount(amount + 1)}
+            disabled={isBuying || isLoading}
+          >
             +
           </CountButton>
           {isMobile && (
@@ -81,6 +85,8 @@ const LegendaryItem = ({ points, description, onBuy }) => {
               width="70%"
               disabled={isBuyButtonDisabled}
               onClick={handleClickBuy}
+              foreColor={isBuyButtonDisabled ? disabledForeColor : themeColor}
+              activeColor={backColor}
             >
               {isBuying && (
                 <CircularProgress
@@ -97,7 +103,13 @@ const LegendaryItem = ({ points, description, onBuy }) => {
           )}
         </Flex>
         {!isMobile && (
-          <BuyButton margin="16px 0px 0px" disabled={isBuyButtonDisabled} onClick={handleClickBuy}>
+          <BuyButton
+            margin="16px 0px 0px"
+            disabled={isBuyButtonDisabled}
+            onClick={handleClickBuy}
+            foreColor={isBuyButtonDisabled ? disabledForeColor : themeColor}
+            activeColor={backColor}
+          >
             {isBuying && (
               <CircularProgress
                 style={{

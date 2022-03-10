@@ -66,9 +66,13 @@ import editIcon from './icons/edit.svg';
 import nftGameStoreDecorationImage from './images/nft-game/store-decoration.svg';
 import crownImage from './images/nft-game/crown.svg';
 import profileDecorationImage from './images/nft-game/profile-decoration.svg';
-import commonMask from './images/nft-game/common-mask.svg';
-import epicMask from './images/nft-game/epic-mask.svg';
-import legendaryMask from './images/nft-game/legendary-mask.svg';
+import commonMaskImage from './images/nft-game/common-mask.svg';
+import epicMaskImage from './images/nft-game/epic-mask.svg';
+import legendaryMaskImage from './images/nft-game/legendary-mask.svg';
+
+import giftBoxImage from './images/nft-game/gift-box.svg';
+import happyIcon from './images/nft-game/happy.svg';
+import inventoryBadge from './images/nft-game/inventory-badge.svg';
 
 export const infoIcons = {
   step1: infoStep1,
@@ -134,7 +138,10 @@ export {
   crownImage,
   nftGameStoreDecorationImage,
   profileDecorationImage,
-  commonMask,
-  epicMask,
-  legendaryMask,
+  commonMaskImage,
+  epicMaskImage,
+  legendaryMaskImage,
+  giftBoxImage,
+  happyIcon,
+  inventoryBadge,
 };

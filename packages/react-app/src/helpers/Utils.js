@@ -28,9 +28,9 @@ export function fixDecimalString(num, decimalCount = 3) {
  * Format a number to string appending suffix 'k', 'M', 'B' and so on...
  * Example: 1.250.000 -> 1.25M
  */
-export function intToString(num) {
+export function intToString(num, decimalCount = 1) {
   if (num < 1000) {
-    return fixDecimal(num, 3);
+    return fixDecimal(num, decimalCount);
   }
 
   const strNum = num.toString().replace(/[^0-9.]/g, '');
@@ -50,7 +50,7 @@ export function intToString(num) {
     }
   }
 
-  const result = fixDecimal(strNum / si[index].v) + si[index].s;
+  const result = fixDecimal(strNum / si[index].v, decimalCount) + si[index].s;
 
   return result;
 }

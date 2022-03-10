@@ -3,23 +3,32 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
-import { Label } from '../UI';
-import { Container, ItemPanel, BuyButton, CountButton } from './styles';
+import { Label, CountButton } from '../UI';
+import { Container, ItemPanel, BuyButton } from './styles';
 
-const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description, onBuy }) => {
+const GeneralItem = ({
+  type = INVENTORY_TYPE.COMMON,
+  title,
+  points,
+  description,
+  onBuy,
+  isLoading,
+}) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const backColor =
-    type === INVENTORY_TYPE.COMMON ? 'white' : type === INVENTORY_TYPE.EPIC ? '#735CDD' : '#A5243D';
-  const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
+  const backColor = type === INVENTORY_TYPE.COMMON ? 'white' : '#735CDD';
   const buttonColor =
     type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
 
-  const isBuyButtonDisabled = isBuying || amount === 0;
+  const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
+
+  const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
+  const disabledForeColor = type === INVENTORY_TYPE.COMMON ? 'gray' : 'rgb(255, 255, 255, 0.5)';
 
   const handleClickBuy = async () => {
     if (isBuying) return;
@@ -50,7 +59,7 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
         {points.toLocaleString()} <span>{description}</span>
       </SectionTitle>
 
-      <ItemPanel mt={isMobile ? '8px' : '16px'} />
+      <ItemPanel src={giftBoxImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
         flexDirection="column"
@@ -62,9 +71,11 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
           <CountButton
             backgroundColor={buttonColor}
             onClick={() => {
-              if (amount >= 1) setAmount(amount - 1);
+              if (!isBuying && amount >= 1) setAmount(amount - 1);
             }}
-            disabled={isBuying}
+            disabled={isBuyButtonDisabled}
+            foreColor={isBuying ? disabledForeColor : foreColor}
+            activeColor={backColor}
           >
             -
           </CountButton>
@@ -73,8 +84,10 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
           </Label>
           <CountButton
             backgroundColor={buttonColor}
-            onClick={() => setAmount(amount + 1)}
-            disabled={isBuying}
+            onClick={() => !isBuying && setAmount(amount + 1)}
+            disabled={isBuying || isLoading}
+            foreColor={isBuying ? disabledForeColor : foreColor}
+            activeColor={backColor}
           >
             +
           </CountButton>
@@ -82,6 +95,8 @@ const GeneralItem = ({ type = INVENTORY_TYPE.COMMON, title, points, description,
         <BuyButton
           mt={isMobile ? '12px' : '16px'}
           backgroundColor={buttonColor}
+          foreColor={isBuyButtonDisabled ? disabledForeColor : foreColor}
+          activeColor={backColor}
           disabled={isBuyButtonDisabled}
           onClick={handleClickBuy}
         >

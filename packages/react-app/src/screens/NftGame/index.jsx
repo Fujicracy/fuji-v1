@@ -9,6 +9,7 @@ import { useCratesInfo } from 'hooks';
 import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
 
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import Profile from './Profile';
 import Inventory from './Inventory';
@@ -52,20 +53,26 @@ function NftGame() {
         <Flex flexDirection="column" alignItems="left">
           <NavigationContainer>
             {isMobile && (
-              <ul>
+              <li>
                 <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
-              </ul>
+              </li>
             )}
-            <ul>
+            <li>
               <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
-            </ul>
-            <ul>
+            </li>
+            <li>
               <StyledNavLink to={`${path}/inventory`}>
                 Inventory
                 {amounts.total > 0 &&
                   (isMobile ? <HightLightBadge /> : <span>{` (${amounts.total})`}</span>)}
               </StyledNavLink>
-            </ul>
+            </li>
+            <li>
+              <StyledNavLink to={`${path}/lock-points`}>Lock points</StyledNavLink>
+            </li>
+            <li>
+              <StyledNavLink to={`${path}/bond-factory`}>Bond factory</StyledNavLink>
+            </li>
           </NavigationContainer>
 
           <Flex justifyContent="center">

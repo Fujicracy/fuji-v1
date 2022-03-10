@@ -13,6 +13,7 @@ import TransactionHistory from './TransactionHistory';
 import ToggleSwitch from './ToggleSwitch';
 import Description from './Description';
 import InventoryPopup from './InventoryPopup';
+import ResultPopup from './ResultPopup';
 
 export * from './NftItemPanel';
 
@@ -35,4 +36,5 @@ export {
   ToggleSwitch,
   Description,
   InventoryPopup,
+  ResultPopup,
 };

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
 import { CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
 import { useAuth } from './Auth';
@@ -7,6 +8,7 @@ import { useContractReader } from './ContractReader';
 const POINTS_DECIMALS = 5;
 
 export function useProfileInfo() {
+  const [isLoading, setIsLoading] = useState(true);
   const { address } = useAuth();
   const contracts = useContractLoader();
   const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
@@ -26,7 +28,11 @@ export function useProfileInfo() {
     ? formatUnits(unformattedComputeBoost, 'wei') / 100
     : undefined;
 
-  return { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost };
+  useEffect(() => {
+    if (points >= 0 && climbingSpeedPerWeek >= 0 && boost >= 0) setIsLoading(false);
+  }, [points, climbingSpeedPerWeek, boost]);
+
+  return { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
 }
 
 export function useCratesInfo() {
