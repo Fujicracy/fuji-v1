@@ -14,3 +14,5 @@ export const NFT_CARD_IDS = {
   START: 4,
   END: 11,
 };
+
+export const NFT_GAME_POINTS_DECIMALS = 5;

@@ -1,6 +1,13 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { BigNumber, ethers } from 'ethers';
+import { WrapperBuilder } from 'redstone-evm-connector';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 
+import { Flex } from 'rebass';
+import { useMediaQuery } from 'react-responsive';
+import { Grid } from '@material-ui/core';
 import {
   BlackBoxContainer,
   InventoryItem,
@@ -9,16 +16,19 @@ import {
   Label,
   SectionTitle,
   StackedInventoryItem,
+  ResultPopup,
 } from 'components';
 
-import { WrapperBuilder } from 'redstone-evm-connector';
-
-import { Flex } from 'rebass';
-import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
-import { Grid } from '@material-ui/core';
-
+import {
+  BREAKPOINTS,
+  BREAKPOINT_NAMES,
+  CRATE_CONTRACT_IDS,
+  INVENTORY_TYPE,
+  NFT_GAME_POINTS_DECIMALS,
+} from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
+
+import { happyIcon } from 'assets/images';
 
 import {
   GearSetItem,
@@ -29,6 +39,11 @@ import {
   RotateContainer,
   GridItem,
 } from './styles';
+
+const abi = [
+  'event CratesOpened(address user, uint256 crateId, uint256 amount, uint256[] rewards)',
+];
+const iface = new ethers.utils.Interface(abi);
 
 const GearSet = () => {
   return (
@@ -51,17 +66,49 @@ const GearSet = () => {
   );
 };
 
+const OPENING_RESULT = {
+  NONE: 'none',
+  NOTHING: 'nothing',
+  POINTS: 'points',
+  NFTS: 'nfts',
+};
+
+const OPENING_DESCRIPTIONS = {
+  [OPENING_RESULT.NFTS]: {
+    value: OPENING_RESULT.NFTS,
+    title: 'Congratulation!',
+    description: 'Bravo, you got a new climbing gear, ....',
+    submitText: 'Back',
+    emotionIcon: happyIcon,
+  },
+  [OPENING_RESULT.POINTS]: {
+    value: OPENING_RESULT.POINTS,
+    title: 'Congratulation!',
+    description: 'Yeahhh, you get X more meter points that accelerate your climbing!',
+    submitText: 'Back',
+    emotionIcon: happyIcon,
+  },
+  [OPENING_RESULT.NOTHING]: {
+    value: OPENING_RESULT.NOTHING,
+    title: 'Ooops!',
+    description: 'Sorry, there is nothing in this crate. Keep climbing!',
+    submitText: 'Back',
+    emotionIcon: '',
+  },
+};
+
 function Inventory() {
   const { address, provider } = useAuth();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [clickedInventory, setClickedInventory] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCratesModalOpen, setIsCratesModalOpen] = useState(false);
 
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [isRedeemed, setIsRedeemed] = useState(false);
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
+  const [actionResult, setActionResult] = useState(OPENING_RESULT.NONE);
 
   const inventories = [
     {
@@ -88,11 +135,11 @@ function Inventory() {
     setClickedInventory(inventory);
 
     setIsRedeemed(false);
-    setIsModalOpen(true);
+    setIsCratesModalOpen(true);
   };
 
   const onClosePopup = () => {
-    setIsModalOpen(false);
+    setIsCratesModalOpen(false);
     setIsRedeeming(false);
   };
 
@@ -113,9 +160,38 @@ function Inventory() {
 
         const result = await wrappednftinteractions.openCrate(crateId, amount);
 
-        console.log({ result });
-        if (result.hash) {
+        if (result && result.hash) {
+          const receipt = await result.wait();
+          const parsedLog = iface.parseLog(receipt.logs[1]);
+          const { rewards } = parsedLog.args;
+
+          const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
+          const nfts = [];
+          let totalNftAmount = 0;
+          let nftDescription = 'Bravo, you got a new climbing gear, you won';
+          for (let i = 4; i < 14; i += 1) {
+            const nftAmount = rewards[i] ? formatUnits(rewards[i], NFT_GAME_POINTS_DECIMALS) : 0;
+            if (nftAmount > 0) {
+              nfts.push({ tokenId: i, amount: nftAmount });
+              totalNftAmount += nftAmount;
+
+              nftDescription += `${nftAmount} NFTs with tokenId ${i}, `;
+            }
+          }
           setIsRedeemed(true);
+
+          setIsCratesModalOpen(false);
+          if (points > 0) {
+            OPENING_DESCRIPTIONS[
+              OPENING_RESULT.POINTS
+            ].description = `Yeahhh, you get ${points} more meter points that accelerate your climbing!`;
+            setActionResult(OPENING_RESULT.POINTS);
+          } else if (totalNftAmount > 0) {
+            OPENING_DESCRIPTIONS[OPENING_RESULT.NFTS].description = nftDescription;
+            setActionResult(OPENING_RESULT.NFTS);
+          } else {
+            setActionResult(OPENING_RESULT.NOTHING);
+          }
         }
       } catch (error) {
         console.error({ error });
@@ -123,6 +199,14 @@ function Inventory() {
       }
       setIsRedeeming(false);
     }
+  };
+
+  const handleCloseModal = () => {
+    setActionResult(OPENING_RESULT.NONE);
+  };
+
+  const handleSubmitModal = result => {
+    setActionResult(OPENING_RESULT.NONE);
   };
 
   return (
@@ -223,14 +307,22 @@ function Inventory() {
           ))}
         </Grid>
       </Flex>
-      {clickedInventory.type && isModalOpen && (
+      {clickedInventory.type && isCratesModalOpen && (
         <InventoryPopup
-          isOpen={isModalOpen}
+          isOpen={isCratesModalOpen}
           onSubmit={onRedeem}
           onClose={onClosePopup}
           inventory={clickedInventory}
           isLoading={isRedeeming}
           isRedeemed={isRedeemed}
+        />
+      )}
+      {actionResult !== OPENING_RESULT.NONE && (
+        <ResultPopup
+          isOpen
+          content={OPENING_DESCRIPTIONS[actionResult]}
+          onSubmit={handleSubmitModal}
+          onClose={handleCloseModal}
         />
       )}
     </BlackBoxContainer>

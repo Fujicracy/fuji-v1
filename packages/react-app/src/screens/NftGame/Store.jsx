@@ -85,7 +85,6 @@ function Store() {
     try {
       const res = await tx(contracts.NFTInteractions.mintCrates(crateId, amount));
 
-      console.log({ res });
       if (res && res.hash) {
         const receipt = await res.wait();
         if (receipt) {

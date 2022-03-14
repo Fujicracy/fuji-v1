@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
-import { CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
+import { CRATE_CONTRACT_IDS, INVENTORY_TYPE, NFT_GAME_POINTS_DECIMALS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
-
-const POINTS_DECIMALS = 5;
 
 export function useProfileInfo() {
   const [isLoading, setIsLoading] = useState(true);
   const { address } = useAuth();
   const contracts = useContractLoader();
   const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
-  const points = debtBalance ? Number(formatUnits(debtBalance, POINTS_DECIMALS)) : 0;
+  const points = debtBalance ? Number(formatUnits(debtBalance, NFT_GAME_POINTS_DECIMALS)) : 0;
 
   const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
   const climbingSpeedPerDay = userdata[1]
-    ? Number(formatUnits(userdata[1], POINTS_DECIMALS)) * 60 * 60 * 24
+    ? Number(formatUnits(userdata[1], NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
     : 0;
   const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
 
@@ -54,7 +52,7 @@ export function useCratesInfo() {
     [CRATE_CONTRACT_IDS.COMMON],
   );
   const commonCratePrice = unformattedCommonCratePrice
-    ? Number(formatUnits(unformattedCommonCratePrice, POINTS_DECIMALS))
+    ? Number(formatUnits(unformattedCommonCratePrice, NFT_GAME_POINTS_DECIMALS))
     : 0;
 
   // epic crate info
@@ -69,7 +67,7 @@ export function useCratesInfo() {
     CRATE_CONTRACT_IDS.EPIC,
   ]);
   const epicCratePrice = unformattedEpicCratePrice
-    ? Number(formatUnits(unformattedEpicCratePrice, POINTS_DECIMALS))
+    ? Number(formatUnits(unformattedEpicCratePrice, NFT_GAME_POINTS_DECIMALS))
     : 0;
 
   // legendary crate info
@@ -87,7 +85,7 @@ export function useCratesInfo() {
     [CRATE_CONTRACT_IDS.LEGENDARY],
   );
   const legendaryCratePrice = unformattedLegendaryCratePrice
-    ? Number(formatUnits(unformattedLegendaryCratePrice, POINTS_DECIMALS))
+    ? Number(formatUnits(unformattedLegendaryCratePrice, NFT_GAME_POINTS_DECIMALS))
     : 0;
 
   const totalCrateAmount = commonCrateAmount + epicCrateAmount + legendaryCrateAmount;
