@@ -167,8 +167,14 @@ export const FujiMark = styled.div`
   color: ${props =>
     props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
 
-  backdrop-filter: blur(8px);
   transform: rotate(-90deg);
+
+  background-color: ${props => props.backgroundColor};
+
+  @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background-color: transparent;
+    backdrop-filter: blur(8px);
+  }
 `;
 
 export const LegendaryItemsContainter = styled(Flex)`
