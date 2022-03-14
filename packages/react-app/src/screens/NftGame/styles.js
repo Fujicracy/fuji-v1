@@ -23,10 +23,6 @@ export const NavigationContainer = styled.ul`
   margin-bottom: 18px;
 
   overflow-x: auto;
-
-  ${fujiMedia.lessThan('small')`
-    justify-content: center;
-  `}
 `;
 
 export const StyledNavLink = styled(NavLink)`
@@ -53,10 +49,12 @@ export const StyledNavLink = styled(NavLink)`
   }
 
   ${fujiMedia.greaterThan('small')`
+    padding: 0px 4px 8px;
+
     &.active {
       background: transparent;
       border: none;
-      border-bottom: 4px solid ${themeGet('colors.primary')};
+      border-bottom: 2px solid ${themeGet('colors.primary')};
       box-sizing: border-box;
       border-radius: 0px;
     }
