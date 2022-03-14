@@ -145,7 +145,7 @@ export const GearSetItem = styled.div`
   border-radius: 12px;
   -webkit-mask-image: radial-gradient(
     circle 20px at calc(100% - 15px) 15px,
-    transparent 30px,
+    transparent 20px,
     purple 0
   );
 `;
