@@ -23,6 +23,8 @@ export const NavigationContainer = styled.ul`
   margin-bottom: 18px;
 
   overflow-x: auto;
+
+  z-index: 0;
 `;
 
 export const StyledNavLink = styled(NavLink)`
