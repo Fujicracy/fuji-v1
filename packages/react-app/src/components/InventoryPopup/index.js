@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Flex } from 'rebass';
 
 import { NFT_GAME_MODAL_THEMES } from 'consts';
+import { giftBoxImage } from 'assets/images';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import { BlackButton, CountButton, Label } from '../UI';
@@ -61,9 +62,7 @@ const InventoryPopup = ({
         >
           {(amount * inventory.price).toLocaleString()} <span>{description}</span>
         </SectionTitle>
-        <ItemPanel autoPlay muted loop>
-          <source src={theme.pendingAnimation} />
-        </ItemPanel>
+        <ItemPanel src={giftBoxImage} />
       </Flex>
 
       <Flex

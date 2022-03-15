@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { size, color, space } from 'styled-system';
+import { size, color, space, width, height } from 'styled-system';
 import { Box, Image } from 'rebass';
 import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
@@ -64,12 +64,15 @@ export const CloseButton = styled(CloseOutlinedIcon)`
   cursor: pointer;
 `;
 
-export const ItemPanel = styled.video`
+export const ItemPanel = styled(Image)`
   width: 200px;
   height: 200px;
 
-  margin-top: 24px;
+  margin-top: 28px;
 
-  z-index: 1;
-  ${space}
+  mix-blend-mode: hard-light;
+
+  ${space};
+  ${height};
+  ${width};
 `;
