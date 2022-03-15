@@ -3,7 +3,7 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
@@ -13,12 +13,11 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
 
-  const themeColor = 'white';
-  const backColor = '#A5243D';
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
-  const disabledForeColor = 'rgb(255, 255, 255, 0.5)';
+
+  const theme = NFT_GAME_MODAL_THEMES[INVENTORY_TYPE.LEGENDARY];
 
   const handleClickBuy = async () => {
     if (isBuying) return;
@@ -33,17 +32,17 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
     setIsBuying(false);
   };
   return (
-    <LegendaryContainer color={themeColor} backgroundColor={backColor}>
+    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
       <LegendaryItemsContainter>
-        <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
+        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
           Legendary
         </SectionTitle>
         <SectionTitle
-          color={themeColor}
+          color={theme.foreColor}
           fontSize="16px"
           mt={2}
           spanFontSize="10px"
-          spanColor={themeColor}
+          spanColor={theme.foreColor}
           lineHeight="12px"
           alignItems="baseline"
         >
@@ -62,17 +61,17 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
               if (amount >= 1 && !isBuying) setAmount(amount - 1);
             }}
             disabled={isBuyButtonDisabled}
-            foreColor={themeColor}
-            activeColor={backColor}
+            foreColor={theme.foreColor}
+            activeColor={theme.backColor}
           >
             -
           </CountButton>
-          <Label color={themeColor} ml={1} mr={1} width={20}>
+          <Label color={theme.foreColor} ml={1} mr={1} width={20}>
             {amount}
           </Label>
           <CountButton
-            foreColor={themeColor}
-            activeColor={backColor}
+            foreColor={theme.foreColor}
+            activeColor={theme.backColor}
             onClick={() => !isBuying && setAmount(amount + 1)}
             disabled={isBuying || isLoading}
           >
@@ -85,8 +84,8 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
               width="70%"
               disabled={isBuyButtonDisabled}
               onClick={handleClickBuy}
-              foreColor={isBuyButtonDisabled ? disabledForeColor : themeColor}
-              activeColor={backColor}
+              foreColor={isBuyButtonDisabled ? theme.disabledForeColor : theme.foreColor}
+              activeColor={theme.backColor}
             >
               {isBuying && (
                 <CircularProgress
@@ -107,8 +106,8 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
             margin="16px 0px 0px"
             disabled={isBuyButtonDisabled}
             onClick={handleClickBuy}
-            foreColor={isBuyButtonDisabled ? disabledForeColor : themeColor}
-            activeColor={backColor}
+            foreColor={isBuyButtonDisabled ? theme.disabledForeColor : theme.themeColor}
+            activeColor={theme.backColor}
           >
             {isBuying && (
               <CircularProgress

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Flex } from 'rebass';
-import { commonMaskImage, epicMaskImage, legendaryMaskImage } from 'assets/images';
-import { INVENTORY_TYPE } from 'consts';
+
+import { NFT_GAME_MODAL_THEMES } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import { BlackButton, CountButton, Label } from '../UI';
-import { StyledModal, OpacityImage, ItemPanel, CloseButton } from './styles';
+import { StyledModal, OpacityImage, CloseButton, ItemPanel } from './styles';
 
 const InventoryPopup = ({
   isOpen,
@@ -32,57 +32,38 @@ const InventoryPopup = ({
     });
   }
 
-  const themeColor = inventory.type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
-
-  const backMask =
-    inventory.type === INVENTORY_TYPE.COMMON
-      ? commonMaskImage
-      : inventory.type === INVENTORY_TYPE.EPIC
-      ? epicMaskImage
-      : legendaryMaskImage;
-
-  const backColor =
-    inventory.type === INVENTORY_TYPE.COMMON
-      ? 'white'
-      : inventory.type === INVENTORY_TYPE.EPIC
-      ? '#735CDD'
-      : '#A5243D';
-
-  const countButtonColor =
-    inventory.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.16)' : 'rgba(255, 255, 255, 0.16)';
-  const foreColor = inventory.type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
-  const disabledForeColor =
-    inventory.type === INVENTORY_TYPE.COMMON ? 'gray' : 'rgb(255, 255, 255, 0.5)';
-
+  const theme = NFT_GAME_MODAL_THEMES[inventory.type];
   return (
     <StyledModal
-      color={themeColor}
+      color={theme.foreColor}
       isOpen={isOpen}
       afterOpen={afterOpen}
       beforeClose={beforeClose}
-      backgroundColor={backColor}
+      backgroundColor={theme.backColor}
       opacity={opacity}
     >
-      <OpacityImage src={backMask} height="100%" />
+      <OpacityImage src={theme.backMask} height="100%" />
       <CloseButton onClick={isLoading ? undefined : onClose} />
-      <SectionTitle color={themeColor} fontSize="20px" fontWeight="bold">
+      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
         Crates Opening
       </SectionTitle>
       <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        <SectionTitle color={themeColor} fontSize="32px" fontWeight="bold" mt="24px">
+        <SectionTitle color={theme.foreColor} fontSize="32px" fontWeight="bold" mt="24px">
           {inventory.type}
         </SectionTitle>
         <SectionTitle
-          color={themeColor}
+          color={theme.foreColor}
           fontSize="20px"
           mt="12px"
-          spanColor={themeColor}
+          spanColor={theme.foreColor}
           spanFontSize="14px"
           alignItems="baseline"
         >
           {(amount * inventory.price).toLocaleString()} <span>{description}</span>
         </SectionTitle>
-        <ItemPanel mt="16px" />
+        <ItemPanel autoPlay muted loop>
+          <source src={theme.pendingAnimation} />
+        </ItemPanel>
       </Flex>
 
       <Flex
@@ -92,33 +73,33 @@ const InventoryPopup = ({
         mt="16px"
         sx={{ zIndex: 5 }}
       >
-        <Label color={foreColor} ml={1} mr={1}>
+        <Label color={theme.foreColor} ml={1} mr={1}>
           Open
         </Label>
         <CountButton
-          backgroundColor={countButtonColor}
+          backgroundColor={theme.buttonColor}
           onClick={() => {
             if (!isLoading && amount >= 2) setAmount(amount - 1);
           }}
           disabled={isLoading || amount === 1}
-          foreColor={isLoading ? disabledForeColor : foreColor}
-          activeColor={backColor}
+          foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
+          activeColor={theme.backColor}
         >
           -
         </CountButton>
-        <Label color={foreColor} ml={1} mr={1} width={20}>
+        <Label color={theme.foreColor} ml={1} mr={1} width={20}>
           {amount}
         </Label>
         <CountButton
-          backgroundColor={countButtonColor}
+          backgroundColor={theme.buttonColor}
           onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
           disabled={isLoading || amount >= inventory.amount}
-          foreColor={isLoading ? disabledForeColor : foreColor}
-          activeColor={backColor}
+          foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
+          activeColor={theme.backColor}
         >
           +
         </CountButton>
-        <Label color={foreColor} ml={1} mr={1}>
+        <Label color={theme.foreColor} ml={1} mr={1}>
           {amount > 1 ? 'Crates' : 'Crate'}
         </Label>
       </Flex>

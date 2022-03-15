@@ -64,15 +64,12 @@ export const CloseButton = styled(CloseOutlinedIcon)`
   cursor: pointer;
 `;
 
-export const ItemPanel = styled.div`
+export const ItemPanel = styled.video`
   width: 200px;
   height: 200px;
 
-  background-color: rgb(32, 32, 32);
-  border-radius: 8px;
-
-  z-index: 9999;
   margin-top: 24px;
 
+  z-index: 1;
   ${space}
 `;

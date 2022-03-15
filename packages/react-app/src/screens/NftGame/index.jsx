@@ -68,6 +68,9 @@ function NftGame() {
               </StyledNavLink>
             </li>
             <li>
+              <StyledNavLink to={`${path}/leaderboard`}>Leaderboard</StyledNavLink>
+            </li>
+            <li>
               <StyledNavLink to={`${path}/lock-points`}>Lock points</StyledNavLink>
             </li>
             <li>

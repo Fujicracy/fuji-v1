@@ -1,8 +1,8 @@
 import React from 'react';
 import { Flex } from 'rebass';
 
-import { INVENTORY_TYPE } from 'consts';
-import { commonMaskImage, epicMaskImage, legendaryMaskImage, giftBoxImage } from 'assets/images';
+import { INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
+import { giftBoxImage } from 'assets/images';
 import Label from '../UI/Label';
 
 import {
@@ -24,27 +24,23 @@ export const InventoryItem = ({
   blackOverlayOpacity = 0,
   badgePosition = 'right',
 }) => {
-  const backColor =
-    type === INVENTORY_TYPE.COMMON ? 'white' : type === INVENTORY_TYPE.EPIC ? '#735CDD' : '#A5243D';
-  const foreColor = type === INVENTORY_TYPE.COMMON ? 'black' : 'white';
-  const mask =
-    type === INVENTORY_TYPE.EPIC
-      ? epicMaskImage
-      : type === INVENTORY_TYPE.LEGENDARY
-      ? legendaryMaskImage
-      : commonMaskImage;
-
+  const theme = NFT_GAME_MODAL_THEMES[type];
   return (
-    <Container backgroundColor={backColor} color={foreColor} mode="inventory" padding="18px">
+    <Container
+      backgroundColor={theme.backColor}
+      color={theme.foreColor}
+      mode="inventory"
+      padding="18px"
+    >
       <MarkContainer type={type} />
-      <OpacityImage src={mask} />
+      <OpacityImage src={theme.backMask} />
       <BlackOverlay opacity={blackOverlayOpacity} />
       <ItemPanel src={giftBoxImage} width={80} height={80} />
 
-      <FujiMark type={type} right>
+      <FujiMark backgroundColor={theme.backColor} type={type} right>
         FujiDao - Climbing
       </FujiMark>
-      <FujiMark type={type} left>
+      <FujiMark backgroundColor={theme.backColor} type={type} left>
         FujiDao - Climbing
       </FujiMark>
       {amount > 1 && isShowBadge && (
