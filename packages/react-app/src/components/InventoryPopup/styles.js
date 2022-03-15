@@ -64,7 +64,7 @@ export const CloseButton = styled(CloseOutlinedIcon)`
   cursor: pointer;
 `;
 
-export const ItemPanel = styled(Image)`
+export const GiftBoxPanel = styled(Image)`
   width: 200px;
   height: 200px;
 
@@ -75,4 +75,12 @@ export const ItemPanel = styled(Image)`
   ${space};
   ${height};
   ${width};
+`;
+
+export const IntroPanel = styled.video`
+  width: 200px;
+  height: 200px;
+
+  z-index: 1;
+  ${space}
 `;

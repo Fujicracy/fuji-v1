@@ -6,7 +6,7 @@ import { giftBoxImage } from 'assets/images';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import { BlackButton, CountButton, Label } from '../UI';
-import { StyledModal, OpacityImage, CloseButton, ItemPanel } from './styles';
+import { StyledModal, OpacityImage, CloseButton, GiftBoxPanel, IntroPanel } from './styles';
 
 const InventoryPopup = ({
   isOpen,
@@ -62,7 +62,13 @@ const InventoryPopup = ({
         >
           {(amount * inventory.price).toLocaleString()} <span>{description}</span>
         </SectionTitle>
-        <ItemPanel src={giftBoxImage} />
+        {isLoading ? (
+          <IntroPanel autoPlay muted loop>
+            <source src={theme.pendingAnimation} />
+          </IntroPanel>
+        ) : (
+          <GiftBoxPanel src={giftBoxImage} />
+        )}
       </Flex>
 
       <Flex
