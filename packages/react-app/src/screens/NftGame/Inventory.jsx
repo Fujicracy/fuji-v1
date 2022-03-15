@@ -69,22 +69,14 @@ const GearSet = () => {
 const OPENING_RESULT = {
   NONE: 'none',
   NOTHING: 'nothing',
-  POINTS: 'points',
-  NFTS: 'nfts',
+  SUCCESS: 'success',
 };
 
 const OPENING_DESCRIPTIONS = {
-  [OPENING_RESULT.NFTS]: {
-    value: OPENING_RESULT.NFTS,
+  [OPENING_RESULT.SUCCESS]: {
+    value: OPENING_RESULT.SUCCESS,
     title: 'Congratulation!',
     description: 'Bravo, you got a new climbing gear, ....',
-    submitText: 'Back',
-    emotionIcon: happyIcon,
-  },
-  [OPENING_RESULT.POINTS]: {
-    value: OPENING_RESULT.POINTS,
-    title: 'Congratulation!',
-    description: 'Yeahhh, you get X more meter points that accelerate your climbing!',
     submitText: 'Back',
     emotionIcon: happyIcon,
   },
@@ -165,10 +157,11 @@ function Inventory() {
           const parsedLog = iface.parseLog(receipt.logs[receipt.logs.length - 1]);
           const { rewards } = parsedLog.args;
 
+          console.log({ rewards });
           const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
           const nfts = [];
           let totalNftAmount = 0;
-          let nftDescription = 'Bravo, you got a new climbing gear, you won';
+          let nftDescription = '';
           for (let i = 4; i < 14; i += 1) {
             const nftAmount = rewards[i] ? rewards[i].toString() : 0;
             if (nftAmount > 0) {
@@ -178,17 +171,25 @@ function Inventory() {
               nftDescription += `${nftAmount} NFTs with tokenId ${i}, `;
             }
           }
+          nftDescription = nftDescription.substring(0, nftDescription.length - 1); // trim last comma
           setIsRedeemed(true);
 
-          setIsCratesModalOpen(false);
-          if (points > 0) {
+          if (points > 0 && totalNftAmount > 0) {
             OPENING_DESCRIPTIONS[
-              OPENING_RESULT.POINTS
-            ].description = `Yeahhh, you get ${points} more meter points that accelerate your climbing!`;
-            setActionResult(OPENING_RESULT.POINTS);
+              OPENING_RESULT.SUCCESS
+            ].description = `Yeahhh, you got ${points} more meter points and ${nftDescription} that accelerate your climbing!`;
           } else if (totalNftAmount > 0) {
-            OPENING_DESCRIPTIONS[OPENING_RESULT.NFTS].description = nftDescription;
-            setActionResult(OPENING_RESULT.NFTS);
+            OPENING_DESCRIPTIONS[
+              OPENING_RESULT.SUCCESS
+            ].description = `Bravo, you got a new climbing gear, you won ${nftDescription}`;
+          } else if (points > 0) {
+            OPENING_DESCRIPTIONS[
+              OPENING_RESULT.SUCCESS
+            ].description = `Yeahhh, you got ${points} more meter points that accelerate your climbing!`;
+          }
+
+          if (points > 0 || totalNftAmount > 0) {
+            setActionResult(OPENING_RESULT.SUCCESS);
           } else {
             setActionResult(OPENING_RESULT.NOTHING);
           }
@@ -315,9 +316,10 @@ function Inventory() {
           inventory={clickedInventory}
           isLoading={isRedeeming}
           isRedeemed={isRedeemed}
+          onEndOpeningAnimation={() => setIsCratesModalOpen(false)}
         />
       )}
-      {actionResult !== OPENING_RESULT.NONE && (
+      {actionResult !== OPENING_RESULT.NONE && !isCratesModalOpen && (
         <ResultPopup
           isOpen
           content={OPENING_DESCRIPTIONS[actionResult]}

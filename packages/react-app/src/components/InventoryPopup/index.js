@@ -16,6 +16,7 @@ const InventoryPopup = ({
   description = 'Meter Points',
   isRedeemed = false,
   isLoading = false,
+  onEndOpeningAnimation,
 }) => {
   const [opacity, setOpacity] = useState(0);
   const [amount, setAmount] = useState(inventory.amount);
@@ -42,80 +43,89 @@ const InventoryPopup = ({
       beforeClose={beforeClose}
       backgroundColor={theme.backColor}
       opacity={opacity}
+      padding={isRedeemed ? '0rem' : '2rem'}
     >
-      <OpacityImage src={theme.backMask} height="100%" />
-      <CloseButton onClick={isLoading ? undefined : onClose} />
-      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-        Crates Opening
-      </SectionTitle>
-      <Flex flexDirection="column" justifyContent="center" alignItems="center">
-        <SectionTitle color={theme.foreColor} fontSize="32px" fontWeight="bold" mt="24px">
-          {inventory.type}
-        </SectionTitle>
-        <SectionTitle
-          color={theme.foreColor}
-          fontSize="20px"
-          mt="12px"
-          spanColor={theme.foreColor}
-          spanFontSize="14px"
-          alignItems="baseline"
-        >
-          {(amount * inventory.price).toLocaleString()} <span>{description}</span>
-        </SectionTitle>
-        {isLoading ? (
-          <IntroPanel autoPlay muted loop>
-            <source src={theme.pendingAnimation} />
-          </IntroPanel>
-        ) : (
-          <GiftBoxPanel src={giftBoxImage} />
-        )}
-      </Flex>
+      {isRedeemed ? (
+        <IntroPanel width="100%" height="100%" autoPlay muted onEnded={onEndOpeningAnimation}>
+          <source src={theme.openingAnimation} />
+        </IntroPanel>
+      ) : (
+        <>
+          <OpacityImage src={theme.backMask} height="100%" />
+          <CloseButton onClick={isLoading ? undefined : onClose} />
+          <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+            Crates Opening
+          </SectionTitle>
+          <Flex flexDirection="column" justifyContent="center" alignItems="center">
+            <SectionTitle color={theme.foreColor} fontSize="32px" fontWeight="bold" mt="24px">
+              {inventory.type}
+            </SectionTitle>
+            <SectionTitle
+              color={theme.foreColor}
+              fontSize="20px"
+              mt="12px"
+              spanColor={theme.foreColor}
+              spanFontSize="14px"
+              alignItems="baseline"
+            >
+              {(amount * inventory.price).toLocaleString()} <span>{description}</span>
+            </SectionTitle>
+            {isLoading ? (
+              <IntroPanel autoPlay muted loop>
+                <source src={theme.pendingAnimation} />
+              </IntroPanel>
+            ) : (
+              <GiftBoxPanel src={giftBoxImage} />
+            )}
+          </Flex>
 
-      <Flex
-        flexDirection="row"
-        justifyContent="center"
-        alignItems="center"
-        mt="16px"
-        sx={{ zIndex: 5 }}
-      >
-        <Label color={theme.foreColor} ml={1} mr={1}>
-          Open
-        </Label>
-        <CountButton
-          backgroundColor={theme.buttonColor}
-          onClick={() => {
-            if (!isLoading && amount >= 2) setAmount(amount - 1);
-          }}
-          disabled={isLoading || amount === 1}
-          foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
-          activeColor={theme.backColor}
-        >
-          -
-        </CountButton>
-        <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-          {amount}
-        </Label>
-        <CountButton
-          backgroundColor={theme.buttonColor}
-          onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
-          disabled={isLoading || amount >= inventory.amount}
-          foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
-          activeColor={theme.backColor}
-        >
-          +
-        </CountButton>
-        <Label color={theme.foreColor} ml={1} mr={1}>
-          {amount > 1 ? 'Crates' : 'Crate'}
-        </Label>
-      </Flex>
+          <Flex
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+            mt="16px"
+            sx={{ zIndex: 5 }}
+          >
+            <Label color={theme.foreColor} ml={1} mr={1}>
+              Open
+            </Label>
+            <CountButton
+              backgroundColor={theme.buttonColor}
+              onClick={() => {
+                if (!isLoading && amount >= 2) setAmount(amount - 1);
+              }}
+              disabled={isLoading || amount === 1}
+              foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
+              activeColor={theme.backColor}
+            >
+              -
+            </CountButton>
+            <Label color={theme.foreColor} ml={1} mr={1} width={20}>
+              {amount}
+            </Label>
+            <CountButton
+              backgroundColor={theme.buttonColor}
+              onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
+              disabled={isLoading || amount >= inventory.amount}
+              foreColor={isLoading ? theme.disabledForeColor : theme.foreColor}
+              activeColor={theme.backColor}
+            >
+              +
+            </CountButton>
+            <Label color={theme.foreColor} ml={1} mr={1}>
+              {amount > 1 ? 'Crates' : 'Crate'}
+            </Label>
+          </Flex>
 
-      <BlackButton
-        mt="16px"
-        onClick={() => (isRedeemed ? onClose() : onSubmit(inventory.type, amount))}
-        disabled={isLoading}
-      >
-        {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}
-      </BlackButton>
+          <BlackButton
+            mt="16px"
+            onClick={() => (isRedeemed ? onClose() : onSubmit(inventory.type, amount))}
+            disabled={isLoading}
+          >
+            {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}
+          </BlackButton>
+        </>
+      )}
     </StyledModal>
   );
 };

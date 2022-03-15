@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { size, color, space, width, height } from 'styled-system';
+import { size, color, space, width, height, padding } from 'styled-system';
 import { Box, Image } from 'rebass';
 import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
@@ -23,7 +23,6 @@ export const StyledModal = Modal.styled`
   display: flex;
   position: relative;
   align-items: center;
-  padding: 2rem;
   width: 50rem;
   height: 31.25rem;
   border-radius: 12px;
@@ -33,17 +32,20 @@ export const StyledModal = Modal.styled`
   flex-direction: column;
   opacity: ${props => props.opacity};
 
+
+  ${padding};
+  ${color};
+  
   ${fujiMedia.lessThan('small')`
     width: 100%;
     height: 100%;
     border-radius: 0px;
     justify-content: space-between;
-  `}
+  `};
   ${fujiMedia.between('small', 'medium')`
     
-  `}
+  `};
 
-  ${color};
 `;
 
 export const OpacityImage = styled(Image)`
@@ -78,9 +80,12 @@ export const GiftBoxPanel = styled(Image)`
 `;
 
 export const IntroPanel = styled.video`
+  border-radius: 12px;
   width: 200px;
   height: 200px;
 
   z-index: 1;
-  ${space}
+  ${space};
+  ${height};
+  ${width};
 `;

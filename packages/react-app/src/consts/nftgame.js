@@ -5,6 +5,9 @@ import {
   commonCrateIntroAnimation,
   epicCrateIntroAnimation,
   legendaryCrateIntroAnimation,
+  commonCrateOpeningAnimation,
+  epicCrateOpeningAnimation,
+  legendaryCrateOpeningAnimation,
 } from 'assets/images';
 
 export const INVENTORY_TYPE = {
@@ -34,6 +37,7 @@ export const NFT_GAME_MODAL_THEMES = {
     foreColor: 'black',
     disabledForeColor: 'gray',
     pendingAnimation: commonCrateIntroAnimation,
+    openingAnimation: commonCrateOpeningAnimation,
   },
   [INVENTORY_TYPE.EPIC]: {
     backMask: epicMaskImage,
@@ -42,6 +46,7 @@ export const NFT_GAME_MODAL_THEMES = {
     foreColor: 'white',
     disabledForeColor: 'rgb(255, 255, 255, 0.5)',
     pendingAnimation: epicCrateIntroAnimation,
+    openingAnimation: epicCrateOpeningAnimation,
   },
   [INVENTORY_TYPE.LEGENDARY]: {
     backMask: legendaryMaskImage,
@@ -50,5 +55,6 @@ export const NFT_GAME_MODAL_THEMES = {
     foreColor: 'white',
     disabledForeColor: 'rgb(255, 255, 255, 0.5)',
     pendingAnimation: legendaryCrateIntroAnimation,
+    openingAnimation: legendaryCrateOpeningAnimation,
   },
 };

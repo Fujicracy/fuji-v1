@@ -78,6 +78,10 @@ import commonCrateIntroAnimation from './animations/inventory_common_intro.webm'
 import epicCrateIntroAnimation from './animations/inventory_epic_intro.webm';
 import legendaryCrateIntroAnimation from './animations/inventory_legendary_intro.webm';
 
+import commonCrateOpeningAnimation from './animations/inventory_common_opening.mp4';
+import epicCrateOpeningAnimation from './animations/inventory_epic_opening.mp4';
+import legendaryCrateOpeningAnimation from './animations/inventory_legendary_opening.mp4';
+
 export const infoIcons = {
   step1: infoStep1,
   step2: infoStep2,
@@ -151,4 +155,7 @@ export {
   commonCrateIntroAnimation,
   epicCrateIntroAnimation,
   legendaryCrateIntroAnimation,
+  commonCrateOpeningAnimation,
+  epicCrateOpeningAnimation,
+  legendaryCrateOpeningAnimation,
 };
