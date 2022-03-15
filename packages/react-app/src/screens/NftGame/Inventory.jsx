@@ -162,7 +162,7 @@ function Inventory() {
 
         if (result && result.hash) {
           const receipt = await result.wait();
-          const parsedLog = iface.parseLog(receipt.logs[1]);
+          const parsedLog = iface.parseLog(receipt.logs[receipt.logs.length - 1]);
           const { rewards } = parsedLog.args;
 
           const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
@@ -170,7 +170,7 @@ function Inventory() {
           let totalNftAmount = 0;
           let nftDescription = 'Bravo, you got a new climbing gear, you won';
           for (let i = 4; i < 14; i += 1) {
-            const nftAmount = rewards[i] ? formatUnits(rewards[i], NFT_GAME_POINTS_DECIMALS) : 0;
+            const nftAmount = rewards[i] ? rewards[i].toString() : 0;
             if (nftAmount > 0) {
               nfts.push({ tokenId: i, amount: nftAmount });
               totalNftAmount += nftAmount;
