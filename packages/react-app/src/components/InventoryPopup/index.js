@@ -5,7 +5,7 @@ import { NFT_GAME_MODAL_THEMES } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import { BlackButton, CountButton, Label } from '../UI';
-import { StyledModal, OpacityImage, CloseButton, IntroPanel } from './styles';
+import { StyledModal, OpacityImage, CloseButton, IntroPanel, PanelContainer } from './styles';
 
 const InventoryPopup = ({
   isOpen,
@@ -77,18 +77,15 @@ const InventoryPopup = ({
             >
               {(amount * inventory.price).toLocaleString()} <span>{description}</span>
             </SectionTitle>
-            <IntroPanel autoPlay={isLoading} muted loop ref={animationRef}>
-              <source src={theme.pendingAnimation} />
-            </IntroPanel>
+            <Flex flexDirection="column" alignItems="center" justifyContent="center">
+              <PanelContainer backgroundColor={theme.backColor} />
+              <IntroPanel autoPlay={isLoading} muted loop ref={animationRef}>
+                <source src={theme.pendingAnimation} />
+              </IntroPanel>
+            </Flex>
           </Flex>
 
-          <Flex
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="center"
-            mt="16px"
-            sx={{ zIndex: 5 }}
-          >
+          <Flex flexDirection="row" justifyContent="center" alignItems="center" sx={{ zIndex: 5 }}>
             <Label color={theme.foreColor} ml={1} mr={1}>
               Open
             </Label>

@@ -14,6 +14,7 @@ import {
   StackedInventoryContainer,
   StackedContainer,
   BlackOverlay,
+  PanelContainer,
 } from './styles';
 
 export const InventoryItem = ({
@@ -34,7 +35,8 @@ export const InventoryItem = ({
       <MarkContainer type={type} />
       <OpacityImage src={theme.backMask} />
       <BlackOverlay opacity={blackOverlayOpacity} />
-      <ItemPanel src={theme.idleImage} width={80} height={80} />
+      <PanelContainer backgroundColor={theme.backColor} />
+      <ItemPanel src={theme.idleImage} width={80} height={80} mode="inventory" />
 
       <FujiMark backgroundColor={theme.backColor} type={type} right>
         FujiDao - Climbing

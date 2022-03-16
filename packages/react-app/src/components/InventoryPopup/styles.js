@@ -67,6 +67,7 @@ export const CloseButton = styled(CloseOutlinedIcon)`
 `;
 
 export const IntroPanel = styled.video`
+  position: absolute;
   border-radius: 12px;
   width: 200px;
   height: 200px;
@@ -75,4 +76,14 @@ export const IntroPanel = styled.video`
   ${space};
   ${height};
   ${width};
+`;
+
+export const PanelContainer = styled.div`
+  width: 230px;
+  height: 230px;
+  background: ${props => props.backgroundColor};
+  mix-blend-mode: normal;
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: 0;
 `;

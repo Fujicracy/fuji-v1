@@ -60,7 +60,19 @@ export const LegendaryContainer = styled.div`
   ${padding};
 `;
 
+export const PanelContainer = styled.div`
+  width: 100px;
+  height: 100px;
+  background: ${props => props.backgroundColor};
+  mix-blend-mode: normal;
+  border-radius: 50%;
+  filter: blur(10px);
+
+  display: relative;
+`;
+
 export const ItemPanel = styled(Image)`
+  position: ${props => props.mode === 'inventory' && 'absolute'};
   width: 140px;
   height: 140px;
 
