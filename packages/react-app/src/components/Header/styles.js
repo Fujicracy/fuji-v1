@@ -22,11 +22,12 @@ export const HeaderContainer = styled(Box)`
 
   ${fujiMedia.lessThan('small')`
     height:64px;
-    background-color:  #272727;
+    background-color: #272727;
     padding: 16px 28px;
   `}
   ${fujiMedia.between('small', 'medium')`
     padding: 16px 40px;
+    background-color: #272727;
     height: 88px;
   `}
 `;
