@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
@@ -22,6 +22,7 @@ import {
   BREAKPOINT_NAMES,
   CRATE_CONTRACT_IDS,
   INVENTORY_TYPE,
+  NFT_CARD_IDS,
   NFT_GAME_POINTS_DECIMALS,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
@@ -38,7 +39,7 @@ import {
   GridItem,
 } from './styles';
 
-const GearSet = () => {
+const GearSet = ({ balance }) => {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <GearSetContainer>
@@ -48,7 +49,7 @@ const GearSet = () => {
         </GearSetItem>
         <GearSetNumber>
           <Flex justifyContent="center" alignItems="center">
-            <IntenseSpan fontSize="18px">3</IntenseSpan>
+            <IntenseSpan fontSize="18px">{balance}</IntenseSpan>
           </Flex>
         </GearSetNumber>
       </GearSetContainer>
@@ -95,6 +96,8 @@ function Inventory() {
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
   const [actionResult, setActionResult] = useState(OPENING_RESULT.NONE);
 
+  const [gearSetBalances, setGearSetBalances] = useState([]);
+
   const inventories = [
     {
       type: INVENTORY_TYPE.COMMON,
@@ -115,6 +118,27 @@ function Inventory() {
 
   const availableInventories = inventories.filter(inventory => inventory.amount > 0);
   const availableInventoryTypeCounts = availableInventories.length;
+
+  useEffect(() => {
+    async function fetchGearSetData() {
+      if (contracts && address) {
+        const fetchingPromises = [];
+        for (let i = NFT_CARD_IDS.START; i <= NFT_CARD_IDS.END; i += 1) {
+          fetchingPromises.push(contracts.NFTGame.balanceOf(address, i));
+        }
+        const balances = await Promise.all(fetchingPromises);
+        console.log({ balances });
+        setGearSetBalances(
+          balances.map((value, index) => ({
+            id: NFT_CARD_IDS.START + index,
+            balance: value.toString(),
+          })),
+        );
+      }
+    }
+    console.log('fetching');
+    fetchGearSetData();
+  }, [contracts, address]);
 
   const onClickInventory = inventory => {
     setClickedInventory(inventory);
@@ -295,11 +319,12 @@ function Inventory() {
 
         <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(index => (
-            <Grid item xs={6} md={3} key={`gearSet-${index}`}>
-              <GearSet />
-            </Grid>
-          ))}
+          {gearSetBalances.length > 0 &&
+            gearSetBalances.map(gearSet => (
+              <Grid item xs={6} md={3} key={`gearSet-${gearSet.id}`}>
+                <GearSet balance={gearSet.balance} />
+              </Grid>
+            ))}
         </Grid>
       </Flex>
       {clickedInventory.type && isCratesModalOpen && (

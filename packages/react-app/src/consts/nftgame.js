@@ -27,7 +27,7 @@ export const CRATE_CONTRACT_IDS = {
 
 export const NFT_CARD_IDS = {
   START: 4,
-  END: 11,
+  END: 13,
 };
 
 export const NFT_GAME_POINTS_DECIMALS = 5;
