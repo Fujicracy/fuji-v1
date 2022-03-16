@@ -82,6 +82,10 @@ import commonCrateOpeningAnimation from './animations/inventory_common_opening.m
 import epicCrateOpeningAnimation from './animations/inventory_epic_opening.mp4';
 import legendaryCrateOpeningAnimation from './animations/inventory_legendary_opening.mp4';
 
+import commonCrateIdleImage from './images/nft-game/inventory-common-idle.png';
+import epicCrateIdleImage from './images/nft-game/inventory-epic-idle.png';
+import legendaryCrateIdleImage from './images/nft-game/inventory-legendary-idle.png';
+
 export const infoIcons = {
   step1: infoStep1,
   step2: infoStep2,
@@ -158,4 +162,7 @@ export {
   commonCrateOpeningAnimation,
   epicCrateOpeningAnimation,
   legendaryCrateOpeningAnimation,
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
 };

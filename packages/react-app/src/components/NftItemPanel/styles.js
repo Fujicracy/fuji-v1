@@ -67,8 +67,6 @@ export const ItemPanel = styled(Image)`
   border-radius: 8px;
   margin-top: 16px;
 
-  mix-blend-mode: hard-light;
-
   ${fujiMedia.lessThan('small')`
     position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
     right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};

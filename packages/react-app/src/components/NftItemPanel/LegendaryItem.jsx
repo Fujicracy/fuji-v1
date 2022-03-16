@@ -4,7 +4,6 @@ import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
-import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
 import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
@@ -50,7 +49,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
         </SectionTitle>
       </LegendaryItemsContainter>
 
-      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={giftBoxImage} />
+      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
       <LegendaryItemsContainter
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}

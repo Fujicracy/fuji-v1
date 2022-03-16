@@ -3,7 +3,6 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
-import { giftBoxImage } from 'assets/images';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
 import { Container, ItemPanel, BuyButton } from './styles';
@@ -53,7 +52,7 @@ const GeneralItem = ({
         {points.toLocaleString()} <span>{description}</span>
       </SectionTitle>
 
-      <ItemPanel src={giftBoxImage} />
+      <ItemPanel src={theme.idleImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
         flexDirection="column"

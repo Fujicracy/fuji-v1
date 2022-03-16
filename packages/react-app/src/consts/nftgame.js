@@ -8,6 +8,9 @@ import {
   commonCrateOpeningAnimation,
   epicCrateOpeningAnimation,
   legendaryCrateOpeningAnimation,
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
 } from 'assets/images';
 
 export const INVENTORY_TYPE = {
@@ -36,6 +39,7 @@ export const NFT_GAME_MODAL_THEMES = {
     buttonColor: 'rgba(0, 0, 0, 0.16)',
     foreColor: 'black',
     disabledForeColor: 'gray',
+    idleImage: commonCrateIdleImage,
     pendingAnimation: commonCrateIntroAnimation,
     openingAnimation: commonCrateOpeningAnimation,
   },
@@ -45,6 +49,7 @@ export const NFT_GAME_MODAL_THEMES = {
     buttonColor: 'rgba(255, 255, 255, 0.16)',
     foreColor: 'white',
     disabledForeColor: 'rgb(255, 255, 255, 0.5)',
+    idleImage: epicCrateIdleImage,
     pendingAnimation: epicCrateIntroAnimation,
     openingAnimation: epicCrateOpeningAnimation,
   },
@@ -54,6 +59,7 @@ export const NFT_GAME_MODAL_THEMES = {
     buttonColor: 'rgba(255, 255, 255, 0.16)',
     foreColor: 'white',
     disabledForeColor: 'rgb(255, 255, 255, 0.5)',
+    idleImage: legendaryCrateIdleImage,
     pendingAnimation: legendaryCrateIntroAnimation,
     openingAnimation: legendaryCrateOpeningAnimation,
   },
