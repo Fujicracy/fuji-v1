@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { BigNumber, ethers } from 'ethers';
 import { WrapperBuilder } from 'redstone-evm-connector';
-import { formatUnits, parseUnits } from '@ethersproject/units';
+import { formatUnits } from '@ethersproject/units';
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -39,11 +37,6 @@ import {
   RotateContainer,
   GridItem,
 } from './styles';
-
-const abi = [
-  'event CratesOpened(address user, uint256 crateId, uint256 amount, uint256[] rewards)',
-];
-const iface = new ethers.utils.Interface(abi);
 
 const GearSet = () => {
   return (
@@ -154,10 +147,10 @@ function Inventory() {
 
         if (result && result.hash) {
           const receipt = await result.wait();
+          const iface = contracts.NFTInteractions.interface;
           const parsedLog = iface.parseLog(receipt.logs[receipt.logs.length - 1]);
           const { rewards } = parsedLog.args;
 
-          console.log({ rewards });
           const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
           const nfts = [];
           let totalNftAmount = 0;
@@ -207,6 +200,7 @@ function Inventory() {
   };
 
   const handleSubmitModal = result => {
+    console.log({ result }); // TODO: remove result param when we confirm that there is no need
     setActionResult(OPENING_RESULT.NONE);
   };
 
