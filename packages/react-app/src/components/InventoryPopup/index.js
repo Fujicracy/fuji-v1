@@ -22,7 +22,7 @@ const InventoryPopup = ({
   const animationRef = useRef(null);
 
   useEffect(() => {
-    if (animationRef) {
+    if (animationRef && animationRef.current) {
       if (isLoading) animationRef.current.play();
       else animationRef.current.pause();
     }
