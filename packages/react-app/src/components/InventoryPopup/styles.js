@@ -66,19 +66,6 @@ export const CloseButton = styled(CloseOutlinedIcon)`
   cursor: pointer;
 `;
 
-export const GiftBoxPanel = styled(Image)`
-  width: 200px;
-  height: 200px;
-
-  margin-top: 28px;
-
-  mix-blend-mode: hard-light;
-
-  ${space};
-  ${height};
-  ${width};
-`;
-
 export const IntroPanel = styled.video`
   border-radius: 12px;
   width: 200px;

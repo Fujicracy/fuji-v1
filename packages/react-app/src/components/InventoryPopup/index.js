@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Flex } from 'rebass';
 
 import { NFT_GAME_MODAL_THEMES } from 'consts';
-import { giftBoxImage } from 'assets/images';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import { BlackButton, CountButton, Label } from '../UI';
-import { StyledModal, OpacityImage, CloseButton, GiftBoxPanel, IntroPanel } from './styles';
+import { StyledModal, OpacityImage, CloseButton, IntroPanel } from './styles';
 
 const InventoryPopup = ({
   isOpen,
@@ -20,6 +19,14 @@ const InventoryPopup = ({
 }) => {
   const [opacity, setOpacity] = useState(0);
   const [amount, setAmount] = useState(inventory.amount);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    if (animationRef) {
+      if (isLoading) animationRef.current.play();
+      else animationRef.current.pause();
+    }
+  }, [isLoading]);
 
   function afterOpen() {
     setTimeout(() => {
@@ -70,13 +77,9 @@ const InventoryPopup = ({
             >
               {(amount * inventory.price).toLocaleString()} <span>{description}</span>
             </SectionTitle>
-            {isLoading ? (
-              <IntroPanel autoPlay muted loop>
-                <source src={theme.pendingAnimation} />
-              </IntroPanel>
-            ) : (
-              <GiftBoxPanel src={giftBoxImage} />
-            )}
+            <IntroPanel autoPlay={isLoading} muted loop ref={animationRef}>
+              <source src={theme.pendingAnimation} />
+            </IntroPanel>
           </Flex>
 
           <Flex
