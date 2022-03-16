@@ -2,7 +2,6 @@ import React from 'react';
 import { Flex } from 'rebass';
 
 import { INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
-import { giftBoxImage } from 'assets/images';
 import Label from '../UI/Label';
 
 import {
@@ -35,7 +34,7 @@ export const InventoryItem = ({
       <MarkContainer type={type} />
       <OpacityImage src={theme.backMask} />
       <BlackOverlay opacity={blackOverlayOpacity} />
-      <ItemPanel src={giftBoxImage} width={80} height={80} />
+      <ItemPanel src={theme.idleImage} width={80} height={80} />
 
       <FujiMark backgroundColor={theme.backColor} type={type} right>
         FujiDao - Climbing
