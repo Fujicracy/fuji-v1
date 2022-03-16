@@ -138,6 +138,7 @@ export const GearSetItem = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   width: 172px;
   height: 172px;

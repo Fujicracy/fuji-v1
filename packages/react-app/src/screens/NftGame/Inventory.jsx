@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
 
-import { Flex } from 'rebass';
+import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { Grid } from '@material-ui/core';
 import {
@@ -27,7 +27,7 @@ import {
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
-import { happyIcon } from 'assets/images';
+import { happyIcon, giftBoxImage } from 'assets/images';
 
 import {
   GearSetItem,
@@ -45,7 +45,7 @@ const GearSet = ({ balance }) => {
       <GearSetContainer>
         <GearSetItem>
           <GearSetBadge />
-          <SectionTitle>item image</SectionTitle>
+          <Image src={giftBoxImage} width={100} height={100} />
         </GearSetItem>
         <GearSetNumber>
           <Flex justifyContent="center" alignItems="center">
