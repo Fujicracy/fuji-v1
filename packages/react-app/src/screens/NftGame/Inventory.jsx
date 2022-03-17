@@ -39,7 +39,7 @@ import {
   GridItem,
 } from './styles';
 
-const GearSet = ({ balance }) => {
+const GearSet = ({ balance, name, boost }) => {
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <GearSetContainer>
@@ -54,7 +54,8 @@ const GearSet = ({ balance }) => {
         </GearSetNumber>
       </GearSetContainer>
       <SectionTitle spanColor="#05FF00" mt={2}>
-        Heat Capsule<span>+5%</span>
+        {name}
+        <span>+{boost}%</span>
       </SectionTitle>
     </Flex>
   );
@@ -82,6 +83,21 @@ const OPENING_DESCRIPTIONS = {
     emotionIcon: '',
   },
 };
+
+const FAKE_LABELS = [
+  'Pickaxe',
+  'Oxygen Kit',
+  'Gloves',
+  'Flare gun',
+  'Heat Capsule',
+  'Slippers',
+  'Sunglasses',
+  'Watch',
+  'Protein Bar',
+  'Med Kit',
+  'Lip-balm',
+  'Megaphone',
+];
 
 function Inventory() {
   const { address, provider } = useAuth();
@@ -132,6 +148,8 @@ function Inventory() {
           balances.map((value, index) => ({
             id: NFT_CARD_IDS.START + index,
             balance: value.toString(),
+            name: FAKE_LABELS[index],
+            boost: (Math.random() * 10).toFixed(),
           })),
         );
       }
@@ -322,7 +340,7 @@ function Inventory() {
           {gearSetBalances.length > 0 &&
             gearSetBalances.map(gearSet => (
               <Grid item xs={6} md={3} key={`gearSet-${gearSet.id}`}>
-                <GearSet balance={gearSet.balance} />
+                <GearSet balance={gearSet.balance} name={gearSet.name} boost={gearSet.boost} />
               </Grid>
             ))}
         </Grid>
