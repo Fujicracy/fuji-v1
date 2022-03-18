@@ -201,9 +201,6 @@ function Inventory() {
 
           setIsRedeemed(true);
 
-          setIsCratesModalOpen(false);
-          setIsOutComeModalOpen(true);
-
           // TODO: Remove this after outcome modal
           // const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
           // const nfts = [];
@@ -356,7 +353,10 @@ function Inventory() {
           inventory={clickedInventory}
           isLoading={isRedeeming}
           isRedeemed={isRedeemed}
-          onEndOpeningAnimation={() => setIsCratesModalOpen(false)}
+          onEndOpeningAnimation={() => {
+            setIsCratesModalOpen(false);
+            setIsOutComeModalOpen(true);
+          }}
         />
       )}
 
