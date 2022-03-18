@@ -14,7 +14,7 @@ import {
   Label,
   SectionTitle,
   StackedInventoryItem,
-  ResultPopup,
+  OutComePopup,
 } from 'components';
 
 import {
@@ -22,12 +22,12 @@ import {
   BREAKPOINT_NAMES,
   CRATE_CONTRACT_IDS,
   INVENTORY_TYPE,
-  NFT_CARD_IDS,
+  CRATE_CARD_IDS,
   NFT_GAME_POINTS_DECIMALS,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
-import { happyIcon, giftBoxImage } from 'assets/images';
+import { giftBoxImage } from 'assets/images';
 
 import {
   GearSetItem,
@@ -61,29 +61,6 @@ const GearSet = ({ balance, name, boost }) => {
   );
 };
 
-const OPENING_RESULT = {
-  NONE: 'none',
-  NOTHING: 'nothing',
-  SUCCESS: 'success',
-};
-
-const OPENING_DESCRIPTIONS = {
-  [OPENING_RESULT.SUCCESS]: {
-    value: OPENING_RESULT.SUCCESS,
-    title: 'Congratulation!',
-    description: 'Bravo, you got a new climbing gear, ....',
-    submitText: 'Back',
-    emotionIcon: happyIcon,
-  },
-  [OPENING_RESULT.NOTHING]: {
-    value: OPENING_RESULT.NOTHING,
-    title: 'Ooops!',
-    description: 'Sorry, there is nothing in this crate. Keep climbing!',
-    submitText: 'Back',
-    emotionIcon: '',
-  },
-};
-
 const FAKE_LABELS = [
   'Pickaxe',
   'Oxygen Kit',
@@ -110,9 +87,10 @@ function Inventory() {
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
-  const [actionResult, setActionResult] = useState(OPENING_RESULT.NONE);
 
   const [gearSetBalances, setGearSetBalances] = useState([]);
+  const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
+  const [outComes, setOutComes] = useState({});
 
   const inventories = [
     {
@@ -139,14 +117,14 @@ function Inventory() {
     async function fetchGearSetData() {
       if (contracts && address) {
         const fetchingPromises = [];
-        for (let i = NFT_CARD_IDS.START; i <= NFT_CARD_IDS.END; i += 1) {
+        for (let i = CRATE_CARD_IDS.NFT_START; i <= CRATE_CARD_IDS.NFT_END; i += 1) {
           fetchingPromises.push(contracts.NFTGame.balanceOf(address, i));
         }
         const balances = await Promise.all(fetchingPromises);
-        console.log({ balances });
+
         setGearSetBalances(
           balances.map((value, index) => ({
-            id: NFT_CARD_IDS.START + index,
+            id: CRATE_CARD_IDS.NFT_START + index,
             balance: value.toString(),
             name: FAKE_LABELS[index],
             boost: (Math.random() * 10).toFixed(),
@@ -154,7 +132,6 @@ function Inventory() {
         );
       }
     }
-    console.log('fetching');
     fetchGearSetData();
   }, [contracts, address]);
 
@@ -165,9 +142,13 @@ function Inventory() {
     setIsCratesModalOpen(true);
   };
 
-  const onClosePopup = () => {
+  const onCloseCrateModal = () => {
     setIsCratesModalOpen(false);
     setIsRedeeming(false);
+  };
+
+  const onCloseOutComeModal = () => {
+    setIsOutComeModalOpen(false);
   };
 
   const onRedeem = async (type, amount) => {
@@ -191,43 +172,74 @@ function Inventory() {
           const receipt = await result.wait();
           const iface = contracts.NFTInteractions.interface;
           const parsedLog = iface.parseLog(receipt.logs[receipt.logs.length - 1]);
-          const { rewards } = parsedLog.args;
+          const { rewards } = parsedLog.args || [];
 
-          const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
-          const nfts = [];
-          let totalNftAmount = 0;
-          let nftDescription = '';
-          for (let i = 4; i < 14; i += 1) {
-            const nftAmount = rewards[i] ? rewards[i].toString() : 0;
-            if (nftAmount > 0) {
-              nfts.push({ tokenId: i, amount: nftAmount });
-              totalNftAmount += nftAmount;
+          console.log({ rewards });
 
-              nftDescription += `${nftAmount} NFTs with tokenId ${i}, `;
+          const tmpOutComes = {};
+          rewards.forEach(reward => {
+            const tokenId = Number(reward.tokenId);
+            const rewardAmount =
+              tokenId === CRATE_CARD_IDS.POINTS
+                ? Number(formatUnits(reward.amount, NFT_GAME_POINTS_DECIMALS))
+                : Number(reward.amount);
+
+            console.log({ tokenId, rewardAmount });
+
+            if (rewardAmount === 0) {
+              tmpOutComes[CRATE_CARD_IDS.NOTHING] = tmpOutComes[CRATE_CARD_IDS.NOTHING] || {
+                count: 0,
+              };
+              tmpOutComes[CRATE_CARD_IDS.NOTHING].count += 1;
+            } else {
+              tmpOutComes[reward.tokenId] = tmpOutComes[reward.tokenId] || { count: 0, amount: 0 };
+              tmpOutComes[reward.tokenId].count += 1;
+              tmpOutComes[reward.tokenId].amount += rewardAmount;
             }
-          }
-          nftDescription = nftDescription.substring(0, nftDescription.length - 1); // trim last comma
+          });
+          setOutComes(tmpOutComes);
+
           setIsRedeemed(true);
 
-          if (points > 0 && totalNftAmount > 0) {
-            OPENING_DESCRIPTIONS[
-              OPENING_RESULT.SUCCESS
-            ].description = `Yeahhh, you got ${points} more meter points and ${nftDescription} that accelerate your climbing!`;
-          } else if (totalNftAmount > 0) {
-            OPENING_DESCRIPTIONS[
-              OPENING_RESULT.SUCCESS
-            ].description = `Bravo, you got a new climbing gear, you won ${nftDescription}`;
-          } else if (points > 0) {
-            OPENING_DESCRIPTIONS[
-              OPENING_RESULT.SUCCESS
-            ].description = `Yeahhh, you got ${points} more meter points that accelerate your climbing!`;
-          }
+          setIsCratesModalOpen(false);
+          setIsOutComeModalOpen(true);
 
-          if (points > 0 || totalNftAmount > 0) {
-            setActionResult(OPENING_RESULT.SUCCESS);
-          } else {
-            setActionResult(OPENING_RESULT.NOTHING);
-          }
+          // TODO: Remove this after outcome modal
+          // const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
+          // const nfts = [];
+          // let totalNftAmount = 0;
+          // let nftDescription = '';
+          // for (let i = 4; i < 14; i += 1) {
+          //   const nftAmount = rewards[i] ? rewards[i].toString() : 0;
+          //   if (nftAmount > 0) {
+          //     nfts.push({ tokenId: i, amount: nftAmount });
+          //     totalNftAmount += nftAmount;
+
+          //     nftDescription += `${nftAmount} NFTs with tokenId ${i}, `;
+          //   }
+          // }
+          // nftDescription = nftDescription.substring(0, nftDescription.length - 1); // trim last comma
+          // setIsRedeemed(true);
+
+          // if (points > 0 && totalNftAmount > 0) {
+          //   OPENING_DESCRIPTIONS[
+          //     OPENING_RESULT.SUCCESS
+          //   ].description = `Yeahhh, you got ${points} more meter points and ${nftDescription} that accelerate your climbing!`;
+          // } else if (totalNftAmount > 0) {
+          //   OPENING_DESCRIPTIONS[
+          //     OPENING_RESULT.SUCCESS
+          //   ].description = `Bravo, you got a new climbing gear, you won ${nftDescription}`;
+          // } else if (points > 0) {
+          //   OPENING_DESCRIPTIONS[
+          //     OPENING_RESULT.SUCCESS
+          //   ].description = `Yeahhh, you got ${points} more meter points that accelerate your climbing!`;
+          // }
+
+          // if (points > 0 || totalNftAmount > 0) {
+          //   setActionResult(OPENING_RESULT.SUCCESS);
+          // } else {
+          //   setActionResult(OPENING_RESULT.NOTHING);
+          // }
         }
       } catch (error) {
         console.error({ error });
@@ -235,15 +247,6 @@ function Inventory() {
       }
       setIsRedeeming(false);
     }
-  };
-
-  const handleCloseModal = () => {
-    setActionResult(OPENING_RESULT.NONE);
-  };
-
-  const handleSubmitModal = result => {
-    console.log({ result }); // TODO: remove result param when we confirm that there is no need
-    setActionResult(OPENING_RESULT.NONE);
   };
 
   return (
@@ -349,20 +352,16 @@ function Inventory() {
         <InventoryPopup
           isOpen={isCratesModalOpen}
           onSubmit={onRedeem}
-          onClose={onClosePopup}
+          onClose={onCloseCrateModal}
           inventory={clickedInventory}
           isLoading={isRedeeming}
           isRedeemed={isRedeemed}
           onEndOpeningAnimation={() => setIsCratesModalOpen(false)}
         />
       )}
-      {actionResult !== OPENING_RESULT.NONE && !isCratesModalOpen && (
-        <ResultPopup
-          isOpen
-          content={OPENING_DESCRIPTIONS[actionResult]}
-          onSubmit={handleSubmitModal}
-          onClose={handleCloseModal}
-        />
+
+      {isOutComeModalOpen && (
+        <OutComePopup isOpen outComes={outComes} onClose={onCloseOutComeModal} />
       )}
     </BlackBoxContainer>
   );

@@ -25,9 +25,11 @@ export const CRATE_CONTRACT_IDS = {
   LEGENDARY: 3,
 };
 
-export const NFT_CARD_IDS = {
-  START: 4,
-  END: 13,
+export const CRATE_CARD_IDS = {
+  NOTHING: 'nothing',
+  POINTS: 0,
+  NFT_START: 4,
+  NFT_END: 13,
 };
 
 export const NFT_GAME_POINTS_DECIMALS = 5;
