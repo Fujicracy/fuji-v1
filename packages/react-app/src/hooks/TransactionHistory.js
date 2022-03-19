@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { useEffect, useState } from 'react';
 import { useContractLoader, useAuth } from 'hooks';
-import { ASSETS, CHAIN_IDS, TRANSACTION_ACTIONS } from 'consts';
+import { ASSETS, CHAIN_IDS, TRANSACTION_ACTIONS, CHAIN_NAMES, CHAIN_NAME } from 'consts';
 import { formatUnits } from '@ethersproject/units';
 import usePoller from './Poller';
 
@@ -26,7 +26,7 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
           try {
             if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
               let liquidatorEvents;
-              if (networkId === CHAIN_IDS.FANTOM) {
+              if (networkId === CHAIN_IDS.FANTOM || CHAIN_NAME === CHAIN_NAMES.FANTOM) {
                 const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate(address);
                 liquidatorEvents = await contracts.FliquidatorFTM.queryFilter(filterLiquidator);
               } else {

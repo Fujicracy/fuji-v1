@@ -23,10 +23,6 @@ export const DropDownHeader = styled('div')`
   border-bottom-left-radius: ${props => (props.isOpened ? '0px' : '6px')};
 `;
 
-// const breatheAnimation = keyframes`
-//  0% { height: 0px; opacity: 0.7;}
-//  100% { height: 100px; opacity: 0.1; }
-// `;
 export const DropDownListContainer = styled('div')`
   z-index: 9999;
   position: ${props => (props.isSelectable ? 'absolute' : 'inherit')};

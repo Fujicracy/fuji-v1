@@ -24,10 +24,8 @@ const forkUrl =
   network === "fantom"
     ? "https://rpc.ftm.tools/"
     : network === "bsc"
-    ? "https://bsc-dataseed.binance.org/"
-    : network === "polygon"
-    ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
-    : mainnetUrl;
+      ? "https://bsc-dataseed.binance.org/"
+      : mainnetUrl;
 
 //
 // Select the network you want to deploy to here:
@@ -66,15 +64,11 @@ module.exports = {
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     mainnet: {
       url: mainnetUrl,
@@ -86,22 +80,16 @@ module.exports = {
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     xdai: {
       url: "https://rpc.xdaichain.com/",
       gasPrice: 1000000000,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     polygon: {
       url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`,
@@ -126,11 +114,37 @@ module.exports = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 1000,
+            runs: 700,
+          },
+        },
+      }
+    ],
+    overrides: {
+      "contracts/fantom/nft-bonds/NFTInteractions.sol": {
+        version: "0.8.2",
+        settings: {
+          optimizer: {
+            enabled: false
           },
         },
       },
-    ],
+      "contracts/fantom/nft-bonds/FujiPriceAware.sol": {
+        version: "0.8.2",
+        settings: {
+          optimizer: {
+            enabled: false
+          },
+        },
+      },
+      "contracts/fantom/nft-bonds/mocks/MockRandomTests.sol": {
+        version: "0.8.2",
+        settings: {
+          optimizer: {
+            enabled: false
+          },
+        },
+      },
+    },
   },
   mocha: {
     timeout: 200000,

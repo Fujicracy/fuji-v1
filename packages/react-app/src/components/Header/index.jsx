@@ -64,6 +64,8 @@ function Header() {
   useEffect(() => {
     if (Object.values(chains).find(chain => chain.id === networkId)) {
       setSelectedChain(chains[networkName]);
+    } else if (networkId === 31337) {
+      setSelectedChain(CHAINS.local);
     } else {
       setSelectedChain(null);
     }
@@ -150,6 +152,7 @@ function Header() {
     padding: 0,
     marginLeft: isTablet ? 40 : 20,
   };
+
   return (
     <Container>
       {isMenuOpen && (
@@ -186,6 +189,15 @@ function Header() {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My positions
+                  </MenuItem>
+                </NavLink>
+
+                <NavLink to="/nft-game">
+                  <MenuItem
+                    isSelected={currentPage.pathname === '/dashboard/nft-game'}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Ascend
                   </MenuItem>
                 </NavLink>
 
@@ -270,6 +282,12 @@ function Header() {
                   <li className="nav-item">
                     <NavLink to="/dashboard/my-positions" activeClassName="current">
                       My positions
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <NavLink to="/nft-game" activeClassName="current">
+                      Ascent
                     </NavLink>
                   </li>
                 </>

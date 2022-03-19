@@ -68,7 +68,6 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
             {(isMobile || isTablet) && (
               <Flex
                 flexDirection={isMobile ? 'column' : 'row'}
-                // width="100%"
                 justifyContent="center"
                 padding={!isMobile && '0px 4vh'}
               >

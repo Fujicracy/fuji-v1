@@ -34,7 +34,6 @@ import {
 } from 'components';
 
 import DeltaPositionRatios from '../DeltaPositionRatios';
-// import { SectionTitle } from '../../../components/Blocks';
 
 const Action = {
   Supply: 0,
@@ -50,7 +49,6 @@ function CollateralForm({ position }) {
 
   const [action, setAction] = useState(Action.Supply);
   const [dialog, setDialog] = useState('');
-  // const [focus, setFocus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftCollateral, setLeftCollateral] = useState('');
@@ -408,9 +406,6 @@ function CollateralForm({ position }) {
           onChange={value => {
             return setAmount(value);
           }}
-          // onFocus={() => {
-          //   return setFocus(true);
-          // }}
           onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => {
             return clearErrors();

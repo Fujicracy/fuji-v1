@@ -3,6 +3,7 @@ import { Box } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
 import { Link } from 'react-router-dom';
+import { margin } from 'styled-system';
 
 export const NavUnlisted = styled(Box).attrs(props => ({
   pt: 4,
@@ -85,4 +86,6 @@ export const NavBackLink = styled(Link)`
       animation: ${animationBack} 1s ease-in-out alternate infinite;
     }
   }
+
+  ${margin};
 `;

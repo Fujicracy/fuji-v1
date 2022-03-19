@@ -27,8 +27,6 @@ const getDeployments = (name) => {
 };
 
 const updateDeployments = async (name, contractName, address) => {
-  const deployer = (await ethers.getSigners())[0];
-
   let deployData;
   if (fs.existsSync(deploymentsPath)) {
     deployData = JSON.parse(fs.readFileSync(deploymentsPath).toString());
@@ -39,7 +37,6 @@ const updateDeployments = async (name, contractName, address) => {
   const contractArtifacts = await artifacts.readArtifact(contractName);
   deployData[name] = {
     address,
-    deployer: deployer.address,
     abi: contractArtifacts.abi,
     bytecode: contractArtifacts.bytecode,
   };
@@ -49,35 +46,39 @@ const updateDeployments = async (name, contractName, address) => {
 
 const getContractAddress = (name) => {
   return getDeployments(name).address;
-}
+};
 
-const redeployIf = async (name, contractName, shouldRedeploy, deployContract, args = []) => {
-  const deployer = (await ethers.getSigners())[0];
-
+const redeployIf = async (name, contractName, deployContract, args = []) => {
   const currentDeployment = getDeployments(name);
   const contractArtifacts = await artifacts.readArtifact(contractName);
+  const addr = currentDeployment.address ?? "0x0000000000000000000000000000000000000000";
+  const checkExistance = await ethers.provider.getCode(addr);
 
   if (
+    checkExistance !== "0x" &&
     currentDeployment.bytecode === contractArtifacts.bytecode &&
-    JSON.stringify(currentDeployment.abi) === JSON.stringify(contractArtifacts.abi) &&
-    currentDeployment.deployer === deployer.address &&
-    !(await shouldRedeploy())
+    JSON.stringify(currentDeployment.abi) === JSON.stringify(contractArtifacts.abi)
   ) {
-    console.log(name + ": Skipping...");
+    progress.text = name + ": Skipping...";
+    // console.log(name + ": Skipping...");
     return currentDeployment.address;
   }
 
-  console.log(name + ": Deploying...");
+  progress.text = name + ": Deploying...";
+  // console.log(name + ": Deploying...");
   const deployed = await deployContract(name, contractName, args);
-  console.log(name + ": Deployed at", deployed.address);
+  progress.text = name + ": Deployed at" + deployed.address;
+  // console.log(name + ": Deployed at", deployed.address);
   return deployed.address;
 };
 
 const callIf = async (name, shouldCall, call) => {
   if (!(await shouldCall())) {
-    console.log(name + ": Skipping...");
+    progress.text = name + ": Skipping...";
+    // console.log(name + ": Skipping...");
   } else {
-    console.log(name + ": Setting...");
+    name + ": Skipping...";
+    // console.log(name + ": Setting...");
     await call();
   }
 };
@@ -147,6 +148,16 @@ const upgradeProxy = async (name, contractName) => {
   return addr;
 };
 
+const copyMinedTxParams = async (txHash) => {
+  const reftx = await provider.getTransaction(txHash);
+  let unsignedTx = {
+    maxFeePerGas: reftx.maxFeePerGas,
+    maxPriorityFeePerGas: reftx.maxPriorityFeePerGas,
+    chainId: reftx.chainId
+  }
+  return unsignedTx;
+}
+
 module.exports = {
   deploy,
   deployProxy,
@@ -157,5 +168,6 @@ module.exports = {
   updateDeployments,
   redeployIf,
   callIf,
+  copyMinedTxParams,
   network,
 };

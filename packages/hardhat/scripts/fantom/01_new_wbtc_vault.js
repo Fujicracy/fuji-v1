@@ -1,12 +1,20 @@
 const chalk = require("chalk");
+const ora = require("ora");
+
 const { deployVault } = require("../tasks/deployVault");
 const { updateFujiERC1155 } = require("../tasks/updateFujiERC1155");
 const { updateVault } = require("../tasks/updateVault");
 const { setDeploymentsPath, network, getContractAddress } = require("../utils");
 const { ASSETS } = require("./consts");
 
+global.progressPrefix = __filename.split("/").pop()
+global.progress = ora().start(progressPrefix + ": Starting...");
+global.console.log = (...args) => {
+  progress.text = `${progressPrefix}: ${args.join(" ")}`;
+}
+
 const deployContracts = async () => {
-  console.log("\n\n 📡 Deploying...\n");
+  console.log("📡 Deploying...");
 
   const fujiadmin = getContractAddress("FujiAdmin");
   const oracle = getContractAddress("FujiOracle");
@@ -18,29 +26,21 @@ const deployContracts = async () => {
     ASSETS.WBTC.address,
     ASSETS.DAI.address,
   ]);
-  const vaultwbtcusdc = await deployVault("VaultWBTCUSDC", [
-    fujiadmin,
-    oracle,
-    ASSETS.WBTC.address,
-    ASSETS.USDC.address,
-  ]);
 
-   //General Plug-ins and Set-up Transactions
-  await updateFujiERC1155(f1155, [vaultwbtcdai, vaultwbtcusdc]);
+  await updateFujiERC1155(f1155, [vaultwbtcdai]);
+
+  const geist = getContractAddress("ProviderGeist");
+  const cream = getContractAddress("ProviderCream");
+  const scream = getContractAddress("ProviderScream");
 
   // Vault Set-up
   await updateVault("VaultWBTCDAI", vaultwbtcdai, {
-    providers: [cream, scream],
-    fujiadmin,
-    f1155,
-  });
-  await updateVault("VaultWBTCUSDC", vaultwbtcusdc, {
-    providers: [cream, scream],
+    providers: [geist, cream, scream],
     fujiadmin,
     f1155,
   });
 
-  console.log("Finished!");
+  progress.succeed(progressPrefix);
 };
 
 const main = async () => {
