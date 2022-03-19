@@ -24,6 +24,7 @@ import {
   INVENTORY_TYPE,
   CRATE_CARD_IDS,
   NFT_GAME_POINTS_DECIMALS,
+  NFT_GEARS,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
@@ -61,21 +62,6 @@ const GearSet = ({ balance, name, boost }) => {
   );
 };
 
-const FAKE_LABELS = [
-  'Pickaxe',
-  'Oxygen Kit',
-  'Gloves',
-  'Flare gun',
-  'Heat Capsule',
-  'Slippers',
-  'Sunglasses',
-  'Watch',
-  'Protein Bar',
-  'Med Kit',
-  'Lip-balm',
-  'Megaphone',
-];
-
 function Inventory() {
   const { address, provider } = useAuth();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -91,6 +77,7 @@ function Inventory() {
   const [gearSetBalances, setGearSetBalances] = useState([]);
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
   const [outComes, setOutComes] = useState({});
+  const [crateType, setCrateType] = useState({});
 
   const inventories = [
     {
@@ -126,8 +113,8 @@ function Inventory() {
           balances.map((value, index) => ({
             id: CRATE_CARD_IDS.NFT_START + index,
             balance: value.toString(),
-            name: FAKE_LABELS[index],
-            boost: (Math.random() * 10).toFixed(),
+            name: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].name,
+            boost: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].boost,
           })),
         );
       }
@@ -154,6 +141,7 @@ function Inventory() {
   const onRedeem = async (type, amount) => {
     if (contracts) {
       setIsRedeeming(true);
+      setCrateType(type);
       const crateId =
         type === INVENTORY_TYPE.COMMON
           ? CRATE_CONTRACT_IDS.COMMON
@@ -200,43 +188,6 @@ function Inventory() {
           setOutComes(tmpOutComes);
 
           setIsRedeemed(true);
-
-          // TODO: Remove this after outcome modal
-          // const points = formatUnits(rewards[0], NFT_GAME_POINTS_DECIMALS);
-          // const nfts = [];
-          // let totalNftAmount = 0;
-          // let nftDescription = '';
-          // for (let i = 4; i < 14; i += 1) {
-          //   const nftAmount = rewards[i] ? rewards[i].toString() : 0;
-          //   if (nftAmount > 0) {
-          //     nfts.push({ tokenId: i, amount: nftAmount });
-          //     totalNftAmount += nftAmount;
-
-          //     nftDescription += `${nftAmount} NFTs with tokenId ${i}, `;
-          //   }
-          // }
-          // nftDescription = nftDescription.substring(0, nftDescription.length - 1); // trim last comma
-          // setIsRedeemed(true);
-
-          // if (points > 0 && totalNftAmount > 0) {
-          //   OPENING_DESCRIPTIONS[
-          //     OPENING_RESULT.SUCCESS
-          //   ].description = `Yeahhh, you got ${points} more meter points and ${nftDescription} that accelerate your climbing!`;
-          // } else if (totalNftAmount > 0) {
-          //   OPENING_DESCRIPTIONS[
-          //     OPENING_RESULT.SUCCESS
-          //   ].description = `Bravo, you got a new climbing gear, you won ${nftDescription}`;
-          // } else if (points > 0) {
-          //   OPENING_DESCRIPTIONS[
-          //     OPENING_RESULT.SUCCESS
-          //   ].description = `Yeahhh, you got ${points} more meter points that accelerate your climbing!`;
-          // }
-
-          // if (points > 0 || totalNftAmount > 0) {
-          //   setActionResult(OPENING_RESULT.SUCCESS);
-          // } else {
-          //   setActionResult(OPENING_RESULT.NOTHING);
-          // }
         }
       } catch (error) {
         console.error({ error });
@@ -361,7 +312,7 @@ function Inventory() {
       )}
 
       {isOutComeModalOpen && (
-        <OutComePopup isOpen outComes={outComes} onClose={onCloseOutComeModal} />
+        <OutComePopup isOpen crateType={crateType} outComes={outComes} onClose={onCloseOutComeModal} />
       )}
     </BlackBoxContainer>
   );

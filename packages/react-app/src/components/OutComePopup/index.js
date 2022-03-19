@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Flex, Image } from 'rebass';
 
-import { NFT_GAME_MODAL_THEMES, INVENTORY_TYPE, CRATE_CARD_IDS } from 'consts';
+import { NFT_GAME_MODAL_THEMES, CRATE_CARD_IDS, NFT_GEARS } from 'consts';
 
 import { giftBoxImage } from 'assets/images';
 
@@ -14,7 +14,7 @@ import {
   RoundedAmountContainer,
 } from './styles';
 
-const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes }) => {
+const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType }) => {
   const [opacity, setOpacity] = useState(0);
 
   function afterOpen() {
@@ -31,7 +31,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes }) => {
   }
 
   console.log({ outComes });
-  const theme = NFT_GAME_MODAL_THEMES[INVENTORY_TYPE.EPIC];
+  const theme = NFT_GAME_MODAL_THEMES[crateType];
   return (
     <StyledModal
       color={theme.foreColor}
@@ -91,16 +91,21 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes }) => {
           <ItemContainer key={outKey}>
             <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
             {outKey === CRATE_CARD_IDS.NOTHING ? (
-              <SectionTitle fontSize="20px">Empty</SectionTitle>
-            ) : outKey === CRATE_CARD_IDS.POINTS ? (
+              <SectionTitle color={theme.foreColor} fontSize="20px">Empty</SectionTitle>
+            ) : outKey === CRATE_CARD_IDS.POINTS.toString() ? (
               <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <SectionTitle fontSize="20px">{outComes[outKey].amount}</SectionTitle>
-                <SectionTitle fontSize="20px" mt={3}>
+                <SectionTitle color={theme.foreColor} fontSize="20px">{outComes[outKey].amount}</SectionTitle>
+                <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
                   Meter Points
                 </SectionTitle>
               </Flex>
             ) : (
-              <Image src={giftBoxImage} width="140px" height="140px" />
+              <Flex flexDirection="column" alignItems="center" justifyContent="center">
+                <Image src={giftBoxImage} width="140px" height="140px" />
+                <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
+                  {NFT_GEARS[outKey].name}
+                </SectionTitle>
+              </Flex>
             )}
           </ItemContainer>
         ))}
