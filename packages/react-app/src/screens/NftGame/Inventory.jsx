@@ -312,7 +312,12 @@ function Inventory() {
       )}
 
       {isOutComeModalOpen && (
-        <OutComePopup isOpen crateType={crateType} outComes={outComes} onClose={onCloseOutComeModal} />
+        <OutComePopup
+          isOpen
+          crateType={crateType}
+          outComes={outComes}
+          onClose={onCloseOutComeModal}
+        />
       )}
     </BlackBoxContainer>
   );

@@ -91,10 +91,14 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
           <ItemContainer key={outKey}>
             <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
             {outKey === CRATE_CARD_IDS.NOTHING ? (
-              <SectionTitle color={theme.foreColor} fontSize="20px">Empty</SectionTitle>
+              <SectionTitle color={theme.foreColor} fontSize="20px">
+                Empty
+              </SectionTitle>
             ) : outKey === CRATE_CARD_IDS.POINTS.toString() ? (
               <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <SectionTitle color={theme.foreColor} fontSize="20px">{outComes[outKey].amount}</SectionTitle>
+                <SectionTitle color={theme.foreColor} fontSize="20px">
+                  {outComes[outKey].amount}
+                </SectionTitle>
                 <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
                   Meter Points
                 </SectionTitle>
