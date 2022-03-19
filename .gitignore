@@ -15,6 +15,7 @@ packages/hardhat/.openzeppelin/unknown-31337.json
 packages/react-app/src/contracts/*
 !packages/react-app/src/contracts/1-*.deployment.json
 !packages/react-app/src/contracts/250-*.deployment.json
+!packages/react-app/src/contracts/4-*.deployment.json
 packages/bots/contracts/*
 !packages/bots/contracts/1-*.deployment.json
 !packages/bots/contracts/250-*.deployment.json
