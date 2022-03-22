@@ -158,6 +158,25 @@ const copyMinedTxParams = async (txHash) => {
   return unsignedTx;
 }
 
+const networkSuffix = (name) => {
+  let suffix;
+  switch (network) {
+    case "mainnet":
+      suffix = "";
+      break;
+    case "fantom":
+      suffix = "FTM";
+      break;
+    case "polygon":
+      suffix = "MATIC";
+      break;
+    default:
+      return ""
+  }
+
+  return name + suffix;
+}
+
 module.exports = {
   deploy,
   deployProxy,
@@ -169,5 +188,6 @@ module.exports = {
   redeployIf,
   callIf,
   copyMinedTxParams,
+  networkSuffix,
   network,
 };
