@@ -5,7 +5,6 @@ import { Box, Flex } from 'rebass';
 import { fujiMedia } from 'consts';
 
 export const ProviderContainer = styled(Box).attrs(() => ({
-  // bg: themeGet('colors.dark56')(props),
   bg: 'transparent',
 }))`
   padding: 0px;
@@ -26,7 +25,6 @@ export const ProviderContainer = styled(Box).attrs(() => ({
 `;
 
 export const AssetContainer = styled(Box).attrs(() => ({
-  // bg: themeGet('colors.dark56')(props),
   bg: 'transparent',
 }))`
   height: 32px;
@@ -41,7 +39,6 @@ export const AssetContainer = styled(Box).attrs(() => ({
 `;
 
 export const BorderFlex = styled(Flex).attrs(() => ({
-  // bg: themeGet('colors.dark56')(props),
   bg: 'transparent',
 }))`
   border-bottom: 1px solid ${themeGet('colors.text32')};

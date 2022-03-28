@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fontSize, space, width } from 'styled-system';
+import { fontSize, space, width, textAlign, color, margin } from 'styled-system';
 import { themeGet } from '@styled-system/theme-get';
 
 const Label = styled.p`
@@ -11,5 +11,8 @@ const Label = styled.p`
   ${fontSize};
   ${space};
   ${width};
+  ${textAlign};
+  ${color};
+  ${margin};
 `;
 export default Label;

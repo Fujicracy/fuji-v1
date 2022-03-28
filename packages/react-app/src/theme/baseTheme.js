@@ -1,4 +1,4 @@
-import { BREAKPOINT_NAMES, BREAKPOINTS } from 'consts/globals';
+import { BREAKPOINT_NAMES, BREAKPOINTS } from 'consts';
 
 const baseTheme = {
   name: 'Fuji main theme',

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { useSpring, animated, config } from 'react-spring';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { find } from 'lodash';
 import { Image, Box, Text, Flex } from 'rebass';

@@ -13,7 +13,7 @@ function validArgs(args) {
   return !args.includes('') && !args.includes(null);
 }
 
-export default function useContractReader(
+export function useContractReader(
   contracts,
   contractName,
   functionName,

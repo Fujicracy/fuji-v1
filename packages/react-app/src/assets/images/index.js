@@ -59,7 +59,32 @@ import notFoundIcon from './icons/not-found-404.svg';
 import infoStep1 from './images/info/step1.png';
 import infoStep2 from './images/info/step2.png';
 
-import * as scrollDownAnimation from './animation/scroll-down-animation.json';
+import * as scrollDownAnimation from './animations/scroll-down-animation.json';
+
+// NFT-Game
+import editIcon from './icons/edit.svg';
+import nftGameStoreDecorationImage from './images/nft-game/store-decoration.svg';
+import crownImage from './images/nft-game/crown.svg';
+import profileDecorationImage from './images/nft-game/profile-decoration.svg';
+import commonMaskImage from './images/nft-game/common-mask.svg';
+import epicMaskImage from './images/nft-game/epic-mask.svg';
+import legendaryMaskImage from './images/nft-game/legendary-mask.svg';
+
+import giftBoxImage from './images/nft-game/gift-box.svg';
+import happyIcon from './images/nft-game/happy.svg';
+import inventoryBadge from './images/nft-game/inventory-badge.svg';
+
+import commonCrateIntroAnimation from './animations/inventory_common_intro.webm';
+import epicCrateIntroAnimation from './animations/inventory_epic_intro.webm';
+import legendaryCrateIntroAnimation from './animations/inventory_legendary_intro.webm';
+
+import commonCrateOpeningAnimation from './animations/inventory_common_opening.mp4';
+import epicCrateOpeningAnimation from './animations/inventory_epic_opening.mp4';
+import legendaryCrateOpeningAnimation from './animations/inventory_legendary_opening.mp4';
+
+import commonCrateIdleImage from './images/nft-game/inventory-common-idle.png';
+import epicCrateIdleImage from './images/nft-game/inventory-epic-idle.png';
+import legendaryCrateIdleImage from './images/nft-game/inventory-legendary-idle.png';
 
 export const infoIcons = {
   step1: infoStep1,
@@ -120,4 +145,24 @@ export {
   marketFuseIcon,
   marketCoreIcon,
   scrollDownAnimation,
+  // nft-game
+  editIcon,
+  crownImage,
+  nftGameStoreDecorationImage,
+  profileDecorationImage,
+  commonMaskImage,
+  epicMaskImage,
+  legendaryMaskImage,
+  giftBoxImage,
+  happyIcon,
+  inventoryBadge,
+  commonCrateIntroAnimation,
+  epicCrateIntroAnimation,
+  legendaryCrateIntroAnimation,
+  commonCrateOpeningAnimation,
+  epicCrateOpeningAnimation,
+  legendaryCrateOpeningAnimation,
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
 };

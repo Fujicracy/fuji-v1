@@ -18,22 +18,27 @@ INFURA_ID=<YOUR_KEY>
 NETWORK=fantom
 ```
 
+3. Install ganache-cli
+```bash
+npm i -g ganache-cli
+```
+
 ## Run
 
 1. Fork Fantom network from project's directory:
 ```
 cd fuji
-yarn fork
+ganache-cli --fork https://still-patient-feather.fantom.quiknode.pro/b32ce427764a8772e89084c10441bf6e0ad4ec0f/ --chainId 31337
+
 ```
 
 2. Deploy contracts from "hardhat" directory and publish them to other packages:
 ```
-cd fuji/hardhat
-npx yarn deploy:fantom:game && npx yarn publish:core
+yarn workspace @fuji/hardhat run deploy:fantom:game
+yarn workspace @fuji/hardhat publish:core
 ```
 
 3. Start front-end
 ```
-cd fuji
 yarn start
 ```

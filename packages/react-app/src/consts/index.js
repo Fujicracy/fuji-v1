@@ -3,4 +3,7 @@ export * from './providers';
 export * from './assets';
 export * from './contacts';
 export * from './vaults';
+export * from './chains';
+export * from './breakpoints';
+export * from './nftgame';
 export * from './globals';
