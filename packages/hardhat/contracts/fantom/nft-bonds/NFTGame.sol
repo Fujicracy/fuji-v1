@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.0;
 
 /// @title NFT Game
 /// @author fuji-dao.eth
@@ -14,6 +14,8 @@ import "../../interfaces/IVault.sol";
 import "../../interfaces/IVaultControl.sol";
 import "../../interfaces/IERC20Extended.sol";
 import "../../libraries/Errors.sol";
+
+import "hardhat/console.sol";
 
 contract NFTGame is Initializable, ERC1155Upgradeable, AccessControlUpgradeable {
   /**
@@ -222,7 +224,7 @@ contract NFTGame is Initializable, ERC1155Upgradeable, AccessControlUpgradeable 
     _updateUserInfo(user, uint128(debt), phase);
 
     // Compute and assign final score
-    uint256 finalScore = (userdata[user].accruedPoints * boostNumber) / 100;
+    uint256 finalScore = boostNumber == 0 ? userdata[user].accruedPoints : (userdata[user].accruedPoints * boostNumber) / 100;
 
     userdata[user].accruedPoints = uint128(finalScore);
     lockedNFTID = uint256(keccak256(abi.encodePacked(user, finalScore)));
@@ -386,9 +388,11 @@ contract NFTGame is Initializable, ERC1155Upgradeable, AccessControlUpgradeable 
     } else if (phase >= gamePhaseTimestamps[0] && phase < gamePhaseTimestamps[1]) {
       phase = 1; // Accumulation
     } else if (phase >= gamePhaseTimestamps[1] && phase < gamePhaseTimestamps[2]) {
-      phase = 2; // Trade and lock
+      phase = 2; // Trading
+    } else if (phase >= gamePhaseTimestamps[2] && phase < gamePhaseTimestamps[3]) {
+      phase = 3; // Locking and bonding
     } else {
-      phase = 3; // Bonding
+      phase = 4; // Vesting time
     }
   }
 

@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.0;
 
 /// @title NFT Interactions
 /// @author fuji-dao.eth
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "./NFTGame.sol";
 import "../libraries/LibPseudoRandom.sol";
 import "../../libraries/Errors.sol";
 import "./FujiPriceAware.sol";
+import "./PreTokenBonds.sol";
 import "../../interfaces/chainlink/AggregatorV3Interface.sol";
 
-contract NFTInteractions is FujiPriceAware, Initializable {
+contract NFTInteractions is FujiPriceAware, ReentrancyGuardUpgradeable {
   using LibPseudoRandom for uint256;
 
   /**
@@ -54,6 +53,16 @@ contract NFTInteractions is FujiPriceAware, Initializable {
    */
   event LockedScore(address indexed user, uint256 lockedNFTId);
 
+  /**
+   * @dev NFTGame contract address changed
+   */
+  event NFTGameChanged(address newAddress);
+
+  /**
+   * @dev PreTokenBonds contract address changed
+   */
+  event PreTokenBondsChanged(address newAddress);
+
   uint256 public constant CRATE_COMMON_ID = 1;
   uint256 public constant CRATE_EPIC_ID = 2;
   uint256 public constant CRATE_LEGENDARY_ID = 3;
@@ -66,6 +75,7 @@ contract NFTInteractions is FujiPriceAware, Initializable {
   uint256[] private _probabilityIntervals;
 
   NFTGame public nftGame;
+  PreTokenBonds public preTokenBonds;
 
   // CrateID => crate price
   mapping(uint256 => uint256) public cratePrices;
@@ -74,6 +84,7 @@ contract NFTInteractions is FujiPriceAware, Initializable {
   mapping(uint256 => uint256) public cardBoost;
 
   function initialize(address _nftGame) external initializer {
+    __ReentrancyGuard_init();
     isRedstoneOracleOn = true;
     maxDelay = 5 * 60;
     nftGame = NFTGame(_nftGame);
@@ -94,6 +105,13 @@ contract NFTInteractions is FujiPriceAware, Initializable {
   function setNFTGame(address _nftGame) external {
     require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), Errors.VL_NOT_AUTHORIZED);
     nftGame = NFTGame(_nftGame);
+    emit NFTGameChanged(_nftGame);
+  }
+
+  function setPreTokenBonds(address _preTokenBonds) external {
+    require(nftGame.hasRole(nftGame.GAME_ADMIN(), msg.sender), "No permission!");
+    preTokenBonds = PreTokenBonds(_preTokenBonds);
+    emit PreTokenBondsChanged(_preTokenBonds);
   }
 
   /**
@@ -168,13 +186,31 @@ contract NFTInteractions is FujiPriceAware, Initializable {
   /// Interaction Functions
 
   /**
+   * @notice mints new bonds
+   * @param _slotType: the vesting slot (based on time) associated with the bond
+   * @param amount: number of bonds to be minted
+   * @dev '_slotType' input validations is done in {PreTokenBonds} contract.
+   */
+  function mintBonds(uint256 _slotType, uint256 amount) external nonReentrant returns(uint256 tokenId) {
+    require(_isLocked(msg.sender), "User not locked");
+    require(amount > 0, "Zero amount!");
+
+    uint256 cost = amount * preTokenBonds.bondPrice();
+    require(nftGame.balanceOf(msg.sender, nftGame.POINTS_ID()) >= cost, "Not enough points");
+
+    nftGame.burn(msg.sender, nftGame.POINTS_ID(), cost);
+    tokenId = preTokenBonds.mint(msg.sender, _slotType, amount);
+  }
+
+  /**
    * @notice Burns user points to mint a new crate
    */
-  function mintCrates(uint256 crateId, uint256 amount) external {
+  function mintCrates(uint256 crateId, uint256 amount) external nonReentrant {
     // accumulation and trading only
     uint256 phase = nftGame.getPhase();
     require(phase > 0 && phase < 3, "Wrong game phase!");
     require(!_isLocked(msg.sender), "User already locked!");
+    require(amount > 0, "Zero amount!");
 
     require(
       crateId == CRATE_COMMON_ID || crateId == CRATE_EPIC_ID || crateId == CRATE_LEGENDARY_ID,
@@ -195,11 +231,12 @@ contract NFTInteractions is FujiPriceAware, Initializable {
   /**
    * @notice opens crates with the given id
    */
-  function openCrate(uint256 crateId, uint256 amount) external {
+  function openCrate(uint256 crateId, uint256 amount) external nonReentrant {
     // accumulation and trading only
     uint256 phase = nftGame.getPhase();
     require(phase > 0 && phase < 3, "Wrong game phase!");
     require(!_isLocked(msg.sender), "User already locked!");
+    require(amount > 0, "Zero amount!");
 
     require(
       crateId == CRATE_COMMON_ID || crateId == CRATE_EPIC_ID || crateId == CRATE_LEGENDARY_ID,
@@ -269,7 +306,7 @@ contract NFTInteractions is FujiPriceAware, Initializable {
     uint256 lockedNFTId = nftGame.userLock(msg.sender, boostNumber);
 
     // Emit locking event
-    LockedScore(msg.sender, lockedNFTId);
+    emit LockedScore(msg.sender, lockedNFTId);
   }
 
   /// Read-only functions
@@ -294,13 +331,13 @@ contract NFTInteractions is FujiPriceAware, Initializable {
    */
   function computeBoost(address user) public view returns (uint256 totalBoost) {
     totalBoost = 100;
-    for (
-      uint256 index = NFT_CARD_ID_START;
-      index < NFT_CARD_ID_START + nftGame.nftCardsAmount();
-      index++
-    ) {
+    uint256 cardLimit = NFT_CARD_ID_START + nftGame.nftCardsAmount();
+    for (uint256 index = NFT_CARD_ID_START; index < cardLimit;) {
       if (nftGame.balanceOf(user, index) > 0) {
         totalBoost += cardBoost[index];
+      }
+      unchecked {
+        ++index;
       }
     }
   }

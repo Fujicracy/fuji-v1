@@ -110,7 +110,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: true,
@@ -121,7 +121,7 @@ module.exports = {
     ],
     overrides: {
       "contracts/fantom/nft-bonds/NFTInteractions.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
@@ -129,7 +129,7 @@ module.exports = {
         },
       },
       "contracts/fantom/nft-bonds/FujiPriceAware.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
@@ -137,7 +137,7 @@ module.exports = {
         },
       },
       "contracts/fantom/nft-bonds/mocks/MockRandomTests.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
