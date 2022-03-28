@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
-// import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
 
 export const GridContainer = styled(Grid)`
