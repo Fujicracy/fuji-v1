@@ -154,7 +154,9 @@ function Inventory() {
           contracts.NFTInteractions.connect(provider.getSigner(address)),
         ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
-        const result = await wrappednftinteractions.openCrate(crateId, amount);
+        // make a rough estimate of GasLimit according the amount of crates
+        const gasLimit = 130000 + amount * 12000;
+        const result = await wrappednftinteractions.openCrate(crateId, amount, { gasLimit });
 
         if (result && result.hash) {
           const receipt = await result.wait();
