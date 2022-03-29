@@ -5,7 +5,15 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
-import { Container, ItemPanel, BuyButton } from './styles';
+import {
+  Container,
+  ItemPanel,
+  BuyButton,
+  InfoButton,
+  CancelButton,
+  HorizontalBreaker,
+} from './styles';
+import ItemInfo from './ItemInfo';
 
 const GeneralItem = ({
   type = INVENTORY_TYPE.COMMON,
@@ -17,6 +25,7 @@ const GeneralItem = ({
 }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
@@ -35,23 +44,18 @@ const GeneralItem = ({
     }
     setIsBuying(false);
   };
-  return (
-    <Container backgroundColor={theme.backColor} color={theme.foreColor} mode="general">
-      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-        {title}
-      </SectionTitle>
-      <SectionTitle
-        color={theme.foreColor}
-        fontSize={isMobile ? '14px' : '16px'}
-        mt={2}
-        spanFontSize="10px"
-        spanColor={theme.foreColor}
-        lineHeight="12px"
-        alignItems="baseline"
-      >
-        {points.toLocaleString()} <span>{description}</span>
-      </SectionTitle>
 
+  const body = showInfo ? (
+    <>
+      <p style={{ marginTop: '1rem' }}>
+        Each crate has a specific probability of yielding Meter points, a Climbing Gear NFT or it
+        can be empty.
+      </p>
+      <HorizontalBreaker color={theme.foreColor} />
+      <ItemInfo type={type} />
+    </>
+  ) : (
+    <>
       <ItemPanel src={theme.idleImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
@@ -106,6 +110,32 @@ const GeneralItem = ({
           Buy
         </BuyButton>
       </Flex>
+    </>
+  );
+
+  return (
+    <Container backgroundColor={theme.backColor} color={theme.foreColor} mode="general">
+      {showInfo ? (
+        <CancelButton onClick={() => setShowInfo(false)} />
+      ) : (
+        <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
+      )}
+
+      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+        {title}
+      </SectionTitle>
+      <SectionTitle
+        color={theme.foreColor}
+        fontSize={isMobile ? '14px' : '16px'}
+        mt={2}
+        spanFontSize="10px"
+        spanColor={theme.foreColor}
+        lineHeight="12px"
+        alignItems="baseline"
+      >
+        {points.toLocaleString()} <span>{description}</span>
+      </SectionTitle>
+      {body}
     </Container>
   );
 };

@@ -6,11 +6,21 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
-import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
+import {
+  ItemPanel,
+  BuyButton,
+  LegendaryItemsContainter,
+  LegendaryContainer,
+  HorizontalBreaker,
+  InfoButton,
+  CancelButton,
+} from './styles';
+import ItemInfo from './ItemInfo';
 
 const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
@@ -30,25 +40,18 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
     }
     setIsBuying(false);
   };
-  return (
-    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
-      <LegendaryItemsContainter>
-        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-          Legendary
-        </SectionTitle>
-        <SectionTitle
-          color={theme.foreColor}
-          fontSize="16px"
-          mt={2}
-          spanFontSize="10px"
-          spanColor={theme.foreColor}
-          lineHeight="12px"
-          alignItems="baseline"
-        >
-          {points.toLocaleString()} <span>{description}</span>
-        </SectionTitle>
-      </LegendaryItemsContainter>
 
+  const body = showInfo ? (
+    <>
+      <p style={{ marginTop: '1rem' }}>
+        Each crate has a specific probability of yielding Meter points, a Climbing Gear NFT or it
+        can be empty.
+      </p>
+      <HorizontalBreaker color={theme.foreColor} />
+      <ItemInfo type={INVENTORY_TYPE.LEGENDARY} />
+    </>
+  ) : (
+    <>
       <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
       <LegendaryItemsContainter
         position="right"
@@ -122,6 +125,34 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
           </BuyButton>
         )}
       </LegendaryItemsContainter>
+    </>
+  );
+
+  return (
+    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
+      {showInfo ? (
+        <CancelButton onClick={() => setShowInfo(false)} />
+      ) : (
+        <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
+      )}
+      <LegendaryItemsContainter>
+        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+          Legendary
+        </SectionTitle>
+        <SectionTitle
+          color={theme.foreColor}
+          fontSize="16px"
+          mt={2}
+          spanFontSize="10px"
+          spanColor={theme.foreColor}
+          lineHeight="12px"
+          alignItems="baseline"
+        >
+          {points.toLocaleString()} <span>{description}</span>
+        </SectionTitle>
+      </LegendaryItemsContainter>
+
+      {body}
     </LegendaryContainer>
   );
 };

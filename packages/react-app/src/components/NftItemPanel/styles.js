@@ -3,10 +3,13 @@ import { space, color, padding, width, height, opacity } from 'styled-system';
 import { Image, Flex } from 'rebass';
 import { INVENTORY_TYPE, fujiMedia } from 'consts';
 import { inventoryBadge } from 'assets/images';
+import InfoIcon from '@material-ui/icons/Info';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 export const Container = styled.div`
   border: none;
   position: relative;
+  overflow: hidden;
 
   width: ${props => (props.mode === 'inventory' ? '172px' : '100%')};
   height: ${props => (props.mode === 'inventory' ? '256px' : '360px')};
@@ -123,6 +126,19 @@ export const BuyButton = styled.div`
   ${width};
 `;
 
+export const InfoButton = styled(InfoIcon)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+`;
+export const CancelButton = styled(CancelIcon)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+`;
+
 export const OpacityImage = styled(Image)`
   position: absolute;
   opacity: 0.15;
@@ -237,4 +253,12 @@ export const StackedContainer = styled.div`
   align-items: center;
   position: relative;
   flex-direction: row-reverse;
+`;
+
+export const HorizontalBreaker = styled.hr`
+  margin: 1rem 0;
+  display: block;
+  border: none;
+  border-bottom: 1px solid ${props => props.color ?? 'inherit'};
+  width: 100%;
 `;
