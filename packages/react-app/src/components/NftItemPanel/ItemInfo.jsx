@@ -17,7 +17,7 @@ const ItemInfos = ({ type }) => {
     case INVENTORY_TYPE.EPIC:
       return (
         <>
-          <p>Probabilities for Common:</p>
+          <p>Probabilities for Epic:</p>
           <ul>
             <li>4.99% Gear NFT</li>
             <li>45.01% Booster Score</li>
