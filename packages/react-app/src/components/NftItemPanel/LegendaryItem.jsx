@@ -11,7 +11,6 @@ import {
   BuyButton,
   LegendaryItemsContainter,
   LegendaryContainer,
-  HorizontalBreaker,
   InfoButton,
   CancelButton,
 } from './styles';
@@ -42,14 +41,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   };
 
   const body = showInfo ? (
-    <>
-      <p style={{ marginTop: '1rem' }}>
-        Each crate has a specific probability of yielding Meter points, a Climbing Gear NFT or it
-        can be empty.
-      </p>
-      <HorizontalBreaker color={theme.foreColor} />
-      <ItemInfo type={INVENTORY_TYPE.LEGENDARY} />
-    </>
+    <ItemInfo type={INVENTORY_TYPE.LEGENDARY} />
   ) : (
     <>
       <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />

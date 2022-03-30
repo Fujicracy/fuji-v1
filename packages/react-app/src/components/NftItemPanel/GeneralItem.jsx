@@ -5,14 +5,7 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
-import {
-  Container,
-  ItemPanel,
-  BuyButton,
-  InfoButton,
-  CancelButton,
-  HorizontalBreaker,
-} from './styles';
+import { Container, ItemPanel, BuyButton, InfoButton, CancelButton } from './styles';
 import ItemInfo from './ItemInfo';
 
 const GeneralItem = ({
@@ -46,14 +39,7 @@ const GeneralItem = ({
   };
 
   const body = showInfo ? (
-    <>
-      <p style={{ marginTop: '1rem' }}>
-        Each crate has a specific probability of yielding Meter points, a Climbing Gear NFT or it
-        can be empty.
-      </p>
-      <HorizontalBreaker color={theme.foreColor} />
-      <ItemInfo type={type} />
-    </>
+    <ItemInfo type={type} />
   ) : (
     <>
       <ItemPanel src={theme.idleImage} />
