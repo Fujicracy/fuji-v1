@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import { Flex } from 'rebass';
+import { fujiMedia } from 'consts';
 
 const Container = styled.div`
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
@@ -9,16 +10,28 @@ const Container = styled.div`
   backdrop-filter: blur(6px);
   border-radius: 8px;
   color: white;
-  padding: 20px;
-  width: calc(100% - 2 * 20px);
+
+  padding: 1rem;
+  width: calc(100% - 2 * 1rem);
   position: relative;
-  left: 20px;
+  left: 1rem;
+
   display: flex;
+
+  ${fujiMedia.lessThan('medium')`
+    padding: 1rem .5rem;
+    display: block;
+  `}
 `;
 
 const ContentContainer = styled.div`
   margin: 0 16px;
   width: 80%;
+
+  ${fujiMedia.lessThan('medium')`
+    width: 100%;
+    margin: 0;
+  `}
 `;
 
 const Title = styled.p`
@@ -51,13 +64,24 @@ const Cta = styled.button`
   :hover {
     border: 3px solid black;
   }
+
+  ${fujiMedia.lessThan('medium')`
+    width: 100%;
+    margin-top: 1rem;
+  `}
+`;
+
+const Icon = styled(FilterHdrIcon)`
+  ${fujiMedia.lessThan('medium')`
+    display: none;  
+  `}
 `;
 
 const Banner = () => {
   return (
     <Container>
       <Flex width="80%" margin="0 1rem">
-        <FilterHdrIcon />
+        <Icon />
         <ContentContainer>
           <Title>The Fuji Climbing Campaing is Live!!</Title>
           <Text>
