@@ -9,7 +9,7 @@ import { Label, CountButton } from '../UI';
 import {
   ItemPanel,
   BuyButton,
-  LegendaryItemsContainter,
+  LegendaryItemsContainer,
   LegendaryContainer,
   InfoButton,
   CancelButton,
@@ -45,7 +45,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   ) : (
     <>
       <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
-      <LegendaryItemsContainter
+      <LegendaryItemsContainer
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
@@ -116,18 +116,22 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
             Buy
           </BuyButton>
         )}
-      </LegendaryItemsContainter>
+      </LegendaryItemsContainer>
     </>
   );
 
   return (
-    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
+    <LegendaryContainer
+      color={theme.foreColor}
+      backgroundColor={theme.backColor}
+      mode={showInfo ? 'info' : undefined}
+    >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />
       ) : (
         <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
       )}
-      <LegendaryItemsContainter>
+      <LegendaryItemsContainer>
         <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
           Legendary
         </SectionTitle>
@@ -142,7 +146,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
         >
           {points.toLocaleString()} <span>{description}</span>
         </SectionTitle>
-      </LegendaryItemsContainter>
+      </LegendaryItemsContainer>
 
       {body}
     </LegendaryContainer>

@@ -18,11 +18,12 @@ export const Container = styled.div`
   border-radius: 8px;
   background-color: ${props => props.backgroundColor || 'white'};
 
-  display: flex;
+  display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 24px;
+  overflow-y: auto;
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
@@ -46,11 +47,12 @@ export const LegendaryContainer = styled.div`
   border-radius: 8px;
   background-color: ${props => props.backgroundColor || 'white'};
 
-  display: flex;
+  display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 24px;
+  overflow-y: scroll;
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
@@ -204,13 +206,15 @@ export const FujiMark = styled.div`
   }
 `;
 
-export const LegendaryItemsContainter = styled(Flex)`
+export const ItemsContainer = styled(Flex)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
+`;
 
+export const LegendaryItemsContainer = styled(ItemsContainer)`
   ${fujiMedia.lessThan('small')`
     align-items: flex-start;
   `}

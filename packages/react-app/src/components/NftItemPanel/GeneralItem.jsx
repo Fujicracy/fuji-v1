@@ -5,7 +5,14 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
-import { Container, ItemPanel, BuyButton, InfoButton, CancelButton } from './styles';
+import {
+  Container,
+  ItemPanel,
+  BuyButton,
+  InfoButton,
+  CancelButton,
+  ItemsContainer,
+} from './styles';
 import ItemInfo from './ItemInfo';
 
 const GeneralItem = ({
@@ -100,27 +107,32 @@ const GeneralItem = ({
   );
 
   return (
-    <Container backgroundColor={theme.backColor} color={theme.foreColor} mode="general">
+    <Container
+      backgroundColor={theme.backColor}
+      color={theme.foreColor}
+      mode={showInfo ? 'info' : 'general'}
+    >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />
       ) : (
         <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
       )}
-
-      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-        {title}
-      </SectionTitle>
-      <SectionTitle
-        color={theme.foreColor}
-        fontSize={isMobile ? '14px' : '16px'}
-        mt={2}
-        spanFontSize="10px"
-        spanColor={theme.foreColor}
-        lineHeight="12px"
-        alignItems="baseline"
-      >
-        {points.toLocaleString()} <span>{description}</span>
-      </SectionTitle>
+      <ItemsContainer>
+        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+          {title}
+        </SectionTitle>
+        <SectionTitle
+          color={theme.foreColor}
+          fontSize={isMobile ? '14px' : '16px'}
+          mt={2}
+          spanFontSize="10px"
+          spanColor={theme.foreColor}
+          lineHeight="12px"
+          alignItems="baseline"
+        >
+          {points.toLocaleString()} <span>{description}</span>
+        </SectionTitle>
+      </ItemsContainer>
       {body}
     </Container>
   );
