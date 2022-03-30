@@ -23,7 +23,13 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 24px;
+
   overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  :-webkit-scrollbar {
+    display: none;
+  }
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
@@ -52,7 +58,13 @@ export const LegendaryContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 24px;
-  overflow-y: scroll;
+
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  :-webkit-scrollbar {
+    display: none;
+  }
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
