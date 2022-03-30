@@ -91,6 +91,12 @@ const content = {
 };
 
 const GameBanner = () => {
+  // call /rankings/:address?networkId=2&stage=iniitial
+  // if 404 call useProfileInfo()
+  // if res > 0 -> 'claimed-points'
+  // else if res == 0 -> 'no-points'
+  // else -> 'claimable-points'
+
   // 'no-points', 'claimable-points', claimed-points'
   const status = 'claimable-points';
 
