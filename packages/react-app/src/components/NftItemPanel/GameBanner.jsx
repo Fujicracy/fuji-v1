@@ -77,22 +77,39 @@ const Icon = styled(FilterHdrIcon)`
   `}
 `;
 
-const Banner = () => {
+const content = {
+  text: {
+    'no-points':
+      'You are now rewarded for using Fuji, the more you Borrow the higher you will go Visit our Kick-Off Medium post to learn more about the campaign.',
+    'claimable-points':
+      'You are already climbing Mt. Fuji by having a loan with Fuji. Go to the Store and buy a crate for the chance to win prices. You can win Climbing Gear NFTs or Extra Boost for your Meter Points.',
+  },
+  cta: {
+    'no-points': 'Start climbing !',
+    'claimable-points': 'Claim you points.',
+  },
+};
+
+const GameBanner = () => {
+  // 'no-points', 'claimable-points', claimed-points'
+  const status = 'claimable-points';
+
+  if (status === 'claimed-points') {
+    return <></>;
+  }
+
   return (
     <Container>
       <Flex width="80%" margin="0 1rem">
         <Icon />
         <ContentContainer>
           <Title>The Fuji Climbing Campaing is Live!!</Title>
-          <Text>
-            You are now rewarded for using Fuji, the more you Borrow the higher you will go Visit
-            our Kick-Off Medium post to learn more about the campaign.
-          </Text>
+          <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>
-      <Cta onClick={() => alert('not implemented')}>Start climbing !</Cta>
+      <Cta onClick={() => alert('not implemented')}>{content.cta[status]}</Cta>
     </Container>
   );
 };
 
-export default Banner;
+export default GameBanner;

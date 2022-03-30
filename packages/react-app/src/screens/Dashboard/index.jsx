@@ -5,7 +5,7 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Loader, Header } from 'components';
 import { BackgroundEffect } from 'components/UI';
 import { useContractLoader, useAuth, useResources, useContractReader } from 'hooks';
-import Banner from 'components/NftItemPanel/Banner';
+import GameBanner from 'components/NftItemPanel/GameBanner';
 
 import Error from '../Error';
 
@@ -48,11 +48,11 @@ function Dashboard() {
             )}
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/init-borrow`}>
-            <Banner />
+            <GameBanner />
             <InitBorrow />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/my-positions`}>
-            <Banner />
+            <GameBanner />
             <MyPositions />
           </ProtectedRoute>
           <ProtectedRoute path={`${path}/position`}>
