@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
+import axios from 'axios';
 import { Flex } from 'rebass';
 import { fujiMedia } from 'consts';
+import { useAuth } from 'hooks';
 
 const Container = styled.div`
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
@@ -92,15 +94,51 @@ const content = {
   },
 };
 
+const useBannerStatus = () => {
+  const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com/#/';
+  const address = '';
+  const [status, setStatus] = useState('no-points');
+  const auth = useAuth();
+  console.log(auth);
+
+  useEffect(() => {
+    async function fetchStatus() {
+      try {
+        const res = await axios.get(`${baseUri}/rankings/${address}`, {
+          params: {
+            networkId: 2,
+            stage: 'initial',
+          },
+        });
+        console.log(res);
+        setStatus('claimable-points');
+      } catch (e) {
+        console.log(e);
+        // if (res.totalPoints > 0) {
+        //   setStatus('claimed-points')
+        // } else if (res.totalPoints === 0) {
+        //   setStatus('no-points')
+        // }
+      }
+    }
+    fetchStatus();
+  }, [status]);
+
+  return status;
+};
+
 const GameBanner = () => {
-  // call /rankings/:address?networkId=2&stage=iniitial
-  // if 404 call useProfileInfo()
-  // if res > 0 -> 'claimed-points'
-  // else if res == 0 -> 'no-points'
-  // else -> 'claimable-points'
+  /* eslint-disable spaced-comment */
+  /**
+   * call /rankings/:address?networkId=2&stage=iniitial
+   * if 404 call useProfileInfo()
+   *   if res > 0 -> 'claimed-points'
+   *   else if res == 0 -> 'no-points'
+   * else -> 'claimable-points'
+   **/
 
   // 'no-points', 'claimable-points', claimed-points'
-  const status = 'claimable-points';
+  const status = useBannerStatus();
 
   if (status === 'claimed-points') {
     return <></>;
