@@ -109,6 +109,12 @@ const Body = styled(TableBody)`
   }
 `;
 
+const HeadContainer = styled.div`
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+`;
+
 function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
@@ -120,12 +126,15 @@ function Leaderboard() {
       borderRadius="8px"
       mb="88px"
     >
-      <Label color="white" fontSize={4} fontWeight={500} textAlign="left">
-        Leaderboard
-      </Label>
-      <Label color="white" fontSize={2} textAlign="left">
-        See your position around all the fam of fujidoers and climb to the summit of the world
-      </Label>
+      <HeadContainer>
+        <Label color="white" fontSize={4} fontWeight={500} textAlign="left">
+          Leaderboard
+        </Label>
+        <br />
+        <Label color="white" fontSize={2} textAlign="left">
+          See your position around all the fam of fujidoers and climb to the summit of the world
+        </Label>
+      </HeadContainer>
 
       <Table>
         <TableHead>
