@@ -147,7 +147,8 @@ function Leaderboard() {
                 #{r.rank}
                 {r.previousRank && r.previousRank > r.rank ? '⬆' : '⬇'}
               </Cell>
-              <Cell>{r.name ?? r.address}</Cell>
+              {/* TODO: Display problem: full address is too long but short address is irrelevant */}
+              <Cell>{r.name || `${r.address.substr(0, 6)}...${r.address.substr(-4, 4)}`}</Cell>
               <Cell>{r.points}</Cell>
               <Cell>{r.boost}%</Cell>
               <Cell>{r.speed} m/week</Cell>
