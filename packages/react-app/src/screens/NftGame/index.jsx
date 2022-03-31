@@ -13,6 +13,7 @@ import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 
 import Profile from './Profile';
 import Inventory from './Inventory';
+import Leaderboard from './Leaderboard';
 import Store from './Store';
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
@@ -91,6 +92,9 @@ function NftGame() {
               </Route>
               <Route path={`${path}/inventory`}>
                 <Inventory />
+              </Route>
+              <Route path={`${path}/leaderboard`}>
+                <Leaderboard />
               </Route>
             </Switch>
           </Flex>
