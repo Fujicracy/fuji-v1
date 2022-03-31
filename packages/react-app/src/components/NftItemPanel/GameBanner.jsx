@@ -17,6 +17,8 @@ const Container = styled.div`
   left: 1rem;
 
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   ${fujiMedia.lessThan('medium')`
     padding: 1rem .5rem;
@@ -26,7 +28,6 @@ const Container = styled.div`
 
 const ContentContainer = styled.div`
   margin: 0 16px;
-  width: 80%;
 
   ${fujiMedia.lessThan('medium')`
     width: 100%;
@@ -57,8 +58,8 @@ const Cta = styled.button`
   padding: 0.5rem 2rem;
   color: white;
   font-weight: bold;
-  width: 20%;
   cursor: pointer;
+  width: 260px;
 
   transition: 0.3s all;
   :hover {
@@ -68,6 +69,7 @@ const Cta = styled.button`
   ${fujiMedia.lessThan('medium')`
     width: 100%;
     margin-top: 1rem;
+    width: 200px;
   `}
 `;
 
@@ -106,7 +108,7 @@ const GameBanner = () => {
 
   return (
     <Container>
-      <Flex width="80%" margin="0 1rem">
+      <Flex>
         <Icon />
         <ContentContainer>
           <Title>The Fuji Climbing Campaing is Live!!</Title>
