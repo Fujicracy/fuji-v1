@@ -7,16 +7,15 @@ import { fujiMedia } from 'consts';
 import { useAuth } from 'hooks';
 
 const Container = styled.div`
+  // Hard coded with to match container width on borrow & my positions
+  width: calc(1136px - 2 * 24px);
+  margin: 0 auto;
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   box-shadow: 0px 0px 8px #f0014f;
   backdrop-filter: blur(6px);
   border-radius: 8px;
   color: white;
-
   padding: 1rem;
-  width: calc(100% - 2 * 1rem);
-  position: relative;
-  left: 1rem;
 
   display: flex;
   align-items: center;
@@ -83,13 +82,12 @@ const Icon = styled(FilterHdrIcon)`
 
 const content = {
   text: {
-    'no-points':
-      'You are now rewarded for using Fuji, the more you Borrow the higher you will go Visit our Kick-Off Medium post to learn more about the campaign.',
+    'no-points': 'You are now rewarded for using Fuji, the more you Borrow the higher you will go.',
     'claimable-points':
       'You are already climbing Mt. Fuji by having a loan with Fuji. Go to the Store and buy a crate for the chance to win prices. You can win Climbing Gear NFTs or Extra Boost for your Meter Points.',
   },
   cta: {
-    'no-points': 'Start climbing !',
+    'no-points': 'Start climbing',
     'claimable-points': 'Claim you points.',
   },
 };
