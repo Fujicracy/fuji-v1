@@ -6,11 +6,20 @@ import { CircularProgress } from '@material-ui/core';
 import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
-import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
+import {
+  ItemPanel,
+  BuyButton,
+  LegendaryItemsContainer,
+  LegendaryContainer,
+  InfoButton,
+  CancelButton,
+} from './styles';
+import ItemInfo from './ItemInfo';
 
 const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
@@ -30,27 +39,13 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
     }
     setIsBuying(false);
   };
-  return (
-    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
-      <LegendaryItemsContainter>
-        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-          Legendary
-        </SectionTitle>
-        <SectionTitle
-          color={theme.foreColor}
-          fontSize="16px"
-          mt={2}
-          spanFontSize="10px"
-          spanColor={theme.foreColor}
-          lineHeight="12px"
-          alignItems="baseline"
-        >
-          {points.toLocaleString()} <span>{description}</span>
-        </SectionTitle>
-      </LegendaryItemsContainter>
 
+  const body = showInfo ? (
+    <ItemInfo type={INVENTORY_TYPE.LEGENDARY} />
+  ) : (
+    <>
       <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
-      <LegendaryItemsContainter
+      <LegendaryItemsContainer
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
@@ -121,7 +116,39 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
             Buy
           </BuyButton>
         )}
-      </LegendaryItemsContainter>
+      </LegendaryItemsContainer>
+    </>
+  );
+
+  return (
+    <LegendaryContainer
+      color={theme.foreColor}
+      backgroundColor={theme.backColor}
+      mode={showInfo ? 'info' : undefined}
+    >
+      {showInfo ? (
+        <CancelButton onClick={() => setShowInfo(false)} />
+      ) : (
+        <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
+      )}
+      <LegendaryItemsContainer>
+        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+          Legendary
+        </SectionTitle>
+        <SectionTitle
+          color={theme.foreColor}
+          fontSize="16px"
+          mt={2}
+          spanFontSize="10px"
+          spanColor={theme.foreColor}
+          lineHeight="12px"
+          alignItems="baseline"
+        >
+          {points.toLocaleString()} <span>{description}</span>
+        </SectionTitle>
+      </LegendaryItemsContainer>
+
+      {body}
     </LegendaryContainer>
   );
 };
