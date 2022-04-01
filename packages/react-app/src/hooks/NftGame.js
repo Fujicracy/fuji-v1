@@ -73,15 +73,26 @@ function getRewardOutcomes(probabiltyIntervals, rewards) {
   return outcomes;
 }
 
-export function useCratesInfo() {
-  const { address } = useAuth();
+export function useCratesBalance() {
   const contracts = useContractLoader();
-
+  const { address } = useAuth();
   const unformattedBalances = useContractReader(contracts, 'NFTGame', 'balanceOfBatch', [
     [address, address, address],
     [CRATE_CONTRACT_IDS.COMMON, CRATE_CONTRACT_IDS.EPIC, CRATE_CONTRACT_IDS.LEGENDARY],
   ]);
   const crateBalances = formatHexArray(unformattedBalances, 0);
+
+  return {
+    [INVENTORY_TYPE.COMMON]: crateBalances[0],
+    [INVENTORY_TYPE.EPIC]: crateBalances[1],
+    [INVENTORY_TYPE.LEGENDARY]: crateBalances[2],
+    total: crateBalances.reduce((prev, v) => prev + v, 0),
+  };
+}
+
+export function useCratesInfo() {
+  const contracts = useContractLoader();
+  const crateBalances = useCratesBalance();
 
   // crates prices
   const commonPrice = useContractReader(contracts, 'NFTInteractions', 'cratePrices', [
@@ -121,12 +132,7 @@ export function useCratesInfo() {
   );
 
   return {
-    amounts: {
-      [INVENTORY_TYPE.COMMON]: crateBalances[0],
-      [INVENTORY_TYPE.EPIC]: crateBalances[1],
-      [INVENTORY_TYPE.LEGENDARY]: crateBalances[2],
-      total: crateBalances.reduce((prev, v) => prev + v, 0),
-    },
+    amounts: crateBalances,
     prices: {
       [INVENTORY_TYPE.COMMON]: cratePrices[0],
       [INVENTORY_TYPE.EPIC]: cratePrices[1],
