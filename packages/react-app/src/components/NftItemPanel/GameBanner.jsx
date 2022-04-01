@@ -4,7 +4,10 @@ import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import axios from 'axios';
 import { Flex } from 'rebass';
 import { fujiMedia } from 'consts';
-import { useAuth } from 'hooks';
+import { useAuth, useContractLoader, useProfileInfo } from 'hooks';
+import { Transactor } from 'helpers';
+import { happyIcon } from 'assets/images';
+import { ResultPopup } from 'components';
 
 const Container = styled.div`
   // Hard coded with to match container width on borrow & my positions
@@ -93,54 +96,109 @@ const content = {
 };
 
 const useBannerStatus = () => {
-  const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com/#/';
-  const address = '';
+  const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com/';
   const [status, setStatus] = useState('no-points');
-  const auth = useAuth();
-  console.log(auth);
+  const { address } = useAuth();
+  const { points } = useProfileInfo();
 
   useEffect(() => {
     async function fetchStatus() {
+      /* eslint-disable spaced-comment */
+      /**
+       * call /rankings/:address?networkId=2&stage=iniitial
+       * if 404 call useProfileInfo()
+       *   if res > 0 -> 'claimed-points'
+       *   else if res == 0 -> 'no-points'
+       * else -> 'claimable-points'
+       **/
       try {
-        const res = await axios.get(`${baseUri}/rankings/${address}`, {
+        await axios.get(`${baseUri}/rankings/${address}`, {
           params: {
             networkId: 2,
             stage: 'initial',
           },
         });
-        console.log(res);
-        setStatus('claimable-points');
+        if (points > 0) {
+          setStatus('claimed-points');
+        } else {
+          setStatus('claimable-points');
+        }
       } catch (e) {
         console.log(e);
-        // if (res.totalPoints > 0) {
-        //   setStatus('claimed-points')
-        // } else if (res.totalPoints === 0) {
-        //   setStatus('no-points')
-        // }
+        setStatus('no-points');
       }
     }
     fetchStatus();
-  }, [status]);
+  }, [address, points]);
 
   return status;
 };
 
-const GameBanner = () => {
-  /* eslint-disable spaced-comment */
-  /**
-   * call /rankings/:address?networkId=2&stage=iniitial
-   * if 404 call useProfileInfo()
-   *   if res > 0 -> 'claimed-points'
-   *   else if res == 0 -> 'no-points'
-   * else -> 'claimable-points'
-   **/
+const ACTION_RESULT = {
+  NONE: 'none',
+  SUCCESS: 'success',
+  ERROR: 'error',
+};
 
-  // 'no-points', 'claimable-points', claimed-points'
+const ACTION_DESCRIPTIONS = {
+  [ACTION_RESULT.SUCCESS]: {
+    value: ACTION_RESULT.SUCCESS,
+    title: 'Congratulation!',
+    description:
+      'Your action have been processed by Fuji, you can now check your crates into your inventory.',
+    submitText: 'Inventory',
+    emotionIcon: happyIcon,
+  },
+  [ACTION_RESULT.ERROR]: {
+    value: ACTION_RESULT.ERROR,
+    title: 'Something is wrong',
+    description:
+      'An error occured during the transaction, it can be your credits number or a problem on our side.',
+    submitText: 'Try again',
+    emotionIcon: '',
+  },
+};
+
+const GameBanner = () => {
+  // 'no-points', 'claimable-points', 'claimed-points'
   const status = useBannerStatus();
+  const { address, provider } = useAuth();
+  const tx = Transactor(provider);
+
+  const [actionResult, setActionResult] = useState(ACTION_RESULT.NONE);
+
+  const contracts = useContractLoader();
 
   if (status === 'claimed-points') {
     return <></>;
   }
+
+  const handleCta = async () => {
+    if (status === 'claimable-points') {
+      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
+      const { data } = await axios.get(`${baseUri}/rankings/merkle-proofs`, {
+        params: {
+          networkId: 2,
+          address,
+        },
+      });
+      try {
+        const txRes = await tx(contracts.NFTGame.claimBonusPoints(data.pointsToClaim, data.proofs));
+        console.log(txRes);
+
+        if (txRes && txRes.hash) {
+          await txRes.wait();
+          setActionResult(ACTION_RESULT.SUCCESS);
+          // TODO: Put modal (cf in store)
+        }
+      } catch (error) {
+        console.error('minting inventory error:', { error });
+        setActionResult(ACTION_RESULT.ERROR);
+      }
+    } else if (status === 'no-points') {
+      alert('not implemented');
+    }
+  };
 
   return (
     <Container>
@@ -151,7 +209,13 @@ const GameBanner = () => {
           <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>
-      <Cta onClick={() => alert('not implemented')}>{content.cta[status]}</Cta>
+      <Cta onClick={handleCta}>{content.cta[status]}</Cta>
+      <ResultPopup
+        isOpen={actionResult !== ACTION_RESULT.NONE}
+        content={ACTION_DESCRIPTIONS[actionResult] ?? {}}
+        onSubmit={() => alert('not implemented')}
+        onClose={() => alert('not implemented')}
+      />
     </Container>
   );
 };
