@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BlackBoxContainer, Label } from 'components';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,72 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import styled from 'styled-components';
+import Axios from 'axios';
 
-const rankings = [
-  {
-    rank: 1,
-    previousRank: 2,
-    name: 'tiagofneto',
-    address: '0x',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 2,
-    previousRank: 1,
-    name: 'Jaibo',
-    address: '0x',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 3,
-    previousRank: undefined,
-    name: 'Yome',
-    address: '0x',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 4,
-    previousRank: undefined,
-    name: 'bob40',
-    address: '0x',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 5,
-    previousRank: undefined,
-    name: 'GringoClimb69',
-    address: '0x5246EaDEa6925eF6A861e3e2860665306a8A6233',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 6,
-    previousRank: undefined,
-    name: '',
-    address: '0x5246EaDEa6925eF6A861e3e286qw665306a8A6233',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-  {
-    rank: 7,
-    previousRank: undefined,
-    name: '',
-    address: '0x5246EaDEa6925eF6A861e3e2860665306a8A6244',
-    points: 23459,
-    boost: 60,
-    speed: 87843,
-  },
-];
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS } from 'consts';
+import { formatUnits } from 'ethers/lib/utils';
+import { intToString } from 'helpers';
 
 const Cell = styled(TableCell)`
   color: white;
@@ -115,16 +53,20 @@ const HeadContainer = styled.div`
   padding-bottom: 1rem;
 `;
 
-function useRanking() {
-  const [rankings, setRankings] = useState();
-
-  useEffect(() => setRankings());
-
-  return rankings;
-}
-
 function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const [rankings, setRankings] = useState([]);
+  console.count('Leaderboard');
+
+  useEffect(() => {
+    async function fetchData() {
+      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
+      const res = await Axios.get(`${baseUri}/rankings`, { params: { networkId: 2 } });
+      const newRankings = res.data.slice(0, 25);
+      setRankings(newRankings);
+    }
+    fetchData();
+  }, []);
 
   return (
     <BlackBoxContainer
@@ -150,7 +92,6 @@ function Leaderboard() {
             <Cell>Rank</Cell>
             <Cell>Address / Name</Cell>
             <Cell>Meter points</Cell>
-            <Cell>Boost score</Cell>
             <Cell>Climbing speed</Cell>
           </TableRow>
         </TableHead>
@@ -159,16 +100,24 @@ function Leaderboard() {
             // TODO: Use current user address
             <TableRow
               className={{ active: r.address === '0x5246EaDEa6925eF6A861e3e2860665306a8A6233' }}
+              key={r.address}
             >
               <Cell>
-                #{r.rank}
-                {r.previousRank && r.previousRank > r.rank ? '⬆' : '⬇'}
+                #{r.position}
+                {r.previousPosition && r.previousPosition > r.position ? '⬆' : '⬇'}
               </Cell>
-              {/* TODO: Display problem: full address is too long but short address is irrelevant */}
-              <Cell>{r.name || `${r.address.substr(0, 6)}...${r.address.substr(-4, 4)}`}</Cell>
-              <Cell>{r.points}</Cell>
-              <Cell>{r.boost}%</Cell>
-              <Cell>{r.speed} m/week</Cell>
+              <Cell>
+                <a
+                  href={`https://ftmscan.com/address/${r.address}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: 'white', textDecoration: 'underline' }}
+                >
+                  {r.username || `${r.address.substr(0, 8)}...${r.address.substr(-8, 8)}`}
+                </a>
+              </Cell>
+              <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
+              <Cell>{parseInt(r.rateOfAccrual, 10)} m/day</Cell>
             </TableRow>
           ))}
         </Body>
