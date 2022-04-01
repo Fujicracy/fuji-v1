@@ -115,6 +115,14 @@ const HeadContainer = styled.div`
   padding-bottom: 1rem;
 `;
 
+function useRanking() {
+  const [rankings, setRankings] = useState();
+
+  useEffect(() => setRankings());
+
+  return rankings;
+}
+
 function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
