@@ -29,7 +29,7 @@ export const CRATE_CARD_IDS = {
   NOTHING: 'nothing',
   POINTS: 0,
   NFT_START: 4,
-  NFT_END: 13,
+  NFT_END: 8,
 };
 
 const NFT_GEAR_IDS = {
@@ -49,42 +49,72 @@ export const NFT_GEARS = {
   [NFT_GEAR_IDS.PICKAXE]: {
     name: 'Pickaxe',
     boost: 10,
+    images: {
+      medium: 'https://ipfs.fleek.co/ipfs/bafybeiceaehfh4p7jejththcaeadbamztagqhimqjhzo2otgmovinbx6n4'
+    }
   },
   [NFT_GEAR_IDS.OXYGEN_KIT]: {
     name: 'Oxygen Kit',
     boost: 10,
+    images: {
+      medium: 'https://ipfs.fleek.co/ipfs/bafybeighjgji4bhbqkrx5czdwvspgm6hyubdip6uu5t4db6zkkf6rnxuhy'
+    }
   },
   [NFT_GEAR_IDS.GLOVES]: {
     name: 'Gloves',
     boost: 10,
+    images: {
+      medium: 'https://ipfs.fleek.co/ipfs/bafybeigvlaagna77fdibkgs27jxo3law2cey6ui5brqnhoqtnikyunacze'
+    }
   },
   [NFT_GEAR_IDS.FLARE_GUN]: {
     name: 'Flare Gun',
     boost: 10,
+    images: {
+      medium: 'https://ipfs.fleek.co/ipfs/bafybeicau6ab7dlj3zu5tm26qrmqx7t3a6i6pxsbgoixv3vtksrotwiu5u'
+    }
   },
   [NFT_GEAR_IDS.HEAT_CAPSULE]: {
     name: 'Heat Capsule',
     boost: 10,
+    images: {
+      medium: 'https://ipfs.fleek.co/ipfs/bafybeiabt7es5q65qdwp7dns55akbspmvteg5oie4fmezhw2smfywnmkna'
+    }
   },
   [NFT_GEAR_IDS.SLIPPERS]: {
     name: 'Slippers',
     boost: 10,
+    images: {
+      medium: ''
+    }
   },
   [NFT_GEAR_IDS.SUNGLASSES]: {
     name: 'Sunglasses',
     boost: 10,
+    images: {
+      medium: ''
+    }
   },
   [NFT_GEAR_IDS.WATCH]: {
     name: 'Watch',
     boost: 10,
+    images: {
+      medium: ''
+    }
   },
   [NFT_GEAR_IDS.PROTEIN_BAR]: {
     name: 'Protein Bar',
     boost: 10,
+    images: {
+      medium: ''
+    }
   },
   [NFT_GEAR_IDS.MED_KIT]: {
     name: 'Med Kit',
     boost: 10,
+    images: {
+      medium: ''
+    }
   },
 };
 

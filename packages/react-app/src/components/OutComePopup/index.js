@@ -3,8 +3,6 @@ import { Flex, Image } from 'rebass';
 
 import { NFT_GAME_MODAL_THEMES, CRATE_CARD_IDS, NFT_GEARS } from 'consts';
 
-import { giftBoxImage } from 'assets/images';
-
 import SectionTitle from '../Blocks/SectionTitle';
 import {
   StyledModal,
@@ -105,7 +103,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
               </Flex>
             ) : (
               <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <Image src={giftBoxImage} width="140px" height="140px" />
+                <Image src={NFT_GEARS[outKey].images.medium} width="160px" height="160px" />
                 <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
                   {NFT_GEARS[outKey].name}
                 </SectionTitle>

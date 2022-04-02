@@ -28,8 +28,6 @@ import {
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
-import { giftBoxImage } from 'assets/images';
-
 import {
   GearSetItem,
   GearSetNumber,
@@ -40,17 +38,19 @@ import {
   GridItem,
 } from './styles';
 
-const GearSet = ({ balance, name, boost }) => {
+const GearSet = ({ nftGear }) => {
+  const { balance, name, boost, images } = nftGear;
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <GearSetContainer>
         <GearSetItem>
           <GearSetBadge />
-          <Image src={giftBoxImage} width={100} height={100} />
+          <Image src={images.medium} width={230} height={230} />
         </GearSetItem>
         <GearSetNumber>
           <Flex justifyContent="center" alignItems="center">
-            <IntenseSpan fontSize="18px">{balance}</IntenseSpan>
+            <span style={{ marginRight: '2px' }}>x</span>
+            <IntenseSpan fontSize="22px">{balance}</IntenseSpan>
           </Flex>
         </GearSetNumber>
       </GearSetContainer>
@@ -74,7 +74,7 @@ function Inventory() {
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
 
-  const [gearSetBalances, setGearSetBalances] = useState([]);
+  const [nftGears, setNftGears] = useState([]);
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
   const [outComes, setOutComes] = useState({});
   const [crateType, setCrateType] = useState({});
@@ -103,18 +103,20 @@ function Inventory() {
   useEffect(() => {
     async function fetchGearSetData() {
       if (contracts && address) {
-        const fetchingPromises = [];
+        const params = [[], []];
         for (let i = CRATE_CARD_IDS.NFT_START; i <= CRATE_CARD_IDS.NFT_END; i += 1) {
-          fetchingPromises.push(contracts.NFTGame.balanceOf(address, i));
+          params[0].push(address);
+          params[1].push(i);
         }
-        const balances = await Promise.all(fetchingPromises);
+        const balances = await contracts.NFTGame.balanceOfBatch(...params);
 
-        setGearSetBalances(
+        setNftGears(
           balances.map((value, index) => ({
             id: CRATE_CARD_IDS.NFT_START + index,
             balance: value.toString(),
             name: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].name,
             boost: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].boost,
+            images: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].images,
           })),
         );
       }
@@ -155,7 +157,7 @@ function Inventory() {
         ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
         // make a rough estimate of GasLimit according the amount of crates
-        const gasLimit = 130000 + amount * 12000;
+        const gasLimit = 180000 + amount * 12000;
         const result = await wrappednftinteractions.openCrate(crateId, amount, { gasLimit });
 
         if (result && result.hash) {
@@ -290,10 +292,10 @@ function Inventory() {
 
         <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
-          {gearSetBalances.length > 0 &&
-            gearSetBalances.map(gearSet => (
-              <Grid item xs={6} md={3} key={`gearSet-${gearSet.id}`}>
-                <GearSet balance={gearSet.balance} name={gearSet.name} boost={gearSet.boost} />
+          {nftGears.length > 0 &&
+            nftGears.map(nftGear => (
+              <Grid item xs={6} md={4} key={`gearSet-${nftGear.id}`}>
+                <GearSet nftGear={nftGear} />
               </Grid>
             ))}
         </Grid>

@@ -130,8 +130,8 @@ export const TiledPanel = styled.div`
 
 export const GearSetContainer = styled.div`
   position: relative;
-  width: 172px;
-  height: 172px;
+  width: 229px;
+  height: 229px;
 `;
 
 export const GearSetItem = styled.div`
@@ -140,8 +140,8 @@ export const GearSetItem = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 172px;
-  height: 172px;
+  width: 229px;
+  height: 229px;
   background: rgb(18, 18, 18);
 
   border: 2px solid rgb(58, 58, 58);
@@ -170,13 +170,13 @@ export const GearSetNumber = styled.div`
   height: 43px;
 
   display: flex;
-  align-items: cetner;
+  align-items: flex-start;
   justify-content: center;
 
   color: rgba(240, 1, 79, 1);
   position: absolute;
   right: -8px;
-  top: -8px;
+  top: 4px;
   z-index: 2;
 `;
 
