@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
 import {
@@ -16,7 +16,7 @@ import {
 import ItemInfo from './ItemInfo';
 
 const GeneralItem = ({
-  type = INVENTORY_TYPE.COMMON,
+  type = CRATE_TYPE.COMMON,
   title,
   points,
   description,

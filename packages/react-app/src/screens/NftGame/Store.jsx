@@ -12,7 +12,7 @@ import {
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_CONTRACT_IDS, INVENTORY_TYPE } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_IDS, CRATE_TYPE } from 'consts';
 import { Grid } from '@material-ui/core';
 
 import { useProfileInfo, useContractLoader, useAuth, useCratesInfo } from 'hooks';
@@ -71,11 +71,11 @@ function Store() {
     setActionResult(ACTION_RESULT.NONE);
 
     const crateId =
-      type === INVENTORY_TYPE.COMMON
-        ? CRATE_CONTRACT_IDS.COMMON
-        : type === INVENTORY_TYPE.EPIC
-        ? CRATE_CONTRACT_IDS.EPIC
-        : CRATE_CONTRACT_IDS.LEGENDARY;
+      type === CRATE_TYPE.COMMON
+        ? CRATE_IDS.COMMON
+        : type === CRATE_TYPE.EPIC
+        ? CRATE_IDS.EPIC
+        : CRATE_IDS.LEGENDARY;
 
     if (cratesPrices[type] * amount > points) {
       setActionResult(ACTION_RESULT.NOT_ENOUGH_POINTS);
@@ -151,9 +151,9 @@ function Store() {
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={6} md={4}>
             <GeneralItem
-              type={INVENTORY_TYPE.COMMON}
-              title={INVENTORY_TYPE.COMMON}
-              points={cratesPrices[INVENTORY_TYPE.COMMON]}
+              type={CRATE_TYPE.COMMON}
+              title={CRATE_TYPE.COMMON}
+              points={cratesPrices[CRATE_TYPE.COMMON]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}
@@ -161,9 +161,9 @@ function Store() {
           </Grid>
           <Grid item xs={6} md={4}>
             <GeneralItem
-              type={INVENTORY_TYPE.EPIC}
-              title={INVENTORY_TYPE.EPIC}
-              points={cratesPrices[INVENTORY_TYPE.EPIC]}
+              type={CRATE_TYPE.EPIC}
+              title={CRATE_TYPE.EPIC}
+              points={cratesPrices[CRATE_TYPE.EPIC]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}
@@ -171,7 +171,7 @@ function Store() {
           </Grid>
           <Grid item xs={12} md={4}>
             <LegendaryItem
-              points={cratesPrices[INVENTORY_TYPE.LEGENDARY]}
+              points={cratesPrices[CRATE_TYPE.LEGENDARY]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}

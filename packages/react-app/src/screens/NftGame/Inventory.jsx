@@ -20,11 +20,12 @@ import {
 import {
   BREAKPOINTS,
   BREAKPOINT_NAMES,
-  CRATE_CONTRACT_IDS,
-  INVENTORY_TYPE,
-  CRATE_CARD_IDS,
+  NFT_IDS,
+  CRATE_IDS,
+  CRATE_TYPE,
+  GEAR_IDS,
   NFT_GAME_POINTS_DECIMALS,
-  NFT_GEARS,
+  NFT_ITEMS,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
@@ -79,32 +80,32 @@ function Inventory() {
   const [outComes, setOutComes] = useState({});
   const [crateType, setCrateType] = useState({});
 
-  const inventories = [
+  const crates = [
     {
-      type: INVENTORY_TYPE.COMMON,
-      amount: cratesAmount[INVENTORY_TYPE.COMMON],
-      price: cratesPrices[INVENTORY_TYPE.COMMON],
+      type: CRATE_TYPE.COMMON,
+      amount: cratesAmount[CRATE_TYPE.COMMON],
+      price: cratesPrices[CRATE_TYPE.COMMON],
     },
     {
-      type: INVENTORY_TYPE.EPIC,
-      amount: cratesAmount[INVENTORY_TYPE.EPIC],
-      price: cratesPrices[INVENTORY_TYPE.EPIC],
+      type: CRATE_TYPE.EPIC,
+      amount: cratesAmount[CRATE_TYPE.EPIC],
+      price: cratesPrices[CRATE_TYPE.EPIC],
     },
     {
-      type: INVENTORY_TYPE.LEGENDARY,
-      amount: cratesAmount[INVENTORY_TYPE.LEGENDARY],
-      price: cratesPrices[INVENTORY_TYPE.LEGENDARY],
+      type: CRATE_TYPE.LEGENDARY,
+      amount: cratesAmount[CRATE_TYPE.LEGENDARY],
+      price: cratesPrices[CRATE_TYPE.LEGENDARY],
     },
   ];
 
-  const availableInventories = inventories.filter(inventory => inventory.amount > 0);
-  const availableInventoryTypeCounts = availableInventories.length;
+  const availableCrates = crates.filter(inventory => inventory.amount > 0);
+  const availableCratesCount = availableCrates.length;
 
   useEffect(() => {
     async function fetchGearSetData() {
       if (contracts && address) {
         const params = [[], []];
-        for (let i = CRATE_CARD_IDS.NFT_START; i <= CRATE_CARD_IDS.NFT_END; i += 1) {
+        for (let i = GEAR_IDS.START; i <= GEAR_IDS.END; i += 1) {
           params[0].push(address);
           params[1].push(i);
         }
@@ -112,11 +113,11 @@ function Inventory() {
 
         setNftGears(
           balances.map((value, index) => ({
-            id: CRATE_CARD_IDS.NFT_START + index,
+            id: GEAR_IDS.START + index,
             balance: value.toString(),
-            name: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].name,
-            boost: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].boost,
-            images: NFT_GEARS[CRATE_CARD_IDS.NFT_START + index].images,
+            name: NFT_ITEMS[GEAR_IDS.START + index].name,
+            boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
+            images: NFT_ITEMS[GEAR_IDS.START + index].images,
           })),
         );
       }
@@ -145,11 +146,11 @@ function Inventory() {
       setIsRedeeming(true);
       setCrateType(type);
       const crateId =
-        type === INVENTORY_TYPE.COMMON
-          ? CRATE_CONTRACT_IDS.COMMON
-          : type === INVENTORY_TYPE.EPIC
-          ? CRATE_CONTRACT_IDS.EPIC
-          : CRATE_CONTRACT_IDS.LEGENDARY;
+        type === CRATE_TYPE.COMMON
+          ? CRATE_IDS.COMMON
+          : type === CRATE_TYPE.EPIC
+          ? CRATE_IDS.EPIC
+          : CRATE_IDS.LEGENDARY;
 
       try {
         const wrappednftinteractions = WrapperBuilder.wrapLite(
@@ -172,17 +173,17 @@ function Inventory() {
           rewards.forEach(reward => {
             const tokenId = Number(reward.tokenId);
             const rewardAmount =
-              tokenId === CRATE_CARD_IDS.POINTS
+              tokenId === NFT_IDS.POINTS
                 ? Number(formatUnits(reward.amount, NFT_GAME_POINTS_DECIMALS))
                 : Number(reward.amount);
 
             console.log({ tokenId, rewardAmount });
 
             if (rewardAmount === 0) {
-              tmpOutComes[CRATE_CARD_IDS.NOTHING] = tmpOutComes[CRATE_CARD_IDS.NOTHING] || {
+              tmpOutComes[NFT_IDS.NOTHING] = tmpOutComes[NFT_IDS.NOTHING] || {
                 count: 0,
               };
-              tmpOutComes[CRATE_CARD_IDS.NOTHING].count += 1;
+              tmpOutComes[NFT_IDS.NOTHING].count += 1;
             } else {
               tmpOutComes[reward.tokenId] = tmpOutComes[reward.tokenId] || { count: 0, amount: 0 };
               tmpOutComes[reward.tokenId].count += 1;
@@ -223,25 +224,25 @@ function Inventory() {
               alignItems="center"
               width="100%"
             >
-              {availableInventoryTypeCounts > 0 &&
-                (availableInventoryTypeCounts === 1 ? (
+              {availableCratesCount > 0 &&
+                (availableCratesCount === 1 ? (
                   <InventoryItem
-                    type={availableInventories[0].type}
-                    onClick={() => onClickInventory(availableInventories[0])}
+                    type={availableCrates[0].type}
+                    onClick={() => onClickInventory(availableCrates[0])}
                   />
                 ) : (
                   <>
                     {['left', 'right', 'center'].map(
                       (position, index) =>
-                        index < availableInventories.length && (
+                        index < availableCrates.length && (
                           <RotateContainer
                             position={position}
                             key={`mobile-inventory-${position}`}
-                            onClick={() => onClickInventory(availableInventories[index])}
+                            onClick={() => onClickInventory(availableCrates[index])}
                           >
                             <InventoryItem
-                              type={availableInventories[index].type}
-                              amount={availableInventories[index].amount}
+                              type={availableCrates[index].type}
+                              amount={availableCrates[index].amount}
                               badgePosition={position}
                             />
                           </RotateContainer>
@@ -252,7 +253,7 @@ function Inventory() {
             </Flex>
           ) : (
             <Grid container alignItems="center" justifyContent="center" spacing={2}>
-              {availableInventories.map(inventory => (
+              {availableCrates.map(inventory => (
                 <GridItem item xs={6} md={4} key={`desktop-inventory-${inventory.type}`}>
                   <StackedInventoryItem
                     type={inventory.type}
