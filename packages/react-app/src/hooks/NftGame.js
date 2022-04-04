@@ -83,9 +83,9 @@ export function useCratesBalance() {
   const crateBalances = formatHexArray(unformattedBalances, 0);
 
   return {
-    [INVENTORY_TYPE.COMMON]: crateBalances[0],
-    [INVENTORY_TYPE.EPIC]: crateBalances[1],
-    [INVENTORY_TYPE.LEGENDARY]: crateBalances[2],
+    [CRATE_TYPE.COMMON]: crateBalances[0],
+    [CRATE_TYPE.EPIC]: crateBalances[1],
+    [CRATE_TYPE.LEGENDARY]: crateBalances[2],
     total: crateBalances.reduce((prev, v) => prev + v, 0),
   };
 }
