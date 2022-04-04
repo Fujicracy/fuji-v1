@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
-import { CRATE_CONTRACT_IDS, INVENTORY_TYPE, NFT_GAME_POINTS_DECIMALS } from 'consts';
+import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
@@ -78,7 +78,7 @@ export function useCratesBalance() {
   const { address } = useAuth();
   const unformattedBalances = useContractReader(contracts, 'NFTGame', 'balanceOfBatch', [
     [address, address, address],
-    [CRATE_CONTRACT_IDS.COMMON, CRATE_CONTRACT_IDS.EPIC, CRATE_CONTRACT_IDS.LEGENDARY],
+    [CRATE_IDS.COMMON, CRATE_IDS.EPIC, CRATE_IDS.LEGENDARY],
   ]);
   const crateBalances = formatHexArray(unformattedBalances, 0);
 
@@ -96,13 +96,13 @@ export function useCratesInfo() {
 
   // crates prices
   const commonPrice = useContractReader(contracts, 'NFTInteractions', 'cratePrices', [
-    CRATE_CONTRACT_IDS.COMMON,
+    CRATE_IDS.COMMON,
   ]);
   const epicPrice = useContractReader(contracts, 'NFTInteractions', 'cratePrices', [
-    CRATE_CONTRACT_IDS.EPIC,
+    CRATE_IDS.EPIC,
   ]);
   const legendaryPrice = useContractReader(contracts, 'NFTInteractions', 'cratePrices', [
-    CRATE_CONTRACT_IDS.LEGENDARY,
+    CRATE_IDS.LEGENDARY,
   ]);
   const cratePrices = formatHexArray(
     [commonPrice, epicPrice, legendaryPrice],
@@ -118,13 +118,13 @@ export function useCratesInfo() {
   );
   const intervals = formatHexArray(probabiltyIntervals, NFT_GAME_POINTS_DECIMALS);
   const commonRewards = useContractReader(contracts, 'NFTInteractions', 'getCrateRewards', [
-    CRATE_CONTRACT_IDS.COMMON,
+    CRATE_IDS.COMMON,
   ]);
   const epicRewards = useContractReader(contracts, 'NFTInteractions', 'getCrateRewards', [
-    CRATE_CONTRACT_IDS.EPIC,
+    CRATE_IDS.EPIC,
   ]);
   const legendaryRewards = useContractReader(contracts, 'NFTInteractions', 'getCrateRewards', [
-    CRATE_CONTRACT_IDS.LEGENDARY,
+    CRATE_IDS.LEGENDARY,
   ]);
   const crateRewards = formatHexArrayArray(
     [commonRewards, epicRewards, legendaryRewards],
@@ -134,14 +134,14 @@ export function useCratesInfo() {
   return {
     amounts: crateBalances,
     prices: {
-      [INVENTORY_TYPE.COMMON]: cratePrices[0],
-      [INVENTORY_TYPE.EPIC]: cratePrices[1],
-      [INVENTORY_TYPE.LEGENDARY]: cratePrices[2],
+      [CRATE_TYPE.COMMON]: cratePrices[0],
+      [CRATE_TYPE.EPIC]: cratePrices[1],
+      [CRATE_TYPE.LEGENDARY]: cratePrices[2],
     },
     outcomes: {
-      [INVENTORY_TYPE.COMMON]: getRewardOutcomes(intervals, crateRewards[0]),
-      [INVENTORY_TYPE.EPIC]: getRewardOutcomes(intervals, crateRewards[1]),
-      [INVENTORY_TYPE.LEGENDARY]: getRewardOutcomes(intervals, crateRewards[2]),
+      [CRATE_TYPE.COMMON]: getRewardOutcomes(intervals, crateRewards[0]),
+      [CRATE_TYPE.EPIC]: getRewardOutcomes(intervals, crateRewards[1]),
+      [CRATE_TYPE.LEGENDARY]: getRewardOutcomes(intervals, crateRewards[2]),
     },
   };
 }

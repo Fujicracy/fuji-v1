@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex } from 'rebass';
 
-import { INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
+import { CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import Label from '../UI/Label';
 
 import {
@@ -18,7 +18,7 @@ import {
 } from './styles';
 
 export const InventoryItem = ({
-  type = INVENTORY_TYPE.COMMON,
+  type = CRATE_TYPE.COMMON,
   amount = 1,
   isShowBadge = true,
   blackOverlayOpacity = 0,
@@ -60,7 +60,7 @@ export const InventoryItem = ({
   );
 };
 
-export const StackedInventoryItem = ({ type = INVENTORY_TYPE.COMMON, onClick, amount = 1 }) => {
+export const StackedInventoryItem = ({ type = CRATE_TYPE.COMMON, onClick, amount = 1 }) => {
   const cardsAmount = Math.min(amount, 3);
   return (
     <StackedContainer flexDirection="row" position="relative" onClick={onClick}>

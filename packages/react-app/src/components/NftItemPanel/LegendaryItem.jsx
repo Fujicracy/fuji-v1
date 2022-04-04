@@ -3,7 +3,7 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
 import { Label, CountButton } from '../UI';
 import {
@@ -25,14 +25,14 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
 
   const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
 
-  const theme = NFT_GAME_MODAL_THEMES[INVENTORY_TYPE.LEGENDARY];
+  const theme = NFT_GAME_MODAL_THEMES[CRATE_TYPE.LEGENDARY];
 
   const handleClickBuy = async () => {
     if (isBuying) return;
 
     try {
       setIsBuying(true);
-      const res = await onBuy(INVENTORY_TYPE.LEGENDARY, amount);
+      const res = await onBuy(CRATE_TYPE.LEGENDARY, amount);
       if (res) setAmount(0);
     } catch (error) {
       console.error('minting inventory error:', { error });
@@ -41,10 +41,10 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   };
 
   const body = showInfo ? (
-    <ItemInfo type={INVENTORY_TYPE.LEGENDARY} />
+    <ItemInfo type={CRATE_TYPE.LEGENDARY} />
   ) : (
     <>
-      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
+      <ItemPanel mode={CRATE_TYPE.LEGENDARY} src={theme.idleImage} />
       <LegendaryItemsContainer
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
