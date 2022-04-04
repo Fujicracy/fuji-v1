@@ -209,6 +209,7 @@ const GameBanner = () => {
           <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>
+      {/* TODO: Loading + disable state on this btn */}
       <Cta onClick={handleCta}>{content.cta[status]}</Cta>
       <ResultPopup
         isOpen={actionResult !== ACTION_RESULT.NONE}
