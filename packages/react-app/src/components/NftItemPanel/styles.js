@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { space, color, padding, width, height, opacity } from 'styled-system';
 import { Image, Flex } from 'rebass';
-import { INVENTORY_TYPE, fujiMedia } from 'consts';
+import { CRATE_TYPE, fujiMedia } from 'consts';
 import { inventoryBadge } from 'assets/images';
 import InfoIcon from '@material-ui/icons/Info';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -98,9 +98,9 @@ export const ItemPanel = styled(Image)`
 
   z-index: 0;
   ${fujiMedia.lessThan('small')`
-    position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
-    right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};
-    margin-top: ${props => (props.mode === INVENTORY_TYPE.LEGENDARY ? '0px' : '16px')};
+    position: ${props => props.mode === CRATE_TYPE.LEGENDARY && 'absolute'};
+    right:  ${props => props.mode === CRATE_TYPE.LEGENDARY && '24px'};
+    margin-top: ${props => (props.mode === CRATE_TYPE.LEGENDARY ? '0px' : '16px')};
 
     width: 80px;
     height: 80px;
@@ -171,7 +171,7 @@ export const MarkContainer = styled.div`
   height: calc(100% - 36px);
   border: 3px solid
     ${props =>
-      props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+      props.type === CRATE_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
   box-sizing: border-box;
   border-radius: 8px;
 `;
@@ -206,7 +206,7 @@ export const FujiMark = styled.div`
   text-align: center;
 
   color: ${props =>
-    props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+    props.type === CRATE_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
 
   transform: rotate(-90deg);
 

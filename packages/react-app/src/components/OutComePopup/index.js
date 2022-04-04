@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Flex, Image } from 'rebass';
 
-import { NFT_GAME_MODAL_THEMES, CRATE_CARD_IDS, NFT_GEARS } from 'consts';
-
-import { giftBoxImage } from 'assets/images';
+import { NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
 
 import SectionTitle from '../Blocks/SectionTitle';
 import {
@@ -90,11 +88,11 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
         {Object.keys(outComes).map(outKey => (
           <ItemContainer key={outKey}>
             <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-            {outKey === CRATE_CARD_IDS.NOTHING ? (
+            {outKey === NFT_IDS.NOTHING ? (
               <SectionTitle color={theme.foreColor} fontSize="20px">
                 Empty
               </SectionTitle>
-            ) : outKey === CRATE_CARD_IDS.POINTS.toString() ? (
+            ) : outKey === NFT_IDS.POINTS.toString() ? (
               <Flex flexDirection="column" alignItems="center" justifyContent="center">
                 <SectionTitle color={theme.foreColor} fontSize="20px">
                   {outComes[outKey].amount}
@@ -105,9 +103,9 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
               </Flex>
             ) : (
               <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <Image src={giftBoxImage} width="140px" height="140px" />
+                <Image src={NFT_ITEMS[outKey].images.medium} width="160px" height="160px" />
                 <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
-                  {NFT_GEARS[outKey].name}
+                  {NFT_ITEMS[outKey].name}
                 </SectionTitle>
               </Flex>
             )}
