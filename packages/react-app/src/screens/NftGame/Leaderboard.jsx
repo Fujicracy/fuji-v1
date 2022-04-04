@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BlackBoxContainer, Label } from 'components';
+import { BlackBoxContainer, Label, Loader } from 'components';
 import { useMediaQuery } from 'react-responsive';
 
 import Table from '@material-ui/core/Table';
@@ -56,14 +56,17 @@ const HeadContainer = styled.div`
 function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [rankings, setRankings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   console.count('Leaderboard');
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
       const res = await Axios.get(`${baseUri}/rankings`, { params: { networkId: 2 } });
       const newRankings = res.data.slice(0, 25);
       setRankings(newRankings);
+      setIsLoading(false);
     }
     fetchData();
   }, []);
@@ -122,6 +125,7 @@ function Leaderboard() {
           ))}
         </Body>
       </Table>
+      {isLoading && <Loader style={{ width: '56px', height: 'auto', margin: 'auto' }} />}
     </BlackBoxContainer>
   );
 }
