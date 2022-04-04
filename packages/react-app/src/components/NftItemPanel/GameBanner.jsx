@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   // Hard coded with to match container width on borrow & my positions
-  width: calc(1136px - 2 * 24px);
+  max-width: calc(1136px - 2 * 24px);
   margin: 0 auto;
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   box-shadow: 0px 0px 8px #f0014f;
@@ -27,7 +27,12 @@ const Container = styled.div`
 
   ${fujiMedia.lessThan('medium')`
     padding: 1rem .5rem;
+  `}
+
+  ${fujiMedia.lessThan('small')`
     display: block;
+    border-radius: 0px;
+    text-align: center;
   `}
 `;
 
