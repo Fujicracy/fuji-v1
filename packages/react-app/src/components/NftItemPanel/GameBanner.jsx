@@ -8,6 +8,7 @@ import { useAuth, useContractLoader, useProfileInfo } from 'hooks';
 import { Transactor } from 'helpers';
 import { happyIcon } from 'assets/images';
 import { ResultPopup } from 'components';
+import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   // Hard coded with to match container width on borrow & my positions
@@ -66,8 +67,13 @@ const Cta = styled.button`
   width: 260px;
 
   transition: 0.3s all;
-  :hover {
+
+  :not([disabled]):hover {
     border: 3px solid black;
+  }
+
+  &[disabled] {
+    cursor: wait;
   }
 
   ${fujiMedia.lessThan('medium')`
@@ -91,26 +97,19 @@ const content = {
   },
   cta: {
     'no-points': 'Start climbing',
-    'claimable-points': 'Claim you points.',
+    'claimable-points': 'Claim your points',
   },
 };
 
 const useBannerStatus = () => {
   const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com/';
-  const [status, setStatus] = useState('no-points');
+  // 'no-points', 'claimable-points', 'claimed-points'
+  const [status, setStatus] = useState('claimed-points');
   const { address } = useAuth();
-  const { points } = useProfileInfo();
+  const { points, isLoading } = useProfileInfo();
 
   useEffect(() => {
     async function fetchStatus() {
-      /* eslint-disable spaced-comment */
-      /**
-       * call /rankings/:address?networkId=2&stage=iniitial
-       * if 404 call useProfileInfo()
-       *   if res > 0 -> 'claimed-points'
-       *   else if res == 0 -> 'no-points'
-       * else -> 'claimable-points'
-       **/
       try {
         await axios.get(`${baseUri}/rankings/${address}`, {
           params: {
@@ -128,8 +127,10 @@ const useBannerStatus = () => {
         setStatus('no-points');
       }
     }
-    fetchStatus();
-  }, [address, points]);
+    if (!isLoading) {
+      fetchStatus();
+    }
+  }, [address, points, isLoading]);
 
   return status;
 };
@@ -144,9 +145,8 @@ const ACTION_DESCRIPTIONS = {
   [ACTION_RESULT.SUCCESS]: {
     value: ACTION_RESULT.SUCCESS,
     title: 'Congratulation!',
-    description:
-      'Your action have been processed by Fuji, you can now check your crates into your inventory.',
-    submitText: 'Inventory',
+    description: 'Your points have been claimed successfully.',
+    submitText: 'Go to Store',
     emotionIcon: happyIcon,
   },
   [ACTION_RESULT.ERROR]: {
@@ -160,20 +160,19 @@ const ACTION_DESCRIPTIONS = {
 };
 
 const GameBanner = () => {
-  // 'no-points', 'claimable-points', 'claimed-points'
   const status = useBannerStatus();
   const { address, provider } = useAuth();
   const tx = Transactor(provider);
 
+  const history = useHistory();
+
+  const [isLoading, setIsLoading] = useState(false);
   const [actionResult, setActionResult] = useState(ACTION_RESULT.NONE);
 
   const contracts = useContractLoader();
 
-  if (status === 'claimed-points') {
-    return <></>;
-  }
-
   const handleCta = async () => {
+    setIsLoading(true);
     if (status === 'claimable-points') {
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
       const { data } = await axios.get(`${baseUri}/rankings/merkle-proofs`, {
@@ -189,7 +188,6 @@ const GameBanner = () => {
         if (txRes && txRes.hash) {
           await txRes.wait();
           setActionResult(ACTION_RESULT.SUCCESS);
-          // TODO: Put modal (cf in store)
         }
       } catch (error) {
         console.error('minting inventory error:', { error });
@@ -198,24 +196,34 @@ const GameBanner = () => {
     } else if (status === 'no-points') {
       alert('not implemented');
     }
+    setIsLoading(false);
   };
+
+  if (status === 'claimed-points' && actionResult === ACTION_RESULT.NONE) {
+    return <></>;
+  }
 
   return (
     <Container>
       <Flex>
         <Icon />
         <ContentContainer>
-          <Title>The Fuji Climbing Campaing is Live!!</Title>
+          <Title>The Fuji Climbing Campaing is Live !</Title>
           <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>
-      {/* TODO: Loading + disable state on this btn */}
-      <Cta onClick={handleCta}>{content.cta[status]}</Cta>
+      <Cta onClick={handleCta} disabled={isLoading}>
+        {content.cta[status]}
+        {isLoading ? '...' : ''}
+      </Cta>
       <ResultPopup
         isOpen={actionResult !== ACTION_RESULT.NONE}
         content={ACTION_DESCRIPTIONS[actionResult] ?? {}}
-        onSubmit={() => alert('not implemented')}
-        onClose={() => alert('not implemented')}
+        onSubmit={() => {
+          setActionResult(ACTION_RESULT.NONE);
+          history.push('/nft-game/store');
+        }}
+        onClose={() => setActionResult(ACTION_RESULT.NONE)}
       />
     </Container>
   );
