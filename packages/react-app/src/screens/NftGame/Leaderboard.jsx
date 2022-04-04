@@ -13,6 +13,7 @@ import Axios from 'axios';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS } from 'consts';
 import { formatUnits } from 'ethers/lib/utils';
 import { intToString } from 'helpers';
+import { useAuth } from 'hooks';
 
 const Cell = styled(TableCell)`
   color: white;
@@ -57,7 +58,7 @@ function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [rankings, setRankings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  console.count('Leaderboard');
+  const { address } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -65,11 +66,19 @@ function Leaderboard() {
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
       const res = await Axios.get(`${baseUri}/rankings`, { params: { networkId: 2 } });
       const newRankings = res.data.slice(0, 25);
+
+      if (!newRankings.find(r => r.address === address)) {
+        const u = res.data.find(r => r.address === address);
+        if (u) {
+          newRankings.push(u);
+        }
+      }
+
       setRankings(newRankings);
       setIsLoading(false);
     }
     fetchData();
-  }, []);
+  }, [address]);
 
   return (
     <BlackBoxContainer
@@ -99,30 +108,27 @@ function Leaderboard() {
           </TableRow>
         </TableHead>
         <Body>
-          {rankings.map(r => (
-            // TODO: Use current user address
-            <TableRow
-              className={{ active: r.address === '0x5246EaDEa6925eF6A861e3e2860665306a8A6233' }}
-              key={r.address}
-            >
-              <Cell>
-                #{r.position}
-                {r.previousPosition && r.previousPosition > r.position ? '⬆' : '⬇'}
-              </Cell>
-              <Cell>
-                <a
-                  href={`https://ftmscan.com/address/${r.address}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: 'white', textDecoration: 'underline' }}
-                >
-                  {r.username || `${r.address.substr(0, 8)}...${r.address.substr(-8, 8)}`}
-                </a>
-              </Cell>
-              <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
-              <Cell>{parseInt(r.rateOfAccrual, 10)} m/day</Cell>
-            </TableRow>
-          ))}
+          {!isLoading &&
+            rankings.map(r => (
+              <TableRow className={{ active: r.address === address }} key={r.address}>
+                <Cell>
+                  #{r.position}
+                  {r.previousPosition && r.previousPosition > r.position ? '⬆' : '⬇'}
+                </Cell>
+                <Cell>
+                  <a
+                    href={`https://ftmscan.com/address/${r.address}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: 'white', textDecoration: 'underline' }}
+                  >
+                    {r.username || `${r.address.substr(0, 8)}...${r.address.substr(-8, 8)}`}
+                  </a>
+                </Cell>
+                <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
+                <Cell>{parseInt(r.rateOfAccrual, 10)} m/day</Cell>
+              </TableRow>
+            ))}
         </Body>
       </Table>
       {isLoading && <Loader style={{ width: '56px', height: 'auto', margin: 'auto' }} />}
