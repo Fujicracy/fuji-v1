@@ -98,7 +98,7 @@ const content = {
   text: {
     'no-points': 'You are now rewarded for using Fuji, the more you Borrow the higher you will go.',
     'claimable-points':
-      'You are already climbing Mt. Fuji by having a loan with Fuji. Go to the Store and buy a crate for the chance to win prices. You can win Climbing Gear NFTs or Extra Boost for your Meter Points.',
+      'Congratulations! You are already climbing Fuji by having opened a borrow position. You need to claim your meter points now.',
   },
   cta: {
     'no-points': 'Start climbing',
@@ -213,13 +213,12 @@ const GameBanner = () => {
       <Flex>
         <Icon />
         <ContentContainer>
-          <Title>The Fuji Climbing Campaing is Live !</Title>
+          <Title>The Fuji Climbing Campaing is Live!</Title>
           <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>
       <Cta onClick={handleCta} disabled={isLoading}>
-        {content.cta[status]}
-        {isLoading ? '...' : ''}
+        {isLoading ? 'Claiming...' : content.cta[status]}
       </Cta>
       <ResultPopup
         isOpen={actionResult !== ACTION_RESULT.NONE}
