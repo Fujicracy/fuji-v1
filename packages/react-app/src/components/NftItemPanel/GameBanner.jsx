@@ -199,7 +199,7 @@ const GameBanner = () => {
         setActionResult(ACTION_RESULT.ERROR);
       }
     } else if (status === 'no-points') {
-      alert('not implemented');
+      history.push('/nft-game');
     }
     setIsLoading(false);
   };
