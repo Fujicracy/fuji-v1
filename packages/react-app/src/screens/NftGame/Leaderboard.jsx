@@ -64,18 +64,22 @@ function Leaderboard() {
     async function fetchData() {
       setIsLoading(true);
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-      const res = await Axios.get(`${baseUri}/rankings`, { params: { networkId: 2, limit: 25 } });
-      // TODO: the API need to return the current user within the limit.
-      // Proposal 1: add queryparam ?currentAddress=0x424242 and add the user to the response
-      // Proposal 2: make 2 calls, one to /rankings and another to rankings/{address} if user is not it top 25
+      const res = await Axios.get(`${baseUri}/rankings`, {
+        params: { networkId: 2, limit: 25 },
+      });
 
-      // TODO: Not relevant anymore with limmit. To delete.
-      // if (!newRankings.find(r => r.address === address)) {
-      //   const u = res.data.find(r => r.address === address);
-      //   if (u) {
-      //     newRankings.push(u);
-      //   }
-      // }
+      if (!res.data.find(r => r.address === address)) {
+        console.log('User not in top 25');
+        try {
+          const res2 = await Axios.get(`${baseUri}/rankings/${address}`, {
+            params: { networkId: 2 },
+          });
+          console.log(res2.data);
+          res2.push(res2.data);
+        } catch (e) {
+          console.error(e);
+        }
+      }
 
       setRankings(res.data);
       setIsLoading(false);
