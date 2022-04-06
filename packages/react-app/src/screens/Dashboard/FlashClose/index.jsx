@@ -43,18 +43,18 @@ async function getProviderIndex(vault, contracts, networkName) {
   if (networkName === CHAIN_NAMES.ETHEREUM) {
     const ibank = PROVIDERS[PROVIDER_TYPE.IRONBANK].name;
     const ibankAddr = contracts[ibank].address;
-    if ([ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name)) {
+    if (
+      [ASSET_NAME[networkName].DAI, ASSET_NAME[networkName].USDC].includes(vault.borrowAsset.name)
+    ) {
       index = providerIndexes.DYDX;
     } else if (activeProvider.toLowerCase() !== ibankAddr) {
       index = providerIndexes.CREAM;
     }
   } else if (networkName === CHAIN_NAMES.FANTOM) {
-    // CREAM flashloans are paused
-    // const cream = PROVIDERS[PROVIDER_TYPE.CREAM].name;
-    // const creamAddr = contracts[cream].address;
-    // index =
-    // activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
-    index = providerIndexes.AAVE;
+    const cream = PROVIDERS[PROVIDER_TYPE.CREAM].name;
+    const creamAddr = contracts[cream].address;
+    index =
+      activeProvider.toLowerCase() === creamAddr ? providerIndexes.AAVE : providerIndexes.CREAM;
   }
 
   return index;
