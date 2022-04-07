@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS, API_BASE_URI } from 'consts';
 import { formatUnits } from 'ethers/lib/utils';
 import { intToString } from 'helpers';
 import { useAuth } from 'hooks';
@@ -63,14 +63,13 @@ function Leaderboard() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-      const { data: allRanks } = await axios.get(`${baseUri}/rankings`, {
+      const { data: allRanks } = await axios.get(`${API_BASE_URI}/rankings`, {
         params: { networkId: 2, limit: 25 },
       });
 
       if (!allRanks.find(r => r.address === address)) {
         try {
-          const { data: userRank } = await axios.get(`${baseUri}/rankings/${address}`, {
+          const { data: userRank } = await axios.get(`${API_BASE_URI}/rankings/${address}`, {
             params: { networkId: 2 },
           });
           allRanks.push(userRank);

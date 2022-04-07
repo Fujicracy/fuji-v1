@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import axios from 'axios';
 import { Flex } from 'rebass';
-import { fujiMedia } from 'consts';
+import { fujiMedia, API_BASE_URI } from 'consts';
 import { useAuth, useContractLoader, useProfileInfo } from 'hooks';
 import { Transactor } from 'helpers';
 import { happyIcon } from 'assets/images';
@@ -107,7 +107,6 @@ const content = {
 };
 
 const useBannerStatus = () => {
-  const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com/';
   // 'no-points', 'claimable-points', 'claimed-points'
   const [status, setStatus] = useState('claimed-points');
   const { address } = useAuth();
@@ -116,7 +115,7 @@ const useBannerStatus = () => {
   useEffect(() => {
     async function fetchStatus() {
       try {
-        await axios.get(`${baseUri}/rankings/${address}`, {
+        await axios.get(`${API_BASE_URI}/rankings/${address}`, {
           params: {
             networkId: 2,
             stage: 'initial',
@@ -179,8 +178,7 @@ const GameBanner = () => {
   const handleCta = async () => {
     setIsLoading(true);
     if (status === 'claimable-points') {
-      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-      const { data } = await axios.get(`${baseUri}/rankings/merkle-proofs`, {
+      const { data } = await axios.get(`${API_BASE_URI}/rankings/merkle-proofs`, {
         params: {
           networkId: 2,
           address,

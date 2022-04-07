@@ -3,7 +3,7 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import axios from 'axios';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, API_BASE_URI } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
 import { intToString } from 'helpers';
 
@@ -42,10 +42,8 @@ function Profile() {
 
   useEffect(() => {
     async function fetchData() {
-      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-
       try {
-        const { data: userRank } = await axios.get(`${baseUri}/rankings/${address}`, {
+        const { data: userRank } = await axios.get(`${API_BASE_URI}/rankings/${address}`, {
           params: { networkId: 2 },
         });
         setRanking(userRank);
