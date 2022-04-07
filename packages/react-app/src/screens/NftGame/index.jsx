@@ -4,15 +4,15 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { useCratesInfo } from 'hooks';
+import { useCratesBalance } from 'hooks';
 
 import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
 
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import Profile from './Profile';
 import Inventory from './Inventory';
+import Leaderboard from './Leaderboard';
 import Store from './Store';
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
@@ -38,7 +38,8 @@ function NftGame() {
   const { path } = useRouteMatch();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const { amounts } = useCratesInfo();
+  const amounts = useCratesBalance();
+  console.count('NFT game');
 
   return (
     <>
@@ -91,6 +92,9 @@ function NftGame() {
               </Route>
               <Route path={`${path}/inventory`}>
                 <Inventory />
+              </Route>
+              <Route path={`${path}/leaderboard`}>
+                <Leaderboard />
               </Route>
             </Switch>
           </Flex>
