@@ -96,7 +96,7 @@ const Icon = styled(FilterHdrIcon)`
 
 const content = {
   text: {
-    'no-points': 'The more you borrow the higher you will climb Fuji.',
+    'no-points': 'The more you borrow, the higher you will climb Fuji.',
     'claimable-points':
       'You are already climbing Fuji by having opened a position. You need to claim your meter points now.',
   },
@@ -166,7 +166,7 @@ const ACTION_DESCRIPTIONS = {
 
 const GameBanner = () => {
   const status = useBannerStatus();
-  const { address, provider } = useAuth();
+  const { address, provider, networkName } = useAuth();
   const tx = Transactor(provider);
 
   const history = useHistory();
@@ -203,6 +203,10 @@ const GameBanner = () => {
     }
     setIsLoading(false);
   };
+
+  if (networkName !== 'fantom') {
+    return <></>;
+  }
 
   if (status === 'claimed-points' && actionResult === ACTION_RESULT.NONE) {
     return <></>;
