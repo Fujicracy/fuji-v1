@@ -115,7 +115,7 @@ function Leaderboard() {
         <Body>
           {!isLoading &&
             rankings.map(r => (
-              <TableRow className={{ active: r.address === address }} key={r.address}>
+              <TableRow className={r.address === address ? 'active' : ''} key={r.address}>
                 <Cell>
                   #{r.position}
                   {r.previousPosition && r.previousPosition > r.position && '⬆'}
