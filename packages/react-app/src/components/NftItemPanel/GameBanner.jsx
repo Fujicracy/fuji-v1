@@ -96,12 +96,12 @@ const Icon = styled(FilterHdrIcon)`
 
 const content = {
   text: {
-    'no-points': 'You are now rewarded for using Fuji, the more you Borrow the higher you will go.',
+    'no-points': 'The more you borrow the higher you will climb Fuji.',
     'claimable-points':
-      'Congratulations! You are already climbing Fuji by having opened a borrow position. You need to claim your meter points now.',
+      'You are already climbing Fuji by having opened a position. You need to claim your meter points now.',
   },
   cta: {
-    'no-points': 'Start climbing',
+    'no-points': 'Learn more',
     'claimable-points': 'Claim your points',
   },
 };
@@ -150,15 +150,15 @@ const ACTION_DESCRIPTIONS = {
   [ACTION_RESULT.SUCCESS]: {
     value: ACTION_RESULT.SUCCESS,
     title: 'Congratulation!',
-    description: 'Your points have been claimed successfully.',
+    description:
+      'Your meter points have been successfully claimed! You can use them to buy crates or continue accumulating them by maintaining your position.',
     submitText: 'Go to Store',
     emotionIcon: happyIcon,
   },
   [ACTION_RESULT.ERROR]: {
     value: ACTION_RESULT.ERROR,
     title: 'Something is wrong',
-    description:
-      'An error occured during the transaction, it can be your credits number or a problem on our side.',
+    description: 'Oups, an error occured during the transaction!',
     submitText: 'Try again',
     emotionIcon: '',
   },
