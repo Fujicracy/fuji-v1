@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import styled from 'styled-components';
-import Axios from 'axios';
+import axios from 'axios';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS } from 'consts';
 import { formatUnits } from 'ethers/lib/utils';
@@ -64,17 +64,16 @@ function Leaderboard() {
     async function fetchData() {
       setIsLoading(true);
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-      const res = await Axios.get(`${baseUri}/rankings`, {
+      const res = await axios.get(`${baseUri}/rankings`, {
         params: { networkId: 2, limit: 25 },
       });
 
       if (!res.data.find(r => r.address === address)) {
         console.log('User not in top 25');
         try {
-          const res2 = await Axios.get(`${baseUri}/rankings/${address}`, {
+          const res2 = await axios.get(`${baseUri}/rankings/${address}`, {
             params: { networkId: 2 },
           });
-          console.log(res2.data);
           res2.push(res2.data);
         } catch (e) {
           console.error(e);
