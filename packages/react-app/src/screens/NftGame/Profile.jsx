@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
+import axios from 'axios';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle } from 'components';
@@ -8,7 +9,7 @@ import { intToString } from 'helpers';
 
 import { useProfileInfo, useAuth } from 'hooks';
 
-import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
+import { crownImage, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
   ProfileDecoration,
@@ -31,11 +32,29 @@ function Profile() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const [isEditable, setIsEditable] = useState(false);
+  const [ranking, setRanking] = useState();
   const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo'));
+
   useEffect(
     () => (customPseudo ? localStorage.setItem('customPseudo', customPseudo) : undefined),
     [customPseudo],
   );
+
+  useEffect(() => {
+    async function fetchData() {
+      const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
+
+      try {
+        const { data: userRank } = await axios.get(`${baseUri}/rankings/${address}`, {
+          params: { networkId: 2 },
+        });
+        setRanking(userRank);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+  }, [address]);
 
   return (
     <BlackBoxContainer
@@ -66,13 +85,15 @@ function Profile() {
             <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
               {customPseudo || formattedAddress}
             </SectionTitle>
-            <Image
-              src={editIcon}
-              alt="edit username"
-              marginLeft={2}
-              onClick={() => setIsEditable(true)}
-              height="24px"
-            />
+            {/*
+              <Image
+                src={editIcon}
+                alt="edit username"
+                marginLeft={2}
+                onClick={() => setIsEditable(true)}
+                height="24px"
+              />
+              */}
           </Flex>
         )}
       </Flex>
@@ -80,7 +101,7 @@ function Profile() {
       <Flex flexDirection="column" alignItems="center" marginTop="36px">
         <Image src={crownImage} />
         <StatsPoints fontSize="40px" color="white" mt={2}>
-          12
+          {ranking?.position ?? '?'}
         </StatsPoints>
         <Label color="white" mt={1}>
           Position
