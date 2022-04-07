@@ -119,7 +119,8 @@ function Leaderboard() {
               <TableRow className={{ active: r.address === address }} key={r.address}>
                 <Cell>
                   #{r.position}
-                  {r.previousPosition && r.previousPosition > r.position ? '⬆' : '⬇'}
+                  {r.previousPosition && r.previousPosition > r.position && '⬆'}
+                  {r.previousPosition && r.previousPosition < r.position && '⬇'}
                 </Cell>
                 <Cell>
                   <a
