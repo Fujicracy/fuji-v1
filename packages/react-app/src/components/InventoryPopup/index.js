@@ -70,16 +70,6 @@ const InventoryPopup = ({
           <Flex flexDirection="column" justifyContent="center" alignItems="center">
             <SectionTitle color={theme.foreColor} fontSize="32px" fontWeight="bold" mt="24px">
               {inventory.type}
-            </SectionTitle>
-            <SectionTitle
-              color={theme.foreColor}
-              fontSize="20px"
-              mt="12px"
-              spanColor={theme.foreColor}
-              spanFontSize="14px"
-              alignItems="baseline"
-            >
-              {(amount * inventory.price).toLocaleString()} <span>{description}</span>
               {showInfo ? (
                 <CancelIcon
                   onClick={() => setShowInfo(!showInfo)}
@@ -91,6 +81,16 @@ const InventoryPopup = ({
                   style={{ zIndex: 1, cursor: 'pointer' }}
                 />
               )}
+            </SectionTitle>
+            <SectionTitle
+              color={theme.foreColor}
+              fontSize="20px"
+              mt="12px"
+              spanColor={theme.foreColor}
+              spanFontSize="14px"
+              alignItems="baseline"
+            >
+              {(amount * inventory.price).toLocaleString()} <span>{description}</span>
             </SectionTitle>
 
             {showInfo ? (
