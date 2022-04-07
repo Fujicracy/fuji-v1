@@ -64,23 +64,22 @@ function Leaderboard() {
     async function fetchData() {
       setIsLoading(true);
       const baseUri = 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
-      const res = await axios.get(`${baseUri}/rankings`, {
+      const { data: allRanks } = await axios.get(`${baseUri}/rankings`, {
         params: { networkId: 2, limit: 25 },
       });
 
-      if (!res.data.find(r => r.address === address)) {
-        console.log('User not in top 25');
+      if (!allRanks.find(r => r.address === address)) {
         try {
-          const res2 = await axios.get(`${baseUri}/rankings/${address}`, {
+          const { data: userRank } = await axios.get(`${baseUri}/rankings/${address}`, {
             params: { networkId: 2 },
           });
-          res2.push(res2.data);
+          allRanks.push(userRank);
         } catch (e) {
           console.error(e);
         }
       }
 
-      setRankings(res.data);
+      setRankings(allRanks);
       setIsLoading(false);
     }
     fetchData();
