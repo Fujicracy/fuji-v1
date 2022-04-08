@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
 
-import { Flex, Image } from 'rebass';
+import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { Grid } from '@material-ui/core';
 import {
@@ -12,7 +12,6 @@ import {
   IntenseSpan,
   InventoryPopup,
   Label,
-  SectionTitle,
   StackedInventoryItem,
   OutComePopup,
 } from 'components';
@@ -29,39 +28,8 @@ import {
 } from 'consts';
 import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
 
-import {
-  GearSetItem,
-  GearSetNumber,
-  GearSetContainer,
-  GearSetBadge,
-  HorizontalLine,
-  RotateContainer,
-  GridItem,
-} from './styles';
-
-const GearSet = ({ nftGear }) => {
-  const { balance, name, boost, images } = nftGear;
-  return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <GearSetContainer>
-        <GearSetItem>
-          <GearSetBadge />
-          <Image src={images.medium} width={230} height={230} />
-        </GearSetItem>
-        <GearSetNumber>
-          <Flex justifyContent="center" alignItems="center">
-            <span style={{ marginRight: '2px' }}>x</span>
-            <IntenseSpan fontSize="22px">{balance}</IntenseSpan>
-          </Flex>
-        </GearSetNumber>
-      </GearSetContainer>
-      <SectionTitle spanColor="#05FF00" mt={2}>
-        {name}
-        <span>+{boost}%</span>
-      </SectionTitle>
-    </Flex>
-  );
-};
+import { HorizontalLine, RotateContainer, GridItem } from './styles';
+import GearSet from '../../components/GearSet';
 
 function Inventory() {
   const { address, provider } = useAuth();
