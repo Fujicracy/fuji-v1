@@ -158,7 +158,7 @@ function Inventory() {
         ).usingPriceFeed('redstone', { asset: 'ENTROPY' });
 
         // make a rough estimate of GasLimit according the amount of crates
-        const gasLimit = 180000 + amount * 12000;
+        const gasLimit = 180000 + amount * 15000;
         const result = await wrappednftinteractions.openCrate(crateId, amount, { gasLimit });
 
         if (result && result.hash) {
