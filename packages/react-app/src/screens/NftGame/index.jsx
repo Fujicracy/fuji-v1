@@ -26,11 +26,11 @@ const ClaimHeader = () => {
       position="relative"
     >
       <HeaderBackContainer>
-        <NavBackLink m={0}>
+        <NavBackLink to="/dashboard/my-positions" m={0}>
           <ArrowBackIosOutlinedIcon />
         </NavBackLink>
       </HeaderBackContainer>
-      <SectionTitle>Claim NFT</SectionTitle>
+      <SectionTitle>Climbing Campaign</SectionTitle>
     </Flex>
   );
 };
