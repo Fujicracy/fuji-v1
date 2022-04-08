@@ -105,7 +105,8 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                 </SectionTitle>
               </ItemContainer>
             );
-          } else if (outKey === NFT_IDS.POINTS.toString()) {
+          }
+          if (outKey === NFT_IDS.POINTS.toString()) {
             return (
               <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                 <Flex flexDirection="column" alignItems="center" justifyContent="center">
@@ -119,21 +120,20 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                 </Flex>
               </ItemContainer>
             );
-          } else {
-            return (
-              <GearSet
-                key={NFT_ITEMS[outKey].name}
-                width="180px"
-                textColor={theme.foreColor}
-                nftGear={{
-                  balance: outComes[outKey].count,
-                  name: NFT_ITEMS[outKey].name,
-                  boost: '10',
-                  images: { medium: NFT_ITEMS[outKey].images.medium },
-                }}
-              />
-            );
           }
+          return (
+            <GearSet
+              key={NFT_ITEMS[outKey].name}
+              width="180px"
+              textColor={theme.foreColor}
+              nftGear={{
+                balance: outComes[outKey].count,
+                name: NFT_ITEMS[outKey].name,
+                boost: '10',
+                images: { medium: NFT_ITEMS[outKey].images.medium },
+              }}
+            />
+          );
         })}
       </CarouselContainer>
       <Flex>
