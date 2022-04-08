@@ -36,6 +36,8 @@ export const StyledNavLink = styled(NavLink)`
   line-height: 21px;
   color: white;
 
+  ${props => props.disabled && `cursor: default;`}
+
   position: relative;
 
   &.active {
