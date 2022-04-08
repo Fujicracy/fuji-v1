@@ -139,8 +139,9 @@ function Store() {
             lineHeight="24px"
             fontSize={isMobile ? '12px' : '16px'}
           >
-            Exchange your Meter Points for reward crates.
-            <br /> Dependening on which crate you buy, you have more or less probabilities to boost your score, earn a Climbing Gear NFT or open a dud of an empty crate.
+            Use your Meter Points to buy crates.
+            <br /> Dependening on which crate you buy, you have more or less probabilities to boost
+            your score, earn a Climbing Gear NFT or open a dud of an empty crate.
           </SectionTitle>
         </Flex>
         <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
@@ -148,8 +149,8 @@ function Store() {
       {!isMobile && (
         <Description
           mt={4}
-          title="How to earn Energy points"
-          description="Users with an open position will accumulate points proportional to the borrowed amount. For 1$ of debt in each vault 1p/day gets earned. For example, a user having two open positions: 1,500 debt of DAI and 500 debt of USDC accumulates 2,000 base points every day. Points are not transferable. "
+          title="How to earn Meter points"
+          description="Users with an open position will accumulate points proportional to the borrowed amount. For 1$ of debt in each vault 1p/day gets earned. For example, a user having two open positions: 1,500 debt of DAI and 500 debt of USDC accumulates 2,000 meter points every day. Points are not transferable. "
         />
       )}
       <Flex mt={isMobile ? '20px' : '40px'}>
