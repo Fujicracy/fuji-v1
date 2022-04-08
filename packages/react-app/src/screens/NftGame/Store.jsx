@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSpring, animated, config } from 'react-spring';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -61,6 +62,10 @@ function Store() {
 
   const { provider } = useAuth();
   const { prices: cratesPrices } = useCratesInfo();
+  const props = useSpring({
+    points,
+    config: config.gentle,
+  });
 
   const tx = Transactor(provider);
 
@@ -121,7 +126,7 @@ function Store() {
         <Flex flexDirection="column">
           <Flex alignItems="bottom">
             <SectionTitle primary fontSize="32px">
-              {parseInt(points, 10)}
+              <animated.div>{props.points.interpolate(p => parseFloat(p).toFixed(4))}</animated.div>
             </SectionTitle>
             <SectionTitle fontSize="14px" fontWeight="light" ml={2} mt={2} spanFontSize="12px">
               Meter points
