@@ -54,6 +54,7 @@ export const ItemContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background: ${props => props.backgroundColor};
 `;
 
 export const RoundedAmountContainer = styled.div`

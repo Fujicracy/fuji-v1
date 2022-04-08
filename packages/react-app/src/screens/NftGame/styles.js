@@ -130,8 +130,8 @@ export const TiledPanel = styled.div`
 
 export const GearSetContainer = styled.div`
   position: relative;
-  width: 229px;
-  height: 229px;
+  width: ${props => props.width || '229px'};
+  height: ${props => props.width || '229px'};
 `;
 
 export const GearSetItem = styled.div`
@@ -140,8 +140,8 @@ export const GearSetItem = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 229px;
-  height: 229px;
+  width: ${props => props.width || '229px'};
+  height: ${props => props.width || '229px'};
   background: rgb(18, 18, 18);
 
   border: 2px solid rgb(58, 58, 58);
