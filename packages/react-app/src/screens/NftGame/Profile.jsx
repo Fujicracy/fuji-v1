@@ -128,7 +128,8 @@ function Profile() {
       >
         <SectionTitle fontSize="24px">Climbing speed</SectionTitle>
         <Label fontSize="12px" color="white" textAlign="left" mt={1} mb={1} lineHeight="18px">
-          The climbing speed is the lorem ipsum of the dolor sit amen.
+          The climbing speed is the number of points that you are collecting from your open loan in
+          Fuji a week/day.
         </Label>
 
         <ClimbingSpeedPer>
