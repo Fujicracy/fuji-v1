@@ -134,8 +134,8 @@ function Store() {
             lineHeight="24px"
             fontSize={isMobile ? '12px' : '16px'}
           >
-            Burn energy points and buy a crate.
-            <br /> When you open a crate you can get nothing, free points or booster cards
+            Exchange your Meter Points for reward crates.
+            <br /> Dependening on which crate you buy, you have more or less probabilities to boost your score, earn a Climbing Gear NFT or open a dud of an empty crate.
           </SectionTitle>
         </Flex>
         <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
@@ -144,7 +144,7 @@ function Store() {
         <Description
           mt={4}
           title="How to earn Energy points"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+          description="Users with an open position will accumulate points proportional to the borrowed amount. For 1$ of debt in each vault 1p/day gets earned. For example, a user having two open positions: 1,500 debt of DAI and 500 debt of USDC accumulates 2,000 base points every day. Points are not transferable. "
         />
       )}
       <Flex mt={isMobile ? '20px' : '40px'}>
