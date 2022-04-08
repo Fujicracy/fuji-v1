@@ -95,16 +95,18 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
         slidesToSlide={2}
         swipeable
       >
-        {Object.keys(outComes).map(outKey => (
-          <>
-            {outKey === NFT_IDS.NOTHING ? (
+        {Object.keys(outComes).map(outKey => {
+          if (outKey === NFT_IDS.NOTHING) {
+            return (
               <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                 <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
                 <SectionTitle color={theme.foreColor} fontSize="20px">
                   Empty
                 </SectionTitle>
               </ItemContainer>
-            ) : outKey === NFT_IDS.POINTS.toString() ? (
+            );
+          } else if (outKey === NFT_IDS.POINTS.toString()) {
+            return (
               <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                 <Flex flexDirection="column" alignItems="center" justifyContent="center">
                   <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
@@ -116,7 +118,9 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                   </SectionTitle>
                 </Flex>
               </ItemContainer>
-            ) : (
+            );
+          } else {
+            return (
               <GearSet
                 key={NFT_ITEMS[outKey].name}
                 width="180px"
@@ -128,9 +132,9 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                   images: { medium: NFT_ITEMS[outKey].images.medium },
                 }}
               />
-            )}
-          </>
-        ))}
+            );
+          }
+        })}
       </CarouselContainer>
       <Flex>
         <BlackButton style={{ marginRight: '8px' }} onClick={() => history.push('/nft-game/store')}>

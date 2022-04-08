@@ -21,7 +21,6 @@ const GearSet = ({ nftGear, width, textColor }) => {
         </GearSetItem>
         <GearSetNumber>
           <Flex justifyContent="center" alignItems="center">
-            {/* <span style={{ marginRight: '2px' }}>x</span> */}
             <IntenseSpan fontSize="22px">{balance}</IntenseSpan>
           </Flex>
         </GearSetNumber>
