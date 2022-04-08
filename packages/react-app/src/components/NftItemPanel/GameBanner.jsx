@@ -110,7 +110,7 @@ const useBannerStatus = () => {
   // 'no-points', 'claimable-points', 'claimed-points'
   const [status, setStatus] = useState('claimed-points');
   const { address } = useAuth();
-  const { points, isLoading } = useProfileInfo();
+  const { claimedPoints, isLoading } = useProfileInfo();
 
   useEffect(() => {
     async function fetchStatus() {
@@ -121,7 +121,7 @@ const useBannerStatus = () => {
             stage: 'initial',
           },
         });
-        if (points > 0) {
+        if (claimedPoints) {
           setStatus('claimed-points');
         } else {
           setStatus('claimable-points');
@@ -134,7 +134,7 @@ const useBannerStatus = () => {
     if (!isLoading) {
       fetchStatus();
     }
-  }, [address, points, isLoading]);
+  }, [address, claimedPoints, isLoading]);
 
   return status;
 };

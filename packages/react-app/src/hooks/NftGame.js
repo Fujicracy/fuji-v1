@@ -12,6 +12,7 @@ export function useProfileInfo() {
   const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
   const points = debtBalance ? Number(formatUnits(debtBalance, NFT_GAME_POINTS_DECIMALS)) : 0;
 
+  const claimedPoints = useContractReader(contracts, 'NFTGame', 'isClaimed', [address], 0);
   const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
   const climbingSpeedPerDay = userdata[1]
     ? Number(formatUnits(userdata[1], NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
@@ -30,7 +31,7 @@ export function useProfileInfo() {
     if (points >= 0 && climbingSpeedPerWeek >= 0 && boost >= 0) setIsLoading(false);
   }, [points, climbingSpeedPerWeek, boost]);
 
-  return { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
+  return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
 }
 
 // helpers for useCratesInfo()
