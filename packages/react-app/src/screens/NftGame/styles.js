@@ -52,6 +52,11 @@ export const StyledNavLink = styled(NavLink)`
     color: #fe3477;
   }
 
+  &[disabled] {
+    color: grey;
+    cursor: not-allowed;
+  }
+
   ${fujiMedia.greaterThan('small')`
     padding: 0px 4px 8px;
 
