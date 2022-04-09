@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import { useCratesInfo } from 'hooks';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { intToString } from 'helpers';
 
 const ItemInfos = ({ type }) => {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -28,10 +29,10 @@ const ItemInfos = ({ type }) => {
                 <TableCell style={{ color: 'inherit' }} padding={isMobile ? 'none' : 'normal'}>
                   <strong>{k}</strong>
                 </TableCell>
-                <TableCell style={{ color: 'inherit' }} padding={isMobile ? 'none' : 'normal'}>
+                <TableCell style={{ color: 'inherit' }} padding="none">
                   {typeof reward === 'number' ? (
                     <>
-                      <strong>{reward}</strong> points
+                      <strong>{intToString(reward)}</strong> points
                     </>
                   ) : (
                     'Gear NFT'

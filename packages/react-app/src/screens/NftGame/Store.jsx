@@ -48,7 +48,7 @@ const ACTION_DESCRIPTIONS = {
   [ACTION_RESULT.NOT_ENOUGH_POINTS]: {
     value: ACTION_RESULT.NOT_ENOUGH_POINTS,
     title: 'Not enough points',
-    description: `You don't have enough points to buy.`,
+    description: `You don't have enough meter points to make this purchase.`,
     submitText: 'Back',
     emotionIcon: '',
   },
