@@ -98,7 +98,7 @@ function Leaderboard() {
         </Label>
         <br />
         <Label color="white" fontSize={2} textAlign="left">
-          See your position around all the fam of fujidoers and climb to the summit of the world
+          Check here how you are standing next to the other fellow climbers.
         </Label>
       </HeadContainer>
 

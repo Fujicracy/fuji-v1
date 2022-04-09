@@ -237,7 +237,7 @@ function Inventory() {
 
       <Flex flexDirection="column" alignItems="flex-start">
         <Label color="white" fontSize={5} fontWeight={500}>
-          Climbing gear set
+          Climbing Gears
         </Label>
 
         {cratesAmount.total === 0 && (
@@ -249,13 +249,15 @@ function Inventory() {
             textAlign="left"
             lineHeight="20px"
           >
-            Gear can be minted when opening crates. {isMobile && <br />}To buy crates please go to
-            the{' '}
+            Can be minted after opening a crate or bought from our partner marketplace.
+            <br />
+            {isMobile && <br />}To buy crates please go to the{' '}
             <NavLink to="/nft-game/store">
               <IntenseSpan primary underline>
                 store
               </IntenseSpan>
             </NavLink>
+            .
           </Label>
         )}
 

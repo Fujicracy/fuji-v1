@@ -17,7 +17,7 @@ const ItemInfos = ({ type }) => {
 
   return (
     <>
-      <p style={{ margin: '1rem 0' }}>What&apos;s inside ?</p>
+      <p style={{ margin: '1rem 0' }}>Probability of outcomes:</p>
       <Table size="small">
         <TableBody>
           {keys.map(k => {
