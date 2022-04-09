@@ -26,7 +26,7 @@ import {
   NFT_GAME_POINTS_DECIMALS,
   NFT_ITEMS,
 } from 'consts';
-import { useContractLoader, useCratesInfo, useAuth } from 'hooks';
+import { useContractLoader, useCratesInfo, useGearsBalance, useAuth } from 'hooks';
 
 import { HorizontalLine, RotateContainer, GridItem } from './styles';
 import GearSet from '../../components/GearSet';
@@ -42,6 +42,7 @@ function Inventory() {
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
+  const { balances: gearBalances } = useGearsBalance();
 
   const [nftGears, setNftGears] = useState([]);
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
@@ -70,17 +71,10 @@ function Inventory() {
   const availableCratesCount = availableCrates.length;
 
   useEffect(() => {
-    async function fetchGearSetData() {
-      if (contracts && address) {
-        const params = [[], []];
-        for (let i = GEAR_IDS.START; i <= GEAR_IDS.END; i += 1) {
-          params[0].push(address);
-          params[1].push(i);
-        }
-        const balances = await contracts.NFTGame.balanceOfBatch(...params);
-
+    function setGearsData() {
+      if (gearBalances) {
         setNftGears(
-          balances.map((value, index) => ({
+          gearBalances.map((value, index) => ({
             id: GEAR_IDS.START + index,
             balance: value.toString(),
             name: NFT_ITEMS[GEAR_IDS.START + index].name,
@@ -90,8 +84,8 @@ function Inventory() {
         );
       }
     }
-    fetchGearSetData();
-  }, [contracts, address]);
+    setGearsData();
+  }, [gearBalances]);
 
   const onClickInventory = inventory => {
     setClickedInventory(inventory);

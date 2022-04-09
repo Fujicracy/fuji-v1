@@ -1,40 +1,11 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
-import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS } from 'consts';
+import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
 
-export function useProfileInfo() {
-  const [isLoading, setIsLoading] = useState(true);
-  const { address } = useAuth();
-  const contracts = useContractLoader();
-  const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
-  const points = debtBalance ? Number(formatUnits(debtBalance, NFT_GAME_POINTS_DECIMALS)) : 0;
-
-  const claimedPoints = useContractReader(contracts, 'NFTGame', 'isClaimed', [address], 0);
-  const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
-  const climbingSpeedPerDay = userdata[1]
-    ? Number(formatUnits(userdata[1], NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
-    : 0;
-  const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
-
-  const unformattedComputeBoost = useContractReader(contracts, 'NFTInteractions', 'computeBoost', [
-    address,
-  ]);
-
-  const boost = unformattedComputeBoost
-    ? formatUnits(unformattedComputeBoost, 'wei') / 100
-    : undefined;
-
-  useEffect(() => {
-    if (points >= 0 && climbingSpeedPerWeek >= 0 && boost >= 0) setIsLoading(false);
-  }, [points, climbingSpeedPerWeek, boost]);
-
-  return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
-}
-
-// helpers for useCratesInfo()
+// helpers
 
 function formatHexArray(values, decimals = 0) {
   if (!values) return [];
@@ -72,6 +43,33 @@ function getRewardOutcomes(probabiltyIntervals, rewards) {
   }
 
   return outcomes;
+}
+
+export function useGearsBalance() {
+  const contracts = useContractLoader();
+  const { address } = useAuth();
+
+  const [balances, setBalances] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  const params = [[], []];
+  for (let i = GEAR_IDS.START; i <= GEAR_IDS.END; i += 1) {
+    params[0].push(address);
+    params[1].push(i);
+  }
+
+  const unformattedBalances = useContractReader(contracts, 'NFTGame', 'balanceOfBatch', params);
+  const gearBalances = formatHexArray(unformattedBalances, 0);
+  const count = gearBalances.reduce((prev, v) => prev + v, 0);
+
+  useEffect(() => {
+    if (count !== total) {
+      setTotal(count);
+      setBalances(gearBalances);
+    }
+  }, [count, total, gearBalances]);
+
+  return { balances, total };
 }
 
 export function useCratesBalance() {
@@ -145,4 +143,33 @@ export function useCratesInfo() {
       [CRATE_TYPE.LEGENDARY]: getRewardOutcomes(intervals, crateRewards[2]),
     },
   };
+}
+
+export function useProfileInfo() {
+  const [isLoading, setIsLoading] = useState(true);
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const debtBalance = useContractReader(contracts, 'NFTGame', 'balanceOf', [address, 0]);
+  const points = debtBalance ? Number(formatUnits(debtBalance, NFT_GAME_POINTS_DECIMALS)) : 0;
+
+  const claimedPoints = useContractReader(contracts, 'NFTGame', 'isClaimed', [address], 0);
+  const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
+  const climbingSpeedPerDay = userdata[1]
+    ? Number(formatUnits(userdata[1], NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
+    : 0;
+  const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
+
+  const unformattedComputeBoost = useContractReader(contracts, 'NFTInteractions', 'computeBoost', [
+    address,
+  ]);
+
+  const boost = unformattedComputeBoost
+    ? formatUnits(unformattedComputeBoost, 'wei') / 100
+    : undefined;
+
+  useEffect(() => {
+    if (points >= 0 && climbingSpeedPerWeek >= 0 && boost >= 0) setIsLoading(false);
+  }, [points, climbingSpeedPerWeek, boost]);
+
+  return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
 }
