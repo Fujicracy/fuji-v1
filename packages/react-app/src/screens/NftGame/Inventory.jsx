@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
@@ -22,9 +22,7 @@ import {
   NFT_IDS,
   CRATE_IDS,
   CRATE_TYPE,
-  GEAR_IDS,
   NFT_GAME_POINTS_DECIMALS,
-  NFT_ITEMS,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useGearsBalance, useAuth } from 'hooks';
 
@@ -42,9 +40,8 @@ function Inventory() {
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
-  const { balances: gearBalances } = useGearsBalance();
+  const { gears: nftGears } = useGearsBalance();
 
-  const [nftGears, setNftGears] = useState([]);
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
   const [outComes, setOutComes] = useState({});
   const [crateType, setCrateType] = useState({});
@@ -69,23 +66,6 @@ function Inventory() {
 
   const availableCrates = crates.filter(inventory => inventory.amount > 0);
   const availableCratesCount = availableCrates.length;
-
-  useEffect(() => {
-    function setGearsData() {
-      if (gearBalances) {
-        setNftGears(
-          gearBalances.map((value, index) => ({
-            id: GEAR_IDS.START + index,
-            balance: value.toString(),
-            name: NFT_ITEMS[GEAR_IDS.START + index].name,
-            boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
-            images: NFT_ITEMS[GEAR_IDS.START + index].images,
-          })),
-        );
-      }
-    }
-    setGearsData();
-  }, [gearBalances]);
 
   const onClickInventory = inventory => {
     setClickedInventory(inventory);

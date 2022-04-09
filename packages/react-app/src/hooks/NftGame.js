@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
-import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS } from 'consts';
+import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS, NFT_ITEMS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
@@ -49,14 +49,22 @@ export function useGearsBalance() {
   const contracts = useContractLoader();
   const { address } = useAuth();
 
-  const [balances, setBalances] = useState([]);
-  const [total, setTotal] = useState(0);
-
   const params = [[], []];
   for (let i = GEAR_IDS.START; i <= GEAR_IDS.END; i += 1) {
     params[0].push(address);
     params[1].push(i);
   }
+
+  const defaultParams = params[0].map((_, index) => ({
+    id: GEAR_IDS.START + index,
+    balance: 0,
+    name: NFT_ITEMS[GEAR_IDS.START + index].name,
+    boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
+    images: NFT_ITEMS[GEAR_IDS.START + index].images,
+  }));
+
+  const [gears, setGears] = useState(defaultParams);
+  const [total, setTotal] = useState(0);
 
   const unformattedBalances = useContractReader(contracts, 'NFTGame', 'balanceOfBatch', params);
   const gearBalances = formatHexArray(unformattedBalances, 0);
@@ -65,11 +73,19 @@ export function useGearsBalance() {
   useEffect(() => {
     if (count !== total) {
       setTotal(count);
-      setBalances(gearBalances);
+      setGears(
+        gearBalances.map((value, index) => ({
+          id: GEAR_IDS.START + index,
+          balance: value.toString(),
+          name: NFT_ITEMS[GEAR_IDS.START + index].name,
+          boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
+          images: NFT_ITEMS[GEAR_IDS.START + index].images,
+        })),
+      );
     }
   }, [count, total, gearBalances]);
 
-  return { balances, total };
+  return { gears, total };
 }
 
 export function useCratesBalance() {
