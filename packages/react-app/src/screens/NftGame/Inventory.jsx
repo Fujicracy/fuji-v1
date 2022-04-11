@@ -14,6 +14,7 @@ import {
   Label,
   StackedInventoryItem,
   OutComePopup,
+  GearPopup,
 } from 'components';
 
 import {
@@ -41,6 +42,7 @@ function Inventory() {
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
   const { gears: nftGears } = useGearsBalance();
+  const [selectedGear, setSelectedGear] = useState();
 
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
   const [outComes, setOutComes] = useState({});
@@ -239,12 +241,21 @@ function Inventory() {
         <Grid container direction="row" alignItems="center" spacing={4}>
           {nftGears.length > 0 &&
             nftGears.map(nftGear => (
-              <Grid item xs={6} md={4} key={`gearSet-${nftGear.id}`}>
+              <Grid
+                item
+                xs={6}
+                md={4}
+                key={`gearSet-${nftGear.id}`}
+                onClick={() => setSelectedGear(nftGear)}
+              >
                 <GearSet nftGear={nftGear} />
               </Grid>
             ))}
         </Grid>
       </Flex>
+
+      {selectedGear && <GearPopup gear={selectedGear} close={() => setSelectedGear()} />}
+
       {clickedInventory.type && isCratesModalOpen && (
         <InventoryPopup
           isOpen={isCratesModalOpen}

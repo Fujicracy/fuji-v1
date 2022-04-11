@@ -51,6 +51,7 @@ export const NFT_IDS = {
 export const NFT_ITEMS = {
   [NFT_IDS.PICKAXE]: {
     name: 'Pickaxe',
+    description: '// TODO',
     boost: 10,
     images: {
       medium:
@@ -59,6 +60,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.OXYGEN_KIT]: {
     name: 'Oxygen Kit',
+    description: '// TODO',
     boost: 10,
     images: {
       medium:
@@ -67,6 +69,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.GLOVES]: {
     name: 'Gloves',
+    description: '// TODO',
     boost: 10,
     images: {
       medium:
@@ -75,6 +78,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.FLARE_GUN]: {
     name: 'Flare Gun',
+    description:
+      'In case of sudden emergency during the climbing, shoot with your Fuji Pistol to show your peers you need some assistance.',
     boost: 10,
     images: {
       medium:
@@ -83,6 +88,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.HEAT_CAPSULE]: {
     name: 'Heat Capsule',
+    description: '// TODO',
     boost: 10,
     images: {
       medium:
@@ -91,6 +97,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.SLIPPERS]: {
     name: 'Slippers',
+    description: '// TODO',
     boost: 10,
     images: {
       medium: '',
@@ -98,6 +105,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.SUNGLASSES]: {
     name: 'Sunglasses',
+    description: '// TODO',
     boost: 10,
     images: {
       medium: '',
@@ -105,6 +113,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.WATCH]: {
     name: 'Watch',
+    description: '// TODO',
     boost: 10,
     images: {
       medium: '',
@@ -112,6 +121,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.PROTEIN_BAR]: {
     name: 'Protein Bar',
+    description: '// TODO',
     boost: 10,
     images: {
       medium: '',
@@ -119,6 +129,7 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.MED_KIT]: {
     name: 'Med Kit',
+    description: '// TODO',
     boost: 10,
     images: {
       medium: '',

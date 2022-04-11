@@ -15,6 +15,7 @@ import Description from './Description';
 import InventoryPopup from './InventoryPopup';
 import ResultPopup from './ResultPopup';
 import OutComePopup from './OutComePopup';
+import GearPopup from './GearPopup';
 
 export * from './NftItemPanel';
 
@@ -39,4 +40,5 @@ export {
   InventoryPopup,
   ResultPopup,
   OutComePopup,
+  GearPopup,
 };
