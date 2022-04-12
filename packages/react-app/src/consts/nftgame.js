@@ -51,7 +51,8 @@ export const NFT_IDS = {
 export const NFT_ITEMS = {
   [NFT_IDS.PICKAXE]: {
     name: 'Pickaxe',
-    description: '// TODO',
+    description:
+      'The Pickaxe will help you maintain a grip. When you reach the higher highs, you’ll need them to overpass the hardest obstacles along the road.',
     boost: 10,
     images: {
       medium:
@@ -60,7 +61,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.OXYGEN_KIT]: {
     name: 'Oxygen Kit',
-    description: '// TODO',
+    description:
+      'Reaching the higher highs is not easy, you’ll find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
     boost: 10,
     images: {
       medium:
@@ -69,7 +71,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.GLOVES]: {
     name: 'Gloves',
-    description: '// TODO',
+    description:
+      'What would be a climbing without gloves? Not a climbing of course. Fuji Gloves will ensure your fingers remain attached to your hand, all the way to the top.',
     boost: 10,
     images: {
       medium:
@@ -88,7 +91,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.HEAT_CAPSULE]: {
     name: 'Heat Capsule',
-    description: '// TODO',
+    description:
+      'The heat capsule will keep you warm and alive each time the temperature decreases to the extreme lows.',
     boost: 10,
     images: {
       medium:
@@ -97,7 +101,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.SLIPPERS]: {
     name: 'Slippers',
-    description: '// TODO',
+    description:
+      'Adapted from the ancient Fuji Flops, those used by the first Fuji Climbers in the history. They’ll let you climb in a comfy manner, and keep your focus on the road instead of your cold feet.',
     boost: 10,
     images: {
       medium: '',
@@ -105,7 +110,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.SUNGLASSES]: {
     name: 'Sunglasses',
-    description: '// TODO',
+    description:
+      'These sunglasses will let you foresee the obstacles you might encounter, and solutions to your challenges at a faster pace. This is technology of the future; equipped laser vision.',
     boost: 10,
     images: {
       medium: '',
@@ -113,7 +119,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.WATCH]: {
     name: 'Watch',
-    description: '// TODO',
+    description:
+      'Each expedition needs its watch. It will follow you during the whole journey, indicating the most important metrics such as your altitude and your speed.',
     boost: 10,
     images: {
       medium: '',
@@ -121,7 +128,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.PROTEIN_BAR]: {
     name: 'Protein Bar',
-    description: '// TODO',
+    description:
+      'The protein bar is a must have during the climbing, in fact, without it, you’ll have to eat your peers, it’s not what you want, right?',
     boost: 10,
     images: {
       medium: '',
@@ -129,7 +137,8 @@ export const NFT_ITEMS = {
   },
   [NFT_IDS.MED_KIT]: {
     name: 'Med Kit',
-    description: '// TODO',
+    description:
+      'The Med Kit is here to support you during hard times, maintain your health the longer you can during the climbing to avoid having to use it.',
     boost: 10,
     images: {
       medium: '',
