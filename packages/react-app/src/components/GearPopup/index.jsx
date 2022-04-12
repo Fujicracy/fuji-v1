@@ -6,7 +6,7 @@ import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import { fujiMedia } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
-import { useContractLoader } from 'hooks';
+import { useAuth, useContractLoader } from 'hooks';
 import EthAddress from '../EthAddress';
 
 export const StyledModal = Modal.styled`
@@ -151,7 +151,8 @@ const SectionDescription = styled.div`
 
 const GearPopup = ({ gear, close }) => {
   const contracts = useContractLoader();
-  const address = contracts?.NFTGame.address;
+  const contractAddress = contracts?.NFTGame.address;
+  const { address: userAddress } = useAuth();
 
   return (
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
@@ -167,14 +168,20 @@ const GearPopup = ({ gear, close }) => {
         <Half pl={4}>
           <Title>{gear.name}</Title>
           <Meta>
-            Publisher:{' '}
-            <a href={`https://ftmscan.com/address/${address}`} target="_blank" rel="noreferrer">
-              <EthAddress address={address} />
+            Contract:{' '}
+            <a
+              href={`https://ftmscan.com/address/${contractAddress}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <EthAddress address={contractAddress} />
             </a>
           </Meta>
           <Meta>
-            {/* TODO: Link to FTM Scan */}
-            Owner: <a href={`https://ftmscan.com/address/${address}`}>0x...4456</a>
+            Owner:{' '}
+            <a href={`https://ftmscan.com/address/${userAddress}`} target="_blank" rel="noreferrer">
+              <EthAddress address={userAddress} />
+            </a>
           </Meta>
           {/* TODO: Activate button */}
           <TradeButton type="button">Trade in marketplace</TradeButton>
