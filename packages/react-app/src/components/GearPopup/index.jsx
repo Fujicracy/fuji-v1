@@ -45,6 +45,10 @@ const CloseButton = styled(CloseIcon)`
   position: absolute;
   right: 16px;
   top: 16px;
+  z-index: 1;
+  &:hover {
+    color: #fa266c;
+  }
 `;
 
 const Title = styled.p`
