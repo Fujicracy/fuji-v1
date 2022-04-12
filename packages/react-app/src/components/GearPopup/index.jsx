@@ -71,6 +71,7 @@ const ImageContainer = styled(Box)`
     transparent 20px,
     purple 0
   );
+  overflow: hidden;
 `;
 
 const ImageBadge = styled.div`
@@ -117,6 +118,15 @@ const SectionBox = styled(Box)`
   margin: 8px 0;
 `;
 
+const Half = styled(Box)`
+  position: relative;
+  width: 50%;
+
+  ${fujiMedia.lessThan('small')`
+    width: 100%;
+  `}
+`;
+
 const SectionTitle = styled.div`
   font-size: 1.2rem;
   margin-bottom: 8px;
@@ -136,14 +146,14 @@ const GearPopup = ({ gear, close }) => {
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
       <CloseButton fontSize="medium" onClick={close} />
       <Flex p={4} flexWrap="wrap">
-        <Box width={[0.5, 0.5, 1]} style={{ position: 'relative' }}>
+        <Half>
           <ImageNumber>{gear.balance}</ImageNumber>
           <ImageContainer>
             <ImageBadge />
             <Image src={gear.images.medium} />
           </ImageContainer>
-        </Box>
-        <Box width={[0.5, 0.5, 1]} pl={4}>
+        </Half>
+        <Half pl={4}>
           <Title>{gear.name}</Title>
           <Meta>
             Publisher: <span> Fuji Finance</span>
@@ -168,7 +178,7 @@ const GearPopup = ({ gear, close }) => {
             <SectionTitle>Description</SectionTitle>
             <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
-        </Box>
+        </Half>
       </Flex>
     </StyledModal>
   );
