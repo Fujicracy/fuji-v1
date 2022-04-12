@@ -8,6 +8,7 @@ import { fujiMedia } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
 import { useAuth, useContractLoader } from 'hooks';
 import EthAddress from '../EthAddress';
+import 'animate.css';
 
 export const StyledModal = Modal.styled`
   display: flex;
@@ -36,10 +37,9 @@ export const StyledModal = Modal.styled`
     border-radius: 0px;
     justify-content: space-between;
   `};
-  ${fujiMedia.between('small', 'medium')`
-    
-  `};
 
+  animation: backInDown;
+  animation-duration: 0.8s;
 `;
 
 const CloseButton = styled(CloseIcon)`
