@@ -139,6 +139,11 @@ export const GearSetContainer = styled.div`
   position: relative;
   width: ${props => props.width || '229px'};
   height: ${props => props.width || '229px'};
+
+  ${fujiMedia.lessThan('small')`
+    width: ${props => props.width || '160px'};
+    height: ${props => props.width || '160px'};
+  `}
 `;
 
 export const GearSetItem = styled.div`
@@ -146,9 +151,14 @@ export const GearSetItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   width: ${props => props.width || '229px'};
   height: ${props => props.width || '229px'};
+  ${fujiMedia.lessThan('small')`
+    width: ${props => props.width || '160px'};
+    height: ${props => props.width || '160px'};
+  `}
   background: rgb(18, 18, 18);
 
   border: 2px solid rgb(58, 58, 58);
@@ -158,12 +168,23 @@ export const GearSetItem = styled.div`
     transparent 20px,
     purple 0
   );
+
+  transition: 0.3s all;
+  &:hover {
+    border: 2px solid #fa266c;
+    cursor: pointer;
+    & > div {
+      // rewrite for GearSetBadge
+      background-color: #fa266c;
+    }
+  }
 `;
 
 export const GearSetBadge = styled.div`
   width: 43px;
   height: 43px;
 
+  transition: all 0.3s;
   background-color: rgb(58, 58, 58);
   border-radius: 50%;
   position: absolute;
