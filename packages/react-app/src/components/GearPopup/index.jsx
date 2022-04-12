@@ -6,7 +6,7 @@ import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import { fujiMedia } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
-import { useAuth, useContractLoader } from 'hooks';
+import { useContractLoader } from 'hooks';
 import EthAddress from '../EthAddress';
 import 'animate.css';
 
@@ -40,6 +40,7 @@ export const StyledModal = Modal.styled`
 
   animation: backInDown;
   animation-duration: 0.8s;
+  opacity: 1 !important; // Override animation opacity
 `;
 
 const CloseButton = styled(CloseIcon)`
@@ -117,6 +118,12 @@ const TradeButton = styled(Button)`
   margin: 16px 0;
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   cursor: pointer;
+
+  &[disabled] {
+    cursor: not-allowed;
+    background: grey;
+  }
+
   // TODO: Hover
 `;
 
@@ -152,7 +159,6 @@ const SectionDescription = styled.div`
 const GearPopup = ({ gear, close }) => {
   const contracts = useContractLoader();
   const contractAddress = contracts?.NFTGame.address;
-  const { address: userAddress } = useAuth();
 
   return (
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
@@ -177,14 +183,10 @@ const GearPopup = ({ gear, close }) => {
               <EthAddress address={contractAddress} />
             </a>
           </Meta>
-          <Meta>
-            Owner:{' '}
-            <a href={`https://ftmscan.com/address/${userAddress}`} target="_blank" rel="noreferrer">
-              <EthAddress address={userAddress} />
-            </a>
-          </Meta>
           {/* TODO: Activate button */}
-          <TradeButton type="button">Trade in marketplace</TradeButton>
+          <TradeButton type="button" disabled>
+            Trade in marketplace
+          </TradeButton>
           <SectionBox>
             <SectionTitle>
               Boost score
