@@ -6,6 +6,8 @@ import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import { fujiMedia } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
+import { useContractLoader } from 'hooks';
+import EthAddress from '../EthAddress';
 
 export const StyledModal = Modal.styled`
   display: flex;
@@ -61,8 +63,11 @@ const Meta = styled.p`
   font-size: 14px;
   line-height: 21px;
 
-  & > span {
+  & > a {
     color: #fe3477;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -145,7 +150,9 @@ const SectionDescription = styled.div`
 `;
 
 const GearPopup = ({ gear, close }) => {
-  console.log(gear);
+  const contracts = useContractLoader();
+  const address = contracts?.NFTGame.address;
+
   return (
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
       <CloseButton fontSize="medium" onClick={close} />
@@ -160,11 +167,14 @@ const GearPopup = ({ gear, close }) => {
         <Half pl={4}>
           <Title>{gear.name}</Title>
           <Meta>
-            Publisher: <span> Fuji Finance</span>
+            Publisher:{' '}
+            <a href={`https://ftmscan.com/address/${address}`} target="_blank" rel="noreferrer">
+              <EthAddress address={address} />
+            </a>
           </Meta>
           <Meta>
             {/* TODO: Link to FTM Scan */}
-            Owner: <span> 0x...4456</span>
+            Owner: <a href={`https://ftmscan.com/address/${address}`}>0x...4456</a>
           </Meta>
           {/* TODO: Activate button */}
           <TradeButton type="button">Trade in marketplace</TradeButton>
