@@ -269,6 +269,12 @@ export const StackedContainer = styled.div`
   align-items: center;
   position: relative;
   flex-direction: row-reverse;
+
+  &:hover {
+    animation: shakeY;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+  }
 `;
 
 export const HorizontalBreaker = styled.hr`
