@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BlackBoxContainer, EthAddress, Label, Loader } from 'components';
+import { BlackBoxContainer, EthAddress, Label, Loader, Tooltip } from 'components';
 import { useMediaQuery } from 'react-responsive';
 
 import Table from '@material-ui/core/Table';
@@ -7,8 +7,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Flex } from 'rebass';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS, API_BASE_URI } from 'consts';
 import { formatUnits } from 'ethers/lib/utils';
@@ -93,9 +95,15 @@ function Leaderboard() {
       mb="88px"
     >
       <HeadContainer>
-        <Label color="white" fontSize={4} fontWeight={500} textAlign="left">
-          Leaderboard
-        </Label>
+        <Flex alignItems="center">
+          <Label color="white" fontSize={4} fontWeight={500} textAlign="left">
+            Leaderboard
+          </Label>
+          <Tooltip>
+            <InfoOutlined />
+            <span>Updated every 2 hours.</span>
+          </Tooltip>
+        </Flex>
         <br />
         <Label color="white" fontSize={2} textAlign="left">
           Check here how you are standing next to the other fellow climbers.
