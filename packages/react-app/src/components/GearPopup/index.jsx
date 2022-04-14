@@ -79,14 +79,17 @@ const Meta = styled.p`
 
 const ImageContainer = styled(Box)`
   position: relative;
+  display: flex;
+  overflow: hidden;
+
   border: 2px solid rgb(58, 58, 58);
   border-radius: 12px;
+
   -webkit-mask-image: radial-gradient(
     circle 20px at calc(100% - 15px) 15px,
     transparent 20px,
     purple 0
   );
-  overflow: hidden;
 `;
 
 const ImageBadge = styled.div`
