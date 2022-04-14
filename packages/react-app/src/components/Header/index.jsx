@@ -192,7 +192,7 @@ function Header() {
                   </MenuItem>
                 </NavLink>
 
-                {networkName === CHAIN_NAMES.FANTOM && (
+                {networkName !== CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/nft-game">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/nft-game'}
@@ -287,7 +287,7 @@ function Header() {
                     </NavLink>
                   </li>
 
-                  {networkName === CHAIN_NAMES.FANTOM && (
+                  {networkName !== CHAIN_NAMES.ETHEREUM && (
                     <li className="nav-item">
                       <NavLink to="/nft-game" activeClassName="current">
                         Climbing
