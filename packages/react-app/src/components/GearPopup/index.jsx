@@ -16,7 +16,12 @@ export const StyledModal = Modal.styled`
   align-items: center;
   width: 50rem;
   height: 31.25rem;
-  overflow: scroll;
+  overflow-y: auto;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  element::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+  }
 
   background: rgba(25, 25, 25, 0.95);
   border: 2px solid rgba(255, 255, 255, 0.4);
