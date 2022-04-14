@@ -87,3 +87,23 @@ export const PanelContainer = styled.div`
   filter: blur(10px);
   z-index: 0;
 `;
+
+export const SkipButton = styled.button`
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  color: white;
+  font-size: 1rem;
+  z-index: 1;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  background: transparent;
+  transition: 0.3s background;
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+`;
