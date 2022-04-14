@@ -443,7 +443,7 @@ function InitBorrow() {
                 padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
-                  {networkName !== CHAIN_NAMES.FANTOM && (
+                  {networkName === CHAIN_NAMES.ETHEREUM && (
                     <Grid item xs={8} sm={8} md={12}>
                       <SelectMarket />
                     </Grid>
