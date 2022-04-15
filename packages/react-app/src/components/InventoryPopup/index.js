@@ -15,6 +15,7 @@ import {
   IntroPanel,
   PanelContainer,
   SkipButton,
+  OpenButton,
 } from './styles';
 
 const InventoryPopup = ({
@@ -48,7 +49,7 @@ const InventoryPopup = ({
       onEscapeKeydown={onClose}
       padding={isOpened ? '0rem' : '2rem'}
     >
-      {isRedeemed ? (
+      {isOpened ? (
         <>
           <IntroPanel
             width="100%"
