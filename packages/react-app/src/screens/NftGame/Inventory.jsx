@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
 
@@ -216,26 +215,17 @@ function Inventory() {
           Climbing Gears
         </Label>
 
-        {cratesAmount.total === 0 && (
-          <Label
-            color="white"
-            fontSize="14px"
-            fontWeight={500}
-            mt="8px"
-            textAlign="left"
-            lineHeight="20px"
-          >
-            Can be minted after opening a crate or bought from our partner marketplace.
-            <br />
-            {isMobile && <br />}To buy crates please go to the{' '}
-            <NavLink to="/nft-game/store">
-              <IntenseSpan primary underline>
-                store
-              </IntenseSpan>
-            </NavLink>
-            .
-          </Label>
-        )}
+        <Label
+          color="white"
+          fontSize="14px"
+          fontWeight={500}
+          mt="8px"
+          textAlign="left"
+          lineHeight="20px"
+        >
+          They accelerate your climbing speed. You can find them in the crates you open or you can
+          buy them from our partner marketplace.
+        </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
