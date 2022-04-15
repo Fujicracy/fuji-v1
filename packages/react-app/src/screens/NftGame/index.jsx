@@ -54,15 +54,19 @@ function NftGame() {
             <Rules />
             <br />
             <Profile />
-            <br />
           </Box>
         )}
         <Flex flexDirection="column" alignItems="left">
           <NavigationContainer>
             {isMobile && (
-              <li>
-                <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
-              </li>
+              <>
+                <li>
+                  <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
+                </li>
+                <li>
+                  <StyledNavLink to={`${path}/rules`}>Rules</StyledNavLink>
+                </li>
+              </>
             )}
             <li>
               <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
@@ -106,6 +110,9 @@ function NftGame() {
               </Route>
               <Route path={`${path}/profile`}>
                 {!isMobile ? <Redirect to={`${path}/store`} /> : <Profile />}
+              </Route>
+              <Route path={`${path}/rules`}>
+                {!isMobile ? <Redirect to={`${path}/store`} /> : <Rules open margin="0 24px" />}
               </Route>
               <Route path={`${path}/store`}>
                 <Store />
