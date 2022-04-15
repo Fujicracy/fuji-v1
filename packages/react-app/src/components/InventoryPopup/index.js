@@ -14,7 +14,7 @@ import {
   OpacityImage,
   IntroPanel,
   PanelContainer,
-  RedeemButton,
+  OpenButton,
 } from './styles';
 
 const InventoryPopup = ({
@@ -22,8 +22,7 @@ const InventoryPopup = ({
   onSubmit,
   inventory,
   onClose,
-  description = 'Meter Points',
-  isRedeemed = false,
+  isOpened = false,
   isLoading = false,
   onEndOpeningAnimation,
 }) => {
@@ -45,9 +44,9 @@ const InventoryPopup = ({
       isOpen={isOpen}
       backgroundColor={theme.backColor}
       onEscapeKeydown={onClose}
-      padding={isRedeemed ? '0rem' : '2rem'}
+      padding={isOpened ? '0rem' : '2rem'}
     >
-      {isRedeemed ? (
+      {isOpened ? (
         <IntroPanel width="100%" height="100%" autoPlay muted onEnded={onEndOpeningAnimation}>
           <source src={theme.openingAnimation} />
         </IntroPanel>
@@ -72,16 +71,6 @@ const InventoryPopup = ({
                   style={{ zIndex: 1, cursor: 'pointer' }}
                 />
               )}
-            </SectionTitle>
-            <SectionTitle
-              color={theme.foreColor}
-              fontSize="20px"
-              mt="12px"
-              spanColor={theme.foreColor}
-              spanFontSize="14px"
-              alignItems="baseline"
-            >
-              {(amount * inventory.price).toLocaleString()} <span>{description}</span>
             </SectionTitle>
 
             {showInfo ? (
@@ -135,13 +124,13 @@ const InventoryPopup = ({
                 </Label>
               </Flex>
 
-              <RedeemButton
+              <OpenButton
                 mt="16px"
-                onClick={() => (isRedeemed ? onClose() : onSubmit(inventory.type, amount))}
+                onClick={() => (isOpened ? onClose() : onSubmit(inventory.type, amount))}
                 disabled={isLoading}
               >
-                {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}
-              </RedeemButton>
+                {isOpened ? 'Go to your inventory' : isLoading ? 'Opening' : 'Open'}
+              </OpenButton>
             </>
           )}
         </>

@@ -36,8 +36,8 @@ function Inventory() {
   const [clickedInventory, setClickedInventory] = useState({});
   const [isCratesModalOpen, setIsCratesModalOpen] = useState(false);
 
-  const [isRedeeming, setIsRedeeming] = useState(false);
-  const [isRedeemed, setIsRedeemed] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
@@ -72,22 +72,22 @@ function Inventory() {
   const onClickInventory = inventory => {
     setClickedInventory(inventory);
 
-    setIsRedeemed(false);
+    setIsOpened(false);
     setIsCratesModalOpen(true);
   };
 
   const onCloseCrateModal = () => {
     setIsCratesModalOpen(false);
-    setIsRedeeming(false);
+    setIsOpening(false);
   };
 
   const onCloseOutComeModal = () => {
     setIsOutComeModalOpen(false);
   };
 
-  const onRedeem = async (type, amount) => {
+  const onOpen = async (type, amount) => {
     if (contracts) {
-      setIsRedeeming(true);
+      setIsOpening(true);
       setCrateType(type);
       const crateId =
         type === CRATE_TYPE.COMMON
@@ -136,13 +136,13 @@ function Inventory() {
           });
           setOutComes(tmpOutComes);
 
-          setIsRedeemed(true);
+          setIsOpened(true);
         }
       } catch (error) {
         console.error({ error });
-        setIsRedeeming(false);
+        setIsOpening(false);
       }
-      setIsRedeeming(false);
+      setIsOpening(false);
     }
   };
 
@@ -259,11 +259,11 @@ function Inventory() {
       {clickedInventory.type && isCratesModalOpen && (
         <InventoryPopup
           isOpen={isCratesModalOpen}
-          onSubmit={onRedeem}
+          onSubmit={onOpen}
           onClose={onCloseCrateModal}
           inventory={clickedInventory}
-          isLoading={isRedeeming}
-          isRedeemed={isRedeemed}
+          isLoading={isOpening}
+          isOpened={isOpened}
           onEndOpeningAnimation={() => {
             setIsCratesModalOpen(false);
             setIsOutComeModalOpen(true);

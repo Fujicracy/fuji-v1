@@ -89,7 +89,7 @@ export const PanelContainer = styled.div`
   z-index: 0;
 `;
 
-export const RedeemButton = styled(BlackButton)`
+export const OpenButton = styled(BlackButton)`
   &:hover {
     animation: pulse;
     animation-duration: 0.5s;
