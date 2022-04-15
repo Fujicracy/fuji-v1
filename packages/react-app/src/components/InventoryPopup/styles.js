@@ -5,6 +5,7 @@ import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { BlackButton } from 'components/UI';
 
 export const ContentContainer = styled(Box)`
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -42,10 +43,10 @@ export const StyledModal = Modal.styled`
     border-radius: 0px;
     justify-content: space-between;
   `};
-  ${fujiMedia.between('small', 'medium')`
-    
-  `};
 
+  animation: backInDown;
+  animation-duration: .5s;
+  opacity: 1 !important; // override animation opacity
 `;
 
 export const OpacityImage = styled(Image)`
@@ -105,5 +106,12 @@ export const SkipButton = styled.button`
   transition: 0.3s background;
   &:hover {
     background: rgba(255, 255, 255, 0.25);
+  }
+`;
+
+export const OpenButton = styled(BlackButton)`
+  &:hover {
+    animation: pulse;
+    animation-duration: 0.5s;
   }
 `;

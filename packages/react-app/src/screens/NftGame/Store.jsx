@@ -126,7 +126,9 @@ function Store() {
         <Flex flexDirection="column">
           <Flex alignItems="bottom">
             <SectionTitle primary fontSize="32px">
-              <animated.div>{props.points.interpolate(p => parseFloat(p).toFixed(4))}</animated.div>
+              <animated.div>
+                {props.points.interpolate(p => parseFloat(p).toLocaleString())}
+              </animated.div>
             </SectionTitle>
             <SectionTitle fontSize="14px" fontWeight="light" ml={2} mt={2} spanFontSize="12px">
               Meter points

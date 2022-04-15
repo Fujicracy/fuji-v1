@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
 
@@ -14,6 +13,7 @@ import {
   Label,
   StackedInventoryItem,
   OutComePopup,
+  GearPopup,
 } from 'components';
 
 import {
@@ -35,12 +35,13 @@ function Inventory() {
   const [clickedInventory, setClickedInventory] = useState({});
   const [isCratesModalOpen, setIsCratesModalOpen] = useState(false);
 
-  const [isRedeeming, setIsRedeeming] = useState(false);
-  const [isRedeemed, setIsRedeemed] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
   const contracts = useContractLoader();
 
   const { amounts: cratesAmount, prices: cratesPrices } = useCratesInfo();
   const { gears: nftGears } = useGearsBalance();
+  const [selectedGear, setSelectedGear] = useState();
 
   const [isOutComeModalOpen, setIsOutComeModalOpen] = useState(false);
   const [outComes, setOutComes] = useState({});
@@ -70,22 +71,22 @@ function Inventory() {
   const onClickInventory = inventory => {
     setClickedInventory(inventory);
 
-    setIsRedeemed(false);
+    setIsOpened(false);
     setIsCratesModalOpen(true);
   };
 
   const onCloseCrateModal = () => {
     setIsCratesModalOpen(false);
-    setIsRedeeming(false);
+    setIsOpening(false);
   };
 
   const onCloseOutComeModal = () => {
     setIsOutComeModalOpen(false);
   };
 
-  const onRedeem = async (type, amount) => {
+  const onOpen = async (type, amount) => {
     if (contracts) {
-      setIsRedeeming(true);
+      setIsOpening(true);
       setCrateType(type);
       const crateId =
         type === CRATE_TYPE.COMMON
@@ -134,13 +135,13 @@ function Inventory() {
           });
           setOutComes(tmpOutComes);
 
-          setIsRedeemed(true);
+          setIsOpened(true);
         }
       } catch (error) {
         console.error({ error });
-        setIsRedeeming(false);
+        setIsOpening(false);
       }
-      setIsRedeeming(false);
+      setIsOpening(false);
     }
   };
 
@@ -214,45 +215,45 @@ function Inventory() {
           Climbing Gears
         </Label>
 
-        {cratesAmount.total === 0 && (
-          <Label
-            color="white"
-            fontSize="14px"
-            fontWeight={500}
-            mt="8px"
-            textAlign="left"
-            lineHeight="20px"
-          >
-            Can be minted after opening a crate or bought from our partner marketplace.
-            <br />
-            {isMobile && <br />}To buy crates please go to the{' '}
-            <NavLink to="/nft-game/store">
-              <IntenseSpan primary underline>
-                store
-              </IntenseSpan>
-            </NavLink>
-            .
-          </Label>
-        )}
+        <Label
+          color="white"
+          fontSize="14px"
+          fontWeight={500}
+          mt="8px"
+          textAlign="left"
+          lineHeight="20px"
+        >
+          They accelerate your climbing speed. You can find them in the crates you open or you can
+          buy them from our partner marketplace.
+        </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
         <Grid container direction="row" alignItems="center" spacing={4}>
           {nftGears.length > 0 &&
             nftGears.map(nftGear => (
-              <Grid item xs={6} md={4} key={`gearSet-${nftGear.id}`}>
+              <Grid
+                item
+                xs={6}
+                md={4}
+                key={`gearSet-${nftGear.id}`}
+                onClick={() => setSelectedGear(nftGear)}
+              >
                 <GearSet nftGear={nftGear} />
               </Grid>
             ))}
         </Grid>
       </Flex>
+
+      {selectedGear && <GearPopup gear={selectedGear} close={() => setSelectedGear()} />}
+
       {clickedInventory.type && isCratesModalOpen && (
         <InventoryPopup
           isOpen={isCratesModalOpen}
-          onSubmit={onRedeem}
+          onSubmit={onOpen}
           onClose={onCloseCrateModal}
           inventory={clickedInventory}
-          isLoading={isRedeeming}
-          isRedeemed={isRedeemed}
+          isLoading={isOpening}
+          isOpened={isOpened}
           onEndOpeningAnimation={() => {
             setIsCratesModalOpen(false);
             setIsOutComeModalOpen(true);

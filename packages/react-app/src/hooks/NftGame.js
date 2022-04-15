@@ -55,10 +55,12 @@ export function useGearsBalance() {
     params[1].push(i);
   }
 
+  // TODO: Shall we use deconstruction for all props ?
   const defaultParams = params[0].map((_, index) => ({
     id: GEAR_IDS.START + index,
     balance: 0,
     name: NFT_ITEMS[GEAR_IDS.START + index].name,
+    description: NFT_ITEMS[GEAR_IDS.START + index].description,
     boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
     images: NFT_ITEMS[GEAR_IDS.START + index].images,
   }));
@@ -78,6 +80,7 @@ export function useGearsBalance() {
           id: GEAR_IDS.START + index,
           balance: value.toString(),
           name: NFT_ITEMS[GEAR_IDS.START + index].name,
+          description: NFT_ITEMS[GEAR_IDS.START + index].description,
           boost: NFT_ITEMS[GEAR_IDS.START + index].boost,
           images: NFT_ITEMS[GEAR_IDS.START + index].images,
         })),

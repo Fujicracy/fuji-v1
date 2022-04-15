@@ -7,7 +7,7 @@ import { NFT_GAME_MODAL_THEMES } from 'consts';
 import ItemInfos from 'components/NftItemPanel/ItemInfo';
 
 import SectionTitle from '../Blocks/SectionTitle';
-import { BlackButton, CountButton, Label } from '../UI';
+import { CountButton, Label } from '../UI';
 import {
   StyledModal,
   CloseButton,
@@ -22,12 +22,10 @@ const InventoryPopup = ({
   onSubmit,
   inventory,
   onClose,
-  description = 'Meter Points',
-  isRedeemed = false,
+  isOpened = false,
   isLoading = false,
   onEndOpeningAnimation,
 }) => {
-  const [opacity, setOpacity] = useState(0);
   const [amount, setAmount] = useState(inventory.amount);
   const [showInfo, setShowInfo] = useState(false);
   const animationRef = useRef(null);
@@ -41,29 +39,14 @@ const InventoryPopup = ({
     }
   }, [isLoading]);
 
-  function afterOpen() {
-    setTimeout(() => {
-      setOpacity(1);
-    }, 100);
-  }
-
-  function beforeClose() {
-    return new Promise(resolve => {
-      setOpacity(0);
-      setTimeout(resolve, 300);
-    });
-  }
-
   const theme = NFT_GAME_MODAL_THEMES[inventory.type];
   return (
     <StyledModal
       color={theme.foreColor}
       isOpen={isOpen}
-      afterOpen={afterOpen}
-      beforeClose={beforeClose}
       backgroundColor={theme.backColor}
-      opacity={opacity}
-      padding={isRedeemed ? '0rem' : '2rem'}
+      onEscapeKeydown={onClose}
+      padding={isOpened ? '0rem' : '2rem'}
     >
       {isRedeemed ? (
         <>
@@ -104,16 +87,6 @@ const InventoryPopup = ({
                   style={{ zIndex: 1, cursor: 'pointer' }}
                 />
               )}
-            </SectionTitle>
-            <SectionTitle
-              color={theme.foreColor}
-              fontSize="20px"
-              mt="12px"
-              spanColor={theme.foreColor}
-              spanFontSize="14px"
-              alignItems="baseline"
-            >
-              {(amount * inventory.price).toLocaleString()} <span>{description}</span>
             </SectionTitle>
 
             {showInfo ? (
@@ -167,13 +140,13 @@ const InventoryPopup = ({
                 </Label>
               </Flex>
 
-              <BlackButton
+              <OpenButton
                 mt="16px"
-                onClick={() => (isRedeemed ? onClose() : onSubmit(inventory.type, amount))}
+                onClick={() => (isOpened ? onClose() : onSubmit(inventory.type, amount))}
                 disabled={isLoading}
               >
-                {isRedeemed ? 'Go to your inventory' : isLoading ? 'Redeeming' : 'Redeem'}
-              </BlackButton>
+                {isOpened ? 'Go to your inventory' : isLoading ? 'Opening' : 'Open'}
+              </OpenButton>
             </>
           )}
         </>
