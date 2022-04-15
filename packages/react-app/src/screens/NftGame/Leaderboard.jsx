@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BlackBoxContainer, Label, Loader, Tooltip } from 'components';
+import { BlackBoxContainer, EthAddress, Label, Loader, Tooltip } from 'components';
 import { useMediaQuery } from 'react-responsive';
 
 import Table from '@material-ui/core/Table';
@@ -135,7 +135,7 @@ function Leaderboard() {
                     rel="noreferrer"
                     style={{ color: 'white', textDecoration: 'underline' }}
                   >
-                    {r.username || `${r.address.substr(0, 8)}...${r.address.substr(-8, 8)}`}
+                    {r.username || <EthAddress address={r.address} prefix="10" suffix="8" />}
                   </a>
                 </Cell>
                 <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>

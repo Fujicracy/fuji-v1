@@ -15,6 +15,8 @@ import Description from './Description';
 import InventoryPopup from './InventoryPopup';
 import ResultPopup from './ResultPopup';
 import OutComePopup from './OutComePopup';
+import GearPopup from './GearPopup';
+import EthAddress from './EthAddress';
 
 export * from './NftItemPanel';
 
@@ -22,6 +24,7 @@ export * from './Blocks';
 export * from './UI';
 export {
   AlphaWarning,
+  EthAddress,
   CollaterizationIndicator,
   Header,
   HowItWorks,
@@ -39,4 +42,5 @@ export {
   InventoryPopup,
   ResultPopup,
   OutComePopup,
+  GearPopup,
 };

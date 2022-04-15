@@ -5,6 +5,7 @@ import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { BlackButton } from 'components/UI';
 
 export const ContentContainer = styled(Box)`
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -42,10 +43,10 @@ export const StyledModal = Modal.styled`
     border-radius: 0px;
     justify-content: space-between;
   `};
-  ${fujiMedia.between('small', 'medium')`
-    
-  `};
 
+  animation: backInDown;
+  animation-duration: .5s;
+  opacity: 1 !important; // override animation opacity
 `;
 
 export const OpacityImage = styled(Image)`
@@ -86,4 +87,11 @@ export const PanelContainer = styled.div`
   border-radius: 50%;
   filter: blur(10px);
   z-index: 0;
+`;
+
+export const RedeemButton = styled(BlackButton)`
+  &:hover {
+    animation: pulse;
+    animation-duration: 0.5s;
+  }
 `;
