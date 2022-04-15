@@ -14,6 +14,7 @@ import {
   OpacityImage,
   IntroPanel,
   PanelContainer,
+  SkipButton,
   OpenButton,
 } from './styles';
 
@@ -29,6 +30,8 @@ const InventoryPopup = ({
   const [amount, setAmount] = useState(inventory.amount);
   const [showInfo, setShowInfo] = useState(false);
   const animationRef = useRef(null);
+
+  const canSkipAnimation = localStorage.getItem('nftgame.canSkip') ?? false;
 
   useEffect(() => {
     if (animationRef && animationRef.current) {
@@ -47,9 +50,23 @@ const InventoryPopup = ({
       padding={isOpened ? '0rem' : '2rem'}
     >
       {isOpened ? (
-        <IntroPanel width="100%" height="100%" autoPlay muted onEnded={onEndOpeningAnimation}>
-          <source src={theme.openingAnimation} />
-        </IntroPanel>
+        <>
+          <IntroPanel
+            width="100%"
+            height="100%"
+            autoPlay
+            muted
+            onEnded={() => {
+              localStorage.setItem('nftgame.canSkip', true);
+              onEndOpeningAnimation();
+            }}
+          >
+            <source src={theme.openingAnimation} />
+          </IntroPanel>
+          {canSkipAnimation && (
+            <SkipButton onClick={onEndOpeningAnimation}>Skip to reward...</SkipButton>
+          )}
+        </>
       ) : (
         <>
           <OpacityImage src={theme.backMask} height="100%" />
