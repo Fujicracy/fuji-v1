@@ -196,18 +196,18 @@ const GearPopup = ({ gear, close }) => {
             Trade in marketplace
           </TradeButton>
           <SectionBox>
+            <SectionTitle>Description</SectionTitle>
+            <SectionDescription>{gear.description}</SectionDescription>
+          </SectionBox>
+          <SectionBox>
             <SectionTitle>
               Boost score
               <span> +{gear.boost}%</span>
             </SectionTitle>
             <SectionDescription>
-              This means that your total Meter Points will be increased (1.{gear.boost}x). You can
-              accumulate Boost when you possess multiple Climbing Gear NFTs.
+              Your total Meter Points will be multiplied by 1.{gear.boost}x as far as you possess
+              this Climbing Gear NFT.
             </SectionDescription>
-          </SectionBox>
-          <SectionBox>
-            <SectionTitle>Description</SectionTitle>
-            <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
         </Half>
       </Flex>
