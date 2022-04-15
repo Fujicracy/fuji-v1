@@ -43,9 +43,8 @@ export const StyledModal = Modal.styled`
     justify-content: space-between;
   `};
 
-  animation: backInDown;
-  animation-duration: 0.8s;
-  opacity: 1 !important; // Override animation opacity
+  animation: zoomIn;
+  animation-duration: 0.6s;
 `;
 
 const CloseButton = styled(CloseIcon)`

@@ -44,9 +44,8 @@ export const StyledModal = Modal.styled`
     justify-content: space-between;
   `};
 
-  animation: backInDown;
-  animation-duration: .5s;
-  opacity: 1 !important; // override animation opacity
+  animation: zoomIn;
+  animation-duration: .6s;
 `;
 
 export const OpacityImage = styled(Image)`
