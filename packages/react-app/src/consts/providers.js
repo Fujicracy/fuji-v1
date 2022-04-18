@@ -11,6 +11,7 @@ const PROVIDER_TYPE = {
   CREAM: 'Cream',
   GEIST: 'Geist',
   HUNDRED: 'Hundred',
+  COMPOUND_MOCK: 'CompoundMock',
 };
 
 const PROVIDERS = {
@@ -74,6 +75,11 @@ const PROVIDERS = {
     id: 'hundred',
     name: 'ProviderHundred',
     title: 'Hundred',
+  },
+  [PROVIDER_TYPE.COMPOUND_MOCK]: {
+    id: 'compound-mock',
+    name: 'ProviderMockCompound',
+    title: 'MockCompound',
   },
 };
 

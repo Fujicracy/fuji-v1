@@ -1,6 +1,7 @@
 import * as ethereumCore from './vaults-core';
 import * as ethereumFuse from './vaults-fuse';
 import * as fantomCore from './vaults-fantom';
+import * as rinkebyCore from './vaults-rinkeby';
 
 const BORROW_IDS = {
   ethereum: {
@@ -9,6 +10,9 @@ const BORROW_IDS = {
   },
   fantom: {
     core: fantomCore.BORROW_IDS,
+  },
+  rinkeby: {
+    core: rinkebyCore.BORROW_IDS,
   },
 };
 
@@ -20,6 +24,9 @@ const COLLATERAL_IDS = {
   fantom: {
     core: fantomCore.COLLATERAL_IDS,
   },
+  rinkeby: {
+    core: rinkebyCore.COLLATERAL_IDS,
+  },
 };
 
 const VAULTS_NAMES = {
@@ -30,6 +37,9 @@ const VAULTS_NAMES = {
   fantom: {
     core: fantomCore.VAULTS_NAMES,
   },
+  rinkeby: {
+    core: rinkebyCore.VAULTS_NAMES,
+  },
 };
 
 const VAULTS = {
@@ -39,6 +49,9 @@ const VAULTS = {
   },
   fantom: {
     core: fantomCore.VAULTS,
+  },
+  rinkeby: {
+    core: rinkebyCore.VAULTS,
   },
 };
 
