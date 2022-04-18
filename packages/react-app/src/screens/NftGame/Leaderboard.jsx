@@ -60,19 +60,19 @@ function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [rankings, setRankings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { address } = useAuth();
+  const { address, networkId } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       const { data: allRanks } = await axios.get(`${API_BASE_URI}/rankings`, {
-        params: { networkId: 2, limit: 25 },
+        params: { networkId, limit: 25 },
       });
 
       if (!allRanks.find(r => r.address === address)) {
         try {
           const { data: userRank } = await axios.get(`${API_BASE_URI}/rankings/${address}`, {
-            params: { networkId: 2 },
+            params: { networkId },
           });
           allRanks.push(userRank);
         } catch (e) {
@@ -84,7 +84,7 @@ function Leaderboard() {
       setIsLoading(false);
     }
     fetchData();
-  }, [address]);
+  }, [address, networkId]);
 
   return (
     <BlackBoxContainer

@@ -20,7 +20,7 @@ import {
 } from './styles';
 
 function Profile() {
-  const { address } = useAuth();
+  const { address, networkId } = useAuth();
 
   const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
   const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
@@ -44,7 +44,7 @@ function Profile() {
     async function fetchData() {
       try {
         const { data: userRank } = await axios.get(`${API_BASE_URI}/rankings/${address}`, {
-          params: { networkId: 2 },
+          params: { networkId },
         });
         setRanking(userRank);
       } catch (e) {
@@ -52,7 +52,7 @@ function Profile() {
       }
     }
     fetchData();
-  }, [address]);
+  }, [address, networkId]);
 
   return (
     <BlackBoxContainer

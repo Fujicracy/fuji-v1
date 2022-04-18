@@ -109,7 +109,7 @@ const content = {
 const useBannerStatus = () => {
   // 'no-points', 'claimable-points', 'claimed-points'
   const [status, setStatus] = useState('claimed-points');
-  const { address } = useAuth();
+  const { address, networkId } = useAuth();
   const { claimedPoints, isLoading } = useProfileInfo();
 
   useEffect(() => {
@@ -117,7 +117,7 @@ const useBannerStatus = () => {
       try {
         await axios.get(`${API_BASE_URI}/rankings/${address}`, {
           params: {
-            networkId: 2,
+            networkId,
             stage: 'initial',
           },
         });
@@ -134,7 +134,7 @@ const useBannerStatus = () => {
     if (!isLoading) {
       fetchStatus();
     }
-  }, [address, claimedPoints, isLoading]);
+  }, [address, networkId, claimedPoints, isLoading]);
 
   return status;
 };
@@ -165,7 +165,7 @@ const ACTION_DESCRIPTIONS = {
 
 const GameBanner = () => {
   const status = useBannerStatus();
-  const { address, provider, networkName } = useAuth();
+  const { address, networkId, provider, networkName } = useAuth();
   const tx = Transactor(provider);
 
   const history = useHistory();
@@ -180,7 +180,7 @@ const GameBanner = () => {
     if (status === 'claimable-points') {
       const { data } = await axios.get(`${API_BASE_URI}/rankings/merkle-proofs`, {
         params: {
-          networkId: 2,
+          networkId,
           address,
         },
       });
