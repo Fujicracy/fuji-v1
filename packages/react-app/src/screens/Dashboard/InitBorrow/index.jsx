@@ -460,7 +460,7 @@ function InitBorrow() {
               </BlackBoxContainer>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <BlackBoxContainer
               hasBlackContainer
               padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
@@ -580,7 +580,7 @@ function InitBorrow() {
               </form>
             </BlackBoxContainer>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <Box mr={isMobile || isTablet ? '' : '56px'}>
               <CollaterizationIndicator position={position} />
             </Box>
