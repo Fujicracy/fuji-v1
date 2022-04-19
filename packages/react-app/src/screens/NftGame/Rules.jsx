@@ -65,10 +65,13 @@ const Rules = ({ margin, open = false }) => (
       </Ol>
       <Text mt="1rem">
         For more visit our{' '}
-        <Link href="https://github.com/Fujicracy/" color="#fa266c">
+        <Link
+          href="https://docs.google.com/document/d/1ftYFOWXBK0r-9VGrHooNZpdS13hhjrerKTgWTpg0yow"
+          color="#fa266c"
+        >
           Documentation
         </Link>{' '}
-        and{' '}
+        and {/* TODO: Link */}
         <Link href="https://github.com/Fujicracy/" color="#fa266c">
           Medium page.
         </Link>
