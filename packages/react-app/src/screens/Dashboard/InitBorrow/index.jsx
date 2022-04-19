@@ -430,9 +430,8 @@ function InitBorrow() {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Box
-        minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        width={isMobile ? '320px' : isTablet ? '470px' : '1200px'}
-        margin={isMobile ? '32px 28px' : isTablet ? '36px' : '24px 160px'}
+        width={isMobile ? '600px' : isTablet ? '960px' : '1200px'}
+        margin={isMobile ? '32px auto' : isTablet ? '36px' : '24px auto'}
       >
         <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
           <Grid item xs={12} sm={12} md={4}>
