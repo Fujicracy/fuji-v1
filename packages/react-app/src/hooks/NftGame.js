@@ -23,7 +23,7 @@ function getRewardOutcomes(probabiltyIntervals, rewards) {
   const outcomes = {};
 
   // transform to make easier percentage calculations
-  const intervals = probabiltyIntervals.map(i => i * 10);
+  const intervals = probabiltyIntervals.map(i => i * 100);
 
   let key;
   for (let i = 0; i < intervals.length; i += 1) {
@@ -134,7 +134,8 @@ export function useCratesInfo() {
     'getProbabilityIntervals',
     [],
   );
-  const intervals = formatHexArray(probabiltyIntervals, NFT_GAME_POINTS_DECIMALS);
+  // use 6 because the probabilty intervals are based on 1000000 (6 zeros)
+  const intervals = formatHexArray(probabiltyIntervals, 6);
   const commonRewards = useContractReader(contracts, 'NFTInteractions', 'getCrateRewards', [
     CRATE_IDS.COMMON,
   ]);
@@ -172,9 +173,9 @@ export function useProfileInfo() {
   const points = debtBalance ? Number(formatUnits(debtBalance, NFT_GAME_POINTS_DECIMALS)) : 0;
 
   const claimedPoints = useContractReader(contracts, 'NFTGame', 'isClaimed', [address], 0);
-  const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
-  const climbingSpeedPerDay = userdata[1]
-    ? Number(formatUnits(userdata[1], NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
+  const rateOfAccrual = useContractReader(contracts, 'NFTGame', 'computeRateOfAccrual', [address]);
+  const climbingSpeedPerDay = rateOfAccrual
+    ? Number(formatUnits(rateOfAccrual, NFT_GAME_POINTS_DECIMALS)) * 60 * 60 * 24
     : 0;
   const climbingSpeedPerWeek = climbingSpeedPerDay * 7;
 
