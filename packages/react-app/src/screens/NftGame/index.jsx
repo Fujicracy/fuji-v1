@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { useMediaQuery } from 'react-responsive';
-import { Flex } from 'rebass';
+import { Flex, Box } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { useCratesBalance, useGearsBalance } from 'hooks';
 
@@ -12,6 +12,7 @@ import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Profile from './Profile';
+import Rules from './Rules';
 import Inventory from './Inventory';
 import Leaderboard from './Leaderboard';
 import Store from './Store';
@@ -49,16 +50,23 @@ function NftGame() {
       <BackgroundEffect />
       <Flex flexDirection="row" justifyContent="center">
         {!isMobile && (
-          <Flex margin="24px 48px 0px 0px">
+          <Box margin="24px 48px 0px 0px" maxWidth="340px">
+            <Rules />
+            <br />
             <Profile />
-          </Flex>
+          </Box>
         )}
         <Flex flexDirection="column" alignItems="left">
           <NavigationContainer>
             {isMobile && (
-              <li>
-                <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
-              </li>
+              <>
+                <li>
+                  <StyledNavLink to={`${path}/profile`}>Profile</StyledNavLink>
+                </li>
+                <li>
+                  <StyledNavLink to={`${path}/rules`}>Rules</StyledNavLink>
+                </li>
+              </>
             )}
             <li>
               <StyledNavLink to={`${path}/store`}>Store</StyledNavLink>
@@ -102,6 +110,9 @@ function NftGame() {
               </Route>
               <Route path={`${path}/profile`}>
                 {!isMobile ? <Redirect to={`${path}/store`} /> : <Profile />}
+              </Route>
+              <Route path={`${path}/rules`}>
+                {!isMobile ? <Redirect to={`${path}/store`} /> : <Rules open margin="0 24px" />}
               </Route>
               <Route path={`${path}/store`}>
                 <Store />
