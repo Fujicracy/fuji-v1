@@ -3,6 +3,7 @@ import { capitalizeFirstLetter } from 'helpers/Utils';
 
 const CHAIN_IDS = {
   ETHEREUM: 1,
+  RINKEBY: 4,
   FANTOM: 250,
   POLYGON: 137,
   LOCAL: 31337,
@@ -10,6 +11,7 @@ const CHAIN_IDS = {
 
 const CHAIN_NAMES = {
   ETHEREUM: 'ethereum',
+  RINKEBY: 'rinkeby',
   FANTOM: 'fantom',
   POLYGON: 'polygon',
   LOCAL: 'local',
@@ -71,6 +73,15 @@ const CHAINS = {
     isDeployed: false,
     isCustomNetwork: false,
     rpcUrl: 'http://localhost:8545',
+  },
+  [CHAIN_NAMES.RINKEBY]: {
+    id: CHAIN_IDS.RINKEBY,
+    name: CHAIN_NAMES.RINKEBY,
+    title: capitalizeFirstLetter(CHAIN_NAMES.RINKEBY),
+    icon: logoIcon.toString(),
+    isDeployed: false,
+    isCustomNetwork: false,
+    rpcUrl: 'https://rinkeby.infura.io/v3',
   },
 };
 

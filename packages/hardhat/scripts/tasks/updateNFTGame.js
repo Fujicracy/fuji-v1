@@ -32,7 +32,7 @@ const updateNFTGame = async (nftGameAddress, nftInteractionsAddress, vaults, mul
     await tx.wait();
     console.log("MerkleRoot succesfully set in NFTgame");
   } else {
-    console.warn("\nMerkleRoot is NOT set!");
+    console.log("\nMerkleRoot is NOT set!");
   }
 
   // Setting NFTGame address in vaults
@@ -49,8 +49,8 @@ const updateNFTGame = async (nftGameAddress, nftInteractionsAddress, vaults, mul
           await tx.wait();
           console.log(`NFTGame address succesfully set in vault ${vaultAddr}`);
         } catch (error) {
-          console.log("ERROR: Could not set NFTGame address, check vault contract owner!");
-          console.log(error);
+          console.warn("ERROR: Could not set NFTGame address, check vault contract owner!");
+          console.debug(error);
         }
       } else {
         console.log(`...skipping NFTGame address already set in vault ${vaultAddr}`);

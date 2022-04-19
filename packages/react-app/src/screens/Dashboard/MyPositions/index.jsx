@@ -92,7 +92,7 @@ function MyPositions() {
   return (
     <Flex flex flexDirection="row" justifyContent="center">
       <GridContainer container spacing={6}>
-        {(isMobile || isTablet) && networkName !== CHAIN_NAMES.FANTOM && (
+        {(isMobile || isTablet) && networkName === CHAIN_NAMES.ETHEREUM && (
           <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer
               hasBlackContainer
@@ -198,7 +198,7 @@ function MyPositions() {
           <Grid item xs={12} sm={12} md={4}>
             <BlackBoxContainer hasBlackContainer padding="32px 28px">
               <Grid container spacing={4}>
-                {networkName !== CHAIN_NAMES.FANTOM && (
+                {networkName === CHAIN_NAMES.ETHEREUM && (
                   <Grid item xs={8} sm={8} md={12}>
                     <SelectMarket />
                   </Grid>

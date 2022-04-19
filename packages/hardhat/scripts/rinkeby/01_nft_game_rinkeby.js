@@ -17,7 +17,8 @@ const {
   setDeploymentsPath,
   network,
   redeployIf,
-  deploy
+  deploy,
+  getContractAddress
 } = require("../utils");
 
 const { 
@@ -43,10 +44,10 @@ const updatePointFaucet = async (pointfaucetAddresss, nftgameAddress) => {
   
   if (!nftGameResponse) {
     const tx = await pointfaucet.setNFTGame(nftgameAddress);
-    await tx.wait(5);
-    progress.text = "Faucet nftGame address set-up complete";
+    await tx.wait();
+    console.log("Faucet nftGame address set-up complete");
   } else {
-    progress.text = "Faucet nftGame address already set-up";
+    console.log("Faucet nftGame address already set-up");
   }
 
   const nftgame = await ethers.getContractAt("NFTGame", nftgameAddress);
@@ -55,16 +56,16 @@ const updatePointFaucet = async (pointfaucetAddresss, nftgameAddress) => {
 
   if (!hasRole) {
     const tx1 = await nftgame.grantRole(GAME_INTERACTOR, pointfaucet.address);
-    await tx1.wait(5);
-    progress.text = "Faucet role GAME_INTERACTOR assigned in Nftgame complete";
+    await tx1.wait();
+    console.log("Faucet role GAME_INTERACTOR assigned in Nftgame complete");
   } else {
-    progress.text = "Faucet role GAME_INTERACTOR already assigned.";
+    console.log("Faucet role GAME_INTERACTOR already assigned.");
   }
 };
 
 const getVaultsAddrs = (network) => {
   if (network == 'rinkeby') {
-    const vaultethusdc = getContractAddress("VaultETHUSDC");
+    const vaultethusdc = getContractAddress("VaultDAIUSDC");
     return [vaultethusdc];
   } else {
     return [];
@@ -96,16 +97,17 @@ const deployContracts = async () => {
   // Note that 'standard' rewards chances:
   // 50%, 20%, 20%, 5%, 0.01%
   const rewardfactors = [
-    [1, 0, 0, 2, 25], // CrateId = 1 
-    [1, 0, 0, 4, 50], // CrateId = 2
-    [1, 0, 0, 8, 100] // CrateId = 3
+    [0.9, 0, 1.1, 2, 25], // CrateId = 1 
+    [0.9, 0, 1.1, 4, 50], // CrateId = 2
+    [0.9, 0, 1.1, 8, 100] // CrateId = 3
   ];
 
-  const prices = [2, 4, 8].map( i => parseUnits(i, POINTS_DECIMALS));
+  const prices = [10, 20, 40].map( i => parseUnits(i, POINTS_DECIMALS));
+  const merkleRoot = "0x903f8cb795059ae5a39d1a6caae25eb970d75914aa9324ccc657e9e38eb1a7c9";
 
   // Functions below return string addresses
   let nftgame = await deployNFTGame([phases]);
-  let nftinteractions = await deployNFTInteractions([nftgame.address]);
+  let nftinteractions = await deployNFTInteractions([nftgame]);
   let pretokenbonds = await deployPreTokenBonds([POINTS_DECIMALS, nftgame]);
 
   // Deploy 'pointfaucet'; only required for Rinkeby
@@ -115,7 +117,7 @@ const deployContracts = async () => {
   nftgame = await ethers.getContractAt("NFTGame", nftgame);
   nftinteractions = await ethers.getContractAt("NFTInteractions", nftinteractions);
   pretokenbonds = await ethers.getContractAt("PreTokenBonds", pretokenbonds);
-  pointfaucet = await ethers.getContractAt("PointsFaucet", pointfaucet);
+  pointfaucet = await ethers.getContractAt("PointFaucet", pointfaucet);
 
   // Authorize Redstone entropy signer, if not set.
   const entropyTrustedSigner = await nftinteractions.getTrustedSigner();
@@ -124,18 +126,17 @@ const deployContracts = async () => {
     .wrapLite(nftinteractions)
     .usingPriceFeed("redstone", { asset: "ENTROPY" });
     const txA = await wrappednftinteractions.authorizeSignerEntropyFeed("0x0C39486f770B26F5527BBBf942726537986Cd7eb");
-    progress.text = `...authorizing Redstone entropy provider tx-hash: ${txA.hash}`;
+    console.log(`...authorizing Redstone entropy provider tx-hash: ${txA.hash}`);
     await txA.wait();
-    progress.text = `succesfully set Redstone entropy signer`;
+    console.log(`succesfully set Redstone entropy signer`);
   } else {
-    progress.text = `...skipping Redstone entropy signer is set!`;
+    console.log(`...skipping Redstone entropy signer is set!`);
   }
 
   // Get vaults
-  console.log("network", network);
   const vaults = getVaultsAddrs(network);
   
-  await updateNFTGame(nftgame.address, nftinteractions.address, vaults, nftgame.signer.address);
+  await updateNFTGame(nftgame.address, nftinteractions.address, vaults, nftgame.signer.address, merkleRoot);
   await updatePointFaucet(pointfaucet.address, nftgame.address);
   await updateNFTInteractions(nftinteractions.address, CRATE_IDS, rewardfactors, prices);
   await updatePreTokenBonds(
@@ -150,7 +151,8 @@ const deployContracts = async () => {
     true
   );
 
-  console.log("Finished!");
+  console.log(`Finished!`);
+  progress.succeed(progressPrefix);
 };
 
 const main = async () => {
