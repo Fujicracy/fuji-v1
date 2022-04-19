@@ -202,7 +202,7 @@ const GameBanner = () => {
     setIsLoading(false);
   };
 
-  if (networkName !== 'fantom') {
+  if (networkName !== 'fantom' && networkName !== 'rinkeby') {
     return <></>;
   }
 
