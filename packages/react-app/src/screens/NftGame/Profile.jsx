@@ -3,6 +3,7 @@ import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import axios from 'axios';
 import InfoOutlined from '@material-ui/icons/InfoOutlined';
+import { NavLink } from 'react-router-dom';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, API_BASE_URI } from 'consts';
 import { BlackBoxContainer, Label, SectionTitle, Tooltip } from 'components';
@@ -58,7 +59,7 @@ function Profile() {
   return (
     <BlackBoxContainer
       maxWidth={!isMobile && '340px'}
-      p="40px 24px"
+      p={isMobile ? '0 24px 24px 24px' : '40px 24px'}
       hasBlackContainer={!isMobile}
       borderRadius="8px"
       color="white"
@@ -102,9 +103,9 @@ function Profile() {
         <StatsPoints fontSize="40px" color="white" mt={2}>
           {ranking?.position ?? '?'}
         </StatsPoints>
-        <Label color="white" mt={1}>
+        <NavLink to="leaderboard" style={{ textDecoration: 'underline', color: 'white' }}>
           Position
-        </Label>
+        </NavLink>
       </Flex>
 
       <Flex justifyContent="center" mt="24px">

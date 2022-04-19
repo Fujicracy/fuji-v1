@@ -146,7 +146,7 @@ export const NFT_ITEMS = {
   },
 };
 
-export const NFT_GAME_POINTS_DECIMALS = 5;
+export const NFT_GAME_POINTS_DECIMALS = 9;
 
 export const NFT_GAME_MODAL_THEMES = {
   [CRATE_TYPE.COMMON]: {
