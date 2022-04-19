@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import axios from 'axios';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, API_BASE_URI } from 'consts';
-import { BlackBoxContainer, Label, SectionTitle } from 'components';
+import { BlackBoxContainer, Label, SectionTitle, Tooltip } from 'components';
 import { intToString } from 'helpers';
 
 import { useProfileInfo, useAuth } from 'hooks';
@@ -114,7 +115,17 @@ function Profile() {
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
-          <StatsBoost>{boost ? `${boost}x` : '?'}</StatsBoost>
+          <Flex alignItems="center">
+            <StatsBoost>{boost ? `${boost}x` : '?'}</StatsBoost>
+            <Tooltip>
+              <InfoOutlined color="red" />
+              <span>
+                Each Climbing Gear NFT that you own boosts your meter points by an extra 10%.
+                Duplicate NFTs will NOT count towards your final score, only one of each type is
+                counted.
+              </span>
+            </Tooltip>
+          </Flex>
           <Label textAlign="left" color="white" fontSize="14px">
             Boost Score
           </Label>
