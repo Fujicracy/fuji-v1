@@ -80,12 +80,12 @@ const InventoryPopup = ({
               {showInfo ? (
                 <CancelIcon
                   onClick={() => setShowInfo(!showInfo)}
-                  style={{ zIndex: 1, cursor: 'pointer' }}
+                  style={{ zIndex: 1, cursor: 'pointer', marginLeft: '8px' }}
                 />
               ) : (
                 <InfoIcon
                   onClick={() => setShowInfo(!showInfo)}
-                  style={{ zIndex: 1, cursor: 'pointer' }}
+                  style={{ zIndex: 1, cursor: 'pointer', marginLeft: '8px' }}
                 />
               )}
             </SectionTitle>

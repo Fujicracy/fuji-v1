@@ -17,7 +17,7 @@ const ItemInfos = ({ type }) => {
     .filter(k => outcomes[type][k] !== 0);
 
   return (
-    <>
+    <div className="animate__animated animate__fast animate__flipInY">
       <p style={{ margin: '1rem 0' }}>Probability of outcomes:</p>
       <Table size="small">
         <TableBody>
@@ -43,7 +43,7 @@ const ItemInfos = ({ type }) => {
           })}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 };
 
