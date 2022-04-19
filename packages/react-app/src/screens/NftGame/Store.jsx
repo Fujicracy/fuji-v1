@@ -159,7 +159,7 @@ function Store() {
             <GeneralItem
               type={CRATE_TYPE.COMMON}
               title={CRATE_TYPE.COMMON}
-              points={cratesPrices[CRATE_TYPE.COMMON]}
+              price={cratesPrices[CRATE_TYPE.COMMON]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}
@@ -169,7 +169,7 @@ function Store() {
             <GeneralItem
               type={CRATE_TYPE.EPIC}
               title={CRATE_TYPE.EPIC}
-              points={cratesPrices[CRATE_TYPE.EPIC]}
+              price={cratesPrices[CRATE_TYPE.EPIC]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}
@@ -177,7 +177,7 @@ function Store() {
           </Grid>
           <Grid item xs={12} md={4}>
             <LegendaryItem
-              points={cratesPrices[CRATE_TYPE.LEGENDARY]}
+              price={cratesPrices[CRATE_TYPE.LEGENDARY]}
               description="Meter points"
               onBuy={mintInventory}
               isLoading={isLoading}

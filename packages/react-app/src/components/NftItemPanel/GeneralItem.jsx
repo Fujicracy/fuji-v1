@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
+
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
-import { Label, CountButton } from '../UI';
+import { CountButton } from '../UI';
 import {
   Container,
   ItemPanel,
@@ -12,17 +13,11 @@ import {
   InfoButton,
   CancelButton,
   ItemsContainer,
+  AmountInput,
 } from './styles';
 import ItemInfo from './ItemInfo';
 
-const GeneralItem = ({
-  type = CRATE_TYPE.COMMON,
-  title,
-  points,
-  description,
-  onBuy,
-  isLoading,
-}) => {
+const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -60,6 +55,7 @@ const GeneralItem = ({
         <Flex flexDirection="row" justifyContent="center" alignItems="center">
           <CountButton
             backgroundColor={theme.buttonColor}
+            color={theme.foreColor}
             onClick={() => {
               if (!isBuying && amount >= 1) setAmount(amount - 1);
             }}
@@ -69,10 +65,15 @@ const GeneralItem = ({
           >
             -
           </CountButton>
-          <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-            {amount}
-          </Label>
+          <AmountInput
+            value={amount}
+            theme={theme}
+            type="number"
+            onChange={e => setAmount(parseInt(e.target.value, 10))}
+            disabled={isBuying || isLoading}
+          />
           <CountButton
+            color={theme.foreColor}
             backgroundColor={theme.buttonColor}
             onClick={() => !isBuying && setAmount(amount + 1)}
             disabled={isBuying || isLoading}
@@ -84,9 +85,7 @@ const GeneralItem = ({
         </Flex>
         <BuyButton
           mt={isMobile ? '12px' : '16px'}
-          backgroundColor={theme.buttonColor}
-          foreColor={isBuyButtonDisabled ? theme.disabledForeColor : theme.foreColor}
-          activeColor={theme.backColor}
+          theme={theme}
           disabled={isBuyButtonDisabled}
           onClick={handleClickBuy}
         >
@@ -130,7 +129,7 @@ const GeneralItem = ({
           lineHeight="12px"
           alignItems="baseline"
         >
-          {points.toLocaleString()} <span>{description}</span>
+          {price.toLocaleString()} <span>{description}</span>
         </SectionTitle>
       </ItemsContainer>
       {body}
