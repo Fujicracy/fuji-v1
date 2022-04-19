@@ -68,11 +68,12 @@ const Rules = ({ margin, open = false }) => (
         <Link
           href="https://docs.google.com/document/d/1ftYFOWXBK0r-9VGrHooNZpdS13hhjrerKTgWTpg0yow"
           color="#fa266c"
+          target="_blank"
         >
           Documentation
         </Link>{' '}
         and {/* TODO: Link */}
-        <Link href="https://github.com/Fujicracy/" color="#fa266c">
+        <Link href="https://github.com/Fujicracy/" target="_blank" color="#fa266c">
           Medium page.
         </Link>
       </Text>
