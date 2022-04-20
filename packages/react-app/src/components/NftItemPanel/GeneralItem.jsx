@@ -48,7 +48,7 @@ const GeneralItem = ({
   const body = showInfo ? (
     <ItemInfo type={type} />
   ) : (
-    <>
+    <div className="animate__animated animate__fast animate__flipInY">
       <ItemPanel src={theme.idleImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
@@ -103,7 +103,7 @@ const GeneralItem = ({
           Buy
         </BuyButton>
       </Flex>
-    </>
+    </div>
   );
 
   return (

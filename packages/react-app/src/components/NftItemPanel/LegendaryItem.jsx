@@ -43,7 +43,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
   const body = showInfo ? (
     <ItemInfo type={CRATE_TYPE.LEGENDARY} />
   ) : (
-    <>
+    <div className="animate__animated animate__fast animate__flipInY">
       <ItemPanel mode={CRATE_TYPE.LEGENDARY} src={theme.idleImage} />
       <LegendaryItemsContainer
         position="right"
@@ -117,7 +117,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
           </BuyButton>
         )}
       </LegendaryItemsContainer>
-    </>
+    </div>
   );
 
   return (
