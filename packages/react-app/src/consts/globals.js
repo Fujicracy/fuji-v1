@@ -5,8 +5,8 @@ const DEPLOYMENT_TYPES = {
 
 const ETH_CAP_VALUE = process.env.REACT_APP_ETH_CAP_VALUE || 2;
 
-const APP_URL = process.env.REACT_APP_APP_URL || 'http://localhost:3000';
-const LANDING_URL = process.env.REACT_APP_LANDING_URL || 'http://localhost:3000';
+const APP_URL = process.env.REACT_APP_APP_URL || '';
+const LANDING_URL = process.env.REACT_APP_LANDING_URL || '';
 const API_BASE_URI =
   process.env.REACT_APP_API_BASE_URI || 'https://fuji-api-dot-fuji-306908.ey.r.appspot.com';
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
