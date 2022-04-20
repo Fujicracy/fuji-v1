@@ -16,6 +16,7 @@ import {
   PanelContainer,
   SkipButton,
   OpenButton,
+  AmountInput,
 } from './styles';
 
 const InventoryPopup = ({
@@ -124,9 +125,13 @@ const InventoryPopup = ({
                 >
                   -
                 </CountButton>
-                <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-                  {amount}
-                </Label>
+                <AmountInput
+                  value={amount}
+                  theme={theme}
+                  type="number"
+                  onChange={e => setAmount(parseInt(e.target.value, 10))}
+                  disabled={isLoading}
+                />
                 <CountButton
                   backgroundColor={theme.buttonColor}
                   onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
