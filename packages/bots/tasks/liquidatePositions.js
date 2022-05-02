@@ -96,7 +96,7 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
   console.log('---> find borrowers');
 
   let borrowers;
-  if (process.env.REDIS) {
+  if (process.env.REDIS === 'true') {
     console.log('---> using redis');
     const client = await connectRedis();
     const vaultAddr = vault.address.toLowerCase();

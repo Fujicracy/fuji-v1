@@ -29,10 +29,7 @@ export const getFlashloanProvider = async (setup, vault) => {
   if (config.networkName === 'ethereum') {
     index = getForEthereum(contracts, activeProvider, borrowAsset);
   } else if (config.networkName === 'fantom') {
-    index =
-      contracts.ProviderCream.address === activeProvider
-        ? providerIndexes.AAVE
-        : providerIndexes.CREAM;
+    index = providerIndexes.AAVE;
   }
 
   return index;
