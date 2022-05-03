@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Flex } from 'rebass';
+import { Flex, Text } from 'rebass';
 import CancelIcon from '@material-ui/icons/Cancel';
 import InfoIcon from '@material-ui/icons/Info';
 
@@ -146,10 +146,17 @@ const InventoryPopup = ({
                 </Label>
               </Flex>
 
+              {amount > inventory.amount && (
+                <Text fontSize="1" marginTop="2" color="grey">
+                  ⚠️ You does not have enough crates available in your inventory ({inventory.amount}{' '}
+                  available).
+                </Text>
+              )}
+
               <OpenButton
                 mt="16px"
                 onClick={() => (isOpened ? onClose() : onSubmit(inventory.type, amount))}
-                disabled={isLoading}
+                disabled={isLoading || amount > inventory.amount}
               >
                 {isOpened ? 'Go to your inventory' : isLoading ? 'Opening' : 'Open'}
               </OpenButton>
