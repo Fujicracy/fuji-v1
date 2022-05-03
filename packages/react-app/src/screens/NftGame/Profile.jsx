@@ -64,6 +64,7 @@ function Profile() {
       borderRadius="8px"
       color="white"
       height="fit-content"
+      style={{ zIndex: 1 }}
     >
       <ProfileDecoration left src={profileDecorationImage} />
       <ProfileDecoration right src={profileDecorationImage} />
