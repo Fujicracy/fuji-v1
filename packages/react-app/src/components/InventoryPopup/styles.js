@@ -114,3 +114,14 @@ export const OpenButton = styled(BlackButton)`
     animation-duration: 0.5s;
   }
 `;
+
+export const AmountInput = styled.input`
+  width: 2rem;
+  margin: 0 8px;
+  text-align: center;
+  height: 1.5rem;
+  background-color: inherit;
+  border: 1px solid ${({ theme }) => theme.buttonColor};
+  color: ${({ theme }) => theme.foreColor};
+  border-radius: 3px;
+`;

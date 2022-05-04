@@ -122,18 +122,22 @@ export const BuyButton = styled.div`
 
   font-weight: 500;
   border-radius: 30px;
-  background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
-
+  background: ${({ theme }) => theme.buttonColor || 'rgba(255, 255, 255, 0.16)'};
+  color: ${({ theme }) => theme.foreColor};
   cursor: pointer;
-  color: ${props => props.foreColor};
 
   &:hover {
-    border: ${props => !props.disabled && `1px solid ${props.foreColor}`};
+    border: ${props => !props.disabled && `1px solid ${props.theme.foreColor}`};
   }
 
-  &:active {
-    background: ${props => !props.disabled && props.foreColor};
-    color: ${props => !props.disabled && props.activeColor};
+  &[disabled] {
+    cursor: not-allowed;
+    color: ${({ theme }) => theme.disabledForeColor};
+  }
+
+  &:not([disabled]):active {
+    background: ${({ theme }) => theme.foreColor};
+    color: ${({ theme }) => theme.activeColor};
   }
 
   ${space};
@@ -313,4 +317,15 @@ export const HorizontalBreaker = styled.hr`
   border: none;
   border-bottom: 1px solid ${props => props.color ?? 'inherit'};
   width: 100%;
+`;
+
+export const AmountInput = styled.input`
+  width: 2rem;
+  margin: 0 8px;
+  text-align: center;
+  height: 1.5rem;
+  background-color: inherit;
+  border: 1px solid ${({ theme }) => theme.buttonColor};
+  color: ${({ theme }) => theme.foreColor};
+  border-radius: 3px;
 `;

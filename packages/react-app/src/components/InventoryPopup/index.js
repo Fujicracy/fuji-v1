@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Flex } from 'rebass';
+import { Flex, Text } from 'rebass';
 import CancelIcon from '@material-ui/icons/Cancel';
 import InfoIcon from '@material-ui/icons/Info';
 
@@ -16,6 +16,7 @@ import {
   PanelContainer,
   SkipButton,
   OpenButton,
+  AmountInput,
 } from './styles';
 
 const InventoryPopup = ({
@@ -124,9 +125,13 @@ const InventoryPopup = ({
                 >
                   -
                 </CountButton>
-                <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-                  {amount}
-                </Label>
+                <AmountInput
+                  value={amount}
+                  theme={theme}
+                  type="number"
+                  onChange={e => setAmount(parseInt(e.target.value, 10))}
+                  disabled={isLoading}
+                />
                 <CountButton
                   backgroundColor={theme.buttonColor}
                   onClick={() => !isLoading && amount < inventory.amount && setAmount(amount + 1)}
@@ -141,10 +146,17 @@ const InventoryPopup = ({
                 </Label>
               </Flex>
 
+              {amount > inventory.amount && (
+                <Text fontSize="1" marginTop="2" color="grey">
+                  ⚠️ You does not have enough crates available in your inventory ({inventory.amount}{' '}
+                  available).
+                </Text>
+              )}
+
               <OpenButton
                 mt="16px"
                 onClick={() => (isOpened ? onClose() : onSubmit(inventory.type, amount))}
-                disabled={isLoading}
+                disabled={isLoading || amount > inventory.amount}
               >
                 {isOpened ? 'Go to your inventory' : isLoading ? 'Opening' : 'Open'}
               </OpenButton>

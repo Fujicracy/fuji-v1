@@ -5,7 +5,7 @@ import { CircularProgress } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
-import { Label, CountButton } from '../UI';
+import { CountButton } from '../UI';
 import {
   ItemPanel,
   BuyButton,
@@ -13,10 +13,11 @@ import {
   LegendaryContainer,
   InfoButton,
   CancelButton,
+  AmountInput,
 } from './styles';
 import ItemInfo from './ItemInfo';
 
-const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
+const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -60,9 +61,13 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
           >
             -
           </CountButton>
-          <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-            {amount}
-          </Label>
+          <AmountInput
+            value={amount}
+            theme={theme}
+            type="number"
+            onChange={e => setAmount(parseInt(e.target.value, 10))}
+            disabled={isBuying || isLoading}
+          />
           <CountButton
             foreColor={theme.foreColor}
             activeColor={theme.backColor}
@@ -144,7 +149,7 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
           lineHeight="12px"
           alignItems="baseline"
         >
-          {points.toLocaleString()} <span>{description}</span>
+          {price.toLocaleString()} <span>{description}</span>
         </SectionTitle>
       </LegendaryItemsContainer>
 
