@@ -9,15 +9,15 @@ export const BREAKPOINT_NAMES = {
 };
 
 export const BREAKPOINTS = {
-  [BREAKPOINT_NAMES.MOBILE]: { inString: '767px', inNumber: 767 },
-  [BREAKPOINT_NAMES.TABLET]: { inString: '1439px', inNumber: 1439 },
-  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1919px', inNumber: 1919 },
+  [BREAKPOINT_NAMES.MOBILE]: { inString: '600px', inNumber: 600 },
+  [BREAKPOINT_NAMES.TABLET]: { inString: '960px', inNumber: 960 },
+  [BREAKPOINT_NAMES.DESKTOP]: { inString: '1280px', inNumber: 1280 },
 };
 
 export const fujiMedia = generateMedia({
-  small: '767px',
-  medium: '1439px',
-  large: '1919px',
+  small: '600px',
+  medium: '960px',
+  large: '1280px',
 });
 
 export const DESKTOP_MINIMUM_HEIGHT = 550;

@@ -80,9 +80,9 @@ function ManagePosition() {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        width={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        margin={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
+        maxWidth={isMobile ? '500px' : isTablet ? '800px' : '1200px'}
+        margin={isMobile ? '32px auto' : isTablet ? '44px auto' : '72px auto'}
+        padding="0 2rem"
       >
         <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
           <NavBackLink to="my-positions">
