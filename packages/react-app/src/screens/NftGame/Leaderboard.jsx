@@ -80,7 +80,13 @@ function Leaderboard() {
         }
       }
 
-      setRankings(allRanks);
+      const SECS = 60 * 60 * 24;
+      const ranks = allRanks.map(r => ({
+        ...r,
+        rateOfAccrual:
+          Number(formatUnits(parseInt(r.rateOfAccrual, 10), NFT_GAME_POINTS_DECIMALS)) * SECS,
+      }));
+      setRankings(ranks);
       setIsLoading(false);
     }
     fetchData();
