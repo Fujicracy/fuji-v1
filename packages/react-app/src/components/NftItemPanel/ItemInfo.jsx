@@ -12,25 +12,23 @@ import { intToString } from 'helpers';
 const ItemInfos = ({ type }) => {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const { outcomes } = useCratesInfo();
-  const keys = Object.keys(outcomes[type])
-    .sort((a, b) => parseFloat(b) - parseFloat(a))
-    .filter(k => outcomes[type][k] !== 0);
+  const rewards = Object.keys(outcomes[type]).sort((a, b) => parseFloat(a) - parseFloat(b));
 
   return (
     <div className="animate__animated animate__fast animate__flipInY">
       <p style={{ margin: '1rem 0' }}>Probability of outcomes:</p>
       <Table size="small">
         <TableBody>
-          {keys.map(k => {
-            const reward = outcomes[type][k];
+          {rewards.map(reward => {
+            const probabilty = outcomes[type][reward];
 
             return (
-              <TableRow key={`${k}${outcomes[type][k]}`}>
+              <TableRow key={`${reward}${outcomes[type][reward]}`}>
                 <TableCell style={{ color: 'inherit' }} padding={isMobile ? 'none' : 'normal'}>
-                  <strong>{k}</strong>
+                  <strong>{probabilty}</strong>
                 </TableCell>
                 <TableCell style={{ color: 'inherit' }} padding="none">
-                  {typeof reward === 'number' ? (
+                  {reward !== 'card' ? (
                     <>
                       <strong>{intToString(reward)}</strong> points
                     </>
