@@ -135,7 +135,9 @@ function Leaderboard() {
                     rel="noreferrer"
                     style={{ color: 'white', textDecoration: 'underline' }}
                   >
-                    {r.username || <EthAddress address={r.address} prefix="10" suffix="8" />}
+                    {r.username || (
+                      <EthAddress address={r?.address ?? null} prefix="10" suffix="8" />
+                    )}
                   </a>
                 </Cell>
                 <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
