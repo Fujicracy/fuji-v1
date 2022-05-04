@@ -50,7 +50,7 @@ function NftGame() {
       <BackgroundEffect />
       <Flex flexDirection="row" justifyContent="center">
         {!isMobile && (
-          <Box margin="24px 48px 0px 0px" maxWidth="340px">
+          <Box margin="0 48px 0px 0px" maxWidth="340px">
             <Rules />
             <br />
             <Profile />
