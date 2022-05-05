@@ -59,6 +59,27 @@ function Header() {
   const [balance, setBalance] = useState(0);
   const [selectedChain, setSelectedChain] = useState(chains[networkName]);
 
+  const [displayname, setDisplayName] = useState('');
+
+  const nameResolver = async () => {
+    try {
+      if (address) {
+        let displayname = address.substr(0, 6) + '...' + address.substr(-4, 4);
+        if (provider) {
+          const ensname = await provider.lookupAddress(address);
+          if (ensname) {
+            displayname = ensname;
+          }
+        }
+        return displayname; 
+      } else {
+        return '';
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const userBalance = useBalance(provider, address, contracts);
 
   useEffect(() => {
@@ -70,15 +91,23 @@ function Header() {
   }, [chains, networkName, networkId]);
 
   useEffect(() => {
-    function formatBalance() {
-      const bal = Number(formatUnits(userBalance, defaultAsset.decimals)).toFixed(2);
-      setBalance(bal);
+    const fetch = async () => {
+      const displayname = await nameResolver();
+      setDisplayName(displayname);
     }
+    fetch();
+  }, [displayname]);
 
-    if (userBalance) formatBalance();
-  }, [defaultAsset, userBalance]);
+  useEffect(() => {
+    if (Object.values(chains).find(chain => chain.id === networkId)) {
+      setSelectedChain(chains[networkName]);
+    } else {
+      setSelectedChain(null);
+    }
+  }, [chains, networkName, networkId]);
 
-  const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
+ const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
+  
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
   });
@@ -299,7 +328,7 @@ function Header() {
                       onClick={() => setIsOpenWalletDropDown(!isOpenWalletDropDown)}
                       isClicked={isOpenWalletDropDown}
                     >
-                      <Label color="#f5f5f5">{ellipsedAddress}</Label>
+                      <Label color="#f5f5f5">{displayname}</Label>
                       <Image
                         src={isOpenWalletDropDown ? upArrowIcon : downArrowIcon}
                         ml={2}
