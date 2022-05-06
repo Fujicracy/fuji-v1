@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flex } from 'rebass';
+import { Flex, Text } from 'rebass';
 import { useHistory } from 'react-router-dom';
 
 import { NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
@@ -7,14 +7,10 @@ import { BlackButton } from 'components/UI';
 import { OpacityImage } from 'components/InventoryPopup/styles';
 import GearSet from 'components/GearSet';
 import { SectionTitle } from 'components/Blocks';
+// TODO: use correct video animation instead
+import { commonCrateIntroAnimation } from 'assets/images';
 
-import {
-  StyledModal,
-  CarouselContainer,
-  CloseButton,
-  ItemContainer,
-  RoundedAmountContainer,
-} from './styles';
+import { StyledModal, CarouselContainer, CloseButton, ItemContainer } from './styles';
 
 const carouselResponsive = {
   desktop: {
@@ -46,6 +42,7 @@ const carouselResponsive = {
 const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType }) => {
   const [opacity, setOpacity] = useState(0);
   const history = useHistory();
+  const theme = NFT_GAME_MODAL_THEMES[crateType];
 
   function afterOpen() {
     setTimeout(() => {
@@ -60,7 +57,6 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
     });
   }
 
-  const theme = NFT_GAME_MODAL_THEMES[crateType];
   return (
     <StyledModal
       color={theme.foreColor}
@@ -84,41 +80,45 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
         infinite
         containerClass="carousel-container"
         draggable
-        keyBoardControl
         minimumTouchDrag={80}
-        renderButtonGroupOutside={false}
-        renderDotsOutside={false}
-        centerMode={false}
         responsive={carouselResponsive}
         showDots={false}
-        sliderClass=""
         slidesToSlide={2}
         swipeable
       >
         {Object.keys(outComes).map(outKey => {
           if (outKey === NFT_IDS.NOTHING) {
             return (
-              <ItemContainer key={outKey} backgroundColor={theme.backColor}>
-                <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-                <SectionTitle color={theme.foreColor} fontSize="20px">
+              <div>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={commonCrateIntroAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
+                  <Text fontWeight="bold" display="inline">
+                    {outComes[outKey].count}x
+                  </Text>{' '}
                   Empty
-                </SectionTitle>
-              </ItemContainer>
+                </Text>
+              </div>
             );
           }
           if (outKey === NFT_IDS.POINTS.toString()) {
             return (
-              <ItemContainer key={outKey} backgroundColor={theme.backColor}>
-                <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                  <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-                  <SectionTitle color={theme.foreColor} fontSize="20px">
+              <div>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={commonCrateIntroAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
+                  <Text fontWeight="bold" display="inline">
                     {outComes[outKey].amount}
-                  </SectionTitle>
-                  <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
-                    Meter Points
-                  </SectionTitle>
-                </Flex>
-              </ItemContainer>
+                  </Text>{' '}
+                  meter points
+                </Text>
+              </div>
             );
           }
           return (
