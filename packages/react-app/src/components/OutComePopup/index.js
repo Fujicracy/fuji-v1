@@ -76,13 +76,11 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
         arrows
         autoPlay
         autoPlaySpeed={3000}
-        infinite
         containerClass="carousel-container"
         draggable
         minimumTouchDrag={80}
         responsive={carouselResponsive}
         showDots={false}
-        slidesToSlide={2}
         swipeable
       >
         {Object.keys(outComes).map(outKey => {
