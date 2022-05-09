@@ -25,7 +25,11 @@ const GearSet = ({ nftGear, width, textColor, hover = true }) => {
           </Flex>
         </GearSetNumber>
       </GearSetContainer>
-      <SectionTitle color={textColor} spanColor="#05FF00" mt={2}>
+      <SectionTitle
+        color={textColor}
+        spanColor={textColor === 'black' ? textColor : '#05FF00'}
+        mt={2}
+      >
         {name}
         <span>+{boost}%</span>
       </SectionTitle>
