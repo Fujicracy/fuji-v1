@@ -150,7 +150,7 @@ const ACTION_DESCRIPTIONS = {
     value: ACTION_RESULT.SUCCESS,
     title: 'Congratulation!',
     description:
-      'Your meter points have been successfully claimed! You can use them to buy crates or continue accumulating them by maintaining your position.',
+      'You successfully claimed {amount} meter points! You can use them to buy crates or continue accumulating them by maintaining your position.',
     submitText: 'Go to Store',
     emotionIcon: happyIcon,
   },
@@ -190,6 +190,9 @@ const GameBanner = () => {
 
         if (txRes && txRes.hash) {
           await txRes.wait();
+          ACTION_DESCRIPTIONS[ACTION_RESULT.SUCCESS].description = ACTION_DESCRIPTIONS[
+            ACTION_RESULT.SUCCESS
+          ].description.replace('{amount}', data.pointsToClaim);
           setActionResult(ACTION_RESULT.SUCCESS);
         }
       } catch (error) {
