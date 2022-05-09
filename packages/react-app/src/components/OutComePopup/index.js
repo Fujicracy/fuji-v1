@@ -125,6 +125,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
               key={NFT_ITEMS[outKey].name}
               width="180px"
               textColor={theme.foreColor}
+              hover={false}
               nftGear={{
                 balance: outComes[outKey].count,
                 name: NFT_ITEMS[outKey].name,

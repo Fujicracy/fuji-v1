@@ -170,13 +170,15 @@ export const GearSetItem = styled.div`
   );
 
   transition: 0.3s all;
-  &:hover {
-    border: 2px solid #fa266c;
-    cursor: pointer;
-    & > div {
-      // rewrite for GearSetBadge
-      background-color: #fa266c;
-    }
+  ${props =>
+    props.hover &&
+    `&:hover {
+      border: 2px solid #fa266c;
+      cursor: pointer;
+      & > div {
+        // rewrite for GearSetBadge
+        background-color: #fa266c;
+    }`}
   }
 `;
 

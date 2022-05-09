@@ -9,13 +9,13 @@ import {
   GearSetBadge,
 } from '../screens/NftGame/styles';
 
-const GearSet = ({ nftGear, width, textColor }) => {
+const GearSet = ({ nftGear, width, textColor, hover = true }) => {
   const { balance, images, name, boost } = nftGear;
 
   return (
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <GearSetContainer width={width}>
-        <GearSetItem width={width}>
+        <GearSetItem width={width} hover={hover}>
           <GearSetBadge />
           <Image src={images.medium} width={width} />
         </GearSetItem>
