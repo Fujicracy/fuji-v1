@@ -7,8 +7,7 @@ import { BlackButton } from 'components/UI';
 import { OpacityImage } from 'components/InventoryPopup/styles';
 import GearSet from 'components/GearSet';
 import { SectionTitle } from 'components/Blocks';
-// TODO: use correct video animation instead
-import { commonCrateIntroAnimation } from 'assets/images';
+import { emptyCrateAnimation, meterPointCrateAnimation } from 'assets/images';
 
 import { StyledModal, CarouselContainer, CloseButton, ItemContainer } from './styles';
 
@@ -92,7 +91,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
               <div>
                 <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                   <video autoPlay muted loop width="180" height="180">
-                    <source src={commonCrateIntroAnimation} type="video/mp4" />
+                    <source src={emptyCrateAnimation} type="video/mp4" />
                   </video>
                 </ItemContainer>
                 <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
@@ -109,7 +108,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
               <div>
                 <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                   <video autoPlay muted loop width="180" height="180">
-                    <source src={commonCrateIntroAnimation} type="video/mp4" />
+                    <source src={meterPointCrateAnimation} type="video/mp4" />
                   </video>
                 </ItemContainer>
                 <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">

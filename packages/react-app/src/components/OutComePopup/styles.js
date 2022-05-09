@@ -48,6 +48,7 @@ export const ItemContainer = styled.div`
   height: 180px;
   border-radius: 12px;
   border: 1px solid black;
+  overflow: hidden;
 
   margin: auto;
 

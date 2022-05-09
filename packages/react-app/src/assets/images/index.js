@@ -81,6 +81,8 @@ import legendaryCrateIntroAnimation from './animations/inventory_legendary_intro
 import commonCrateOpeningAnimation from './animations/inventory_common_opening.mp4';
 import epicCrateOpeningAnimation from './animations/inventory_epic_opening.mp4';
 import legendaryCrateOpeningAnimation from './animations/inventory_legendary_opening.mp4';
+import emptyCrateAnimation from './animations/empty.mp4';
+import meterPointCrateAnimation from './animations/meter_points.mp4';
 
 import commonCrateIdleImage from './images/nft-game/inventory-common-idle.png';
 import epicCrateIdleImage from './images/nft-game/inventory-epic-idle.png';
@@ -162,6 +164,8 @@ export {
   commonCrateOpeningAnimation,
   epicCrateOpeningAnimation,
   legendaryCrateOpeningAnimation,
+  meterPointCrateAnimation,
+  emptyCrateAnimation,
   commonCrateIdleImage,
   epicCrateIdleImage,
   legendaryCrateIdleImage,
