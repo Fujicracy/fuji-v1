@@ -26,7 +26,7 @@ function getRewardOutcomes(probabiltyIntervals, rewards) {
   const intervals = probabiltyIntervals.map(i => i * 100);
 
   let prob;
-  for (let i = 0; i < rewards.length; i += 1) {
+  for (let i = 0; i < intervals.length; i += 1) {
     if (i === 0) {
       prob = intervals[0].toFixed(2) + '%';
     } else {
