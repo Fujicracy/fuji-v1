@@ -137,13 +137,6 @@ export const TiledPanel = styled.div`
 
 export const GearSetContainer = styled.div`
   position: relative;
-  width: ${props => props.width || '229px'};
-  height: ${props => props.width || '229px'};
-
-  ${fujiMedia.lessThan('small')`
-    width: ${props => props.width || '160px'};
-    height: ${props => props.width || '160px'};
-  `}
 `;
 
 export const GearSetItem = styled.div`
@@ -153,12 +146,6 @@ export const GearSetItem = styled.div`
   align-items: center;
   overflow: hidden;
 
-  width: ${props => props.width || '229px'};
-  height: ${props => props.width || '229px'};
-  ${fujiMedia.lessThan('small')`
-    width: ${props => props.width || '160px'};
-    height: ${props => props.width || '160px'};
-  `}
   background: rgb(18, 18, 18);
 
   border: 2px solid rgb(58, 58, 58);
@@ -194,8 +181,8 @@ export const GearSetBadge = styled.div`
 `;
 
 export const GearSetNumber = styled.div`
-  width: 43px;
-  height: 43px;
+  width: 40px;
+  height: 40px;
 
   display: flex;
   align-items: flex-start;
@@ -203,7 +190,7 @@ export const GearSetNumber = styled.div`
 
   color: rgba(240, 1, 79, 1);
   position: absolute;
-  right: -8px;
+  right: -6px;
   top: 4px;
   z-index: 2;
 `;
