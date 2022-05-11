@@ -55,6 +55,8 @@ export const NFT_ITEMS = {
       'The Pickaxe will help you maintain a grip. When you reach the higher highs, you’ll need them to overpass the hardest obstacles along the road.',
     boost: 10,
     images: {
+      small:
+        'https://ipfs.fleek.co/ipfs/bafybeifthyg7tmh6g55qu77ih4kq7qnpvoinlcnttano3ifof2i2znpina',
       medium:
         'https://ipfs.fleek.co/ipfs/bafybeiceaehfh4p7jejththcaeadbamztagqhimqjhzo2otgmovinbx6n4',
     },
@@ -65,6 +67,8 @@ export const NFT_ITEMS = {
       'Reaching the higher highs is not easy, you’ll find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
     boost: 10,
     images: {
+      small:
+        'https://ipfs.fleek.co/ipfs/bafybeichno5r55c2wgw2abdohuch7my2b3wvvrgwypp2azccagltqw2mne',
       medium:
         'https://ipfs.fleek.co/ipfs/bafybeighjgji4bhbqkrx5czdwvspgm6hyubdip6uu5t4db6zkkf6rnxuhy',
     },
@@ -75,6 +79,8 @@ export const NFT_ITEMS = {
       'What would be a climbing without gloves? Not a climbing of course. Fuji Gloves will ensure your fingers remain attached to your hand, all the way to the top.',
     boost: 10,
     images: {
+      small:
+        'https://ipfs.fleek.co/ipfs/bafybeiftaklgesfljkrpd5g7rinitxtqvelo7vjshrqvzmzfcxbbpey7by',
       medium:
         'https://ipfs.fleek.co/ipfs/bafybeigvlaagna77fdibkgs27jxo3law2cey6ui5brqnhoqtnikyunacze',
     },
@@ -85,6 +91,8 @@ export const NFT_ITEMS = {
       'In case of sudden emergency during the climbing, shoot with your Fuji Pistol to show your peers you need some assistance.',
     boost: 10,
     images: {
+      small:
+        'https://ipfs.fleek.co/ipfs/bafybeiaghca5qlzsijcz6wlbse2aik7qwsvwyywsrh2v7bpzicpq6ypr54',
       medium:
         'https://ipfs.fleek.co/ipfs/bafybeicau6ab7dlj3zu5tm26qrmqx7t3a6i6pxsbgoixv3vtksrotwiu5u',
     },
@@ -95,6 +103,8 @@ export const NFT_ITEMS = {
       'The heat capsule will keep you warm and alive each time the temperature decreases to the extreme lows.',
     boost: 10,
     images: {
+      small:
+        'https://ipfs.fleek.co/ipfs/bafybeih2keg45qi6kjonfn5xvbi2m2njb25qzcyv3fxtbubriikc5uz54y',
       medium:
         'https://ipfs.fleek.co/ipfs/bafybeiabt7es5q65qdwp7dns55akbspmvteg5oie4fmezhw2smfywnmkna',
     },
@@ -105,6 +115,7 @@ export const NFT_ITEMS = {
       'Adapted from the ancient Fuji Flops, those used by the first Fuji Climbers in the history. They’ll let you climb in a comfy manner, and keep your focus on the road instead of your cold feet.',
     boost: 10,
     images: {
+      small: '',
       medium: '',
     },
   },
@@ -114,6 +125,7 @@ export const NFT_ITEMS = {
       'These sunglasses will let you foresee the obstacles you might encounter, and solutions to your challenges at a faster pace. This is technology of the future; equipped laser vision.',
     boost: 10,
     images: {
+      small: '',
       medium: '',
     },
   },
@@ -123,6 +135,7 @@ export const NFT_ITEMS = {
       'Each expedition needs its watch. It will follow you during the whole journey, indicating the most important metrics such as your altitude and your speed.',
     boost: 10,
     images: {
+      small: '',
       medium: '',
     },
   },
@@ -132,6 +145,7 @@ export const NFT_ITEMS = {
       'The protein bar is a must have during the climbing, in fact, without it, you’ll have to eat your peers, it’s not what you want, right?',
     boost: 10,
     images: {
+      small: '',
       medium: '',
     },
   },
@@ -141,6 +155,7 @@ export const NFT_ITEMS = {
       'The Med Kit is here to support you during hard times, maintain your health the longer you can during the climbing to avoid having to use it.',
     boost: 10,
     images: {
+      small: '',
       medium: '',
     },
   },
