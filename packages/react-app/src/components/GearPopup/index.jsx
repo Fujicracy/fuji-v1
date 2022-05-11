@@ -166,6 +166,9 @@ const SectionDescription = styled.div`
 const GearPopup = ({ gear, close }) => {
   const contracts = useContractLoader();
   const contractAddress = contracts?.NFTGame.address;
+  const boost = gear.balance
+    ? gear.boost[gear.balance < gear.boost.length ? gear.balance - 1 : gear.boost.length - 1]
+    : 0;
 
   return (
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
@@ -200,12 +203,13 @@ const GearPopup = ({ gear, close }) => {
           </SectionBox>
           <SectionBox>
             <SectionTitle>
-              Boost score
-              <span> +{gear.boost}%</span>
+              Boost scores
+              {boost && <span> +{boost}%</span>}
             </SectionTitle>
             <SectionDescription>
-              Your total Meter Points will be multiplied by 1.{gear.boost}x as far as you possess
-              this Climbing Gear NFT.
+              As far as you possess this Climbing Gear NFT your Meter Points will be multiplied by:
+              1.10x for 1 Gear, 1.15x for 2 Gears, 1.17x for 3 Gears, 1.18x for 4 Gears, 1.19x for 5
+              Gears or more...
             </SectionDescription>
           </SectionBox>
         </Half>
