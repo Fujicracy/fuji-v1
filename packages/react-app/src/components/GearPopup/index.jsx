@@ -208,8 +208,7 @@ const GearPopup = ({ gear, close }) => {
             </SectionTitle>
             <SectionDescription>
               As far as you possess this Climbing Gear NFT your Meter Points will be multiplied by:
-              1.10x for 1 Gear, 1.15x for 2 Gears, 1.17x for 3 Gears, 1.18x for 4 Gears, 1.19x for 5
-              Gears or more...
+              1.10x for 1 Gear, 1.15x for 2 Gears, 1.17x for 3 Gears, 1.18x for 4 Gears or more...
             </SectionDescription>
           </SectionBox>
         </Half>

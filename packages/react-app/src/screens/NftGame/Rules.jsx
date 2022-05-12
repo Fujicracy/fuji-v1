@@ -58,7 +58,7 @@ const Rules = ({ margin, open = false }) => (
         <Li>
           You can trade your gears on the open market (X) at any time before the Locking Ceremony,
         </Li>
-        <Li>The Booster Score reflects the number and type of the NFT Gears in your inventory.</Li>
+        <Li>The Booster Score reflects the number and type of the Gears NFT in your inventory.</Li>
       </Ol>
       <Text mt="1rem">
         For more visit our{' '}
