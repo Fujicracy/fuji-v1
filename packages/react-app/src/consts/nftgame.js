@@ -55,10 +55,8 @@ export const NFT_ITEMS = {
       'The Pickaxe will help you maintain a grip. When you reach the higher highs, you’ll need them to overpass the hardest obstacles along the road.',
     boost: 10,
     images: {
-      small:
-        'https://ipfs.fleek.co/ipfs/bafybeifthyg7tmh6g55qu77ih4kq7qnpvoinlcnttano3ifof2i2znpina',
-      medium:
-        'https://ipfs.fleek.co/ipfs/bafybeiceaehfh4p7jejththcaeadbamztagqhimqjhzo2otgmovinbx6n4',
+      small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/pickaxe-200.png',
+      medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/pickaxe-full.png',
     },
   },
   [NFT_IDS.OXYGEN_KIT]: {
@@ -67,10 +65,8 @@ export const NFT_ITEMS = {
       'Reaching the higher highs is not easy, you’ll find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
     boost: 10,
     images: {
-      small:
-        'https://ipfs.fleek.co/ipfs/bafybeichno5r55c2wgw2abdohuch7my2b3wvvrgwypp2azccagltqw2mne',
-      medium:
-        'https://ipfs.fleek.co/ipfs/bafybeighjgji4bhbqkrx5czdwvspgm6hyubdip6uu5t4db6zkkf6rnxuhy',
+      small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/oxykit-200.png',
+      medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/oxykit-full.png',
     },
   },
   [NFT_IDS.GLOVES]: {
@@ -79,10 +75,8 @@ export const NFT_ITEMS = {
       'What would be a climbing without gloves? Not a climbing of course. Fuji Gloves will ensure your fingers remain attached to your hand, all the way to the top.',
     boost: 10,
     images: {
-      small:
-        'https://ipfs.fleek.co/ipfs/bafybeiftaklgesfljkrpd5g7rinitxtqvelo7vjshrqvzmzfcxbbpey7by',
-      medium:
-        'https://ipfs.fleek.co/ipfs/bafybeigvlaagna77fdibkgs27jxo3law2cey6ui5brqnhoqtnikyunacze',
+      small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/exogloves-200.png',
+      medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/gloves-full.png',
     },
   },
   [NFT_IDS.FLARE_GUN]: {
@@ -91,10 +85,8 @@ export const NFT_ITEMS = {
       'In case of sudden emergency during the climbing, shoot with your Fuji Pistol to show your peers you need some assistance.',
     boost: 10,
     images: {
-      small:
-        'https://ipfs.fleek.co/ipfs/bafybeiaghca5qlzsijcz6wlbse2aik7qwsvwyywsrh2v7bpzicpq6ypr54',
-      medium:
-        'https://ipfs.fleek.co/ipfs/bafybeicau6ab7dlj3zu5tm26qrmqx7t3a6i6pxsbgoixv3vtksrotwiu5u',
+      small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/flaregun-200.png',
+      medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/flaregun-full.png',
     },
   },
   [NFT_IDS.HEAT_CAPSULE]: {
@@ -103,10 +95,8 @@ export const NFT_ITEMS = {
       'The heat capsule will keep you warm and alive each time the temperature decreases to the extreme lows.',
     boost: 10,
     images: {
-      small:
-        'https://ipfs.fleek.co/ipfs/bafybeih2keg45qi6kjonfn5xvbi2m2njb25qzcyv3fxtbubriikc5uz54y',
-      medium:
-        'https://ipfs.fleek.co/ipfs/bafybeiabt7es5q65qdwp7dns55akbspmvteg5oie4fmezhw2smfywnmkna',
+      small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/heatcapsule-200.png',
+      medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/heatcapsule-full.png',
     },
   },
   [NFT_IDS.SLIPPERS]: {
