@@ -13,9 +13,6 @@ const getForEthereum = (contracts, activeProvider, borrowAsset) => {
     // use dydx flashloans when underlying asset is DAI or USDC
     return providerIndexes.DYDX;
   }
-  if (contracts.ProviderIronBank && contracts.ProviderIronBank.address !== activeProvider) {
-    return providerIndexes.CREAM;
-  }
   return providerIndexes.AAVE;
 };
 
