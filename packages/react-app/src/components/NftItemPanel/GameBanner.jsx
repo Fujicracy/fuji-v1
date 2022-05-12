@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import axios from 'axios';
+import { formatUnits } from '@ethersproject/units';
 import { Flex } from 'rebass';
-import { fujiMedia, API_BASE_URI } from 'consts';
+import { fujiMedia, API_BASE_URI, NFT_GAME_POINTS_DECIMALS } from 'consts';
 import { useAuth, useContractLoader, useProfileInfo } from 'hooks';
 import { Transactor } from 'helpers';
 import { happyIcon } from 'assets/images';
@@ -192,7 +193,10 @@ const GameBanner = () => {
           await txRes.wait();
           ACTION_DESCRIPTIONS[ACTION_RESULT.SUCCESS].description = ACTION_DESCRIPTIONS[
             ACTION_RESULT.SUCCESS
-          ].description.replace('{amount}', data.pointsToClaim);
+          ].description.replace(
+            '{amount}',
+            formatUnits(data.pointsToClaim, NFT_GAME_POINTS_DECIMALS),
+          );
           setActionResult(ACTION_RESULT.SUCCESS);
         }
       } catch (error) {
