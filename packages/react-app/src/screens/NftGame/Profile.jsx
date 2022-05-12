@@ -123,7 +123,7 @@ function Profile() {
               <InfoOutlined color="red" />
               <span>
                 Each Climbing Gear NFT that you own boosts your meter points by an extra 10%. Each
-                duplicate NFTs boosts your score up to a maximum of 19.1875%.
+                duplicate NFTs boosts your score up to a maximum of 18%.
               </span>
             </Tooltip>
           </Flex>
