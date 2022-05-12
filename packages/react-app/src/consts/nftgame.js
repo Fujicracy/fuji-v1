@@ -53,7 +53,7 @@ export const NFT_ITEMS = {
     name: 'Pickaxe',
     description:
       'The Pickaxe will help you maintain a grip. When you reach the higher highs, you’ll need them to overpass the hardest obstacles along the road.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/pickaxe-200.png',
       medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/pickaxe-full.png',
@@ -63,7 +63,7 @@ export const NFT_ITEMS = {
     name: 'Oxygen Kit',
     description:
       'Reaching the higher highs is not easy, you’ll find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/oxykit-200.png',
       medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/oxykit-full.png',
@@ -73,7 +73,7 @@ export const NFT_ITEMS = {
     name: 'Gloves',
     description:
       'What would be a climbing without gloves? Not a climbing of course. Fuji Gloves will ensure your fingers remain attached to your hand, all the way to the top.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/exogloves-200.png',
       medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/gloves-full.png',
@@ -83,7 +83,7 @@ export const NFT_ITEMS = {
     name: 'Flare Gun',
     description:
       'In case of sudden emergency during the climbing, shoot with your Fuji Pistol to show your peers you need some assistance.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/flaregun-200.png',
       medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/flaregun-full.png',
@@ -93,7 +93,7 @@ export const NFT_ITEMS = {
     name: 'Heat Capsule',
     description:
       'The heat capsule will keep you warm and alive each time the temperature decreases to the extreme lows.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/heatcapsule-200.png',
       medium: 'https://storage.googleapis.com/fuji-game-resources/gears-full/heatcapsule-full.png',
@@ -103,7 +103,7 @@ export const NFT_ITEMS = {
     name: 'Slippers',
     description:
       'Adapted from the ancient Fuji Flops, those used by the first Fuji Climbers in the history. They’ll let you climb in a comfy manner, and keep your focus on the road instead of your cold feet.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: '',
       medium: '',
@@ -113,7 +113,7 @@ export const NFT_ITEMS = {
     name: 'Sunglasses',
     description:
       'These sunglasses will let you foresee the obstacles you might encounter, and solutions to your challenges at a faster pace. This is technology of the future; equipped laser vision.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: '',
       medium: '',
@@ -123,7 +123,7 @@ export const NFT_ITEMS = {
     name: 'Watch',
     description:
       'Each expedition needs its watch. It will follow you during the whole journey, indicating the most important metrics such as your altitude and your speed.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: '',
       medium: '',
@@ -133,7 +133,7 @@ export const NFT_ITEMS = {
     name: 'Protein Bar',
     description:
       'The protein bar is a must have during the climbing, in fact, without it, you’ll have to eat your peers, it’s not what you want, right?',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: '',
       medium: '',
@@ -143,7 +143,7 @@ export const NFT_ITEMS = {
     name: 'Med Kit',
     description:
       'The Med Kit is here to support you during hard times, maintain your health the longer you can during the climbing to avoid having to use it.',
-    boost: 10,
+    boost: [10, 15, 17, 18],
     images: {
       small: '',
       medium: '',

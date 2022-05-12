@@ -8,8 +8,12 @@ export const Container = styled(Box)`
 `;
 
 export const FadingBackground = styled(BaseModalBackground)`
-  background-color: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(6px);
+  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    backdrop-filter: blur(5px);
+  }
+  @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
   transition: all 0.3s ease-in-out;
 `;
 
