@@ -5,7 +5,7 @@ import { Flex } from 'rebass';
 import { BlackBoxContainer, Label } from 'components';
 import { APP_URL } from 'consts';
 
-import { HomeContainer, VerticalLine, PageContainter } from './styles';
+import { HomeContainer, VerticalLine, PageContainer } from './styles';
 
 function FifthPage() {
   const handleLearnClick = () => {
@@ -13,7 +13,7 @@ function FifthPage() {
   };
 
   return (
-    <PageContainter>
+    <PageContainer>
       <HomeContainer>
         <Flex flexDirection="row" alignItems="center">
           <BlackBoxContainer hasBlackContainer width="424px" height="240px">
@@ -62,7 +62,7 @@ function FifthPage() {
           </BlackBoxContainer>
         </Flex>
       </HomeContainer>
-    </PageContainter>
+    </PageContainer>
   );
 }
 
