@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { Flex, Text } from 'rebass';
+import { Flex, Image, Text } from 'rebass';
 import { useHistory } from 'react-router-dom';
 
-import { NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
+import { CRATE_TYPE, NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
 import { BlackButton } from 'components/UI';
 import { OpacityImage } from 'components/InventoryPopup/styles';
 import GearSet from 'components/GearSet';
 import { SectionTitle } from 'components/Blocks';
-import { emptyCrateAnimation, meterPointCrateAnimation } from 'assets/images';
+import {
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
+  emptyCrateAnimation,
+  meterPointCrateAnimation,
+} from 'assets/images';
 
 import { StyledModal, CarouselContainer, CloseButton, ItemContainer } from './styles';
 
@@ -42,6 +48,10 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
   const [opacity, setOpacity] = useState(0);
   const history = useHistory();
   const theme = NFT_GAME_MODAL_THEMES[crateType];
+  const crateImage =
+    (crateType === CRATE_TYPE.COMMON && commonCrateIdleImage) ||
+    (crateType === CRATE_TYPE.EPIC && epicCrateIdleImage) ||
+    (crateType === CRATE_TYPE.LEGENDARY && legendaryCrateIdleImage);
 
   function afterOpen() {
     setTimeout(() => {
@@ -87,6 +97,12 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
           if (outKey === NFT_IDS.NOTHING) {
             return (
               <div>
+                <Flex justifyContent="center" alignItems="center">
+                  <Image height="50px" src={crateImage} mr="2" />
+                  <Text fontWeight="bold" fontSize="4" mb="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
+                </Flex>
                 <ItemContainer key={outKey} backgroundColor={theme.backColor}>
                   <video autoPlay muted loop width="180" height="180">
                     <source src={emptyCrateAnimation} type="video/mp4" />
@@ -109,7 +125,13 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                     <source src={meterPointCrateAnimation} type="video/mp4" />
                   </video>
                 </ItemContainer>
-                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
+                <Flex justifyContent="center" alignItems="center" mt="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
+                </Flex>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem">
                   <Text fontWeight="bold" display="inline">
                     {outComes[outKey].amount}
                   </Text>{' '}
@@ -119,18 +141,26 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
             );
           }
           return (
-            <GearSet
-              key={NFT_ITEMS[outKey].name}
-              width="180px"
-              textColor={theme.foreColor}
-              hover={false}
-              nftGear={{
-                balance: outComes[outKey].count,
-                name: NFT_ITEMS[outKey].name,
-                boost: '10',
-                images: { medium: NFT_ITEMS[outKey].images.medium },
-              }}
-            />
+            <>
+              <Flex justifyContent="center" alignItems="center">
+                <Image height="50px" src={crateImage} mr="2" />
+                <Text fontWeight="bold" fontSize="4" mb="2" textAlign="center">
+                  x{outComes[outKey].count}
+                </Text>
+              </Flex>
+              <GearSet
+                key={NFT_ITEMS[outKey].name}
+                width="180px"
+                textColor={theme.foreColor}
+                hover={false}
+                nftGear={{
+                  balance: outComes[outKey].count,
+                  name: NFT_ITEMS[outKey].name,
+                  boost: '10',
+                  images: { medium: NFT_ITEMS[outKey].images.medium },
+                }}
+              />
+            </>
           );
         })}
       </CarouselContainer>
