@@ -27,6 +27,10 @@ import fujiAlice2 from './images/home/fujiAlice2.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
+import teamUnbornPhoto from './images/team/unborn.jpg';
+import teamYomePhoto from './images/team/yome.png';
+import teamTiagoPhoto from './images/team/tiago.jpg';
+import teamPragueBrewerPhoto from './images/team/praguebrewer.jpg';
 import partnerDelphi from './images/partner/delphi-digital.svg';
 import partnerMaven from './images/partner/maven11.svg';
 import partnerCapital from './images/partner/origin-capital.svg';
@@ -130,6 +134,10 @@ export {
   teamBoyanPhoto,
   teamDaigaroPhoto,
   teamEdgarPhoto,
+  teamUnbornPhoto,
+  teamYomePhoto,
+  teamTiagoPhoto,
+  teamPragueBrewerPhoto,
   fujiFlopsGiftbox,
   // Contacts
   discordImage,
