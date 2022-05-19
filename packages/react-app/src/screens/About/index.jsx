@@ -14,6 +14,7 @@ import {
   partnerCapital,
   partnerMaven,
   partnerSpartan,
+  teamIvanPhoto,
 } from 'assets/images';
 import { Header } from 'components';
 
@@ -76,7 +77,7 @@ const useStyles = makeStyles(theme =>
   }),
 );
 
-function Person({ picture, name, linkedin, twitter, position }) {
+function Person({ picture, name, linkedin, twitter, position, telegram }) {
   const classes = useStyles();
 
   return (
@@ -103,6 +104,11 @@ function Person({ picture, name, linkedin, twitter, position }) {
       {twitter && (
         <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noreferrer noopener">
           <Typography className={classes.twitter}>@{twitter}</Typography>
+        </a>
+      )}
+      {telegram && (
+        <a href={`https://t.me/${telegram}`} target="_blank" rel="noreferrer noopener">
+          <Typography className={classes.twitter}>@{telegram}</Typography>
         </a>
       )}
     </>
@@ -190,9 +196,18 @@ function Infos() {
 
             <Grid item md={4} sm={4} xs={12}>
               <Person
+                picture={teamIvanPhoto}
+                name="Ivan"
+                twitter="iafhurtado"
+                position="Product Lead"
+              />
+            </Grid>
+
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
                 picture={teamPragueBrewerPhoto}
                 name="PragueBrewer"
-                twitter=""
+                telegram="cryptoflippers"
                 position="Community Manager"
               />
             </Grid>

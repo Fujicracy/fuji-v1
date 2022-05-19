@@ -31,6 +31,7 @@ import teamUnbornPhoto from './images/team/unborn.jpg';
 import teamYomePhoto from './images/team/yome.png';
 import teamTiagoPhoto from './images/team/tiago.jpg';
 import teamPragueBrewerPhoto from './images/team/praguebrewer.jpg';
+import teamIvanPhoto from './images/team/ivan.jpg';
 import partnerDelphi from './images/partner/delphi-digital.svg';
 import partnerMaven from './images/partner/maven11.svg';
 import partnerCapital from './images/partner/origin-capital.svg';
@@ -138,6 +139,7 @@ export {
   teamYomePhoto,
   teamTiagoPhoto,
   teamPragueBrewerPhoto,
+  teamIvanPhoto,
   fujiFlopsGiftbox,
   // Contacts
   discordImage,
