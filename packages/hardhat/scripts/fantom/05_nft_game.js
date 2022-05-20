@@ -119,7 +119,7 @@ const deployContracts = async () => {
     }
   };
   let nftinteractions = await deployNFTInteractions([nftgame], library);
-  let pretokenbonds = await deployPreTokenBonds([POINTS_DECIMALS, nftgame]);
+  let pretokenbonds = await deployPreTokenBonds([nftgame]);
   
   // Build etherjs contracts again
   nftgame = await ethers.getContractAt("NFTGame", nftgame);
@@ -168,11 +168,6 @@ const deployContracts = async () => {
   await updatePreTokenBonds(
     pretokenbonds.address,
     nftinteractions.address,
-    [
-      "https://www.example.com/metadata/token/",
-      "https://www.example.com/metadata/contract.json",
-      "https://www.example.com/metadata/slot/"
-    ],
     POINTS_DECIMALS,
     TESTING_PARAMS
   );
