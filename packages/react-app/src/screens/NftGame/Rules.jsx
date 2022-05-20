@@ -52,16 +52,13 @@ const Rules = ({ margin, open = false }) => (
       <Ol>
         <Li>
           The more DAI or USDC that you borrow on Fantom, the faster you will climb and earn meter
-          points
+          points,
         </Li>
-        <Li>Collect the full Climbing Gear NFT set to double your final meter points count</Li>
+        <Li>Collect the full Climbing Gear NFT set to double your final meter points count,</Li>
         <Li>
-          You can trade your gears on the open market (X) at any time before the Locking Ceremony
+          You can trade your gears on the open market (X) at any time before the Locking Ceremony,
         </Li>
-        <Li>
-          The Booster Score reflects the NFTs in your Inventory. Only one of each type is required
-          to boost your score
-        </Li>
+        <Li>The Booster Score reflects the number and type of the Gears NFT in your inventory.</Li>
       </Ol>
       <Text mt="1rem">
         For more visit our{' '}

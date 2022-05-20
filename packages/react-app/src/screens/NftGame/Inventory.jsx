@@ -228,13 +228,13 @@ function Inventory() {
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
-        <Grid container direction="row" alignItems="center" spacing={4}>
+        <Grid container justifyContent="space-between" direction="row" spacing="1">
           {nftGears.length > 0 &&
             nftGears.map(nftGear => (
               <Grid
                 item
-                xs={6}
-                md={4}
+                xs={4}
+                md={2}
                 key={`gearSet-${nftGear.id}`}
                 onClick={() => setSelectedGear(nftGear)}
               >

@@ -25,21 +25,21 @@ function getRewardOutcomes(probabiltyIntervals, rewards) {
   // transform to make easier percentage calculations
   const intervals = probabiltyIntervals.map(i => i * 100);
 
-  let key;
+  let prob;
   for (let i = 0; i < intervals.length; i += 1) {
     if (i === 0) {
-      key = intervals[0].toFixed(2) + '%';
+      prob = intervals[0].toFixed(2) + '%';
     } else {
-      key = (intervals[i] - intervals[i - 1]).toFixed(2) + '%';
+      prob = (intervals[i] - intervals[i - 1]).toFixed(2) + '%';
     }
 
-    outcomes[key] = rewards[i];
+    outcomes[rewards[i]] = prob;
   }
 
   // add at the end the probabilty for a card
   if (intervals && intervals.length > 0) {
-    key = (100 - intervals[intervals.length - 1]).toFixed(2) + '%';
-    outcomes[key] = 'card';
+    prob = (100 - intervals[intervals.length - 1]).toFixed(2) + '%';
+    outcomes.card = prob;
   }
 
   return outcomes;
