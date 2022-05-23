@@ -31,24 +31,23 @@ const ACTION_RESULT = {
 const ACTION_DESCRIPTIONS = {
   [ACTION_RESULT.SUCCESS]: {
     value: ACTION_RESULT.SUCCESS,
-    title: 'Congratulation!',
+    title: 'Success',
     description:
-      'Your action have been processed by Fuji, you can now check your crates into your inventory.',
+      'Your purchase has been processed and you can find now your crates into the inventory.',
     submitText: 'Inventory',
     emotionIcon: happyIcon,
   },
   [ACTION_RESULT.ERROR]: {
     value: ACTION_RESULT.ERROR,
-    title: 'Something is wrong',
-    description:
-      'An error occured during the transaction, it can be your credits number or a problem on our side.',
+    title: 'Something went wrong',
+    description: 'An error occured while processing the transaction.',
     submitText: 'Try again',
     emotionIcon: '',
   },
   [ACTION_RESULT.NOT_ENOUGH_POINTS]: {
     value: ACTION_RESULT.NOT_ENOUGH_POINTS,
-    title: 'Not enough points',
-    description: `You don't have enough meter points to make this purchase.`,
+    title: 'Not enough meter points',
+    description: `You don't have enough meter points to buy this amount of crates.`,
     submitText: 'Back',
     emotionIcon: '',
   },

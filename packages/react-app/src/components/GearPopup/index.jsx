@@ -12,25 +12,27 @@ import 'animate.css';
 
 export const StyledModal = Modal.styled`
   display: flex;
+  flex-direction: column;
   position: relative;
   align-items: center;
   width: 50rem;
   height: 31.25rem;
-  overflow-y: auto;
-  -ms-overflow-style: none; /* for Internet Explorer, Edge */
-  scrollbar-width: none; /* for Firefox */
-  element::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
-  }
+  overflow: hidden;
 
-  background: rgba(25, 25, 25, 0.95);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
 
+  animation: zoomIn;
+  animation-duration: 0.6s;
   transition : all 0.3s ease-in-out;
   color: ${themeGet('colors.fujiWhite')};
-  flex-direction: column;
-  opacity: ${props => props.opacity};
+
+  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background: rgba(0, 0, 0, 0.6);
+  }
 
 
   ${padding};
@@ -41,26 +43,34 @@ export const StyledModal = Modal.styled`
     height: 100%;
     border-radius: 0px;
     justify-content: space-between;
+    overflow-y: auto;
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    element::-webkit-scrollbar {
+      display: none; /* for Chrome, Safari, and Opera */
+    }
   `};
-
-  animation: zoomIn;
-  animation-duration: 0.6s;
 `;
 
 const CloseButton = styled(CloseIcon)`
   cursor: pointer;
   position: absolute;
-  right: 16px;
-  top: 16px;
+  right: 1rem;
+  top: 1rem;
   z-index: 1;
   &:hover {
     color: #fa266c;
   }
+
+  ${fujiMedia.lessThan('small')`
+    left: 1rem;
+    position: fixed;
+  `}
 `;
 
 const Title = styled.p`
   font-size: 48px;
-  line-height: 72px;
+  line-height: 1.2em;
 `;
 
 const Meta = styled.p`
@@ -78,11 +88,7 @@ const Meta = styled.p`
 
 const ImageContainer = styled(Box)`
   position: relative;
-  display: flex;
   overflow: hidden;
-
-  border: 2px solid rgb(58, 58, 58);
-  border-radius: 12px;
 
   -webkit-mask-image: radial-gradient(
     circle 20px at calc(100% - 15px) 15px,
@@ -135,19 +141,7 @@ const TradeButton = styled(Button)`
 `;
 
 const SectionBox = styled(Box)`
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px;
   margin: 8px 0;
-`;
-
-const Half = styled(Box)`
-  position: relative;
-  width: 50%;
-
-  ${fujiMedia.lessThan('small')`
-    width: 100%;
-  `}
 `;
 
 const SectionTitle = styled.div`
@@ -166,19 +160,20 @@ const SectionDescription = styled.div`
 const GearPopup = ({ gear, close }) => {
   const contracts = useContractLoader();
   const contractAddress = contracts?.NFTGame.address;
+  const boost = gear.balance ? gear.boost[gear.balance - 1] || gear[gear.boost.length - 1] : 0;
 
   return (
     <StyledModal isOpen={Boolean(gear)} onEscapeKeydown={close}>
       <CloseButton fontSize="medium" onClick={close} />
-      <Flex p={4} flexWrap="wrap">
-        <Half>
+      <Flex flexWrap="wrap">
+        <Box style={{ position: 'relative' }} scrolling="" maxWidth="500px">
           <ImageNumber>{gear.balance}</ImageNumber>
           <ImageContainer>
             <ImageBadge />
-            <Image src={gear.images.medium} />
+            <Image src={gear.images.medium} height="auto" width="auto" />
           </ImageContainer>
-        </Half>
-        <Half pl={4}>
+        </Box>
+        <Box p={4} flex="1">
           <Title>{gear.name}</Title>
           <Meta>
             Contract:{' '}
@@ -190,25 +185,29 @@ const GearPopup = ({ gear, close }) => {
               <EthAddress address={contractAddress} />
             </a>
           </Meta>
-          {/* TODO: Activate button */}
-          <TradeButton type="button" disabled>
-            Trade in marketplace
-          </TradeButton>
           <SectionBox>
-            <SectionTitle>Description</SectionTitle>
             <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
+          {/* TODO: Activate button */}
+          <TradeButton type="button" disabled>
+            Marketplace
+          </TradeButton>
           <SectionBox>
             <SectionTitle>
-              Boost score
-              <span> +{gear.boost}%</span>
+              Boost scores
+              {boost ? <span> +{boost}%</span> : ''}
             </SectionTitle>
             <SectionDescription>
-              Your total Meter Points will be multiplied by 1.{gear.boost}x as far as you possess
-              this Climbing Gear NFT.
+              As far as you possess this Climbing Gear NFT your Meter Points will be multiplied by:
+              <ul>
+                <li>- 1.10x for 1 Gear</li>
+                <li>- 1.15x for 2 Gears</li>
+                <li>- 1.17x for 3 Gears</li>
+                <li>- 1.18x for 4 Gears or more...</li>
+              </ul>
             </SectionDescription>
           </SectionBox>
-        </Half>
+        </Box>
       </Flex>
     </StyledModal>
   );

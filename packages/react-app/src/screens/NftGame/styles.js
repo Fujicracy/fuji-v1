@@ -135,6 +135,66 @@ export const TiledPanel = styled.div`
   background-image: ;
 `;
 
+export const GearSetContainer = styled.div`
+  position: relative;
+`;
+
+export const GearSetItem = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  background: rgb(18, 18, 18);
+
+  border: 2px solid rgb(58, 58, 58);
+  border-radius: 12px;
+  -webkit-mask-image: radial-gradient(
+    circle 20px at calc(100% - 15px) 15px,
+    transparent 20px,
+    purple 0
+  );
+
+  transition: 0.3s all;
+  &:hover {
+    border: 2px solid #fa266c;
+    cursor: pointer;
+    & > div {
+      // rewrite for GearSetBadge
+      background-color: #fa266c;
+    }
+  }
+`;
+
+export const GearSetBadge = styled.div`
+  width: 43px;
+  height: 43px;
+
+  transition: all 0.3s;
+  background-color: rgb(58, 58, 58);
+  border-radius: 50%;
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  z-index: 1;
+`;
+
+export const GearSetNumber = styled.div`
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  color: rgba(240, 1, 79, 1);
+  position: absolute;
+  right: -6px;
+  top: 4px;
+  z-index: 2;
+`;
+
 export const RotateContainer = styled.div`
   transform: ${props =>
     `translate(${

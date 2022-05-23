@@ -95,20 +95,25 @@ const deployContracts = async () => {
     now + 11 * day
   ];
   // Note that 'standard' rewards chances:
-  // 50%, 20%, 20%, 5%, 0.01%
+  // 52.50%, 20.00%, 22.50%, 3.99%, 0.01%
   const rewardfactors = [
-    [0.9, 0, 1.1, 2, 25], // CrateId = 1 
-    [0.9, 0, 1.1, 4, 50], // CrateId = 2
-    [0.9, 0, 1.1, 8, 100] // CrateId = 3
+    [0.25, 0, 1.1, 2, 25], // CrateId = 1 
+    [0.25, 0, 1.1, 4, 50], // CrateId = 2
+    [0.25, 0, 1.1, 8, 100] // CrateId = 3
   ];
 
   const prices = [10, 20, 40].map( i => parseUnits(i, POINTS_DECIMALS));
-  const merkleRoot = "0x903f8cb795059ae5a39d1a6caae25eb970d75914aa9324ccc657e9e38eb1a7c9";
+  const merkleRoot = "0xc0decc3b3577dcfe4ac5930eb46aa7201451ebf2e525c6321ef559a079c69482";
 
   // Functions below return string addresses
   let nftgame = await deployNFTGame([phases]);
-  let nftinteractions = await deployNFTInteractions([nftgame]);
-  let pretokenbonds = await deployPreTokenBonds([POINTS_DECIMALS, nftgame]);
+  const library = {
+    libraries: {
+      LibPseudoRandom: "0x63E978f8C647bAA71184b9eCcB39e0509C09D681", // rinkeby
+    }
+  };
+  let nftinteractions = await deployNFTInteractions([nftgame], library);
+  let pretokenbonds = await deployPreTokenBonds([nftgame]);
 
   // Deploy 'pointfaucet'; only required for Rinkeby
   let pointfaucet = await deployPointFaucet();
@@ -142,11 +147,6 @@ const deployContracts = async () => {
   await updatePreTokenBonds(
     pretokenbonds.address,
     nftinteractions.address,
-    [
-      "https://www.example.com/metadata/token/",
-      "https://www.example.com/metadata/contract.json",
-      "https://www.example.com/metadata/slot/"
-    ],
     POINTS_DECIMALS,
     true
   );
