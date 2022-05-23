@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Flex } from 'rebass';
+import { Flex, Image, Text } from 'rebass';
 import { useHistory } from 'react-router-dom';
 
-import { NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
+import { CRATE_TYPE, NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
 import { BlackButton } from 'components/UI';
 import { OpacityImage } from 'components/InventoryPopup/styles';
 import GearSet from 'components/GearSet';
 import { SectionTitle } from 'components/Blocks';
-
 import {
-  StyledModal,
-  CarouselContainer,
-  CloseButton,
-  ItemContainer,
-  RoundedAmountContainer,
-} from './styles';
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
+  emptyCrateAnimation,
+  meterPointCrateAnimation,
+} from 'assets/images';
+
+import { StyledModal, CarouselContainer, CloseButton, ItemContainer } from './styles';
 
 const carouselResponsive = {
   desktop: {
@@ -46,6 +47,11 @@ const carouselResponsive = {
 const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType }) => {
   const [opacity, setOpacity] = useState(0);
   const history = useHistory();
+  const theme = NFT_GAME_MODAL_THEMES[crateType];
+  const crateImage =
+    (crateType === CRATE_TYPE.COMMON && commonCrateIdleImage) ||
+    (crateType === CRATE_TYPE.EPIC && epicCrateIdleImage) ||
+    (crateType === CRATE_TYPE.LEGENDARY && legendaryCrateIdleImage);
 
   function afterOpen() {
     setTimeout(() => {
@@ -60,7 +66,6 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
     });
   }
 
-  const theme = NFT_GAME_MODAL_THEMES[crateType];
   return (
     <StyledModal
       color={theme.foreColor}
@@ -81,58 +86,81 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
         arrows
         autoPlay
         autoPlaySpeed={3000}
-        infinite
         containerClass="carousel-container"
         draggable
-        keyBoardControl
         minimumTouchDrag={80}
-        renderButtonGroupOutside={false}
-        renderDotsOutside={false}
-        centerMode={false}
         responsive={carouselResponsive}
         showDots={false}
-        sliderClass=""
-        slidesToSlide={2}
         swipeable
       >
         {Object.keys(outComes).map(outKey => {
           if (outKey === NFT_IDS.NOTHING) {
             return (
-              <ItemContainer key={outKey} backgroundColor={theme.backColor}>
-                <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-                <SectionTitle color={theme.foreColor} fontSize="20px">
+              <div>
+                <Flex justifyContent="center" alignItems="center" mb="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
+                </Flex>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={emptyCrateAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
+                  <Text fontWeight="bold" display="inline">
+                    {outComes[outKey].count}x
+                  </Text>{' '}
                   Empty
-                </SectionTitle>
-              </ItemContainer>
+                </Text>
+              </div>
             );
           }
           if (outKey === NFT_IDS.POINTS.toString()) {
             return (
-              <ItemContainer key={outKey} backgroundColor={theme.backColor}>
-                <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                  <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-                  <SectionTitle color={theme.foreColor} fontSize="20px">
-                    {outComes[outKey].amount}
-                  </SectionTitle>
-                  <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
-                    Meter Points
-                  </SectionTitle>
+              <div>
+                <Flex justifyContent="center" alignItems="center" mb="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
                 </Flex>
-              </ItemContainer>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={meterPointCrateAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="2">
+                  <Text fontWeight="bold" display="inline">
+                    {outComes[outKey].amount}
+                  </Text>{' '}
+                  meter points
+                </Text>
+              </div>
             );
           }
           return (
-            <GearSet
-              key={NFT_ITEMS[outKey].name}
-              width="180px"
-              textColor={theme.foreColor}
-              nftGear={{
-                balance: outComes[outKey].count,
-                name: NFT_ITEMS[outKey].name,
-                boost: '10',
-                images: { medium: NFT_ITEMS[outKey].images.medium },
-              }}
-            />
+            <>
+              <Flex justifyContent="center" alignItems="center" mb="2">
+                <Image height="30px" src={crateImage} mr="2" />
+                <Text fontSize="2" textAlign="center">
+                  x{outComes[outKey].count}
+                </Text>
+              </Flex>
+              <GearSet
+                key={NFT_ITEMS[outKey].name}
+                width="180px"
+                textColor={theme.foreColor}
+                hover={false}
+                nftGear={{
+                  balance: outComes[outKey].count,
+                  name: NFT_ITEMS[outKey].name,
+                  boost: '10',
+                  images: { medium: NFT_ITEMS[outKey].images.medium },
+                }}
+              />
+            </>
           );
         })}
       </CarouselContainer>
