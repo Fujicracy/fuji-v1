@@ -19,13 +19,23 @@ const Details = styled.details`
     animation: fadeIn;
     animation-duration: 0.6s;
   }
+  &[open] summary::marker {
+    content: '- ';
+  }
+
+  &:not([open]) summary:hover {
+    animation: pulse;
+    animation-duration: 1s;
+  }
 `;
 
 const Summary = styled.summary`
   cursor: pointer;
+  text-align: center;
 
   &::marker {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    content: '+ ';
   }
 `;
 
@@ -40,11 +50,11 @@ const Rules = ({ margin, open = false }) => (
     height="fit-content"
     width={[1]}
     m={margin}
-    p="24px"
+    p="16px 24px"
   >
     <DetailsWithOpen open={open}>
       <Summary>
-        <SectionTitle fontSize="1.5rem" lineHeight="2rem" display="inline">
+        <SectionTitle fontSize="1.2rem" lineHeight="2rem" display="inline">
           How to play?
         </SectionTitle>
       </Summary>
