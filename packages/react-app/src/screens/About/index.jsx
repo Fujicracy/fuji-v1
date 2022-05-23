@@ -6,10 +6,15 @@ import {
   teamBoyanPhoto,
   teamDaigaroPhoto,
   teamEdgarPhoto,
+  teamUnbornPhoto,
+  teamYomePhoto,
+  teamTiagoPhoto,
+  teamPragueBrewerPhoto,
   partnerDelphi,
   partnerCapital,
   partnerMaven,
   partnerSpartan,
+  teamIvanPhoto,
 } from 'assets/images';
 import { Header } from 'components';
 
@@ -72,6 +77,44 @@ const useStyles = makeStyles(theme =>
   }),
 );
 
+function Person({ picture, name, linkedin, twitter, position, telegram }) {
+  const classes = useStyles();
+
+  return (
+    <>
+      <img src={picture} alt={name} width="126" height="126" style={{ borderRadius: '500px' }} />
+
+      <Typography className={classes.subtitle}>{name}</Typography>
+
+      <div className={classes.meta}>
+        <Typography variant="h6">
+          {position}
+          {linkedin && (
+            <a
+              href={`https://www.linkedin.com/in/${linkedin}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {' '}
+              <img src={linkedinIcon} alt={`${name} Linkedin`} />
+            </a>
+          )}
+        </Typography>
+      </div>
+      {twitter && (
+        <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noreferrer noopener">
+          <Typography className={classes.twitter}>@{twitter}</Typography>
+        </a>
+      )}
+      {telegram && (
+        <a href={`https://t.me/${telegram}`} target="_blank" rel="noreferrer noopener">
+          <Typography className={classes.twitter}>@{telegram}</Typography>
+        </a>
+      )}
+    </>
+  );
+}
+
 function Infos() {
   const classes = useStyles();
 
@@ -95,69 +138,78 @@ function Infos() {
             </Grid>
 
             <Grid item md={4} sm={4} xs={12}>
-              <img src={teamDaigaroPhoto} alt="Daigaro Cota" />
-
-              <Typography className={classes.subtitle}>Daigaro Cota</Typography>
-
-              <div className={classes.meta}>
-                <Typography variant="h6">Technology&nbsp;</Typography>
-                <a
-                  href="https://www.linkedin.com/in/daigaro-cota/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={linkedinIcon} alt="Daigaro's Linkedin" />
-                </a>
-              </div>
-              <a href="https://twitter.com/DaigaroC" target="_blank" rel="noreferrer noopener">
-                <Typography className={classes.twitter}>@DaigaroC</Typography>
-              </a>
+              <Person
+                picture={teamDaigaroPhoto}
+                name="Daigaro Cota"
+                linkedin="daigaro-cota"
+                twitter="DaigaroC"
+                position="Technology"
+              />
             </Grid>
 
             <Grid item md={4} sm={4} xs={12}>
-              <img src={teamBoyanPhoto} alt="Boyan Barakov" />
-
-              <Typography className={classes.subtitle}>Boyan Barakov</Typography>
-
-              <div className={classes.meta}>
-                <Typography variant="h6">Product&nbsp;</Typography>
-                <a
-                  href="https://www.linkedin.com/in/boyan-barakov-3b91891a/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={linkedinIcon} alt="Boyan's Linkedin" />
-                </a>
-              </div>
-
-              <a href="https://twitter.com/BoyanBarakov" target="_blank" rel="noreferrer noopener">
-                <Typography className={classes.twitter}>@BoyanBarakov</Typography>
-              </a>
+              <Person
+                picture={teamBoyanPhoto}
+                name="Boyan Barakov"
+                linkedin="boyan-barakov-3b91891a"
+                twitter="BoyanBarakov"
+                position="Product"
+              />
             </Grid>
 
             <Grid item md={4} sm={4} xs={12}>
-              <img src={teamEdgarPhoto} alt="Edgar Moreau" />
+              <Person
+                picture={teamEdgarPhoto}
+                name="Edgar Moreau"
+                linkedin="edgar-moreau-1b074b133"
+                twitter="TheEdgarMoreau"
+                position="Magic"
+              />
+            </Grid>
 
-              <Typography className={classes.subtitle}>Edgar Moreau</Typography>
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
+                picture={teamUnbornPhoto}
+                name="unb0rn"
+                twitter="unb0rn__"
+                position="Design"
+              />
+            </Grid>
 
-              <div className={classes.meta}>
-                <Typography variant="h6">Magic&nbsp;</Typography>
-                <a
-                  href="https://www.linkedin.com/in/edgar-moreau-1b074b133/"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  <img src={linkedinIcon} alt="Edgar's Linkedin" />
-                </a>
-              </div>
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
+                picture={teamYomePhoto}
+                name="yome"
+                twitter="guill__om"
+                position="Techology"
+              />
+            </Grid>
 
-              <a
-                href="https://twitter.com/TheEdgarMoreau"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <Typography className={classes.twitter}>@TheEdgarMoreau</Typography>
-              </a>
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
+                picture={teamTiagoPhoto}
+                name="Tiago"
+                twitter="0xtiagofneto"
+                position="Techology"
+              />
+            </Grid>
+
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
+                picture={teamIvanPhoto}
+                name="Ivan"
+                twitter="iafhurtado"
+                position="Product Lead"
+              />
+            </Grid>
+
+            <Grid item md={4} sm={4} xs={12}>
+              <Person
+                picture={teamPragueBrewerPhoto}
+                name="PragueBrewer"
+                telegram="cryptoflippers"
+                position="Community Manager"
+              />
             </Grid>
           </Grid>
 
