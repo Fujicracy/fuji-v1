@@ -97,9 +97,9 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
           if (outKey === NFT_IDS.NOTHING) {
             return (
               <div>
-                <Flex justifyContent="center" alignItems="center">
-                  <Image height="50px" src={crateImage} mr="2" />
-                  <Text fontWeight="bold" fontSize="4" mb="2" textAlign="center">
+                <Flex justifyContent="center" alignItems="center" mb="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
                     x{outComes[outKey].count}
                   </Text>
                 </Flex>
@@ -120,18 +120,18 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
           if (outKey === NFT_IDS.POINTS.toString()) {
             return (
               <div>
-                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
-                  <video autoPlay muted loop width="180" height="180">
-                    <source src={meterPointCrateAnimation} type="video/mp4" />
-                  </video>
-                </ItemContainer>
-                <Flex justifyContent="center" alignItems="center" mt="2">
+                <Flex justifyContent="center" alignItems="center" mb="2">
                   <Image height="30px" src={crateImage} mr="2" />
                   <Text fontSize="2" textAlign="center">
                     x{outComes[outKey].count}
                   </Text>
                 </Flex>
-                <Text color={theme.foreColor} textAlign="center" fontSize="1rem">
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={meterPointCrateAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="2">
                   <Text fontWeight="bold" display="inline">
                     {outComes[outKey].amount}
                   </Text>{' '}
@@ -142,9 +142,9 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
           }
           return (
             <>
-              <Flex justifyContent="center" alignItems="center">
-                <Image height="50px" src={crateImage} mr="2" />
-                <Text fontWeight="bold" fontSize="4" mb="2" textAlign="center">
+              <Flex justifyContent="center" alignItems="center" mb="2">
+                <Image height="30px" src={crateImage} mr="2" />
+                <Text fontSize="2" textAlign="center">
                   x{outComes[outKey].count}
                 </Text>
               </Flex>
