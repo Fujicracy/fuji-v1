@@ -6,7 +6,7 @@ import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES, APP_URL } from 'consts';
 import { fujiAlice2, fujiAliceMobile } from 'assets/images';
 
-import { HomeContainer, PageContainter } from './styles';
+import { HomeContainer, PageContainer } from './styles';
 
 function FourthPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -20,7 +20,7 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
   };
 
   return (
-    <PageContainter>
+    <PageContainer>
       <HomeContainer>
         <Flex
           flexDirection={isMobile || isTablet ? 'column' : 'row'}
@@ -104,7 +104,7 @@ function FourthPage({ titleFontSize, descriptionFontSize }) {
           </Flex>
         </Flex>
       </HomeContainer>
-    </PageContainter>
+    </PageContainer>
   );
 }
 
