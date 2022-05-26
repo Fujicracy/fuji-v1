@@ -24,10 +24,10 @@ const forkUrl =
   network === "fantom"
     ? "https://rpc.ftm.tools/"
     : network === "bsc"
-    ? "https://bsc-dataseed.binance.org/"
-    : network === "polygon"
-    ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
-    : mainnetUrl;
+      ? "https://bsc-dataseed.binance.org/"
+      : network === "polygon"
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
+        : mainnetUrl
 
 //
 // Select the network you want to deploy to here:
