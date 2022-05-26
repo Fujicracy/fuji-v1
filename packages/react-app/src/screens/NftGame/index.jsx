@@ -6,7 +6,7 @@ import { Flex, Box } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { useCratesBalance, useGearsBalance } from 'hooks';
 
-import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
+import { BackgroundEffect, NavBackLink, Header, SectionTitle, DiscordWidget } from 'components';
 
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -46,6 +46,7 @@ function NftGame() {
 
   return (
     <>
+      <DiscordWidget />
       {isMobile ? <ClaimHeader /> : <Header />}
       <BackgroundEffect />
       <Flex flexDirection="row" justifyContent="center">
