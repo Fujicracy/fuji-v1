@@ -11,9 +11,7 @@ import { Box, Flex } from 'rebass';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
-import Infos from 'screens/Infos';
 import About from 'screens/About';
-import Team from 'screens/Team';
 import Error from 'screens/Error';
 import Governance from 'screens/Governance';
 import NftGame from 'screens/NftGame';
@@ -33,47 +31,22 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <ModalProvider backgroundComponent={FadingBackground}>
-        <Container>
-          <GlobalStyle />
-          <HashRouter>
+        <HashRouter>
+          <Container>
+            <GlobalStyle />
             <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route path="/dashboard">
-                <ProvideAuth>
-                  <Dashboard />
-                </ProvideAuth>
-              </Route>
-              <Route path="/team">
-                <Team />
-              </Route>
-              <Route path="/about">
-                <ProvideAuth>
-                  <About />
-                </ProvideAuth>
-              </Route>
-              <Route path="/info">
-                <Infos />
-              </Route>
-              <Route path="/claim-nft">
-                <ProvideAuth>
-                  <Governance />
-                </ProvideAuth>
-              </Route>
-              {/* TODO: Find a consensus with the name */}
-              <Route path="/nft-game">
-                <ProvideAuth>
-                  <NftGame />
-                </ProvideAuth>
-              </Route>
-              <Route path="*">
-                <Error />
-              </Route>
+              <Route exact path="/" component={Home} />
+              <ProvideAuth>
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/about" component={About} />
+                <Route path="/claim-nft" component={Governance} />
+                <Route path="/nft-game" component={NftGame} />
+              </ProvideAuth>
+              <Route path="*" component={Error} />
             </Switch>
-            {!isMobileOrTablet && <Footer />}
-          </HashRouter>
-        </Container>
+          </Container>
+          {!isMobileOrTablet && <Footer />}
+        </HashRouter>
       </ModalProvider>
     </ThemeProvider>
   );
@@ -92,7 +65,9 @@ function Footer() {
               bottom: '0px',
               width: '100%',
             }
-          : {}
+          : {
+              bottom: '57px',
+            }
       }
     >
       <Flex justifyContent="space-between" p="3">

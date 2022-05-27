@@ -17,7 +17,6 @@ import ResultPopup from './ResultPopup';
 import OutComePopup from './OutComePopup';
 import GearPopup from './GearPopup';
 import EthAddress from './EthAddress';
-import DiscordWidget from './DiscordWidget';
 
 export * from './NftItemPanel';
 
@@ -44,5 +43,4 @@ export {
   ResultPopup,
   OutComePopup,
   GearPopup,
-  DiscordWidget,
 };
