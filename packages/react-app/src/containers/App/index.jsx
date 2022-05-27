@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Switch, Route, NavLink } from 'react-router-dom';
+import { HashRouter, Switch, Route, NavLink, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
 import { ProvideAuth } from 'hooks';
@@ -7,6 +7,7 @@ import GlobalStyle from 'components/GlobalStyle';
 import themes from 'theme';
 import map from 'lodash/map';
 import { useMediaQuery } from 'react-responsive';
+import { Box, Flex } from 'rebass';
 
 import Home from 'screens/Home';
 import Dashboard from 'screens/Dashboard';
@@ -17,7 +18,7 @@ import Error from 'screens/Error';
 import Governance from 'screens/Governance';
 import NftGame from 'screens/NftGame';
 
-import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
+import { NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { Container, FadingBackground, NavText } from './styles';
@@ -70,27 +71,46 @@ function App() {
                 <Error />
               </Route>
             </Switch>
-            {!isMobileOrTablet && (
-              <footer>
-                <NavUnlisted position="left">
-                  {map(Object.keys(CONTACTS), key => (
-                    <NavImageLink key={key} contact={CONTACTS[key]} />
-                  ))}
-                </NavUnlisted>
-
-                <NavUnlisted alignItems="center" position="right">
-                  <NavLink to="/about">
-                    <NavText>About</NavText>
-                  </NavLink>
-                  <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
-                  <Label fontSize={12}>© FujiDAO 2021</Label>
-                </NavUnlisted>
-              </footer>
-            )}
+            {!isMobileOrTablet && <Footer />}
           </HashRouter>
         </Container>
       </ModalProvider>
     </ThemeProvider>
+  );
+}
+
+function Footer() {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+
+  return (
+    <footer
+      style={
+        isHome
+          ? {
+              position: 'fixed',
+              bottom: '0px',
+              width: '100%',
+            }
+          : {}
+      }
+    >
+      <Flex justifyContent="space-between" p="3">
+        <Box border="1px solid red">
+          {map(Object.keys(CONTACTS), key => (
+            <NavImageLink key={key} contact={CONTACTS[key]} />
+          ))}
+        </Box>
+
+        <Flex alignItems="center">
+          <NavLink to="/about">
+            <NavText>About</NavText>
+          </NavLink>
+          <NavTextLink url="https://docs.fujidao.org">Documentation</NavTextLink>
+          <Label fontSize={12}>© FujiDAO {new Date().getFullYear()}</Label>
+        </Flex>
+      </Flex>
+    </footer>
   );
 }
 
