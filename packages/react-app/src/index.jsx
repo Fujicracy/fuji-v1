@@ -1,17 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import App from 'containers/App/index';
 import './index.css';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-
-// let subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract"
-
-// const client = new ApolloClient({
-// uri: subgraphUri,
-// cache: new InMemoryCache()
-// });
 
 const theme = createTheme({
   breakpoints: {
