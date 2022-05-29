@@ -97,12 +97,12 @@ const Icon = styled(FilterHdrIcon)`
 
 const content = {
   text: {
-    'no-points': 'The more you borrow, the higher you will climb Fuji.',
+    'no-points': 'The more you borrow, the higher you climb.',
     'claimable-points':
       'You are already climbing Fuji by having opened a position. You need to claim your meter points now.',
   },
   cta: {
-    'no-points': 'Learn more',
+    'no-points': 'Go to Campaign',
     'claimable-points': 'Claim your points',
   },
 };
@@ -222,7 +222,7 @@ const GameBanner = () => {
       <Flex>
         <Icon />
         <ContentContainer>
-          <Title>The Fuji Climbing Campaing is Live!</Title>
+          <Title>The Fuji Climb is now live</Title>
           <Text>{content.text[status]}</Text>
         </ContentContainer>
       </Flex>

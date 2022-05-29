@@ -61,17 +61,14 @@ const Rules = ({ margin, open = false }) => (
       <HorizontalLine margin="1rem 0rem" />
       <Ol>
         <Li>
-          The more DAI or USDC that you borrow on Fantom, the faster you will climb and earn meter
-          points,
+          The more DAI or USDC you borrow on Fantom, the faster you climb and earn meter points.
         </Li>
-        <Li>Collect the full Climbing Gear NFT set to double your final meter points count,</Li>
-        <Li>
-          You can trade your gears on the open market (X) at any time before the Locking Ceremony,
-        </Li>
-        <Li>The Booster Score reflects the number and type of the Gears NFT in your inventory.</Li>
+        <Li>Buy and open crates to find a Climbing Gear NFT that boosts your score.</Li>
+        <Li>Collect the full gear set to double your final meter points.</Li>
+        <Li>Trade gears on the open market (X) at any time before the Locking Ceremony.</Li>
       </Ol>
       <Text mt="1rem">
-        For more visit our{' '}
+        Learn more at our{' '}
         <Link
           href="https://docs.google.com/document/d/1ftYFOWXBK0r-9VGrHooNZpdS13hhjrerKTgWTpg0yow"
           color="#fa266c"
@@ -81,7 +78,7 @@ const Rules = ({ margin, open = false }) => (
         </Link>{' '}
         and {/* TODO: Link */}
         <Link href="https://github.com/Fujicracy/" target="_blank" color="#fa266c">
-          Medium page.
+          Medium.
         </Link>
       </Text>
     </DetailsWithOpen>

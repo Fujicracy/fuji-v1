@@ -223,8 +223,8 @@ function Inventory() {
           textAlign="left"
           lineHeight="20px"
         >
-          They accelerate your climbing speed. You can find them in the crates you open or you can
-          buy them from our partner marketplace.
+          They boost your final score. You can find them in the crates you open or you can buy them
+          from our partner marketplace.
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />

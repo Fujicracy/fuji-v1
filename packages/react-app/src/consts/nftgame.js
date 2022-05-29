@@ -52,7 +52,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.PICKAXE]: {
     name: 'Pickaxe',
     description:
-      'The Pickaxe will help you maintain a grip. When you reach the higher highs, you’ll need them to overpass the hardest obstacles along the road.',
+      'The Pickaxe will help you maintain a grip. When you reach higher highs, it will let you to overpass the hardest obstacles along the road.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/pickaxe-200.png',
@@ -62,7 +62,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.OXYGEN_KIT]: {
     name: 'Oxygen Kit',
     description:
-      'Reaching the higher highs is not easy, you’ll find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
+      'Reaching higher highs is not easy. You will find the Oxygen Kit very helpful when you are out of breath near the top of the mountain.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/oxykit-200.png',
@@ -72,7 +72,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.GLOVES]: {
     name: 'Gloves',
     description:
-      'What would be a climbing without gloves? Not a climbing of course. Fuji Gloves will ensure your fingers remain attached to your hand, all the way to the top.',
+      'How would be a climb without gloves? Very painfull, of course. Fuji Gloves will ensure your fingers remain attached to your hand all the way to the top.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/exogloves-200.png',
@@ -82,7 +82,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.FLARE_GUN]: {
     name: 'Flare Gun',
     description:
-      'In case of sudden emergency during the climbing, shoot with your Fuji Pistol to show your peers you need some assistance.',
+      'In case of emergency during the climb, shoot with your Flare Gun to ask your peers for assistance.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/flaregun-200.png',
@@ -92,7 +92,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.HEAT_CAPSULE]: {
     name: 'Heat Capsule',
     description:
-      'The heat capsule will keep you warm and alive each time the temperature decreases to the extreme lows.',
+      'The Heat Capsule will keep you warm and alive each time the temperature decreases to extreme lows.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/heatcapsule-200.png',
@@ -102,7 +102,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.SLIPPERS]: {
     name: 'Slippers',
     description:
-      'Adapted from the ancient Fuji Flops, those used by the first Fuji Climbers in the history. They’ll let you climb in a comfy manner, and keep your focus on the road instead of your cold feet.',
+      'Adapted from the ancient Fuji Flops, those used by the first Fuji Climbers in the history. Slippers let you climb in a comfy manner and keep you focused on the road instead of your cold feet.',
     boost: [10, 15, 17, 18],
     images: {
       small: '',
@@ -112,7 +112,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.SUNGLASSES]: {
     name: 'Sunglasses',
     description:
-      'These sunglasses will let you foresee the obstacles you might encounter, and solutions to your challenges at a faster pace. This is technology of the future; equipped laser vision.',
+      'The Sunglasses equipped with laser vision will let you foresee the obstacles and swiftly find solutions to your challenges.',
     boost: [10, 15, 17, 18],
     images: {
       small: '',
@@ -122,7 +122,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.WATCH]: {
     name: 'Watch',
     description:
-      'Each expedition needs its watch. It will follow you during the whole journey, indicating the most important metrics such as your altitude and your speed.',
+      'Alone in a hostile environment, you can easily lose the notion of time. The Watch will keep you mind sain and will also indicate the most important metrics such as your altitude and your speed.',
     boost: [10, 15, 17, 18],
     images: {
       small: '',
@@ -132,7 +132,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.PROTEIN_BAR]: {
     name: 'Protein Bar',
     description:
-      'The protein bar is a must have during the climbing, in fact, without it, you’ll have to eat your peers, it’s not what you want, right?',
+      'The Protein Bar is a must-have during the climb. In fact, without it, you might find yourself eating your peers... It’s not what you want, right?',
     boost: [10, 15, 17, 18],
     images: {
       small: '',
@@ -142,7 +142,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.MED_KIT]: {
     name: 'Med Kit',
     description:
-      'The Med Kit is here to support you during hard times, maintain your health the longer you can during the climbing to avoid having to use it.',
+      'The Med Kit is here to support you during the hardest times. It has everything you might need to cure your body and soul.',
     boost: [10, 15, 17, 18],
     images: {
       small: '',

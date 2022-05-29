@@ -140,16 +140,16 @@ function Store() {
             lineHeight="24px"
             fontSize={isMobile ? '12px' : '16px'}
           >
-            Climb Mt. Fuji by accumulating meter points and use them to buy crates.
+            Climb Fuji by accumulating meter points and use them to buy crates.
           </SectionTitle>
         </Flex>
         <StoreDecoration src={nftGameStoreDecorationImage} alt="flask" />
       </Flex>
       {!isMobile && (
         <Description
-          mt={4}
+          mt={5}
           title="How to earn Meter points"
-          description="Users with open positions accumulate meter points proportional to the borrowed amount. For 1$ of debt in each vault 1p/day gets earned. For example, a user having two open positions: 1,500 debt of DAI and 500 debt of USDC accumulates 2,000 meter points every day. Points are not transferable. "
+          description="Open a debt position to accumulate meter points proportional to your borrowed amount: you earn a meter point per day for every $1 of debt."
         />
       )}
       <Flex mt={isMobile ? '20px' : '40px'}>

@@ -105,7 +105,7 @@ function Profile() {
           {ranking?.position ?? '?'}
         </StatsPoints>
         <NavLink to="leaderboard" style={{ textDecoration: 'underline', color: 'white' }}>
-          Position
+          Rank
         </NavLink>
       </Flex>
 
@@ -113,7 +113,7 @@ function Profile() {
         <Flex flexDirection="column">
           <StatsPoints>{roundedPoints}</StatsPoints>
           <Label textAlign="left" color="white" fontSize="14px">
-            Meter Points
+            Meter points
           </Label>
         </Flex>
         <Flex flexDirection="column" ml="40px">
@@ -123,12 +123,12 @@ function Profile() {
               <InfoOutlined color="red" />
               <span>
                 Each Climbing Gear NFT that you own boosts your meter points by an extra 10%. Each
-                duplicate NFTs boosts your score up to a maximum of 18%.
+                duplicate NFTs gives a boost up to a maximum of 18%.
               </span>
             </Tooltip>
           </Flex>
           <Label textAlign="left" color="white" fontSize="14px">
-            Boost Score
+            Boost
           </Label>
         </Flex>
       </Flex>
@@ -140,7 +140,7 @@ function Profile() {
       >
         <SectionTitle fontSize="24px">Climbing speed</SectionTitle>
         <Label fontSize="12px" color="white" textAlign="left" mt={1} mb={1} lineHeight="18px">
-          Approximation based on your current borrowed amounts.
+          Based on your current borrowed amounts.
         </Label>
 
         <ClimbingSpeedPer>
