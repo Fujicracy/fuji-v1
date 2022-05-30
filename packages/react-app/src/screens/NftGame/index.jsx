@@ -16,6 +16,8 @@ import Rules from './Rules';
 import Inventory from './Inventory';
 import Leaderboard from './Leaderboard';
 import Store from './Store';
+import LockingCeremony from './LockingCeremony';
+
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
 const ClaimHeader = () => {
@@ -86,10 +88,10 @@ function NftGame() {
               <StyledNavLink to={`${path}/leaderboard`}>Leaderboard</StyledNavLink>
             </li>
             <li>
-              <StyledNavLink disabled to={`${path}/lock-points`} onClick={e => e.preventDefault()}>
+              <StyledNavLink to={`${path}/locking-ceremony`}>
                 <Flex alignItems="center" justifyContent="center">
-                  Lock points
-                  <LockOutlinedIcon fontSize="small" />
+                  Locking ceremony
+                  {/* <LockOutlinedIcon fontSize="small" /> */}
                 </Flex>
               </StyledNavLink>
             </li>
@@ -114,15 +116,10 @@ function NftGame() {
               <Route path={`${path}/rules`}>
                 {!isMobile ? <Redirect to={`${path}/store`} /> : <Rules open margin="0 24px" />}
               </Route>
-              <Route path={`${path}/store`}>
-                <Store />
-              </Route>
-              <Route path={`${path}/inventory`}>
-                <Inventory />
-              </Route>
-              <Route path={`${path}/leaderboard`}>
-                <Leaderboard />
-              </Route>
+              <Route path={`${path}/store`} component={Store} />
+              <Route path={`${path}/inventory`} component={Inventory} />
+              <Route path={`${path}/leaderboard`} component={Leaderboard} />
+              <Route path={`${path}/locking-ceremony`} component={LockingCeremony} />
             </Switch>
           </Flex>
         </Flex>
