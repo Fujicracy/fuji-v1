@@ -14,6 +14,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import Alert from '@material-ui/lab/Alert';
 import { Box, Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
@@ -45,7 +46,7 @@ import { useAuth, useBalance, useAllowance, useResources, useContractLoader } fr
 import { Container, Helper } from './styles';
 
 function InitBorrow() {
-  const { address, provider, networkName } = useAuth();
+  const { address, provider, networkName, deployment } = useAuth();
   const contracts = useContractLoader();
   const { vaults } = useResources();
 
@@ -568,21 +569,41 @@ function InitBorrow() {
                   <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
 
-                <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>
-                  <Flex flexDirection="row" justifyContent="center" alignItems="center">
-                    {loading && (
-                      <CircularProgress
-                        style={{
-                          width: 25,
-                          height: 25,
-                          marginRight: '16px',
-                          color: 'rgba(0, 0, 0, 0.26)',
-                        }}
-                      />
-                    )}
-                    {getBorrowBtnContent()}
-                  </Flex>
-                </Button>
+                {deployment === 'fuse' ? (
+                  <Alert severity="warning" variant="outlined" style={{ color: 'white' }}>
+                    On April 30th Fuse pools were exploited and all borrowing was paused due to
+                    further security measures. You can still repay debt or withdraw your collateral
+                    in{' '}
+                    <NavLink
+                      to="/dashboard/my-positions"
+                      style={{ textDecoration: 'underline', color: '#f0014f' }}
+                    >
+                      my positions
+                    </NavLink>
+                    .
+                  </Alert>
+                ) : (
+                  <Button
+                    onClick={handleSubmit(onSubmit)}
+                    block
+                    fontWeight={600}
+                    disabled={loading}
+                  >
+                    <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                      {loading && (
+                        <CircularProgress
+                          style={{
+                            width: 25,
+                            height: 25,
+                            marginRight: '16px',
+                            color: 'rgba(0, 0, 0, 0.26)',
+                          }}
+                        />
+                      )}
+                      {getBorrowBtnContent()}
+                    </Flex>
+                  </Button>
+                )}
               </form>
             </BlackBoxContainer>
           </Grid>
