@@ -52,7 +52,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.PICKAXE]: {
     name: 'Pickaxe',
     description:
-      'The Pickaxe will help you maintain a grip. When you reach higher highs, it will let you to overpass the hardest obstacles along the road.',
+      'The Pickaxe will help you maintain a grip. When you reach higher highs, it will let you overpass the hardest obstacles along the road.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/pickaxe-200.png',
@@ -72,7 +72,7 @@ export const NFT_ITEMS = {
   [NFT_IDS.GLOVES]: {
     name: 'Gloves',
     description:
-      'How would be a climb without gloves? Very painfull, of course. Fuji Gloves will ensure your fingers remain attached to your hand all the way to the top.',
+      'How would it be to climb without gloves? Very painfull, of course. Fuji Gloves will ensure your fingers remain attached to your hand.',
     boost: [10, 15, 17, 18],
     images: {
       small: 'https://storage.googleapis.com/fuji-game-resources/gears-200/exogloves-200.png',
