@@ -3,7 +3,7 @@ import Crate from '@widgetbot/crate';
 
 const crate = new Crate({
   server: '833590270599233566', // Fuji DAO
-  channel: '844166216414527548' // #❓︱community-questions
+  channel: '844166216414527548', // #❓︱community-questions
   indicator: true,
   notifications: true,
 });
