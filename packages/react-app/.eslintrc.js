@@ -65,5 +65,8 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react/jsx-props-no-spreading': ['off'],
+    'no-unused-vars': 'warn',
+    'import/order': 'warn',
+    'import/named': 'warn',
   },
 };
