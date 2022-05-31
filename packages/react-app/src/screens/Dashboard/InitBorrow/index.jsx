@@ -14,7 +14,8 @@ import {
   Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Box, Flex } from 'rebass';
+import Alert from '@material-ui/lab/Alert';
+import { Box, Flex, Link } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 
@@ -45,7 +46,7 @@ import { useAuth, useBalance, useAllowance, useResources, useContractLoader } fr
 import { Container, Helper } from './styles';
 
 function InitBorrow() {
-  const { address, provider, networkName } = useAuth();
+  const { address, provider, networkName, deployment } = useAuth();
   const contracts = useContractLoader();
   const { vaults } = useResources();
 
@@ -568,21 +569,44 @@ function InitBorrow() {
                   <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
 
-                <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>
-                  <Flex flexDirection="row" justifyContent="center" alignItems="center">
-                    {loading && (
-                      <CircularProgress
-                        style={{
-                          width: 25,
-                          height: 25,
-                          marginRight: '16px',
-                          color: 'rgba(0, 0, 0, 0.26)',
-                        }}
-                      />
-                    )}
-                    {getBorrowBtnContent()}
-                  </Flex>
-                </Button>
+                {deployment === 'fuse' ? (
+                  <Alert severity="warning" variant="outlined" style={{ color: 'white' }}>
+                    On April 30th Fuse pools were exploited and all borrowing was paused to restrict
+                    any further damage. <br />
+                    If you have open positions in Fuse, please report your case in our Discord
+                    channel{' '}
+                    <Link
+                      href="https://discord.com/channels/833590270599233566/844166088220868618"
+                      target="_blank"
+                      style={{ textDecoration: 'underline', color: 'white' }}
+                    >
+                      #protocol-support
+                    </Link>
+                    , and we will notify you when Fuse functions are resumed so you can repay any
+                    outstanding debt and remove your collateral.
+                  </Alert>
+                ) : (
+                  <Button
+                    onClick={handleSubmit(onSubmit)}
+                    block
+                    fontWeight={600}
+                    disabled={loading}
+                  >
+                    <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                      {loading && (
+                        <CircularProgress
+                          style={{
+                            width: 25,
+                            height: 25,
+                            marginRight: '16px',
+                            color: 'rgba(0, 0, 0, 0.26)',
+                          }}
+                        />
+                      )}
+                      {getBorrowBtnContent()}
+                    </Flex>
+                  </Button>
+                )}
               </form>
             </BlackBoxContainer>
           </Grid>
