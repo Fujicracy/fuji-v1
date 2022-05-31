@@ -2,8 +2,8 @@ import { createContext } from 'react';
 import Crate from '@widgetbot/crate';
 
 const crate = new Crate({
-  server: '808620015653879828', // FujiDAO - Team
-  channel: '978623257005686824', // #test-bot-support
+  server: '833590270599233566', // Fuji DAO
+  channel: '844166216414527548' // #❓︱community-questions
   indicator: true,
   notifications: true,
 });
