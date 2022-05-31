@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Alert from '@material-ui/lab/Alert';
-import { Box, Flex } from 'rebass';
+import { Box, Flex, Link } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 
@@ -571,16 +571,19 @@ function InitBorrow() {
 
                 {deployment === 'fuse' ? (
                   <Alert severity="warning" variant="outlined" style={{ color: 'white' }}>
-                    On April 30th Fuse pools were exploited and all borrowing was paused due to
-                    further security measures. You can still repay debt or withdraw your collateral
-                    in{' '}
-                    <NavLink
-                      to="/dashboard/my-positions"
-                      style={{ textDecoration: 'underline', color: '#f0014f' }}
+                    On April 30th Fuse pools were exploited and all borrowing was paused to restrict
+                    any further damage. <br />
+                    If you have open positions in Fuse, please report your case in our Discord
+                    channel{' '}
+                    <Link
+                      href="https://discord.com/channels/833590270599233566/844166088220868618"
+                      target="_blank"
+                      style={{ textDecoration: 'underline', color: 'white' }}
                     >
-                      my positions
-                    </NavLink>
-                    .
+                      #protocol-support
+                    </Link>
+                    , and we will notify you when Fuse functions are resumed so you can repay any
+                    outstanding debt and remove your collateral.
                   </Alert>
                 ) : (
                   <Button
