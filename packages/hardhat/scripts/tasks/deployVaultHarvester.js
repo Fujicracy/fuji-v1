@@ -4,7 +4,7 @@ const deployVaultHarvester = async () => {
   const name = networkSuffix("VaultHarvester");
   const contractName = networkSuffix("VaultHarvester");
 
-  const deployed = await redeployIf(name, contractName, () => false, deploy);
+  const deployed = await redeployIf(name, contractName, deploy);
   return deployed;
 };
 

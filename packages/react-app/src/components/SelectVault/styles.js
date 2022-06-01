@@ -33,10 +33,6 @@ export const DropDownHeader = styled('div')`
   `}
 `;
 
-// const breatheAnimation = keyframes`
-//  0% { height: 0px; opacity: 0.7;}
-//  100% { height: 100px; opacity: 0.1; }
-// `;
 export const DropDownListContainer = styled('div')`
   overflow-y: auto;
 

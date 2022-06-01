@@ -4,7 +4,7 @@ const deployFliquidator = async () => {
   const name = networkSuffix("Fliquidator");
   const contractName = networkSuffix("Fliquidator");
 
-  const deployed = await redeployIf(name, contractName, () => false, deploy);
+  const deployed = await redeployIf(name, contractName, deploy);
   return deployed;
 };
 

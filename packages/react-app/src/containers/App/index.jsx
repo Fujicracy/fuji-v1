@@ -14,6 +14,7 @@ import About from 'screens/About';
 import Team from 'screens/Team';
 import Error from 'screens/Error';
 import Governance from 'screens/Governance';
+import NftGame from 'screens/NftGame';
 
 import { NavUnlisted, NavImageLink, NavTextLink, Label } from 'components/UI';
 import { CONTACTS } from 'consts/contacts';
@@ -52,6 +53,12 @@ function App() {
               <Route path="/claim-nft">
                 <ProvideAuth>
                   <Governance />
+                </ProvideAuth>
+              </Route>
+              {/* TODO: Find a consensus with the name */}
+              <Route path="/nft-game">
+                <ProvideAuth>
+                  <NftGame />
                 </ProvideAuth>
               </Route>
               <Route path="*">

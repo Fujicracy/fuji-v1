@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-// import { themeGet } from '@styled-system/theme-get';
 import { Box } from 'rebass';
 import { fujiMedia } from 'consts';
 
@@ -7,7 +6,6 @@ export const Container = styled(Box)`
   margin-top: 72px !important;
   min-height: calc(100vh - 13.125rem);
   display: flex;
-  // align-items: center;
   justify-content: center;
   line-height: 150%;
   padding-bottom: 24px 0px 64px;

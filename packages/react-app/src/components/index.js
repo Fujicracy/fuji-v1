@@ -11,11 +11,20 @@ import SelectMarket from './SelectMarket';
 import LandingHeader from './LandingHeader';
 import TransactionHistory from './TransactionHistory';
 import ToggleSwitch from './ToggleSwitch';
+import Description from './Description';
+import InventoryPopup from './InventoryPopup';
+import ResultPopup from './ResultPopup';
+import OutComePopup from './OutComePopup';
+import GearPopup from './GearPopup';
+import EthAddress from './EthAddress';
+
+export * from './NftItemPanel';
 
 export * from './Blocks';
 export * from './UI';
 export {
   AlphaWarning,
+  EthAddress,
   CollaterizationIndicator,
   Header,
   HowItWorks,
@@ -29,4 +38,9 @@ export {
   LandingHeader,
   TransactionHistory,
   ToggleSwitch,
+  Description,
+  InventoryPopup,
+  ResultPopup,
+  OutComePopup,
+  GearPopup,
 };
