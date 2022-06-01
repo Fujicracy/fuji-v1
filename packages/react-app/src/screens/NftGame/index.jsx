@@ -1,14 +1,15 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+
 import { useMediaQuery } from 'react-responsive';
 import { Flex, Box } from 'rebass';
-import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { useCratesBalance, useGearsBalance } from 'hooks';
-import { DiscordContext } from 'context';
+
 import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
+
+import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Profile from './Profile';
 import Rules from './Rules';
@@ -41,14 +42,6 @@ function NftGame() {
 
   const crates = useCratesBalance();
   const gears = useGearsBalance();
-
-  const discordContext = useContext(DiscordContext);
-
-  useEffect(() => {
-    discordContext.show();
-    return () => discordContext.hide();
-  }, [discordContext]);
-
   console.count('NFT game');
 
   return (
