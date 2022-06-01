@@ -43,7 +43,9 @@ async function getProviderIndex(vault, contracts, networkName) {
   if (networkName === CHAIN_NAMES.ETHEREUM) {
     const ibank = PROVIDERS[PROVIDER_TYPE.IRONBANK].name;
     const ibankAddr = contracts[ibank].address;
-    if ([ASSET_NAME.DAI, ASSET_NAME.USDC].includes(vault.borrowAsset.name)) {
+    if (
+      [ASSET_NAME[networkName].DAI, ASSET_NAME[networkName].USDC].includes(vault.borrowAsset.name)
+    ) {
       index = providerIndexes.DYDX;
     } else if (activeProvider.toLowerCase() !== ibankAddr) {
       index = providerIndexes.CREAM;

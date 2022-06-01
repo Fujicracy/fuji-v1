@@ -61,9 +61,6 @@ import logoTitleIcon from './icons/logo-title.svg';
 import logoIcon from './icons/logo.svg';
 import notFoundIcon from './icons/not-found-404.svg';
 
-import infoStep1 from './images/info/step1.png';
-import infoStep2 from './images/info/step2.png';
-
 import * as scrollDownAnimation from './animations/scroll-down-animation.json';
 
 // NFT-Game
@@ -92,11 +89,6 @@ import meterPointCrateAnimation from './animations/meter_points.mp4';
 import commonCrateIdleImage from './images/nft-game/inventory-common-idle.png';
 import epicCrateIdleImage from './images/nft-game/inventory-epic-idle.png';
 import legendaryCrateIdleImage from './images/nft-game/inventory-legendary-idle.png';
-
-export const infoIcons = {
-  step1: infoStep1,
-  step2: infoStep2,
-};
 
 export const ethIcons = {
   GRAY: ethGrayIcon,
