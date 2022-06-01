@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
-// import { themeGet } from '@styled-system/theme-get';
-// import { fujiMedia } from 'consts';
 
 export const ManageButton = styled(Button)`
   cursor: pointer;

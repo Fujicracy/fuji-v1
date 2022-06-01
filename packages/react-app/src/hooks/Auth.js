@@ -12,7 +12,7 @@ import {
   CHAINS,
   CHAIN_NAMES,
   DEPLOYMENT_TYPES,
-} from 'consts/globals';
+} from 'consts';
 
 const RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
@@ -137,8 +137,8 @@ function useProvideAuth() {
       network: id => {
         if (id) {
           setNetworkId(id);
-          if (id === 31337) {
-            // when local, use what's stored in .env
+          if (id === 31337 || id === 4) {
+            // when local or rinkeby, use what's stored in .env
             setNetworkName(CHAIN_NAME);
           } else {
             const n = Object.values(CHAINS).find(v => v.id === id && v.isDeployed);

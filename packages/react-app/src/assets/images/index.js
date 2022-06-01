@@ -27,6 +27,11 @@ import fujiAlice2 from './images/home/fujiAlice2.svg';
 import teamBoyanPhoto from './images/team/boyan.svg';
 import teamDaigaroPhoto from './images/team/daigaro.svg';
 import teamEdgarPhoto from './images/team/edgar.svg';
+import teamUnbornPhoto from './images/team/unborn.jpg';
+import teamYomePhoto from './images/team/yome.png';
+import teamTiagoPhoto from './images/team/tiago.jpg';
+import teamPragueBrewerPhoto from './images/team/praguebrewer.jpg';
+import teamIvanPhoto from './images/team/ivan.jpg';
 import partnerDelphi from './images/partner/delphi-digital.svg';
 import partnerMaven from './images/partner/maven11.svg';
 import partnerCapital from './images/partner/origin-capital.svg';
@@ -56,7 +61,34 @@ import logoTitleIcon from './icons/logo-title.svg';
 import logoIcon from './icons/logo.svg';
 import notFoundIcon from './icons/not-found-404.svg';
 
-import * as scrollDownAnimation from './animation/scroll-down-animation.json';
+import * as scrollDownAnimation from './animations/scroll-down-animation.json';
+
+// NFT-Game
+import editIcon from './icons/edit.svg';
+import nftGameStoreDecorationImage from './images/nft-game/store-decoration.svg';
+import crownImage from './images/nft-game/crown.svg';
+import profileDecorationImage from './images/nft-game/profile-decoration.svg';
+import commonMaskImage from './images/nft-game/common-mask.svg';
+import epicMaskImage from './images/nft-game/epic-mask.svg';
+import legendaryMaskImage from './images/nft-game/legendary-mask.svg';
+
+import giftBoxImage from './images/nft-game/gift-box.svg';
+import happyIcon from './images/nft-game/happy.svg';
+import inventoryBadge from './images/nft-game/inventory-badge.svg';
+
+import commonCrateIntroAnimation from './animations/inventory_common_intro.webm';
+import epicCrateIntroAnimation from './animations/inventory_epic_intro.webm';
+import legendaryCrateIntroAnimation from './animations/inventory_legendary_intro.webm';
+
+import commonCrateOpeningAnimation from './animations/inventory_common_opening.mp4';
+import epicCrateOpeningAnimation from './animations/inventory_epic_opening.mp4';
+import legendaryCrateOpeningAnimation from './animations/inventory_legendary_opening.mp4';
+import emptyCrateAnimation from './animations/empty.mp4';
+import meterPointCrateAnimation from './animations/meter_points.mp4';
+
+import commonCrateIdleImage from './images/nft-game/inventory-common-idle.png';
+import epicCrateIdleImage from './images/nft-game/inventory-epic-idle.png';
+import legendaryCrateIdleImage from './images/nft-game/inventory-legendary-idle.png';
 
 export const ethIcons = {
   GRAY: ethGrayIcon,
@@ -97,6 +129,11 @@ export {
   teamBoyanPhoto,
   teamDaigaroPhoto,
   teamEdgarPhoto,
+  teamUnbornPhoto,
+  teamYomePhoto,
+  teamTiagoPhoto,
+  teamPragueBrewerPhoto,
+  teamIvanPhoto,
   fujiFlopsGiftbox,
   // Contacts
   discordImage,
@@ -112,4 +149,26 @@ export {
   marketFuseIcon,
   marketCoreIcon,
   scrollDownAnimation,
+  // nft-game
+  editIcon,
+  crownImage,
+  nftGameStoreDecorationImage,
+  profileDecorationImage,
+  commonMaskImage,
+  epicMaskImage,
+  legendaryMaskImage,
+  giftBoxImage,
+  happyIcon,
+  inventoryBadge,
+  commonCrateIntroAnimation,
+  epicCrateIntroAnimation,
+  legendaryCrateIntroAnimation,
+  commonCrateOpeningAnimation,
+  epicCrateOpeningAnimation,
+  legendaryCrateOpeningAnimation,
+  meterPointCrateAnimation,
+  emptyCrateAnimation,
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
 };

@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 import { Grid } from '@material-ui/core';
-// import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
 
 export const GridContainer = styled(Grid)`
-  margin: 64px 112px;
-  min-width: 71rem;
-  width: 71rem;
+  margin: 64px auto;
+  max-width: 71rem;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -14,14 +12,12 @@ export const GridContainer = styled(Grid)`
   padding-bottom: 4rem;
   position: relative;
   ${fujiMedia.lessThan('small')`
-    margin: 40px 28px;
-    min-width: 320px;
-    width: 320px;
+    margin: 40px auto;
+    max-width: 500px;
   `}
   ${fujiMedia.between('small', 'medium')`
-    margin: 40px 28px;
-    min-width: 470px;
-    width: 470px;
+    margin: 40px auto;
+    max-width: 800px;
   `}
 `;
 

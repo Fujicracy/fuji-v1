@@ -8,7 +8,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { fujiLanding2, fujiLandingMobile } from '../../assets/images';
 
-import { HomeContainer, PageContainter } from './styles';
+import { HomeContainer, PageContainer } from './styles';
 
 function ThirdPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -18,7 +18,7 @@ function ThirdPage({ titleFontSize, descriptionFontSize }) {
   });
 
   return (
-    <PageContainter>
+    <PageContainer>
       <HomeContainer>
         <Grid container spacing={isTablet ? 10 : 6}>
           {isMobile || isTablet ? (
@@ -128,7 +128,7 @@ function ThirdPage({ titleFontSize, descriptionFontSize }) {
           )}
         </Grid>
       </HomeContainer>
-    </PageContainter>
+    </PageContainer>
   );
 }
 

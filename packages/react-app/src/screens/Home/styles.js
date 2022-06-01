@@ -43,7 +43,7 @@ export const VerticalLine = styled.div`
   margin: 0px 72px 0px 72px;
 `;
 
-export const PageContainter = styled(Flex).attrs(() => ({
+export const PageContainer = styled(Flex).attrs(() => ({
   bg: 'transparent',
 }))`
   display: flex;
@@ -51,6 +51,6 @@ export const PageContainter = styled(Flex).attrs(() => ({
   align-items: center;
   height: calc(100% - 100px);
   ${fujiMedia.lessThan('medium')`
-    height: 100%;
+    height: 100vh;
   `}
 `;

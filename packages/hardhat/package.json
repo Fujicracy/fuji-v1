@@ -19,7 +19,8 @@
     "@nomiclabs/hardhat-etherscan": "^2.1.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "^4.2.0",
-    "@openzeppelin/contracts-upgradeable": "^4.2.0",
+    "@openzeppelin/contracts-upgradeable": "4.5.2",
+    "@openzeppelin/hardhat-defender": "^1.6.0",
     "@openzeppelin/hardhat-upgrades": "^1.9.0",
     "@tenderly/hardhat-tenderly": "1.0.12",
     "@uniswap/v2-core": "^1.0.1",
@@ -33,8 +34,10 @@
     "hardhat-contract-sizer": "^2.0.3",
     "hardhat-gas-reporter": "1.0.4",
     "node-watch": "^0.7.0",
+    "ora": "5.4.1",
     "qrcode-terminal": "^0.12.0",
-    "ramda": "^0.27.1"
+    "ramda": "^0.27.1",
+    "redstone-evm-connector": "2.1.7"
   },
   "scripts": {
     "fork": "hardhat node --hostname 0.0.0.0",
@@ -45,6 +48,7 @@
     "deploy:mainnet": "hardhat run scripts/mainnet/00_initial_deploy.js",
     "deploy:mainnet:fuse": "hardhat run scripts/mainnet/01_deploy_fuse.js",
     "deploy:fantom": "hardhat run scripts/fantom/00_initial_deploy.js",
+    "deploy:fantom:game": "yarn deploy:fantom && hardhat run scripts/fantom/01_new_wbtc_vault.js && hardhat run scripts/fantom/02_new_weth_vaults.js && hardhat run scripts/fantom/05_nft_game.js",
     "publish:core": "hardhat publish",
     "publish:fuse": "hardhat publish --market fuse",
     "sync": "hardhat sync",

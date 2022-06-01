@@ -1,7 +1,5 @@
 import React from 'react';
 import { useSpring, config } from 'react-spring';
-// import { Button } from 'components/UI';
-// import { Grid } from '@material-ui/core';
 import { SectionTitle, Animation, Button } from 'components';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -49,7 +47,7 @@ function FirstPage({ onClickAnimation }) {
   };
 
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
+    <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
       <HomeAnimatedContainer style={props}>
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1}
