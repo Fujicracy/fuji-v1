@@ -157,7 +157,7 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
                   balance: outComes[outKey].count,
                   name: NFT_ITEMS[outKey].name,
                   boost: '10',
-                  images: { medium: NFT_ITEMS[outKey].images.medium },
+                  images: { medium: NFT_ITEMS[outKey].images },
                 }}
               />
             </>

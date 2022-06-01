@@ -171,7 +171,10 @@ const GearPopup = ({ gear, close }) => {
           <ImageNumber>{gear.balance}</ImageNumber>
           <ImageContainer>
             <ImageBadge />
-            <Image src={gear.images.medium} height="auto" width="auto" />
+            <picture>
+              <source srcSet={gear.images.medium.replace('.png', '.webp')} type="image/webp" />
+              <Image src={gear.images.medium} height="auto" width="auto" />
+            </picture>
           </ImageContainer>
         </Box>
         <Box p={4} flex="1">
