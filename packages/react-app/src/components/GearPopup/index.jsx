@@ -2,6 +2,7 @@ import React from 'react';
 import { themeGet } from '@styled-system/theme-get';
 import { color, padding } from 'styled-system';
 import CloseIcon from '@material-ui/icons/Close';
+import { Tooltip } from '@material-ui/core';
 import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import { fujiMedia } from 'consts';
@@ -188,10 +189,12 @@ const GearPopup = ({ gear, close }) => {
           <SectionBox>
             <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
-          {/* TODO: Activate button */}
-          <TradeButton type="button" disabled>
-            Marketplace
-          </TradeButton>
+          <Tooltip title="The collection will be live soon on Paintswap.">
+            {/* TODO: Activate button */}
+            <TradeButton type="button" disabled>
+              Marketplace
+            </TradeButton>
+          </Tooltip>
           <SectionBox>
             <SectionTitle>
               Boost scores

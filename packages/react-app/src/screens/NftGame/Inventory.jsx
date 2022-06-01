@@ -4,7 +4,8 @@ import { formatUnits } from '@ethersproject/units';
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { Grid } from '@material-ui/core';
+import { Grid, Tooltip } from '@material-ui/core';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {
   BlackBoxContainer,
   InventoryItem,
@@ -225,6 +226,9 @@ function Inventory() {
         >
           They boost your final score. You can find them in the crates you open or you can buy them
           from our partner marketplace.
+          <Tooltip title="The collection will be live soon on Paintswap.">
+            <InfoOutlinedIcon fontSize="inherit" />
+          </Tooltip>
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
