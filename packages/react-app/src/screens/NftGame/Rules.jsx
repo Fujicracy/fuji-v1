@@ -65,21 +65,26 @@ const Rules = ({ margin, open = false }) => (
         </Li>
         <Li>Buy and open crates to find a Climbing Gear NFT that boosts your score.</Li>
         <Li>Collect the full gear set to double your final meter points.</Li>
-        <Li>Trade gears on the open market (X) at any time before the Locking Ceremony.</Li>
+        <Li>Trade gears on the open market at any time before the Locking Ceremony.</Li>
       </Ol>
       <Text mt="1rem">
-        Learn more at our{' '}
+        Learn more about the{' '}
         <Link
-          href="https://docs.google.com/document/d/1ftYFOWXBK0r-9VGrHooNZpdS13hhjrerKTgWTpg0yow"
+          href="https://docs.fujidao.org/climbing-fantom-expedition/rules-and-mechanics"
           color="#fa266c"
           target="_blank"
         >
-          Documentation
+          rules & mechanics
         </Link>{' '}
-        and {/* TODO: Link */}
-        <Link href="https://github.com/Fujicracy/" target="_blank" color="#fa266c">
-          Medium.
+        and read{' '}
+        <Link
+          href="https://medium.com/fuji-finance/fuji-climb-fantom-expedition-29e01cdca752"
+          target="_blank"
+          color="#fa266c"
+        >
+          the annoucement
         </Link>
+        .
       </Text>
     </DetailsWithOpen>
   </BlackBoxContainer>
