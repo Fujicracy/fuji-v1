@@ -83,7 +83,7 @@ function Profile() {
           />
         ) : (
           <Flex height="54px" justifyContent="center" alignItems="center">
-            <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
+            <SectionTitle fontSize="24px" lineHeight="36px">
               {customPseudo || formattedAddress}
             </SectionTitle>
             {/*
