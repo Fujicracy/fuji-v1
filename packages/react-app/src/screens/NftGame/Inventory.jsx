@@ -4,8 +4,7 @@ import { formatUnits } from '@ethersproject/units';
 
 import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { Grid, Tooltip } from '@material-ui/core';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { Grid } from '@material-ui/core';
 import {
   BlackBoxContainer,
   InventoryItem,
@@ -15,6 +14,7 @@ import {
   StackedInventoryItem,
   OutComePopup,
   GearPopup,
+  ExternalLink,
 } from 'components';
 
 import {
@@ -225,14 +225,15 @@ function Inventory() {
           lineHeight="20px"
         >
           They boost your final score. You can find them in the crates you open or you can buy them
-          from our partner marketplace.
-          <Tooltip title="The collection will be live soon on Paintswap.">
-            <InfoOutlinedIcon fontSize="inherit" />
-          </Tooltip>
+          from our partner{' '}
+          <ExternalLink href="https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0">
+            marketplace
+          </ExternalLink>
+          .
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
-        <Grid container justifyContent="space-between" direction="row" spacing="1">
+        <Grid container justifyContent="space-between" direction="row" spacing={1}>
           {nftGears.length > 0 &&
             nftGears.map(nftGear => (
               <Grid

@@ -2,12 +2,12 @@ import React from 'react';
 import { themeGet } from '@styled-system/theme-get';
 import { color, padding } from 'styled-system';
 import CloseIcon from '@material-ui/icons/Close';
-import { Tooltip } from '@material-ui/core';
 import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import { fujiMedia } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
 import { useContractLoader } from 'hooks';
+import { ExternalLink } from 'components/UI';
 import EthAddress from '../EthAddress';
 import 'animate.css';
 
@@ -192,12 +192,9 @@ const GearPopup = ({ gear, close }) => {
           <SectionBox>
             <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
-          <Tooltip title="The collection will be live soon on Paintswap.">
-            {/* TODO: Activate button */}
-            <TradeButton type="button" disabled>
-              Marketplace
-            </TradeButton>
-          </Tooltip>
+          <ExternalLink href="https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0">
+            <TradeButton type="button">Marketplace</TradeButton>
+          </ExternalLink>
           <SectionBox>
             <SectionTitle>
               Boost scores

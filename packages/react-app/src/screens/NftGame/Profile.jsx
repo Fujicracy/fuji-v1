@@ -120,7 +120,7 @@ function Profile() {
           <Flex alignItems="center">
             <StatsBoost>{boost ? `${boost}x` : '?'}</StatsBoost>
             <Tooltip>
-              <InfoOutlined color="red" />
+              <InfoOutlined />
               <span>
                 Each Climbing Gear NFT that you own boosts your meter points by an extra 10%. Each
                 duplicate NFTs gives a boost up to a maximum of 18%.
