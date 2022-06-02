@@ -233,7 +233,7 @@ function Inventory() {
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
-        <Grid container justifyContent="space-between" direction="row" spacing="1">
+        <Grid container justifyContent="space-between" direction="row" spacing={1}>
           {nftGears.length > 0 &&
             nftGears.map(nftGear => (
               <Grid
