@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, Text } from 'rebass';
+import { Text } from 'rebass';
 import styled from 'styled-components';
 
-import { BlackBoxContainer, SectionTitle } from 'components';
+import { BlackBoxContainer, ExternalLink, SectionTitle } from 'components';
 
 import { HorizontalLine } from './styles';
 
@@ -69,21 +69,13 @@ const Rules = ({ margin, open = false }) => (
       </Ol>
       <Text mt="1rem">
         Learn more about the{' '}
-        <Link
-          href="https://docs.fujidao.org/climbing-fantom-expedition/rules-and-mechanics"
-          color="#fa266c"
-          target="_blank"
-        >
+        <ExternalLink href="https://docs.fujidao.org/climbing-fantom-expedition/rules-and-mechanics">
           rules & mechanics
-        </Link>{' '}
+        </ExternalLink>{' '}
         and read{' '}
-        <Link
-          href="https://medium.com/fuji-finance/fuji-climb-fantom-expedition-29e01cdca752"
-          target="_blank"
-          color="#fa266c"
-        >
+        <ExternalLink href="https://medium.com/fuji-finance/fuji-climb-fantom-expedition-29e01cdca752">
           the annoucement
-        </Link>
+        </ExternalLink>
         .
       </Text>
     </DetailsWithOpen>
