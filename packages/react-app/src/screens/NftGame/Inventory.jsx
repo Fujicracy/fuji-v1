@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { WrapperBuilder } from 'redstone-evm-connector';
 import { formatUnits } from '@ethersproject/units';
 
-import { Flex } from 'rebass';
+import { Flex, Link } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { Grid, Tooltip } from '@material-ui/core';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { Grid } from '@material-ui/core';
 import {
   BlackBoxContainer,
   InventoryItem,
@@ -225,10 +224,15 @@ function Inventory() {
           lineHeight="20px"
         >
           They boost your final score. You can find them in the crates you open or you can buy them
-          from our partner marketplace.
-          <Tooltip title="The collection will be live soon on Paintswap.">
-            <InfoOutlinedIcon fontSize="inherit" />
-          </Tooltip>
+          from our partner{' '}
+          <Link
+            href="https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0"
+            color="#fa266c"
+            target="_blank"
+          >
+            marketplace
+          </Link>
+          .
         </Label>
 
         <HorizontalLine margin="16px 0px 24px" />
