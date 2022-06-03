@@ -36,34 +36,15 @@ function App() {
           <GlobalStyle />
           <HashRouter>
             <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route path="/team">
-                <Team />
-              </Route>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/dashboard">
-                <ProvideAuth>
-                  <Dashboard />
-                </ProvideAuth>
-              </Route>
-              <Route path="/claim-nft">
-                <ProvideAuth>
-                  <Governance />
-                </ProvideAuth>
-              </Route>
-              {/* TODO: Find a consensus with the name */}
-              <Route path="/nft-game">
-                <ProvideAuth>
-                  <NftGame />
-                </ProvideAuth>
-              </Route>
-              <Route path="*">
-                <Error />
-              </Route>
+              <Route exact path="/" component={Home} />
+              <Route path="/team" component={Team} />
+              <Route path="/about" component={About} />
+              <ProvideAuth>
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/claim-nft" component={Governance} />
+                <Route path="/nft-game" component={NftGame} />
+              </ProvideAuth>
+              <Route path="*" component={Error} />
             </Switch>
             {!isMobileOrTablet && (
               <footer>
