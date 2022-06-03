@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { useMediaQuery } from 'react-responsive';
@@ -42,6 +42,13 @@ function NftGame() {
 
   const crates = useCratesBalance();
   const gears = useGearsBalance();
+
+  useEffect(() => {
+    // stupid trick but putting this in a context make the whole app crash.
+    // TODO: rewrite all the polling and hooks logic stuff...
+    window?.widgetbotCrate?.show();
+    return () => window?.widgetbotCrate?.hide();
+  });
   console.count('NFT game');
 
   return (
