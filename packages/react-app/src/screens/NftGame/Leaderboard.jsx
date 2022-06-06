@@ -107,7 +107,7 @@ function Leaderboard() {
           </Label>
           <Tooltip>
             <InfoOutlined />
-            <span>Updated every 2 hours.</span>
+            <span>Updated every 10 minutes.</span>
           </Tooltip>
         </Flex>
         <br />
