@@ -11,7 +11,7 @@ const VAULTS = {
     name: 'VaultFTMDAI',
     deployBlockNumber: 19246494,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
@@ -27,7 +27,7 @@ const VAULTS = {
     name: 'VaultFTMUSDC',
     deployBlockNumber: 19246736,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
@@ -43,7 +43,7 @@ const VAULTS = {
     name: 'VaultWBTCDAI',
     deployBlockNumber: 19428442,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
@@ -59,7 +59,7 @@ const VAULTS = {
     name: 'VaultWETHUSDC',
     deployBlockNumber: 23503564,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
@@ -75,7 +75,7 @@ const VAULTS = {
     name: 'VaultWETHDAI',
     deployBlockNumber: 23791628,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
