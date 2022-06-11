@@ -83,6 +83,7 @@ function Leaderboard() {
       const SECS = 60 * 60 * 24;
       const ranks = allRanks.map(r => ({
         ...r,
+        address: r.address.toLowerCase(),
         rateOfAccrual:
           Number(formatUnits(parseInt(r.rateOfAccrual, 10), NFT_GAME_POINTS_DECIMALS)) * SECS,
       }));
@@ -107,7 +108,7 @@ function Leaderboard() {
           </Label>
           <Tooltip>
             <InfoOutlined />
-            <span>Updated every 2 hours.</span>
+            <span>Updated every 10 minutes.</span>
           </Tooltip>
         </Flex>
         <br />
@@ -147,7 +148,7 @@ function Leaderboard() {
                   </a>
                 </Cell>
                 <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
-                <Cell>{parseInt(r.rateOfAccrual, 10)} m/day</Cell>
+                <Cell>{intToString(parseInt(r.rateOfAccrual, 10))}/day</Cell>
               </TableRow>
             ))}
         </Body>
