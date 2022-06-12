@@ -4,16 +4,7 @@ const providerIndexes = {
   AAVE: '0', // on fantom it's Geist
   DYDX: '1',
   CREAM: '2',
-};
-
-const getForEthereum = (contracts, activeProvider, borrowAsset) => {
-  const assets = ASSETS.ethereum;
-
-  if ([assets.DAI.address, assets.USDC.address].includes(borrowAsset)) {
-    // use dydx flashloans when underlying asset is DAI or USDC
-    return providerIndexes.DYDX;
-  }
-  return providerIndexes.AAVE;
+  BALANCER: '3',
 };
 
 export const getFlashloanProvider = async (setup, vault) => {
@@ -24,7 +15,7 @@ export const getFlashloanProvider = async (setup, vault) => {
 
   let index = providerIndexes.AAVE;
   if (config.networkName === 'ethereum') {
-    index = getForEthereum(contracts, activeProvider, borrowAsset);
+    index = providerIndexes.BALANCER;
   } else if (config.networkName === 'fantom') {
     index = providerIndexes.AAVE;
   }
