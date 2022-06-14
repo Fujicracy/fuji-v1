@@ -12,22 +12,19 @@ import { intToString } from 'helpers';
 
 import { useProfileInfo, useAuth } from 'hooks';
 
-import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
+import { crownImage, profileDecorationImage } from 'assets/images';
+import PseudoInput from './PseudoInput';
 import {
   ClimbingSpeedPer,
   ProfileDecoration,
   StatsPoints,
   StatsBoost,
   HorizontalLine,
-  PseudoInput,
 } from './styles';
-import { ethers } from 'ethers';
 
 function Profile() {
-  const { address, networkId, provider } = useAuth();
-
+  const { address, networkId } = useAuth();
   const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
-  const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
 
   const roundedPoints = intToString(points);
   const roundedPerDay = intToString(climbingSpeedPerDay);
@@ -35,28 +32,7 @@ function Profile() {
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
-  const [isEditable, setIsEditable] = useState(false);
   const [ranking, setRanking] = useState();
-  const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo') || '');
-
-  useEffect(() => {
-    async function updatePseudo() {
-      // call api then localstorage.
-      const signer = provider.getSigner(address);
-      const message = `Hey, please sign to update your climber name to "${customPseudo}"`;
-      const signedMessage = await signer.signMessage(message);
-      console.debug({ message, signedMessage });
-      const verify = ethers.utils.verifyMessage(message, signedMessage);
-      console.debug({ verify });
-      // then make request to backend
-      // then in backend ethers.utils.verifyMessage('Destroyer123', signedMessage)
-      localStorage.setItem('customPseudo', customPseudo);
-    }
-    const pseudoHaveChanged = customPseudo !== localStorage.getItem('customPseudo');
-    if (!isEditable && customPseudo && pseudoHaveChanged) {
-      updatePseudo();
-    }
-  }, [isEditable, customPseudo]);
 
   useEffect(() => {
     async function fetchData() {
@@ -85,33 +61,7 @@ function Profile() {
       <ProfileDecoration left src={profileDecorationImage} />
       <ProfileDecoration right src={profileDecorationImage} />
 
-      <Flex alignItems="center" justifyContent="center">
-        {isEditable ? (
-          <PseudoInput
-            autoFocus
-            onFocus={e => e.currentTarget.select()}
-            value={customPseudo}
-            onChange={e => {
-              setCustomPseudo(e?.target?.value);
-            }}
-            onKeyUp={e => e.key === 'Enter' && setIsEditable(false)}
-            onBlur={() => setIsEditable(false)}
-          />
-        ) : (
-          <Flex height="54px" justifyContent="center" alignItems="center">
-            <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
-              {customPseudo || formattedAddress}
-            </SectionTitle>
-            <Image
-              src={editIcon}
-              alt="edit username"
-              marginLeft={2}
-              onClick={() => setIsEditable(true)}
-              height="24px"
-            />
-          </Flex>
-        )}
-      </Flex>
+      <PseudoInput />
 
       <Flex flexDirection="column" alignItems="center" marginTop="36px">
         <Image src={crownImage} />
