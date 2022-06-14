@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Flex, Image } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
@@ -11,7 +12,7 @@ import { intToString } from 'helpers';
 
 import { useProfileInfo, useAuth } from 'hooks';
 
-import { crownImage, profileDecorationImage } from 'assets/images';
+import { crownImage, editIcon, profileDecorationImage } from 'assets/images';
 import {
   ClimbingSpeedPer,
   ProfileDecoration,
@@ -20,9 +21,10 @@ import {
   HorizontalLine,
   PseudoInput,
 } from './styles';
+import { ethers } from 'ethers';
 
 function Profile() {
-  const { address, networkId } = useAuth();
+  const { address, networkId, provider } = useAuth();
 
   const { points, climbingSpeedPerDay, climbingSpeedPerWeek, boost } = useProfileInfo();
   const formattedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
@@ -35,12 +37,26 @@ function Profile() {
 
   const [isEditable, setIsEditable] = useState(false);
   const [ranking, setRanking] = useState();
-  const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo'));
+  const [customPseudo, setCustomPseudo] = useState(localStorage.getItem('customPseudo') || '');
 
-  useEffect(
-    () => (customPseudo ? localStorage.setItem('customPseudo', customPseudo) : undefined),
-    [customPseudo],
-  );
+  useEffect(() => {
+    async function updatePseudo() {
+      // call api then localstorage.
+      const signer = provider.getSigner(address);
+      const message = `Hey, please sign to update your climber name to "${customPseudo}"`;
+      const signedMessage = await signer.signMessage(message);
+      console.debug({ message, signedMessage });
+      const verify = ethers.utils.verifyMessage(message, signedMessage);
+      console.debug({ verify });
+      // then make request to backend
+      // then in backend ethers.utils.verifyMessage('Destroyer123', signedMessage)
+      localStorage.setItem('customPseudo', customPseudo);
+    }
+    const pseudoHaveChanged = customPseudo !== localStorage.getItem('customPseudo');
+    if (!isEditable && customPseudo && pseudoHaveChanged) {
+      updatePseudo();
+    }
+  }, [isEditable, customPseudo]);
 
   useEffect(() => {
     async function fetchData() {
@@ -83,18 +99,16 @@ function Profile() {
           />
         ) : (
           <Flex height="54px" justifyContent="center" alignItems="center">
-            <SectionTitle fontSize="24px" lineHeight="36px">
+            <SectionTitle fontSize="24px" lineHeight="36px" onClick={() => setIsEditable(true)}>
               {customPseudo || formattedAddress}
             </SectionTitle>
-            {/*
-              <Image
-                src={editIcon}
-                alt="edit username"
-                marginLeft={2}
-                onClick={() => setIsEditable(true)}
-                height="24px"
-              />
-              */}
+            <Image
+              src={editIcon}
+              alt="edit username"
+              marginLeft={2}
+              onClick={() => setIsEditable(true)}
+              height="24px"
+            />
           </Flex>
         )}
       </Flex>
