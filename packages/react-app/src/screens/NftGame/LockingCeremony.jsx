@@ -3,6 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import { Button, Text } from 'rebass';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
+import Countdown from 'react-countdown';
 
 import { BlackBoxContainer, ExternalLink } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
@@ -45,9 +46,54 @@ const ConsumateButton = styled(Button)`
   }
 `;
 
+function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
+  if (days >= 7) {
+    return (
+      <Text color="white" fontSize="1rem" mt="16px">
+        {days} days {hours} hours {minutes} minutes {seconds} seconds remaining. You still have time
+        ;)
+      </Text>
+    );
+  }
+  if (days >= 1) {
+    return (
+      <Text color="white" fontSize="1rem" mt="16px">
+        {days} days {hours} hours {minutes} minutes {seconds} seconds remaining. Last climbing week.
+      </Text>
+    );
+  }
+  if (hours >= 1) {
+    return (
+      <Text color="white" fontSize="1rem" mt="16px">
+        {hours} hours {minutes} minutes {seconds} seconds remaining. Last day. You should lock
+        now... !
+      </Text>
+    );
+  }
+  if (!completed) {
+    return (
+      <Text color="white" fontSize="1rem" mt="16px">
+        {minutes} minutes {seconds} seconds remaining. Hurry up !
+      </Text>
+    );
+  }
+  if (completed) {
+    return (
+      <Text color="white" fontSize="1rem" mt="16px">
+        Too late
+      </Text>
+    );
+  }
+
+  // TODO: remove to avoid shame lol
+  return <p>Error in if / else statements FE Guy is dumb.</p>;
+}
+const END_DATE = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2 + 20000);
 function LockingCeremony() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const { gears: nftGears } = useGearsBalance();
+  // TODO: Fetch from contract
+  const endDate = END_DATE;
 
   return (
     <BlackBoxContainer
@@ -81,7 +127,9 @@ function LockingCeremony() {
         swipeable
       >
         {nftGears.length > 0 &&
-          nftGears.map(nftGear => <GearSet nftGear={nftGear} width="100px" hover={false} />)}
+          nftGears.map(nftGear => (
+            <GearSet nftGear={nftGear} width="100px" hover={false} key={nftGear.id} />
+          ))}
       </Carousel>
       <HorizontalLine margin="16px 0px 24px" />
 
@@ -91,6 +139,9 @@ function LockingCeremony() {
         the ashes you will receive your achievement immortalized into an NFT with your name,
         position, and points accumulated during your climb.
       </Text>
+
+      {/* Phase 3 of getPhaseTimeStamp https://ftmscan.com/address/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0#readProxyContract */}
+      <Countdown date={endDate} renderer={CountdownRenderer} />
 
       <ConsumateButton mt={4}>Consumate the Ceremony</ConsumateButton>
     </BlackBoxContainer>
