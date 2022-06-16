@@ -1,11 +1,11 @@
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Button, Link, Text } from 'rebass';
+import { Button, Text } from 'rebass';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 
-import { BlackBoxContainer } from 'components';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BlackBoxContainer, ExternalLink } from 'components';
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
 import { useGearsBalance } from 'hooks';
 import GearSet from 'components/GearSet';
 import { HorizontalLine } from './styles';
@@ -66,10 +66,7 @@ function LockingCeremony() {
 
       <Text color="white" fontSize="1rem" mt="4">
         You can still trade Climbing Gears on the
-        <Link color="#fa266c" href="#not-yet">
-          {' '}
-          marketplace
-        </Link>
+        <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}> marketplace</ExternalLink>
       </Text>
 
       <HorizontalLine margin="16px 0px 24px" />

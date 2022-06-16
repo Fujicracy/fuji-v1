@@ -185,3 +185,6 @@ export const NFT_GAME_MODAL_THEMES = {
     openingAnimation: legendaryCrateOpeningAnimation,
   },
 };
+
+export const NFT_GAME_MARKETPLACE_LINK =
+  'https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0';
