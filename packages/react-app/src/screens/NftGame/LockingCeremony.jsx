@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Button, Text } from 'rebass';
+import { Box, Button, Flex, Text } from 'rebass';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 import Countdown from 'react-countdown';
@@ -46,49 +46,47 @@ const ConsumateButton = styled(Button)`
   }
 `;
 
+const CountDownLabel = ({ label, value }) => (
+  <Flex flexDirection="column" textAlign="center" minWidth="60px">
+    <Text color="#fa266c" fontSize="2rem" fontWeight="bold" p={1}>
+      {String(value).padStart(2, '0')}
+    </Text>
+    <Text color="white" fontSize="1rem" p={1}>
+      {label}
+    </Text>
+  </Flex>
+);
 function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
+  let message;
+
   if (days >= 7) {
-    return (
-      <Text color="white" fontSize="1rem" mt="16px">
-        {days} days {hours} hours {minutes} minutes {seconds} seconds remaining. You still have time
-        ;)
-      </Text>
-    );
-  }
-  if (days >= 1) {
-    return (
-      <Text color="white" fontSize="1rem" mt="16px">
-        {days} days {hours} hours {minutes} minutes {seconds} seconds remaining. Last climbing week.
-      </Text>
-    );
-  }
-  if (hours >= 1) {
-    return (
-      <Text color="white" fontSize="1rem" mt="16px">
-        {hours} hours {minutes} minutes {seconds} seconds remaining. Last day. You should lock
-        now... !
-      </Text>
-    );
-  }
-  if (!completed) {
-    return (
-      <Text color="white" fontSize="1rem" mt="16px">
-        {minutes} minutes {seconds} seconds remaining. Hurry up !
-      </Text>
-    );
-  }
-  if (completed) {
-    return (
-      <Text color="white" fontSize="1rem" mt="16px">
-        Too late
-      </Text>
-    );
+    message = 'You still have time to climb 🌋';
+  } else if (days >= 1) {
+    message = 'Last climbing week... 🌋';
+  } else if (hours >= 1) {
+    message = 'Last day. We recommend you to lock now 🌋';
+  } else if (!completed) {
+    message = 'Hurry up 😱';
+  } else if (completed) {
+    message = 'Too late 🥲';
   }
 
-  // TODO: remove to avoid shame lol
-  return <p>Error in if / else statements FE Guy is dumb.</p>;
+  return (
+    <Box textAlign="center">
+      <Flex alignItems="center" mt={4}>
+        {days && <CountDownLabel label="days" value={days} />}
+        <CountDownLabel label="hours" value={hours} />
+        <CountDownLabel label="minutes" value={minutes} />
+        {!days && <CountDownLabel label="seconds" value={seconds} />}
+      </Flex>
+      <Text color="white" fontSize={2} pt={3}>
+        {message}
+      </Text>
+    </Box>
+  );
 }
-const END_DATE = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2 + 20000);
+const END_DATE = new Date(Date.now() + 1000 * 60 * 60 * 24 * 8 + 20000);
+
 function LockingCeremony() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const { gears: nftGears } = useGearsBalance();
@@ -133,7 +131,7 @@ function LockingCeremony() {
       </Carousel>
       <HorizontalLine margin="16px 0px 24px" />
 
-      <Text color="white" fontSize={2}>
+      <Text color="white" fontSize={2} lineHeight="1.5">
         Now it is time to move on to the next phase, which is to throw your Climbing Gear into Mt.
         Fuji&apos;s lava pit and watch it combust into a volcanic eruption. Don&apos;t worry, out of
         the ashes you will receive your achievement immortalized into an NFT with your name,
@@ -143,7 +141,9 @@ function LockingCeremony() {
       {/* Phase 3 of getPhaseTimeStamp https://ftmscan.com/address/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0#readProxyContract */}
       <Countdown date={endDate} renderer={CountdownRenderer} />
 
-      <ConsumateButton mt={4}>Consumate the Ceremony</ConsumateButton>
+      <Box textAlign="center">
+        <ConsumateButton mt={4}>Consumate the Ceremony</ConsumateButton>
+      </Box>
     </BlackBoxContainer>
   );
 }
