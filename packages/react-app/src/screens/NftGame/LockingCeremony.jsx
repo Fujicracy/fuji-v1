@@ -7,7 +7,7 @@ import Countdown from 'react-countdown';
 
 import { BlackBoxContainer, ExternalLink } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
-import { useGearsBalance } from 'hooks';
+import { useContractLoader, useContractReader, useGearsBalance } from 'hooks';
 import GearSet from 'components/GearSet';
 import { HorizontalLine } from './styles';
 
@@ -56,15 +56,16 @@ const CountDownLabel = ({ label, value }) => (
     </Text>
   </Flex>
 );
+
 function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
   let message;
 
   if (days >= 7) {
-    message = 'You still have time to climb 🌋';
+    message = 'You still have time to lock in your points';
   } else if (days >= 1) {
-    message = 'Last climbing week... 🌋';
+    message = 'Last week to trade';
   } else if (hours >= 1) {
-    message = 'Last day. We recommend you to lock now 🌋';
+    message = 'Last day. We recommend you to lock in now';
   } else if (!completed) {
     message = 'Hurry up 😱';
   } else if (completed) {
@@ -73,7 +74,7 @@ function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
 
   return (
     <Box textAlign="center">
-      <Flex alignItems="center" mt={4}>
+      <Flex justifyContent="center" mt={4}>
         {days && <CountDownLabel label="days" value={days} />}
         <CountDownLabel label="hours" value={hours} />
         <CountDownLabel label="minutes" value={minutes} />
@@ -85,13 +86,14 @@ function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
     </Box>
   );
 }
-const END_DATE = new Date(Date.now() + 1000 * 60 * 60 * 24 * 8 + 20000);
 
 function LockingCeremony() {
-  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const contracts = useContractLoader();
+  const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [3], 0);
+  const endTimestamp = end ? Number(end.toString()) * 1000 : undefined;
+
   const { gears: nftGears } = useGearsBalance();
-  // TODO: Fetch from contract
-  const endDate = END_DATE;
+  const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   return (
     <BlackBoxContainer
@@ -139,7 +141,7 @@ function LockingCeremony() {
       </Text>
 
       {/* Phase 3 of getPhaseTimeStamp https://ftmscan.com/address/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0#readProxyContract */}
-      <Countdown date={endDate} renderer={CountdownRenderer} />
+      {endTimestamp && <Countdown date={endTimestamp} renderer={CountdownRenderer} />}
 
       <Box textAlign="center">
         <ConsumateButton mt={4}>Consumate the Ceremony</ConsumateButton>
