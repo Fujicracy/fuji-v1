@@ -90,7 +90,7 @@ function Leaderboard() {
       setRankings(ranks);
       setIsLoading(false);
     }
-    fetchData();
+    if (networkId) fetchData();
   }, [address, networkId]);
 
   return (
@@ -147,7 +147,9 @@ function Leaderboard() {
                     )}
                   </a>
                 </Cell>
-                <Cell>{intToString(formatUnits(r.accruedPoints, NFT_GAME_POINTS_DECIMALS))}</Cell>
+                <Cell>
+                  {intToString(formatUnits(r.accruedPoints.toString(), NFT_GAME_POINTS_DECIMALS))}
+                </Cell>
                 <Cell>{intToString(parseInt(r.rateOfAccrual, 10))}/day</Cell>
               </TableRow>
             ))}
