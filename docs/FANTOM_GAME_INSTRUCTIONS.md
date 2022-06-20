@@ -33,6 +33,9 @@ ganache-cli --fork https://still-patient-feather.fantom.quiknode.pro/b32ce427764
 Alternative for RPC provider
 ganache-cli -d -e 10000 --fork https://rpc.ftm.tools/ --chainId 31337
 
+Alternative URL for RPC
+https://rpc.ankr.com/fantom
+
 ```
 
 2. Deploy contracts from "hardhat" directory and publish them to other packages:
