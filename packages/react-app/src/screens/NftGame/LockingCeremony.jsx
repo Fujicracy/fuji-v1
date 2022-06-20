@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Box, Button, Flex, Text } from 'rebass';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 import Countdown from 'react-countdown';
 
-import { BlackBoxContainer, ExternalLink } from 'components';
+import { BlackBoxContainer, ExternalLink, LockingCeremonyPopup } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
 import { useContractLoader, useContractReader, useGearsBalance } from 'hooks';
 import GearSet from 'components/GearSet';
@@ -42,6 +42,7 @@ const ConsumateButton = styled(Button)`
   background: linear-gradient(92.29deg, #fe3477 0%, #f0014f 100%);
   transition: opacity 0.3s;
   &:hover {
+    cursor: pointer;
     opacity: 0.8;
   }
 `;
@@ -94,6 +95,7 @@ function LockingCeremony() {
 
   const { gears: nftGears } = useGearsBalance();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const [popupIsOpen, setPopupIsOpen] = useState(false);
 
   return (
     <BlackBoxContainer
@@ -103,6 +105,8 @@ function LockingCeremony() {
       borderRadius="8px"
       mb="88px"
     >
+      <LockingCeremonyPopup isOpen={popupIsOpen} close={() => setPopupIsOpen(false)} />
+
       <Text color="white" fontSize={4} fontWeight={500}>
         Congratulations!
       </Text>
@@ -144,7 +148,9 @@ function LockingCeremony() {
       {endTimestamp && <Countdown date={endTimestamp} renderer={CountdownRenderer} />}
 
       <Box textAlign="center">
-        <ConsumateButton mt={4}>Consumate the Ceremony</ConsumateButton>
+        <ConsumateButton mt={4} onClick={() => setPopupIsOpen(true)}>
+          Consumate the Ceremony
+        </ConsumateButton>
       </Box>
     </BlackBoxContainer>
   );
