@@ -8,6 +8,7 @@ import { fujiMedia } from 'consts';
 import { Box, Button, Flex, Image, Text } from 'rebass/styled-components';
 import 'animate.css';
 import { lavaImage } from 'assets/images';
+import { useContractLoader } from 'hooks';
 import { Label, CheckBox } from './UI';
 
 export const StyledModal = Modal.styled`
@@ -103,7 +104,22 @@ const PrimaryButton = styled(Button)`
 `;
 
 const LockingCeremonyPopup = ({ isOpen, close }) => {
+  const contracts = useContractLoader();
   const [isChecked, setIsChecked] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+
+  async function lessgo() {
+    setIsFetching(true);
+    try {
+      const res = await contracts.NFTInteractions.lockFinalScore();
+      console.info(res);
+      setIsFetching(false);
+    } catch (e) {
+      console.error(e);
+      setIsFetching(false);
+    }
+  }
+
   return (
     <StyledModal isOpen={isOpen} onEscapeKeydown={close}>
       <CloseButton fontSize="medium" onClick={close} />
@@ -138,11 +154,16 @@ const LockingCeremonyPopup = ({ isOpen, close }) => {
                 lineHeight="1.2rem"
                 padding="0 0 0 0.5rem"
               >
-                Yes I want to end my participation on Fuji climbing campaign
+                By clicking Confirm I assume responsibility of this action.
               </Label>
             </Flex>
-            <PrimaryButton mt={2} display="block" disabled={!isChecked}>
-              Confirm
+            <PrimaryButton
+              mt={2}
+              display="block"
+              disabled={!isChecked || isFetching}
+              onClick={lessgo}
+            >
+              {isFetching ? 'Confirm...' : 'Confirm'}
             </PrimaryButton>
           </SectionBox>
         </Box>
