@@ -70,7 +70,7 @@ function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
   } else if (!completed) {
     message = 'Hurry up 😱';
   } else if (completed) {
-    message = 'Too late 🥲';
+    message = 'Locking phase is over, please proceed to the Bond Factory';
   }
 
   return (
