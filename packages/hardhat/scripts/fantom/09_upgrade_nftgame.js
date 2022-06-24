@@ -7,7 +7,11 @@ const upgrade = async () => {
   const NFTGame = await ethers.getContractFactory("NFTGame");
   const addr = getContractAddress("NFTGame");
   console.log("Creating proposal for upgrading NFTGame...");
-  const proposal = await defender.proposeUpgrade(addr, NFTGame);
+  const proposal = await defender.proposeUpgrade(addr, NFTGame, 
+    {
+      unsafeAllowRenames: true
+    }
+    );
   console.log("Upgrade proposal created at:", proposal.url);
 };
 
