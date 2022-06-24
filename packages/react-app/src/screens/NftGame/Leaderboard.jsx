@@ -90,7 +90,8 @@ function Leaderboard() {
       setRankings(ranks);
       setIsLoading(false);
     }
-    if (networkId) fetchData();
+    // TODO: do not fetch if not on leaderboard or not connected
+    if (networkId && address) fetchData();
   }, [address, networkId]);
 
   return (

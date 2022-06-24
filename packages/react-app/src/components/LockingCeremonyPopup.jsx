@@ -4,14 +4,16 @@ import { color, padding } from 'styled-system';
 import CloseIcon from '@material-ui/icons/Close';
 import Modal from 'styled-react-modal';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { Transactor } from 'helpers';
 import { fujiMedia } from 'consts';
 import { Box, Button, Flex, Image, Text } from 'rebass/styled-components';
 import 'animate.css';
 import { lavaImage } from 'assets/images';
-import { useContractLoader } from 'hooks';
+import { useAuth, useContractLoader } from 'hooks';
 import { Label, CheckBox } from './UI';
 
-export const StyledModal = Modal.styled`
+const StyledModal = Modal.styled`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -103,7 +105,9 @@ const PrimaryButton = styled(Button)`
   }
 `;
 
-const LockingCeremonyPopup = ({ isOpen, close }) => {
+const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
+  const { provider } = useAuth();
+  const tx = Transactor(provider);
   const contracts = useContractLoader();
   const [isChecked, setIsChecked] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -111,10 +115,11 @@ const LockingCeremonyPopup = ({ isOpen, close }) => {
   async function lessgo() {
     setIsFetching(true);
     try {
-      const res = await contracts.NFTInteractions.lockFinalScore();
-      console.info(res);
+      const txRes = await tx(contracts.NFTInteractions.lockFinalScore());
+      onSuccess(txRes);
       setIsFetching(false);
     } catch (e) {
+      // Todo: handle error
       console.error(e);
       setIsFetching(false);
     }
@@ -125,7 +130,6 @@ const LockingCeremonyPopup = ({ isOpen, close }) => {
       <CloseButton fontSize="medium" onClick={close} />
       <Flex flexWrap="wrap">
         <Box style={{ position: 'relative' }} scrolling="" maxWidth="450px">
-          {/* <ImageNumber>{gear.balance}</ImageNumber> */}
           <ImageContainer>
             <Image src={lavaImage} height="auto" width="auto" />
           </ImageContainer>
@@ -157,19 +161,20 @@ const LockingCeremonyPopup = ({ isOpen, close }) => {
                 By clicking Confirm I assume responsibility of this action.
               </Label>
             </Flex>
-            <PrimaryButton
-              mt={2}
-              display="block"
-              disabled={!isChecked || isFetching}
-              onClick={lessgo}
-            >
-              {isFetching ? 'Confirm...' : 'Confirm'}
+            <PrimaryButton mt={2} display="block" disabled={isFetching} onClick={lessgo}>
+              Confirm {isFetching ? '⏳' : ''}
             </PrimaryButton>
           </SectionBox>
         </Box>
       </Flex>
     </StyledModal>
   );
+};
+
+LockingCeremonyPopup.prototype = {
+  isOpen: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };
 
 export default LockingCeremonyPopup;

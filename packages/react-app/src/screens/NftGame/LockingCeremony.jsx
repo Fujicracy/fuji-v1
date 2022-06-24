@@ -7,7 +7,7 @@ import Countdown from 'react-countdown';
 
 import { BlackBoxContainer, ExternalLink, LockingCeremonyPopup } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
-import { useContractLoader, useContractReader, useGearsBalance } from 'hooks';
+import { useContractLoader, useContractReader, useGearsBalance, useSouvenirNFT } from 'hooks';
 import GearSet from 'components/GearSet';
 import { HorizontalLine } from './styles';
 
@@ -44,6 +44,10 @@ const ConsumateButton = styled(Button)`
   &:hover {
     cursor: pointer;
     opacity: 0.8;
+  }
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 `;
 
@@ -90,12 +94,56 @@ function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
 
 function LockingCeremony() {
   const contracts = useContractLoader();
-  const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [3], 0);
+  const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [2], 0);
   const endTimestamp = end ? Number(end.toString()) * 1000 : undefined;
 
   const { gears: nftGears } = useGearsBalance();
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [popupIsOpen, setPopupIsOpen] = useState(false);
+
+  /* eslint-disable */
+  const nft = useSouvenirNFT();
+
+  // TODO: display loader while checking NFTSouvenir
+
+  if (nft?.NFTImage) {
+    return (
+      <BlackBoxContainer width="860px" hasBlackContainer={!isMobile} borderRadius="8px" mb="88px">
+        <Box backgroundColor="#F7EDE8" borderRadius={8} p={5} width="860px">
+          <Text fontSize="1.5rem" lineHeight="1.5rem">
+            There are many paths leading to the top of Mount Fuji, but there is only one summit -
+            love.
+          </Text>
+          <Text>Morihei Ueshiba</Text>
+        </Box>
+        <Flex color="white" p={5}>
+          <Box width={1 / 2}>
+            <p>image</p>
+          </Box>
+          <Box width={1 / 2}>
+            <Text fontSize="2rem" lineHeight="2rem" fontWeight="bold">
+              Next Steps
+            </Text>
+            <br />
+            <Text fontSize="1rem" lineHeight="1.2rem">
+              1. All your locked meter points will enable you to obtain a FUJI bond(s).
+            </Text>
+            <Text fontSize="1rem" lineHeight="1.2rem">
+              2. You choose your vesting period from 3 months to 12 months.
+            </Text>
+            {/* TODO: will the name be $FUJI ? */}
+            <Text fontSize="1rem" lineHeight="1.2rem">
+              3. At the end of the vesting period, you will receive the respective $FUJI tokens.
+            </Text>
+
+            <Button backgroundColor="#FE3477" mt={3}>
+              Go to bond factory
+            </Button>
+          </Box>
+        </Flex>
+      </BlackBoxContainer>
+    );
+  }
 
   return (
     <BlackBoxContainer
@@ -105,7 +153,11 @@ function LockingCeremony() {
       borderRadius="8px"
       mb="88px"
     >
-      <LockingCeremonyPopup isOpen={popupIsOpen} close={() => setPopupIsOpen(false)} />
+      <LockingCeremonyPopup
+        isOpen={popupIsOpen}
+        close={() => setPopupIsOpen(false)}
+        onSuccess={() => setPopupIsOpen(false)}
+      />
 
       <Text color="white" fontSize={4} fontWeight={500}>
         Congratulations!
@@ -148,7 +200,11 @@ function LockingCeremony() {
       {endTimestamp && <Countdown date={endTimestamp} renderer={CountdownRenderer} />}
 
       <Box textAlign="center">
-        <ConsumateButton mt={4} onClick={() => setPopupIsOpen(true)}>
+        <ConsumateButton
+          mt={4}
+          onClick={() => setPopupIsOpen(true)}
+          disabled={endTimestamp < Date.now()}
+        >
           Consumate the Ceremony
         </ConsumateButton>
       </Box>

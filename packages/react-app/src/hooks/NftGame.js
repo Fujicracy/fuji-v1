@@ -193,3 +193,28 @@ export function useProfileInfo() {
 
   return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
 }
+
+export function useNft() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [NFTImage, setNFTImage] = useState();
+
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+
+  useEffect(() => {
+    async function fetchNFT() {
+      const userdata = await contracts.NFTGame.userdata([address]);
+      console.info({ userdata });
+      const image = await contracts.NFTGame.uri([userdata.lockedNFTID]);
+      console.info({ image });
+      setNFTImage(image);
+      setIsLoading(false);
+    }
+    fetchNFT();
+  }, [contracts, address]);
+
+  // const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
+  // const NFTImage = useContractReader(contracts, 'NFTGame', 'uri', [userdata.lockedNFTID]);
+
+  return { isLoading, NFTImage };
+}
