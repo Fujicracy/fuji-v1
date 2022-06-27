@@ -194,7 +194,7 @@ export function useProfileInfo() {
   return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
 }
 
-export function useNft() {
+export function useSouvenirNFT() {
   const [isLoading, setIsLoading] = useState(true);
   const [NFTImage, setNFTImage] = useState();
 
@@ -203,18 +203,38 @@ export function useNft() {
 
   useEffect(() => {
     async function fetchNFT() {
-      const userdata = await contracts.NFTGame.userdata([address]);
-      console.info({ userdata });
-      const image = await contracts.NFTGame.uri([userdata.lockedNFTID]);
-      console.info({ image });
-      setNFTImage(image);
-      setIsLoading(false);
-    }
-    fetchNFT();
-  }, [contracts, address]);
+      console.count('fetchNFT');
+      try {
+        const userdata = await contracts.NFTGame.userdata(address);
+        console.debug('userdata', userdata);
+        console.debug('lockedNFTID', userdata?.lockedNFTID);
+        const NFTID = userdata.lockedNFTID.toString();
 
-  // const userdata = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
-  // const NFTImage = useContractReader(contracts, 'NFTGame', 'uri', [userdata.lockedNFTID]);
+        // NFTID should be greater than 3, cause 0, 1, 2 & 3 are reserved ids.
+        // TODO: fetch 8 from smart contract (3 + fetched)
+        // BigInt comparison with BigInt.from(8)
+        // if (NFTID <= 8) {
+        //   console.debug({ NFTID });
+        //   console.debug('No nft for user, display locking screen');
+        //   return;
+        // }
+
+        console.debug('NFTID', NFTID);
+        const image = await contracts.NFTGame.uri(NFTID);
+        console.debug('image', image);
+        setNFTImage();
+      } catch (e) {
+        // TODO set error
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (contracts && address) {
+      fetchNFT();
+    }
+  }, [contracts, address]);
 
   return { isLoading, NFTImage };
 }
