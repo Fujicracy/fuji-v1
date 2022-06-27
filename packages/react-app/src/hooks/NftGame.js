@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
+import { BigNumber } from 'ethers';
 import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS, NFT_ITEMS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
@@ -205,24 +206,18 @@ export function useSouvenirNFT() {
     async function fetchNFT() {
       console.count('fetchNFT');
       try {
-        const userdata = await contracts.NFTGame.userdata(address);
-        console.debug('userdata', userdata);
-        console.debug('lockedNFTID', userdata?.lockedNFTID);
-        const NFTID = userdata.lockedNFTID.toString();
+        const { lockedNFTID } = await contracts.NFTGame.userdata(address);
 
-        // NFTID should be greater than 3, cause 0, 1, 2 & 3 are reserved ids.
         // TODO: fetch 8 from smart contract (3 + fetched)
-        // BigInt comparison with BigInt.from(8)
-        // if (NFTID <= 8) {
-        //   console.debug({ NFTID });
-        //   console.debug('No nft for user, display locking screen');
-        //   return;
-        // }
+        // NFTID should be greater than 3 + number of cards (reserved ids)
+        if (lockedNFTID.lte(BigNumber.from(8))) {
+          console.debug('Invalid nft id (id is < 8');
+          return;
+        }
 
-        console.debug('NFTID', NFTID);
-        const image = await contracts.NFTGame.uri(NFTID);
-        console.debug('image', image);
-        setNFTImage();
+        const base64json = await contracts.NFTGame.uri(lockedNFTID);
+        const json = JSON.parse(atob(base64json.split(',')[1]));
+        setNFTImage(json.image);
       } catch (e) {
         // TODO set error
         console.error(e);
