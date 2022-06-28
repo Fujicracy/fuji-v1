@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import InfoOutlined from '@material-ui/icons/InfoOutlined';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Flex } from 'rebass';
+import { Box, Flex } from 'rebass';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS, API_BASE_URI } from 'consts';
 import { formatUnits } from 'ethers/lib/utils';
@@ -60,37 +60,38 @@ function Leaderboard() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [rankings, setRankings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const { address, networkId } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const { data: allRanks } = await axios.get(`${API_BASE_URI}/rankings`, {
-        params: { networkId, limit: 25 },
-      });
-
-      if (!allRanks.find(r => r.address === address)) {
-        try {
+      setError();
+      try {
+        const { data: allRanks } = await axios.get(`${API_BASE_URI}/rankings`, {
+          params: { networkId, limit: 25 },
+        });
+        if (!allRanks.find(r => r.address === address)) {
           const { data: userRank } = await axios.get(`${API_BASE_URI}/rankings/${address}`, {
             params: { networkId },
           });
           allRanks.push(userRank);
-        } catch (e) {
-          console.error(e);
         }
-      }
+        const SECS = 60 * 60 * 24;
+        const ranks = allRanks.map(r => ({
+          ...r,
+          address: r.address.toLowerCase(),
+          rateOfAccrual:
+            Number(formatUnits(parseInt(r.rateOfAccrual, 10), NFT_GAME_POINTS_DECIMALS)) * SECS,
+        }));
 
-      const SECS = 60 * 60 * 24;
-      const ranks = allRanks.map(r => ({
-        ...r,
-        address: r.address.toLowerCase(),
-        rateOfAccrual:
-          Number(formatUnits(parseInt(r.rateOfAccrual, 10), NFT_GAME_POINTS_DECIMALS)) * SECS,
-      }));
-      setRankings(ranks);
-      setIsLoading(false);
+        setIsLoading(false);
+        setRankings(ranks);
+      } catch (e) {
+        setIsLoading(false);
+        setError(e);
+      }
     }
-    // TODO: do not fetch if not on leaderboard or not connected
     if (networkId && address) fetchData();
   }, [address, networkId]);
 
@@ -118,45 +119,56 @@ function Leaderboard() {
         </Label>
       </HeadContainer>
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <Cell>Rank</Cell>
-            <Cell>Address / Name</Cell>
-            <Cell>Meter points</Cell>
-            <Cell>Climbing speed</Cell>
-          </TableRow>
-        </TableHead>
-        <Body>
-          {!isLoading &&
-            rankings.map(r => (
-              <TableRow className={r.address === address ? 'active' : ''} key={r.address}>
-                <Cell>
-                  #{r.position}
-                  {r.previousPosition && r.previousPosition > r.position && '⬆'}
-                  {r.previousPosition && r.previousPosition < r.position && '⬇'}
-                </Cell>
-                <Cell>
-                  <a
-                    href={`https://ftmscan.com/address/${r.address}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{ color: 'white', textDecoration: 'underline' }}
-                  >
-                    {r.username || (
-                      <EthAddress address={r?.address ?? null} prefix="10" suffix="8" />
-                    )}
-                  </a>
-                </Cell>
-                <Cell>
-                  {intToString(formatUnits(r.accruedPoints.toString(), NFT_GAME_POINTS_DECIMALS))}
-                </Cell>
-                <Cell>{intToString(parseInt(r.rateOfAccrual, 10))}/day</Cell>
+      {error ? (
+        <Box p={2} color="white" border="1px solid red">
+          Oops, the leaderboard is unavailable 🥲 Please come back later and report this on our
+          discord.
+        </Box>
+      ) : (
+        <>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <Cell>Rank</Cell>
+                <Cell>Address / Name</Cell>
+                <Cell>Meter points</Cell>
+                <Cell>Climbing speed</Cell>
               </TableRow>
-            ))}
-        </Body>
-      </Table>
-      {isLoading && <Loader style={{ width: '56px', height: 'auto', margin: 'auto' }} />}
+            </TableHead>
+            <Body>
+              {!isLoading &&
+                rankings.map(r => (
+                  <TableRow className={r.address === address ? 'active' : ''} key={r.address}>
+                    <Cell>
+                      #{r.position}
+                      {r.previousPosition && r.previousPosition > r.position && '⬆'}
+                      {r.previousPosition && r.previousPosition < r.position && '⬇'}
+                    </Cell>
+                    <Cell>
+                      <a
+                        href={`https://ftmscan.com/address/${r.address}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: 'white', textDecoration: 'underline' }}
+                      >
+                        {r.username || (
+                          <EthAddress address={r?.address ?? null} prefix="10" suffix="8" />
+                        )}
+                      </a>
+                    </Cell>
+                    <Cell>
+                      {intToString(
+                        formatUnits(r.accruedPoints.toString(), NFT_GAME_POINTS_DECIMALS),
+                      )}
+                    </Cell>
+                    <Cell>{intToString(parseInt(r.rateOfAccrual, 10))}/day</Cell>
+                  </TableRow>
+                ))}
+            </Body>
+          </Table>
+          {isLoading && <Loader style={{ width: '56px', height: 'auto', margin: 'auto' }} />}
+        </>
+      )}
     </BlackBoxContainer>
   );
 }
