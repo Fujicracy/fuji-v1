@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { Box, Button, Flex, Text } from 'rebass';
+import { Box, Button, Flex, Image, Text } from 'rebass';
 import Carousel from 'react-multi-carousel';
 import styled from 'styled-components';
 import Countdown from 'react-countdown';
 
-import { BlackBoxContainer, ExternalLink, LockingCeremonyPopup } from 'components';
+import { BlackBoxContainer, ExternalLink, Loader, LockingCeremonyPopup } from 'components';
 import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts';
 import { useContractLoader, useContractReader, useGearsBalance, useSouvenirNFT } from 'hooks';
 import GearSet from 'components/GearSet';
@@ -102,25 +102,33 @@ function LockingCeremony() {
   const [popupIsOpen, setPopupIsOpen] = useState(false);
 
   /* eslint-disable */
-  const nft = useSouvenirNFT();
+  const { isLoading, NFTImage } = useSouvenirNFT();
+  const ready = endTimestamp && nftGears && !isLoading;
 
-  // TODO: display loader while checking NFTSouvenir
+  if (!ready) {
+    return (
+      <BlackBoxContainer width="860px" hasBlackContainer={!isMobile} borderRadius="8px" p={5}>
+        <Loader style={{ width: '56px', height: 'auto', margin: 'auto' }} />
+      </BlackBoxContainer>
+    );
+  }
 
-  if (nft?.NFTImage) {
+  if (NFTImage) {
     return (
       <BlackBoxContainer width="860px" hasBlackContainer={!isMobile} borderRadius="8px" mb="88px">
-        <Box backgroundColor="#F7EDE8" borderRadius={8} p={5} width="860px">
+        <Box backgroundColor="#F7EDE8" borderRadius="8" p={5}>
           <Text fontSize="1.5rem" lineHeight="1.5rem">
             There are many paths leading to the top of Mount Fuji, but there is only one summit -
             love.
           </Text>
           <Text>Morihei Ueshiba</Text>
         </Box>
-        <Flex color="white" p={5}>
-          <Box width={1 / 2}>
-            <p>image</p>
+        {/* flexWrap="wrap" */}
+        <Flex color="white" p={[3, 5]}>
+          <Box width={[1, 0.5]}>
+            <Image src={NFTImage} width={300} height={300} />
           </Box>
-          <Box width={1 / 2}>
+          <Box width={[1, 0.5]} ml={[3, 5]}>
             <Text fontSize="2rem" lineHeight="2rem" fontWeight="bold">
               Next Steps
             </Text>
