@@ -19,6 +19,7 @@ import "../interfaces/IFujiERC1155.sol";
 import "../interfaces/IProvider.sol";
 import "../libraries/Errors.sol";
 import "./libraries/LibUniversalERC20UpgradeableFTM.sol";
+import "./nft-bonds/interfaces/INFTGame.sol";
 
 /**
  * @dev Contract for the interaction of Fuji users with the Fuji protocol.
@@ -29,6 +30,11 @@ import "./libraries/LibUniversalERC20UpgradeableFTM.sol";
 contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
   using SafeERC20Upgradeable for IERC20Upgradeable;
   using LibUniversalERC20UpgradeableFTM for IERC20Upgradeable;
+
+  /**
+  * @dev Log a change in fuji admin address
+  */
+  event NFTGameChanged(address newNFTGame);
 
   address public constant FTM = 0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF;
 
@@ -51,7 +57,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   IFujiAdmin private _fujiAdmin;
   address public override fujiERC1155;
   IFujiOracle public oracle;
-
+  
   string public name;
 
   uint8 internal _collateralAssetDecimals;
@@ -61,6 +67,8 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
 
   mapping(address => uint256) internal _userFeeTimestamps; // to be used for protocol fee calculation
   uint256 public remainingProtocolFee;
+
+  address public nftGame;
 
   /**
    * @dev Throws if caller is not the 'owner' or the '_controller' address stored in {FujiAdmin}
@@ -108,7 +116,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
       Errors.VL_ZERO_ADDR
     );
 
-    __Claimable_init();
+    __Ownable_init();
     __Pausable_init();
     __ReentrancyGuard_init();
 
@@ -419,6 +427,17 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
   }
 
   /**
+   * @dev Sets the NFT Bond Logic address
+   * @param _nftgame: new NFT Game address
+   * Emits a {OracleChanged} event.
+   */
+  function setNFTGame(address _nftgame) external isAuthorized {
+    require(_nftgame != address(0), Errors.VL_ZERO_ADDR);
+    nftGame = _nftgame;
+    emit NFTGameChanged(_nftgame);
+  }
+
+  /**
    * @dev Set providers to the Vault
    * @param _providers: new providers' addresses
    * Emits a {ProvidersChanged} event.
@@ -718,6 +737,8 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     IERC20Upgradeable(vAssets.borrowAsset).univTransfer(payable(msg.sender), _borrowAmount);
 
     emit Borrow(msg.sender, vAssets.borrowAsset, _borrowAmount);
+
+    _afterDebtActionCallback(_borrowAmount, false);
   }
 
   /**
@@ -769,5 +790,20 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     remainingProtocolFee += userFee;
 
     emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
+
+    _afterDebtActionCallback(amountToPayback, true);
+  }
+
+  /**
+   * @dev Internal hook function after a 'borrow()' or 'payback()' call.
+   * Used to plug functionality. 
+   */
+  function _afterDebtActionCallback(uint256 _amount, bool _isPayback) internal {
+    if (nftGame != address(0)) {
+      INFTGame game = INFTGame(nftGame);
+      if (block.timestamp < game.gamePhaseTimestamps(1) && block.timestamp >= game.gamePhaseTimestamps(0) && game.isValidVault(address(this))) {
+        game.checkStateOfPoints(msg.sender, _amount, _isPayback, _borrowAssetDecimals);
+      }
+    }
   }
 }

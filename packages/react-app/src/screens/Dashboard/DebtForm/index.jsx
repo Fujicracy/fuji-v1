@@ -57,7 +57,6 @@ function DebtForm({ position }) {
   const tx = Transactor(provider);
 
   const [action, setAction] = useState(Action.Repay);
-  // const [focus, setFocus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [leftToBorrow, setLeftToBorrow] = useState('');
@@ -399,7 +398,6 @@ function DebtForm({ position }) {
           type="number"
           step="any"
           onChange={value => setAmount(value)}
-          // onFocus={() => setFocus(true)}
           onClickTitleInfo={handleClickTitleInfo}
           onBlur={() => clearErrors()}
           ref={register({

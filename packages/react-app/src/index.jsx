@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createTheme, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
 import App from 'containers/App/index';
 import './index.css';
+import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
@@ -23,9 +24,9 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 768,
-      md: 1440,
-      lg: 1920,
+      sm: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
+      md: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
+      lg: BREAKPOINTS[BREAKPOINT_NAMES.DESKTOP].inNumber,
     },
   },
   typography: {

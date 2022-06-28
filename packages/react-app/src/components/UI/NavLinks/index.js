@@ -1,8 +1,10 @@
 import styled, { keyframes } from 'styled-components';
-import { Box } from 'rebass';
+import { Box, Link } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
-import { Link } from 'react-router-dom';
+import { Link as ReactLink } from 'react-router-dom';
+import { margin } from 'styled-system';
+import theme from 'theme/main';
 
 export const NavUnlisted = styled(Box).attrs(props => ({
   pt: 4,
@@ -72,7 +74,7 @@ const animationBack = keyframes`
   }
 `;
 
-export const NavBackLink = styled(Link)`
+export const NavBackLink = styled(ReactLink)`
   color: var(--text);
   cursor: pointer;
   width: auto;
@@ -85,4 +87,14 @@ export const NavBackLink = styled(Link)`
       animation: ${animationBack} 1s ease-in-out alternate infinite;
     }
   }
+
+  ${margin};
+`;
+
+export const ExternalLink = styled(Link).attrs(props => ({
+  href: props.href || '',
+  target: props.target || '_blank',
+  rel: props.rel || 'noopener noreferrer',
+}))`
+  color: ${theme.colors.pink};
 `;

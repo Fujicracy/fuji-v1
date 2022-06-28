@@ -7,7 +7,6 @@ import { Flex } from 'rebass';
 import { Grid } from '@material-ui/core';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-// import { BlackBoxContainer, SectionTitle } from 'components/Blocks';
 import { useAuth, useResources, useContractLoader, useContractReader } from 'hooks';
 import {
   TransactionHistory,
@@ -25,9 +24,6 @@ import DebtForm from '../DebtForm';
 import CollateralForm from '../CollateralForm';
 import SupplyAndBorrowForm from '../SupplyAndBorrowForm';
 import RepayAndWithdrawForm from '../RepayAndWithdrawForm';
-// import PositionElement, { PositionActions } from '../../../components/PositionElement';
-// import CollaterizationIndicator from '../../../components/CollaterizationIndicator';
-// import ProvidersList from '../../../components/ProvidersList';
 
 function ManagePosition() {
   const { address } = useAuth();
@@ -46,7 +42,6 @@ function ManagePosition() {
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
-  // const [actionsType, setActionsType] = useState('single');
   const actionsType = 'single';
 
   const debtBalance = useContractReader(contracts, 'FujiERC1155', 'balanceOf', [
@@ -85,9 +80,9 @@ function ManagePosition() {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        width={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        margin={isMobile ? '32px 28px' : isTablet ? '44px 144px' : '72px 20px 32px'}
+        maxWidth={isMobile ? '500px' : isTablet ? '800px' : '1200px'}
+        margin={isMobile ? '32px auto' : isTablet ? '44px auto' : '72px auto'}
+        padding="0 2rem"
       >
         <BlackBoxContainer hasBlackContainer={false} width={1} maxWidth="68rem">
           <NavBackLink to="my-positions">

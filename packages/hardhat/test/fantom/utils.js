@@ -3,8 +3,12 @@ const { expect } = require("chai");
 
 const { getContractAt, getContractFactory } = ethers;
 
+const { WrapperBuilder } = require("redstone-evm-connector");
+
 const SPOOKY_ROUTER_ADDR = "0xF491e7B69E4244ad4002BC14e878a34207E38c29";
 const TREASURY_ADDR = "0xb98d4D4e205afF4d4755E9Df19BD0B8BD4e0f148"; // Deployer
+
+const LIB_PSEUDORANDOM = "0x2B14eBE4C9F17d8424AAE34a76CF375DB0029b15";
 
 const DEBUG = false;
 
@@ -79,6 +83,15 @@ const getVaults = () => {
 
 // console.log(getVaults());
 
+const syncTime = async function () {
+  const now = Math.ceil(new Date().getTime() / 1000);
+  try {
+    await ethers.provider.send('evm_setNextBlockTimestamp', [now]);
+  } catch (error) {
+    //Skipping time sync - block is ahead of current time
+  }
+};
+
 const fixture = async ([wallet]) => {
   // Step 0: Common
   const tokens = {};
@@ -119,11 +132,33 @@ const fixture = async ([wallet]) => {
     Object.values(ASSETS).map((asset) => asset.oracle)
   );
 
+  const NFTGame = await getContractFactory("NFTGame");
+  const nftgame = await upgrades.deployProxy(NFTGame, [[1, 2, 3, 4]]);
+
+  const NFTInteractions = await getContractFactory("NFTInteractions", {
+    libraries: {
+      LibPseudoRandom: "0x63E978f8C647bAA71184b9eCcB39e0509C09D681", // fantom
+    }
+  });
+  const nftinteractions = await upgrades.deployProxy(
+    NFTInteractions,
+    [nftgame.address],
+    {
+      unsafeAllow: ['external-library-linking']
+    }
+  );
+
+  const wrappednftinteractions = WrapperBuilder
+    .wrapLite(nftinteractions)
+    .usingPriceFeed("redstone", { asset: "ENTROPY" });
+
+  await wrappednftinteractions.authorizeSignerEntropyFeed("0x0C39486f770B26F5527BBBf942726537986Cd7eb");
+
   // Step 2: Providers
   const ProviderCream = await getContractFactory("ProviderCream");
   const cream = await ProviderCream.deploy([]);
-  const ProviderScream = await getContractFactory("ProviderScream");
-  const scream = await ProviderScream.deploy([]);
+  // const ProviderScream = await getContractFactory("ProviderScream");
+  // const scream = await ProviderScream.deploy([]);
   const ProviderGeist = await getContractFactory("ProviderGeist");
   const geist = await ProviderGeist.deploy([]);
   const ProviderHundred = await getContractFactory("ProviderHundred");
@@ -137,6 +172,8 @@ const fixture = async ([wallet]) => {
     console.log("controller", controller.address);
     console.log("f1155", f1155.address);
     console.log("oracle", oracle.address);
+    console.log("nftgame", nftgame.address);
+    console.log("nftinteractions", nftinteractions.address);
     console.log("cream", cream.address);
     console.log("scream", scream.address);
     console.log("geist", geist.address);
@@ -161,11 +198,11 @@ const fixture = async ([wallet]) => {
 
     await f1155.setPermit(vault.address, true);
     await vault.setFujiERC1155(f1155.address);
+    await vault.setNFTGame(nftgame.address);
     await fujiadmin.allowVault(vault.address, true);
     await vault.setProviders(
       [
         cream.address,
-        scream.address,
         geist.address,
         hundred.address
       ]
@@ -186,14 +223,17 @@ const fixture = async ([wallet]) => {
   await flasher.setFujiAdmin(fujiadmin.address);
   await controller.setFujiAdmin(fujiadmin.address);
   await f1155.setPermit(fliquidator.address, true);
+  await nftgame.grantRole(nftgame.GAME_ADMIN(), nftgame.signer.address);
+  await nftgame.grantRole(nftgame.GAME_INTERACTOR(), nftinteractions.address);
 
   return {
     ...tokens,
     ...vaults,
     cream,
-    scream,
     geist,
     hundred,
+    nftgame,
+    nftinteractions,
     oracle,
     fujiadmin,
     fliquidator,
@@ -206,7 +246,9 @@ const fixture = async ([wallet]) => {
 };
 
 module.exports = {
+  syncTime,
   fixture,
   ASSETS,
   VAULTS: getVaults(),
+  LIB_PSEUDORANDOM
 };

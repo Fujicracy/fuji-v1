@@ -8,6 +8,7 @@ require("@nomiclabs/hardhat-etherscan");
 require("@tenderly/hardhat-tenderly");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
+require("@openzeppelin/hardhat-defender");
 require("@openzeppelin/hardhat-upgrades");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
@@ -24,10 +25,10 @@ const forkUrl =
   network === "fantom"
     ? "https://rpc.ftm.tools/"
     : network === "bsc"
-    ? "https://bsc-dataseed.binance.org/"
-    : network === "polygon"
-    ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
-    : mainnetUrl;
+      ? "https://bsc-dataseed.binance.org/"
+      : network === "polygon"
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
+        : mainnetUrl
 
 //
 // Select the network you want to deploy to here:
@@ -66,15 +67,11 @@ module.exports = {
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     mainnet: {
       url: mainnetUrl,
@@ -86,22 +83,16 @@ module.exports = {
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     xdai: {
       url: "https://rpc.xdaichain.com/",
       gasPrice: 1000000000,
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
     },
     polygon: {
       url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`,
@@ -122,19 +113,49 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 1000,
+            runs: 500,
+          },
+        },
+      }
+    ],
+    overrides: {
+      "contracts/fantom/nft-bonds/NFTInteractions.sol": {
+        version: "0.8.4",
+        settings: {
+          optimizer: {
+            enabled: false
           },
         },
       },
-    ],
+      "contracts/fantom/nft-bonds/FujiPriceAware.sol": {
+        version: "0.8.4",
+        settings: {
+          optimizer: {
+            enabled: false
+          },
+        },
+      },
+      "contracts/fantom/nft-bonds/mocks/MockRandomTests.sol": {
+        version: "0.8.4",
+        settings: {
+          optimizer: {
+            enabled: false
+          },
+        },
+      },
+    },
   },
   mocha: {
     timeout: 200000,
   },
+  defender: {
+    apiKey: process.env.OZ_DEFENDER_API_KEY,
+    apiSecret: process.env.OZ_DEFENDER_API_SECRET,
+  }
 };
 
 const DEBUG = false;

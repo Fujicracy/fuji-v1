@@ -27,8 +27,6 @@ const getDeployments = (name) => {
 };
 
 const updateDeployments = async (name, contractName, address) => {
-  const deployer = (await ethers.getSigners())[0];
-
   let deployData;
   if (fs.existsSync(deploymentsPath)) {
     deployData = JSON.parse(fs.readFileSync(deploymentsPath).toString());
@@ -39,7 +37,6 @@ const updateDeployments = async (name, contractName, address) => {
   const contractArtifacts = await artifacts.readArtifact(contractName);
   deployData[name] = {
     address,
-    deployer: deployer.address,
     abi: contractArtifacts.abi,
     bytecode: contractArtifacts.bytecode,
   };
@@ -49,24 +46,30 @@ const updateDeployments = async (name, contractName, address) => {
 
 const getContractAddress = (name) => {
   return getDeployments(name).address;
-}
+};
 
-const redeployIf = async (name, contractName, shouldRedeploy, deployContract, args = []) => {
-  const deployer = (await ethers.getSigners())[0];
-
+/**
+ * Deploy a contract if it has not been deployed, otherwise read address from hardhat artifacts folder.
+ * @param {string} name same as contractName, except for FujiVaults. 
+ * @param {string} contractName name of the compiled contract.
+ * @param {Function} deployContract function call type {deploy, deployProxy}.
+ * @param {Array} args arguments required in contract constructor or initializer.
+ * @returns {Promise} resolves to 'string' address of the deployed contract.
+ */
+const redeployIf = async (name, contractName, deployContract, args = []) => {
   const currentDeployment = getDeployments(name);
   const contractArtifacts = await artifacts.readArtifact(contractName);
+  const addr = currentDeployment.address ?? "0x0000000000000000000000000000000000000000";
+  const checkExistance = await ethers.provider.getCode(addr);
 
   if (
+    checkExistance !== "0x" &&
     currentDeployment.bytecode === contractArtifacts.bytecode &&
-    JSON.stringify(currentDeployment.abi) === JSON.stringify(contractArtifacts.abi) &&
-    currentDeployment.deployer === deployer.address &&
-    !(await shouldRedeploy())
+    JSON.stringify(currentDeployment.abi) === JSON.stringify(contractArtifacts.abi)
   ) {
     console.log(name + ": Skipping...");
     return currentDeployment.address;
   }
-
   console.log(name + ": Deploying...");
   const deployed = await deployContract(name, contractName, args);
   console.log(name + ": Deployed at", deployed.address);
@@ -75,11 +78,40 @@ const redeployIf = async (name, contractName, shouldRedeploy, deployContract, ar
 
 const callIf = async (name, shouldCall, call) => {
   if (!(await shouldCall())) {
-    console.log(name + ": Skipping...");
+    progress.text = name + ": Skipping...";
+    // console.log(name + ": Skipping...");
   } else {
-    console.log(name + ": Setting...");
+    name + ": Skipping...";
+    // console.log(name + ": Setting...");
     await call();
   }
+};
+
+/**
+ * Extension of {redeployIf} to include external libraries. See {redeployIf}.
+ * @dev Same parameters as {redeployIf} + options object + library object
+ * @returns {Promise} resolves to 'string' address of the deployed contract.
+ */
+const redeployWithExternalLibrary = async (name, contractName, deployContract, args = [], options = {}, library = {}) => {
+  const currentDeployment = getDeployments(name);
+  const contractArtifacts = await artifacts.readArtifact(contractName);
+  const addr = currentDeployment.address ?? "0x0000000000000000000000000000000000000000";
+  const checkExistance = await ethers.provider.getCode(addr);
+
+  if (
+    checkExistance !== "0x" &&
+    currentDeployment.bytecode === contractArtifacts.bytecode &&
+    JSON.stringify(currentDeployment.abi) === JSON.stringify(contractArtifacts.abi)
+  ) {
+    console.log(name + ": Skipping...");
+    return currentDeployment.address;
+  }
+
+  console.log(name + ": Deploying...");
+  const deployed = await deployContract(name, contractName, args, options, library);
+  progress.text = name + ": Deployed at" + deployed.address;
+  console.log(name + ": Deployed at", deployed.address);
+  return deployed.address;
 };
 
 // abi encodes contract arguments
@@ -98,13 +130,40 @@ const abiEncodeArgs = (deployed, contractArgs) => {
 const deployProxy = async (name, contractName, args = [], overrides = {}) => {
   const contractArgs = args || [];
   const contractArtifacts = await ethers.getContractFactory(contractName);
-  const deployed = await upgrades.deployProxy(contractArtifacts, [...contractArgs], overrides);
+  const deployed = await upgrades.deployProxy(contractArtifacts, contractArgs, overrides);
   await deployed.deployed();
 
   const initializeFunction = Object.keys(contractArtifacts.interface.functions).find((fname) =>
     fname.startsWith("initialize")
   );
   const encoded = utils.defaultAbiCoder.encode(
+    contractArtifacts.interface.functions[initializeFunction].inputs,
+    contractArgs
+  );
+  fs.writeFileSync(`artifacts/${name}.address`, deployed.address);
+
+  await updateDeployments(name, contractName, deployed.address);
+
+  if (!encoded || encoded.length <= 2) return deployed;
+  fs.writeFileSync(`artifacts/${name}.args`, encoded.slice(2));
+
+  return deployed;
+};
+
+// proxy deploy with external library
+const deployProxyWithExternalLibrary = async (name, contractName, args = [], overrides = {}, libraries = {}) => {
+  const contractArgs = args || [];
+  const externalLibraries = libraries || {};
+  const proxyOverrides = overrides || {};
+  console.debug("externalLibraries", libraries, "proxyOverrides", proxyOverrides);
+  const contractArtifacts = await ethers.getContractFactory(contractName, externalLibraries);
+  const deployed = await upgrades.deployProxy(contractArtifacts, contractArgs, proxyOverrides);
+  await deployed.deployed();
+
+  const initializeFunction = Object.keys(contractArtifacts.interface.functions).find((fname) =>
+    fname.startsWith("initialize")
+  );
+  const encoded = ethers.utils.defaultAbiCoder.encode(
     contractArtifacts.interface.functions[initializeFunction].inputs,
     contractArgs
   );
@@ -147,15 +206,42 @@ const upgradeProxy = async (name, contractName) => {
   return addr;
 };
 
+const copyMinedTxParams = async (txHash) => {
+  const reftx = await provider.getTransaction(txHash);
+  let unsignedTx = {
+    maxFeePerGas: reftx.maxFeePerGas,
+    maxPriorityFeePerGas: reftx.maxPriorityFeePerGas,
+    chainId: reftx.chainId
+  }
+  return unsignedTx;
+}
+
+const networkSuffix = (name) => {
+  switch (network) {
+    case "mainnet":
+      return name;
+    case "fantom":
+      return name + "FTM";
+    case "polygon":
+      return name + "MATIC";
+    default:
+      return ""
+  }
+}
+
 module.exports = {
   deploy,
   deployProxy,
+  deployProxyWithExternalLibrary,
   upgradeProxy,
   setDeploymentsPath,
   getDeployments,
   getContractAddress,
   updateDeployments,
   redeployIf,
+  redeployWithExternalLibrary,
   callIf,
+  copyMinedTxParams,
+  networkSuffix,
   network,
 };

@@ -23,20 +23,13 @@ import { Title, ErrorBrand, ErrorText, ErrorContainer } from '../Error/styles';
 const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(null);
   const windowDimensions = useWindowSize();
-  const [isShowLogo, setIsShowLogo] = useState(false);
-
-  const handlePageChange = number => {
-    setCurrentPage(number);
-    setIsShowLogo(number !== 0);
-  };
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const isTablet = useMediaQuery({
     minWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.TABLET].inNumber,
   });
-
-  if (!windowDimensions.width || !windowDimensions.height) return <Loader />;
+  const isDesktop = !isMobile && !isTablet;
 
   const designDimension = {
     width: isMobile ? 375 : isTablet ? 768 : 1440,
@@ -53,49 +46,70 @@ const HomePage = () => {
   const descriptionFontSize =
     isMobile || isTablet ? calcResponsiveSize(ratio, isMobile ? 20 : 23) : 23;
 
-  return windowDimensions.height < DESKTOP_MINIMUM_HEIGHT && !isMobile && !isTablet ? (
-    <Flex justifyContent="center" alignItems="center" width="100%">
-      <ErrorContainer>
-        <Title>
-          <ErrorBrand>The height of window is too small</ErrorBrand>
-          <ErrorText>&gt; Please, increase the height!</ErrorText>
-        </Title>
-      </ErrorContainer>
-    </Flex>
-  ) : (
+  if (!windowDimensions.width || !windowDimensions.height) {
+    return <Loader />;
+  }
+  if (isDesktop && windowDimensions.height < DESKTOP_MINIMUM_HEIGHT) {
+    return (
+      <Flex justifyContent="center" alignItems="center" width="100%">
+        <ErrorContainer>
+          <Title>
+            <ErrorBrand>The height of window is too small</ErrorBrand>
+            <ErrorText>&gt; Please, increase the height!</ErrorText>
+          </Title>
+        </ErrorContainer>
+      </Flex>
+    );
+  }
+
+  if (isDesktop) {
+    return (
+      <>
+        <LandingHeader isShowLogo={currentPage > 0} height={calcResponsiveSize(ratio, 100)} />
+
+        {currentPage > 0 && (
+          <CirclePagination
+            count={isMobile || isTablet ? 4 : 5}
+            index={currentPage}
+            onDotClick={number => setCurrentPage(number)}
+          />
+        )}
+
+        <ReactPageScroller
+          onBeforePageScroll={number => setCurrentPage(number)}
+          customPageNumber={currentPage}
+          containerWidth={windowDimensions.width}
+          containerHeight={windowDimensions.height - calcResponsiveSize(ratio, 100)}
+          renderAllPagesOnFirstRender
+        >
+          <FirstComponent
+            onClickAnimation={() => setCurrentPage(currentPage + 1)}
+            titleFontSize={titleFontSize}
+          />
+          <SecondComponent
+            titleFontSize={titleFontSize}
+            descriptionFontSize={descriptionFontSize}
+          />
+          <ThirdComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
+          <FourthComponent
+            titleFontSize={titleFontSize}
+            descriptionFontSize={descriptionFontSize}
+          />
+          <FifthComponent />
+        </ReactPageScroller>
+      </>
+    );
+  }
+
+  return (
     <>
-      {!isMobile && !isTablet && (
-        <LandingHeader isShowLogo={isShowLogo} height={calcResponsiveSize(ratio, 100)} />
-      )}
-
-      {currentPage !== null && currentPage !== 0 && !isMobile && !isTablet && (
-        <CirclePagination
-          count={isMobile || isTablet ? 4 : 5}
-          index={currentPage}
-          onDotClick={handlePageChange}
-        />
-      )}
-
-      <ReactPageScroller
-        onBeforePageScroll={handlePageChange}
-        customPageNumber={currentPage}
-        containerWidth={windowDimensions.width}
-        containerHeight={
-          isMobile || isTablet
-            ? windowDimensions.height
-            : windowDimensions.height - calcResponsiveSize(ratio, 100)
-        }
-        renderAllPagesOnFirstRender
-      >
-        <FirstComponent
-          onClickAnimation={() => setCurrentPage(currentPage + 1)}
-          titleFontSize={titleFontSize}
-        />
-        <SecondComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
-        <ThirdComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
-        <FourthComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
-        {!isMobile && !isTablet && <FifthComponent />}
-      </ReactPageScroller>
+      <FirstComponent
+        onClickAnimation={() => setCurrentPage(currentPage + 1)}
+        titleFontSize={titleFontSize}
+      />
+      <SecondComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
+      <ThirdComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
+      <FourthComponent titleFontSize={titleFontSize} descriptionFontSize={descriptionFontSize} />
     </>
   );
 };

@@ -7,10 +7,10 @@ const PROVIDER_TYPE = {
   FUSE7: 'FusePool7',
   FUSE8: 'FusePool8',
   FUSE18: 'FusePool18',
-  SCREAM: 'Scream',
   CREAM: 'Cream',
   GEIST: 'Geist',
   HUNDRED: 'Hundred',
+  COMPOUND_MOCK: 'CompoundMock',
 };
 
 const PROVIDERS = {
@@ -54,12 +54,6 @@ const PROVIDERS = {
     name: 'ProviderFuse18',
     title: 'Olympus Pool',
   },
-
-  [PROVIDER_TYPE.SCREAM]: {
-    id: 'scream',
-    name: 'ProviderScream',
-    title: 'Scream',
-  },
   [PROVIDER_TYPE.CREAM]: {
     id: 'cream',
     name: 'ProviderCream',
@@ -74,6 +68,11 @@ const PROVIDERS = {
     id: 'hundred',
     name: 'ProviderHundred',
     title: 'Hundred',
+  },
+  [PROVIDER_TYPE.COMPOUND_MOCK]: {
+    id: 'compound-mock',
+    name: 'ProviderMockCompound',
+    title: 'MockCompound',
   },
 };
 

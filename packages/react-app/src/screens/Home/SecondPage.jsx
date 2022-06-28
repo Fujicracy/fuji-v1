@@ -8,7 +8,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 
 import { fujiAlice1 } from '../../assets/images';
 
-import { HomeContainer, PageContainter } from './styles';
+import { HomeContainer, PageContainer } from './styles';
 
 function SecondPage({ titleFontSize, descriptionFontSize }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -18,7 +18,7 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
   });
 
   return (
-    <PageContainter>
+    <PageContainer>
       <HomeContainer>
         <Grid container spacing={isTablet ? 10 : 6} m={6}>
           <Grid
@@ -73,7 +73,7 @@ function SecondPage({ titleFontSize, descriptionFontSize }) {
           </Grid>
         </Grid>
       </HomeContainer>
-    </PageContainter>
+    </PageContainer>
   );
 }
 

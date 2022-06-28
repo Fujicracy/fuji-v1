@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-// import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
 
 const blinker = keyframes`

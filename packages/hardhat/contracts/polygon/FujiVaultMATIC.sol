@@ -108,7 +108,7 @@ contract FujiVaultMATIC is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVa
       Errors.VL_ZERO_ADDR
     );
 
-    __Claimable_init();
+    __Ownable_init();
     __Pausable_init();
     __ReentrancyGuard_init();
 
@@ -764,6 +764,6 @@ contract FujiVaultMATIC is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVa
     _userFeeTimestamps[msg.sender] = block.timestamp;
     remainingProtocolFee += userFee;
 
-    emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
+    emit Payback(msg.sender, vAssets.borrowAsset, amountToPayback);
   }
 }
