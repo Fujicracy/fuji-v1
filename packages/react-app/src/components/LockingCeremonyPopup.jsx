@@ -129,7 +129,7 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
     <StyledModal isOpen={isOpen} onEscapeKeydown={close}>
       <CloseButton fontSize="medium" onClick={close} />
       <Flex flexWrap="wrap">
-        <Box style={{ position: 'relative' }} scrolling="" maxWidth="450px">
+        <Box style={{ position: 'relative' }} scrolling="" maxWidth="450px" width={[1, 0.5]}>
           <ImageContainer>
             <Image src={lavaImage} height="auto" width="auto" />
           </ImageContainer>
