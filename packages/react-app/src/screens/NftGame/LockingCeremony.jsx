@@ -113,7 +113,7 @@ function BeforeOpenRenderer({ days, hours, minutes, seconds }) {
 function LockingCeremony() {
   const contracts = useContractLoader();
 
-  const start = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [2], 0);
+  const start = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [1], 0);
   const startTimestamp = start ? Number(start.toString()) * 1000 : undefined;
 
   const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [3], 0);
@@ -190,11 +190,13 @@ function LockingCeremony() {
       />
 
       <Text color="white" fontSize={4} fontWeight={500}>
-        Congratulations!
+        Locking Ceremony
       </Text>
-      <Text color="white" fontSize="14px" mt="8px">
-        You are about to summit.
-      </Text>
+      {startTimestamp < Date.now() && (
+        <Text color="white" fontSize="14px" mt="8px">
+          Congratulations! You are about to summit.
+        </Text>
+      )}
 
       <Text color="white" fontSize="1rem" mt="4">
         You can still trade Climbing Gears on the
@@ -220,10 +222,9 @@ function LockingCeremony() {
       <HorizontalLine margin="16px 0px 24px" />
 
       <Text color="white" fontSize={2} lineHeight="1.5">
-        Now it is time to move on to the next phase, which is to throw your Climbing Gear into Mt.
-        Fuji&apos;s lava pit and watch it combust into a volcanic eruption. Don&apos;t worry, out of
-        the ashes you will receive your achievement immortalized into an NFT with your address,
-        position, and points accumulated during your climb.
+        {startTimestamp > Date.now()
+          ? "After the accumulation period ends, you will be required to perform the Locking Ceremony during which you will have to throw your Climbing Gear into Mt. Fuji's lava pit and watch it combust into a volcanic eruption. "
+          : "Now it is time to move on to the next phase, which is to throw your Climbing Gear into Mt. Fuji's lava pit and watch it combust into a volcanic eruption. Don't worry, out of the ashes you will receive your achievement immortalized into an NFT with your address, position, and points accumulated during your climb."}
       </Text>
 
       {startTimestamp > Date.now() ? (
