@@ -138,12 +138,12 @@ function LockingCeremony() {
   if (NFTImage) {
     return (
       <BlackBoxContainer width="860px" hasBlackContainer={!isMobile} borderRadius="8px" mb="88px">
-        <Box backgroundColor="#F7EDE8" borderRadius="8" p={5}>
-          <Text fontSize="1.5rem" lineHeight="1.5rem">
-            There are many paths leading to the top of Mount Fuji, but there is only one summit -
-            love.
+        <Box backgroundColor="#F7EDE8" borderRadius="8" p="3rem 4rem" style={{ borderRadius: "8px 8px 0 0"}}>
+          <Text fontSize="1.5rem" lineHeight="1.7rem" textAlign="justify">
+            "There are many paths leading to the top of Mount Fuji, but there is only one summit -
+            love."
           </Text>
-          <Text>Morihei Ueshiba</Text>
+          <Text textAlign="right">Morihei Ueshiba</Text>
         </Box>
         {/* flexWrap="wrap" */}
         <Flex color="white" p={[3, 5]}>
@@ -166,6 +166,7 @@ function LockingCeremony() {
               3. At the end of the vesting period, you will receive the respective $FUJI tokens.
             </Text>
 
+            {/* TODO */}
             <Button backgroundColor="#FE3477" mt={3}>
               Go to bond factory
             </Button>
