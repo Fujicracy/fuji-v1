@@ -161,7 +161,12 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
                 By clicking Confirm I assume responsibility of this action.
               </Label>
             </Flex>
-            <PrimaryButton mt={2} display="block" disabled={isFetching} onClick={lessgo}>
+            <PrimaryButton
+              mt={2}
+              display="block"
+              disabled={isFetching || !isChecked}
+              onClick={lessgo}
+            >
               Confirm {isFetching ? '⏳' : ''}
             </PrimaryButton>
           </SectionBox>

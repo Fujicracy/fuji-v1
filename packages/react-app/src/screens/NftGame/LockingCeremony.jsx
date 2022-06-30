@@ -62,7 +62,7 @@ const CountDownLabel = ({ label, value }) => (
   </Flex>
 );
 
-function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
+function BeforeLockRenderer({ days, hours, minutes, seconds, completed }) {
   let message;
 
   if (days >= 7) {
@@ -92,9 +92,31 @@ function CountdownRenderer({ days, hours, minutes, seconds, completed }) {
   );
 }
 
+function BeforeOpenRenderer({ days, hours, minutes, seconds }) {
+  const message = 'remaining before Locking Cermony opens.';
+
+  return (
+    <Box textAlign="center">
+      <Flex justifyContent="center" mt={4}>
+        {days && <CountDownLabel label="days" value={days} />}
+        <CountDownLabel label="hours" value={hours} />
+        <CountDownLabel label="minutes" value={minutes} />
+        {!days && <CountDownLabel label="seconds" value={seconds} />}
+      </Flex>
+      <Text color="white" fontSize={2} pt={3}>
+        {message}
+      </Text>
+    </Box>
+  );
+}
+
 function LockingCeremony() {
   const contracts = useContractLoader();
-  const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [2], 0);
+
+  const start = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [2], 0);
+  const startTimestamp = start ? Number(start.toString()) * 1000 : undefined;
+
+  const end = useContractReader(contracts, 'NFTGame', 'gamePhaseTimestamps', [3], 0);
   const endTimestamp = end ? Number(end.toString()) * 1000 : undefined;
 
   const { gears: nftGears } = useGearsBalance();
@@ -200,22 +222,27 @@ function LockingCeremony() {
       <Text color="white" fontSize={2} lineHeight="1.5">
         Now it is time to move on to the next phase, which is to throw your Climbing Gear into Mt.
         Fuji&apos;s lava pit and watch it combust into a volcanic eruption. Don&apos;t worry, out of
-        the ashes you will receive your achievement immortalized into an NFT with your name,
+        the ashes you will receive your achievement immortalized into an NFT with your address,
         position, and points accumulated during your climb.
       </Text>
 
-      {/* Phase 3 of getPhaseTimeStamp https://ftmscan.com/address/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0#readProxyContract */}
-      {endTimestamp && <Countdown date={endTimestamp} renderer={CountdownRenderer} />}
+      {startTimestamp > Date.now() ? (
+        <Countdown date={startTimestamp} renderer={BeforeOpenRenderer} />
+      ) : (
+        <>
+          {endTimestamp && <Countdown date={endTimestamp} renderer={BeforeLockRenderer} />}
 
-      <Box textAlign="center">
-        <ConsumateButton
-          mt={4}
-          onClick={() => setPopupIsOpen(true)}
-          disabled={endTimestamp < Date.now()}
-        >
-          Consumate the Ceremony
-        </ConsumateButton>
-      </Box>
+          <Box textAlign="center">
+            <ConsumateButton
+              mt={4}
+              onClick={() => setPopupIsOpen(true)}
+              disabled={endTimestamp < Date.now()}
+            >
+              Consumate the Ceremony
+            </ConsumateButton>
+          </Box>
+        </>
+      )}
     </BlackBoxContainer>
   );
 }

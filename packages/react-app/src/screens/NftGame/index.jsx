@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-
 import { useMediaQuery } from 'react-responsive';
 import { Flex, Box } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -44,7 +43,6 @@ function NftGame() {
 
   const crates = useCratesBalance();
   const gears = useGearsBalance();
-  console.count('NFT game');
 
   return (
     <>
@@ -91,12 +89,11 @@ function NftGame() {
               <StyledNavLink to={`${path}/locking-ceremony`}>
                 <Flex alignItems="center" justifyContent="center">
                   Locking ceremony
-                  {/* <LockOutlinedIcon fontSize="small" /> */}
                 </Flex>
               </StyledNavLink>
             </li>
             <li>
-              <StyledNavLink disabled to={`${path}/bond-factory`} onClick={e => e.preventDefault()}>
+              <StyledNavLink to={`${path}/bond-factory`} disabled onClick={e => e.preventDefault()}>
                 <Flex alignItems="center" justifyContent="center">
                   Bond factory
                   <LockOutlinedIcon fontSize="small" />
