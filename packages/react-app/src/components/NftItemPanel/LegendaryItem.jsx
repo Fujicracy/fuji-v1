@@ -7,7 +7,6 @@ import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from
 import { SectionTitle } from '../Blocks';
 import { CountButton } from '../UI';
 import {
-  ItemPanel,
   BuyButton,
   LegendaryItemsContainer,
   LegendaryContainer,
@@ -16,6 +15,7 @@ import {
   AmountInput,
 } from './styles';
 import ItemInfo from './ItemInfo';
+import legendaryBg from '../../assets/images/images/nft-game/legendary_crate_glow-min.jpg';
 
 const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
@@ -45,7 +45,7 @@ const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
     <ItemInfo type={CRATE_TYPE.LEGENDARY} />
   ) : (
     <div className="animate__animated animate__fast animate__flipInY">
-      <ItemPanel mode={CRATE_TYPE.LEGENDARY} src={theme.idleImage} />
+      {/* <ItemPanel mode={CRATE_TYPE.LEGENDARY} src={theme.idleImage} /> */}
       <LegendaryItemsContainer
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
@@ -130,6 +130,7 @@ const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
       color={theme.foreColor}
       backgroundColor={theme.backColor}
       mode={showInfo ? 'info' : undefined}
+      backgroundImage={!showInfo && !isMobile ? legendaryBg : ''}
     >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />
