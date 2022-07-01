@@ -93,7 +93,7 @@ function BeforeLockRenderer({ days, hours, minutes, seconds, completed }) {
 }
 
 function BeforeOpenRenderer({ days, hours, minutes, seconds }) {
-  const message = 'remaining before Locking Cermony opens.';
+  const message = 'remaining before Locking Cermony opens';
 
   return (
     <Box textAlign="center">
@@ -156,14 +156,14 @@ function LockingCeremony() {
             </Text>
             <br />
             <Text fontSize="1rem" lineHeight="1.2rem">
-              1. All your locked meter points will enable you to obtain a FUJI bond(s).
+              1. All your locked meter points will enable you to obtain pre-tokens bonds.
             </Text>
             <Text fontSize="1rem" lineHeight="1.2rem">
               2. You choose your vesting period from 3 months to 12 months.
             </Text>
             {/* TODO: will the name be $FUJI ? */}
             <Text fontSize="1rem" lineHeight="1.2rem">
-              3. At the end of the vesting period, you will receive the respective $FUJI tokens.
+              3. At the end of the vesting period, you will receive the respective Fuji tokens.
             </Text>
 
             {/* TODO */}
@@ -202,6 +202,7 @@ function LockingCeremony() {
       <Text color="white" fontSize="1rem" mt="4">
         You can still trade Climbing Gears on the
         <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}> marketplace</ExternalLink>
+        .
       </Text>
 
       <HorizontalLine margin="16px 0px 24px" />
