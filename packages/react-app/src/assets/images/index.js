@@ -71,6 +71,7 @@ import profileDecorationImage from './images/nft-game/profile-decoration.svg';
 import commonMaskImage from './images/nft-game/common-mask.svg';
 import epicMaskImage from './images/nft-game/epic-mask.svg';
 import legendaryMaskImage from './images/nft-game/legendary-mask.svg';
+import lavaImage from './images/nft-game/lava.png';
 
 import giftBoxImage from './images/nft-game/gift-box.svg';
 import happyIcon from './images/nft-game/happy.svg';
@@ -157,6 +158,7 @@ export {
   commonMaskImage,
   epicMaskImage,
   legendaryMaskImage,
+  lavaImage,
   giftBoxImage,
   happyIcon,
   inventoryBadge,

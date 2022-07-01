@@ -78,8 +78,17 @@ const DisclaimerPopup = ({ isOpen, onSubmit }) => {
                 color="colors.text100"
                 lineHeight={isMobile ? '150%' : '150%'}
               >
-                Please be advised that the current version of the contracts isn&apos;t fully
-                audited. Use at your own risk.
+                Please be advised that the current version of the contracts is&nbsp;
+                <NavTextLink
+                  url="https://docs.fujidao.org/security/audits"
+                  marginRight="5px"
+                  fontSize="16px"
+                  fontWeight="700"
+                  color="white"
+                >
+                  partially audited
+                </NavTextLink>
+                by Trail of Bits and Securing. Do your own research and use at your own risk!
               </Label>
             </Flex>
           </Flex>
