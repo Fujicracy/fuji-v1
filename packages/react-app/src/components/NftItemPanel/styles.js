@@ -32,7 +32,7 @@ export const Container = styled.div`
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  :-webkit-scrollbar {
+  ::-webkit-scrollbar {
     display: none;
   }
 
@@ -72,7 +72,7 @@ export const LegendaryContainer = styled.div`
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  :-webkit-scrollbar {
+  ::-webkit-scrollbar {
     display: none;
   }
 
