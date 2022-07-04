@@ -1,5 +1,5 @@
 import { ASSETS, ASSET_NAME } from './assets.js';
-import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
+import { PROVIDER_TYPE, PROVIDERS } from './providers-fantom-core.js';
 
 const assets = ASSETS.fantom;
 const assetName = ASSET_NAME.fantom;

@@ -6,8 +6,11 @@ import { loadContracts, getSigner, getFlashloanProvider } from '../utils/index.j
 
 const { utils } = ethers;
 
-function getProviderName(contracts, addr) {
-  const provider = Object.values(PROVIDERS).find(
+function getProviderName(contracts, addr, setup) {
+  const { config, deployment } = setup;
+
+  const providers = Object.values(PROVIDERS[config.networkName][deployment].PROVIDERS);
+  const provider = providers.find(
     p => contracts[p.name] && contracts[p.name].address.toLowerCase() === addr.toLowerCase(),
   );
   return provider.name;
@@ -101,7 +104,7 @@ async function checkRates(setup, vault) {
   const borrowAsset = vault.borrowAsset;
 
   const activeProviderAddr = await vaultContract.activeProvider();
-  const activeProviderName = getProviderName(contracts, activeProviderAddr);
+  const activeProviderName = getProviderName(contracts, activeProviderAddr, setup);
 
   const currentRate = await contracts[activeProviderName].getBorrowRateFor(borrowAsset.address);
   const rates = {
