@@ -4,7 +4,7 @@ import { color, padding } from 'styled-system';
 import CloseIcon from '@material-ui/icons/Close';
 import Modal from 'styled-react-modal';
 import styled from 'styled-components';
-import { fujiMedia } from 'consts';
+import { fujiMedia, NFT_GAME_MARKETPLACE_LINK } from 'consts';
 import { Box, Flex, Image, Button } from 'rebass/styled-components';
 import { useContractLoader } from 'hooks';
 import { ExternalLink } from 'components/UI';
@@ -192,7 +192,7 @@ const GearPopup = ({ gear, close }) => {
           <SectionBox>
             <SectionDescription>{gear.description}</SectionDescription>
           </SectionBox>
-          <ExternalLink href="https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0">
+          <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}>
             <TradeButton type="button">Marketplace</TradeButton>
           </ExternalLink>
           <SectionBox>
