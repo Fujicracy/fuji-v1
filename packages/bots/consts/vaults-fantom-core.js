@@ -16,7 +16,6 @@ const VAULTS = {
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
     ],
@@ -32,7 +31,6 @@ const VAULTS = {
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
     ],
@@ -48,10 +46,9 @@ const VAULTS = {
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+    ],
   },
   VaultWETHUSDC: {
     collateralAsset: assets[assetName.ETH],
@@ -64,10 +61,9 @@ const VAULTS = {
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+    ],
   },
   VaultWETHDAI: {
     collateralAsset: assets[assetName.ETH],
@@ -80,10 +76,9 @@ const VAULTS = {
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+    ],
   },
 };
 
