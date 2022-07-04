@@ -8,7 +8,6 @@ import { SectionTitle } from '../Blocks';
 import { CountButton } from '../UI';
 import {
   Container,
-  ItemPanel,
   BuyButton,
   InfoButton,
   CancelButton,
@@ -16,6 +15,8 @@ import {
   AmountInput,
 } from './styles';
 import ItemInfo from './ItemInfo';
+import commonBg from '../../assets/images/images/nft-game/common-crate_glow-min.jpg';
+import epicBg from '../../assets/images/images/nft-game/epic-crate-glow.jpg';
 
 const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
@@ -27,6 +28,9 @@ const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBu
   const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
 
   const theme = NFT_GAME_MODAL_THEMES[type];
+  const backgroundImage =
+    (type === CRATE_TYPE.COMMON && commonBg) || (type === CRATE_TYPE.EPIC && epicBg);
+
   const handleClickBuy = async () => {
     if (isBuying) return;
 
@@ -44,7 +48,6 @@ const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBu
     <ItemInfo type={type} />
   ) : (
     <div className="animate__animated animate__fast animate__flipInY">
-      <ItemPanel src={theme.idleImage} />
       <Flex
         mt={isMobile ? '10px' : '16px'}
         flexDirection="column"
@@ -110,6 +113,8 @@ const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBu
       backgroundColor={theme.backColor}
       color={theme.foreColor}
       mode={showInfo ? 'info' : 'general'}
+      backgroundImage={!showInfo ? backgroundImage : ''}
+      justifyContent="space-between"
     >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />

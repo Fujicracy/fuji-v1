@@ -15,21 +15,30 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
    * @dev NFTGame contract address changed
    */
   event NFTGameChanged(address newAddress);
-
   /**
    * @dev Underlying token address changed
    */
   event UnderlyingChanged(address newAddress);
-
   /**
    * @dev Bond times changed
    */
   event BondTimesChanges(uint256 newBondTimes, uint256 newMultiplier);
-
   /**
    * @dev Bond price changed
    */
   event BondPriceChanges(uint256 newBondPrice);
+  /**
+   * @dev Vesting start timestamp changed
+   */
+  event VestingStartTimestampChanged(uint256 newVestingStartTimestamp);
+  /**
+   * @dev Admin deposit underlying tokens
+   */
+  event UnderlyingDeposit(uint256 amount);
+  /**
+   * @dev User claimed tokens
+   */
+  event UserClaim(address indexed user, uint256 amount);
 
   address private _owner;
 
@@ -47,8 +56,13 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
 
   uint256 public bondPrice;
 
+  uint256 public vestingStartTimestamp;
+
   // Metadata for ERC3525 generated on Chain by 'voucherDescriptor'
   IVNFTDescriptor public voucherDescriptor;
+
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() initializer {}
 
   /**
    * @dev See {IERC165-supportsInterface}.
@@ -74,8 +88,8 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
     VoucherCore._initialize("FujiDAO PreToken Bonds", "fjBondVoucher", decimals);
     _nftgame_GAME_ADMIN = nftGame.GAME_ADMIN();
     _nftgame_GAME_INTERACTOR = nftGame.GAME_INTERACTOR();
-    _bondSlotTimes = [3, 6, 12];
-    uint8[3] memory defaultMultipliers = [1,2,4];
+    _bondSlotTimes = [1, 90, 180, 360];
+    uint8[4] memory defaultMultipliers = [1, 1, 2, 4];
     uint256 length = _bondSlotTimes.length;
     for (uint256 i = 0; i < length; ) {
       bondSlotMultiplier[_bondSlotTimes[i]] = defaultMultipliers[i];
@@ -84,6 +98,7 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
       }
     }
     bondPrice = 10000 * 10 ** decimals;
+    vestingStartTimestamp = nftGame.gamePhaseTimestamps(3) + 30 days;
   }
 
   /// View functions
@@ -168,7 +183,7 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
 
   /**
    * @notice Admin restricted function to push a new bond time.
-   * @dev '_newbondSlotTime' should be different than existing bond times: Defaults: [3, 6, 12]
+   * @dev '_newbondSlotTime' should be different than existing bond times: Defaults: [1, 90, 180, 360]
    * @param _newbondSlotTime Value in months of new vesting time to push.
    * @param _newMultiplier Assigned multiplier for bond reward for '_newbondSlotTime'
    */
@@ -198,6 +213,16 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
   }
 
   /**
+   * @notice Admin restricted function to set the vesting start timestamp
+   */
+  function setVestingStartTimeStamp(uint256 _vestingStartTimestamp) external {
+    require(nftGame.hasRole(_nftgame_GAME_ADMIN, msg.sender), GameErrors.NOT_AUTH);
+    require(_vestingStartTimestamp > 0, GameErrors.INVALID_INPUT);
+    vestingStartTimestamp = _vestingStartTimestamp;
+    emit VestingStartTimestampChanged(_vestingStartTimestamp);
+  }
+
+  /**
    * @notice Admin restricted function to set the {VoucherDescriptor} contract that generates:
    * ContractURI metadata.
    * Slot ID metadata.
@@ -222,7 +247,7 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
 
   /**
    * @notice Function to be called from Interactions contract, after burning the points
-   * @dev Mint access restricted for users only via {NFTInteractions} contract
+   * @dev Mint access restricted for users only via {NFTInteractions} contract or _nftgame_GAME_ADMIN
    * _units must include decimals.
    *
    */
@@ -231,10 +256,17 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
     uint256 _slot,
     uint256 _units
   ) external returns (uint256 tokenID) {
-    require(nftGame.hasRole(_nftgame_GAME_INTERACTOR, msg.sender), GameErrors.NOT_AUTH);
+    bool isGameAdmin = nftGame.hasRole(_nftgame_GAME_ADMIN, msg.sender);
+    require(
+      nftGame.hasRole(_nftgame_GAME_INTERACTOR, msg.sender) || isGameAdmin,
+      GameErrors.NOT_AUTH
+    );
     require(_units > 0 && _checkIfSlotExists(_slot), GameErrors.INVALID_INPUT);
-    uint256 phase = nftGame.getPhase();
-    require(phase >= 2 && phase < 4, GameErrors.WRONG_PHASE);
+    if (!isGameAdmin) {
+      require(_slot != _bondSlotTimes[0], GameErrors.NOT_AUTH);
+      uint256 phase = nftGame.getPhase();
+      require(phase >= 2 && phase < 4, GameErrors.WRONG_PHASE);
+    }
     tokenID = _mint(_user, _slot, _units);
   }
 
@@ -249,6 +281,7 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
     require(token.allowance(msg.sender, address(this)) >= _amount, "No allowance!");
     token.transferFrom(msg.sender, address(this), _amount);
     underlyingAmount += _amount;
+    emit UnderlyingDeposit(_amount);
   }
 
   /**
@@ -266,7 +299,10 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
     uint256 tokensPerBond = tokensPerUnit(slot);
     _burnVoucher(_tokenId);
 
-    IERC20(underlying).transfer(msg.sender, units * tokensPerBond / 10 ** _unitDecimals);
+    uint256 amountToTransfer = units * tokensPerBond / 10 ** _unitDecimals;
+    underlyingAmount -= amountToTransfer;
+    IERC20(underlying).transfer(msg.sender, amountToTransfer);
+    emit UserClaim(msg.sender, amountToTransfer);
   }
 
   /**
@@ -275,7 +311,7 @@ contract PreTokenBonds is VoucherCore, AccessControlUpgradeable {
    */
   function vestingTypeToTimestamp(uint256 _slotId) public view returns (uint256) {
     require(_checkIfSlotExists(_slotId), GameErrors.INVALID_INPUT);
-    return nftGame.gamePhaseTimestamps(3) + (30 days * _slotId);
+    return vestingStartTimestamp + _slotId;
   }
 
   /// Internal functions

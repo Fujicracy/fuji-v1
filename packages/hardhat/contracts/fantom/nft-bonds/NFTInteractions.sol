@@ -96,6 +96,9 @@ contract NFTInteractions is FujiPriceAware, ReentrancyGuardUpgradeable {
   // The maximum number of NFT cards minted per day in relation to the amount of users
   uint256 public cardsPerDayRatio;
 
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() initializer {}
+
   function initialize(address _nftGame) external initializer {
     __ReentrancyGuard_init();
     isRedstoneOracleOn = true;
@@ -107,7 +110,9 @@ contract NFTInteractions is FujiPriceAware, ReentrancyGuardUpgradeable {
     _pointsID = nftGame.POINTS_ID();
     _nftgame_GAME_ADMIN = nftGame.GAME_ADMIN();
 
-    _probabilityIntervals = [525000, 725000, 950000, 989900, 990000];
+    // Default probability intervals
+    // 50.00%, 20.00%, 20.00%, 4.99%, 0.01%. 5.00% of NFT
+    _probabilityIntervals = [500000, 700000, 900000, 949900, 950000];
 
     // Set basic cardBoost
     uint256 cardsLimit = nftGame.nftCardsAmount() + NFT_CARD_ID_START;

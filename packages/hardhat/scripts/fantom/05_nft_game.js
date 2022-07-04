@@ -74,14 +74,13 @@ const deployContracts = async () => {
 
   let prices = [];
   let rewardfactors = [];
-  let phases = [];
+  let gameTimestamps = [];
   let merkleRoot;
-  // 0 = start game launch
-  // 1 = end of accumulation
-  // 2 = end of trade and lock
-  // 3 = end of bond
+  
   if (TESTING_PARAMS) {
-    phases = [
+
+    // Refer to NFTGame.sol for timestamp descriptions.
+    gameTimestamps = [
       now,
       now + 4 * day,
       now + 5 * day,
@@ -97,24 +96,24 @@ const deployContracts = async () => {
   } else {
     // Production parameters
     const LaunchTimestamp = 1653998400;
-    phases = [
+    gameTimestamps = [
       LaunchTimestamp,
       LaunchTimestamp + 8 * week,
       LaunchTimestamp + 10 * week,
       LaunchTimestamp + 12 * week
     ];
-    prices = [2000, 10000, 20000].map( i => parseUnits(i, POINTS_DECIMALS));
+    prices = [1000, 5000, 10000].map( i => parseUnits(i, POINTS_DECIMALS));
     rewardfactors = [
       // Note that 'standard' rewards chances are:
-      // 52.50%, 20.00%, 22.50%, 3.99%, 0.01%
+      // 50.00%, 20.00%, 20.00%, 4.99%, 0.01%. 5.00% of NFT
       [0.25, 0, 1.1, 2, 25], // CrateId = 1
-      [0.25, 0, 1.1, 4, 50], // CrateId = 2
-      [0.25, 0, 1.1, 8, 100], // CrateId = 3
+      [0.35, 0, 1.2, 4, 50], // CrateId = 2
+      [0.45, 0, 1.3, 8, 100], // CrateId = 3
     ];
   }
   
   // Functions below return string addresses
-  let nftgame = await deployNFTGame([phases]);
+  let nftgame = await deployNFTGame([gameTimestamps]);
   const library = {
     libraries: {
       LibPseudoRandom: LIB_PSEUDORANDOM, // fantom

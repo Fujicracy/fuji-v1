@@ -24,6 +24,7 @@ import {
   CRATE_IDS,
   CRATE_TYPE,
   NFT_GAME_POINTS_DECIMALS,
+  NFT_GAME_MARKETPLACE_LINK,
 } from 'consts';
 import { useContractLoader, useCratesInfo, useGearsBalance, useAuth } from 'hooks';
 
@@ -225,10 +226,7 @@ function Inventory() {
           lineHeight="20px"
         >
           They boost your final score. You can find them in the crates you open or you can buy them
-          from our partner{' '}
-          <ExternalLink href="https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0">
-            marketplace
-          </ExternalLink>
+          from our partner <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}>marketplace</ExternalLink>
           .
         </Label>
 
