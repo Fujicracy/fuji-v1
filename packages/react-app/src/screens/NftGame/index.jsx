@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-
 import { useMediaQuery } from 'react-responsive';
 import { Flex, Box } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
@@ -16,6 +15,8 @@ import Rules from './Rules';
 import Inventory from './Inventory';
 import Leaderboard from './Leaderboard';
 import Store from './Store';
+import LockingCeremony from './LockingCeremony';
+
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
 const ClaimHeader = () => {
@@ -42,6 +43,13 @@ function NftGame() {
 
   const crates = useCratesBalance();
   const gears = useGearsBalance();
+
+  useEffect(() => {
+    // stupid trick but putting this in a context make the whole app crash.
+    // TODO: rewrite all the polling and hooks logic stuff...
+    window?.widgetbotCrate?.show();
+    return () => window?.widgetbotCrate?.hide();
+  });
   console.count('NFT game');
 
   return (
@@ -86,15 +94,14 @@ function NftGame() {
               <StyledNavLink to={`${path}/leaderboard`}>Leaderboard</StyledNavLink>
             </li>
             <li>
-              <StyledNavLink disabled to={`${path}/lock-points`} onClick={e => e.preventDefault()}>
+              <StyledNavLink to={`${path}/locking-ceremony`}>
                 <Flex alignItems="center" justifyContent="center">
-                  Lock points
-                  <LockOutlinedIcon fontSize="small" />
+                  Locking ceremony
                 </Flex>
               </StyledNavLink>
             </li>
             <li>
-              <StyledNavLink disabled to={`${path}/bond-factory`} onClick={e => e.preventDefault()}>
+              <StyledNavLink to={`${path}/bond-factory`} disabled onClick={e => e.preventDefault()}>
                 <Flex alignItems="center" justifyContent="center">
                   Bond factory
                   <LockOutlinedIcon fontSize="small" />
@@ -114,15 +121,10 @@ function NftGame() {
               <Route path={`${path}/rules`}>
                 {!isMobile ? <Redirect to={`${path}/store`} /> : <Rules open margin="0 24px" />}
               </Route>
-              <Route path={`${path}/store`}>
-                <Store />
-              </Route>
-              <Route path={`${path}/inventory`}>
-                <Inventory />
-              </Route>
-              <Route path={`${path}/leaderboard`}>
-                <Leaderboard />
-              </Route>
+              <Route path={`${path}/store`} component={Store} />
+              <Route path={`${path}/inventory`} component={Inventory} />
+              <Route path={`${path}/leaderboard`} component={Leaderboard} />
+              <Route path={`${path}/locking-ceremony`} component={LockingCeremony} />
             </Switch>
           </Flex>
         </Flex>

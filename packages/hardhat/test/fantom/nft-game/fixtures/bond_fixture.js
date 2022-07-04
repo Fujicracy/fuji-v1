@@ -127,14 +127,15 @@ const bondFixture = async ([wallet]) => {
   const now = (await provider.getBlock("latest")).timestamp;
   const day = 60 * 60 * 24;
 
-  const phases = [
-    now,            // 0 = start game launch
-    now + day,      // 1 = end of accumulation
-    now + 2 * day,  // 2 = end of trade and lock
-    now + 3 * day   // 3 = end of bond
+  // Refer to NFTGame.sol for timestamp descriptions.
+  const gameTimestamps = [
+    now,            
+    now + day,      
+    now + 2 * day,
+    now + 3 * day
   ];
   
-  await nftgame.setGamePhases(phases);
+  await nftgame.setGamePhases(gameTimestamps);
 
   const crateIds = [
     await nftinteractions.CRATE_COMMON_ID(),
@@ -209,6 +210,36 @@ const bondFixture = async ([wallet]) => {
   // Override for testing only: change to low bond price
   await pretokenbond.setBondPrice(parseUnits(1, pointsDecimals));
 
+  /**
+   * Step 7
+   * Deploy metadata and svg generation contracts and setup
+   * 
+   */
+  const VoucherDescriptor = await getContractFactory("VoucherDescriptor");
+  const VoucherSVG = await getContractFactory("VoucherSVG");
+  const LockNFTDescriptor = await getContractFactory("LockNFTDescriptor");
+  const LockSVG = await getContractFactory("LockSVG");
+
+  const vsvg = await VoucherSVG.deploy(nftgame.address);
+  const vdescriptor = await VoucherDescriptor.deploy(
+    nftgame.address,
+    pretokenbond.address,
+    vsvg.address
+  );
+
+  const proxyOpts = {
+    kind: 'uups'
+  };
+  const lsvg = await upgrades.deployProxy(LockSVG, [nftgame.address], proxyOpts);
+  const ldescriptor = await LockNFTDescriptor.deploy(
+    nftgame.address,
+    lsvg.address
+  );
+
+  // Metadata and svg generation setup
+  await nftgame.setLockNFTDescriptor(ldescriptor.address);
+  await pretokenbond.setVoucherDescriptor(vdescriptor.address);
+
   return {
     vault,
     scream,
@@ -219,12 +250,16 @@ const bondFixture = async ([wallet]) => {
     oracle,
     fujiadmin,
     f1155,
+    vdescriptor,
+    vsvg,
+    ldescriptor,
+    lsvg,
     pointsDecimals,
     now,
     day,
     crateIds,
     cardIds,
-    phases
+    gameTimestamps
   };
 };
 
