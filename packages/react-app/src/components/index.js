@@ -17,6 +17,7 @@ import ResultPopup from './ResultPopup';
 import OutComePopup from './OutComePopup';
 import GearPopup from './GearPopup';
 import EthAddress from './EthAddress';
+import Footer from './Footer';
 import LockingCeremonyPopup from './LockingCeremonyPopup';
 
 export * from './NftItemPanel';
@@ -44,5 +45,6 @@ export {
   ResultPopup,
   OutComePopup,
   GearPopup,
+  Footer,
   LockingCeremonyPopup,
 };
