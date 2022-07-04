@@ -1,7 +1,6 @@
 const PROVIDER_TYPE = {
   AAVE: 'AAVE',
   COMPOUND: 'Compound',
-  DYDX: 'DYDX',
   IRONBANK: 'IronBank',
   FUSE3: 'FusePool3',
   FUSE6: 'FusePool6',
@@ -23,11 +22,6 @@ const PROVIDERS = {
     id: 'compound',
     name: 'ProviderCompound',
     title: 'Compound',
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'DyDx',
   },
   [PROVIDER_TYPE.IRONBANK]: {
     id: 'ironbank',
