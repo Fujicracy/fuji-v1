@@ -114,6 +114,7 @@ const GeneralItem = ({ type = CRATE_TYPE.COMMON, title, price, description, onBu
       color={theme.foreColor}
       mode={showInfo ? 'info' : 'general'}
       backgroundImage={!showInfo ? backgroundImage : ''}
+      justifyContent="space-between"
     >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />

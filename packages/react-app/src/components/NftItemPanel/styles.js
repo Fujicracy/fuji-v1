@@ -21,7 +21,7 @@ export const Container = styled.div`
 
   display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
 
@@ -65,7 +65,7 @@ export const LegendaryContainer = styled.div`
 
   display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
 

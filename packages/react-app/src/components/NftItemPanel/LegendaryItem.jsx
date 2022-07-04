@@ -131,6 +131,7 @@ const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
       backgroundColor={theme.backColor}
       mode={showInfo ? 'info' : undefined}
       backgroundImage={!showInfo && !isMobile ? legendaryBg : ''}
+      justifyContent="space-between"
     >
       {showInfo ? (
         <CancelButton onClick={() => setShowInfo(false)} />
