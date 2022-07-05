@@ -50,7 +50,7 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
   const fliquidatorName = config.networkName === 'fantom' ? 'FliquidatorFTM' : 'Fliquidator';
   const currency = config.networkName === 'fantom' ? 'fantom' : 'ethereum';
 
-  const index = await getFlashloanProvider(setup, vault);
+  const index = await getFlashloanProvider(setup);
   // only for Ethereum
   const gasPrice = await getGasPrice();
   const ethPrice = await getPriceOf(currency);

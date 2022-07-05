@@ -30,7 +30,7 @@ async function executeSwitchFTM(setup, vault, newProviderAddr) {
 async function executeSwitchETH(setup, vault, newProviderAddr) {
   const { contracts, signer } = setup;
 
-  const index = await getFlashloanProvider(setup, vault);
+  const index = await getFlashloanProvider(setup);
   let gasLimit = await contracts.Controller.connect(signer).estimateGas.doRefinancing(
     vault.address,
     newProviderAddr,

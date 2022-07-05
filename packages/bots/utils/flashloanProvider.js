@@ -1,5 +1,3 @@
-import { ASSETS } from '../consts/index.js';
-
 const providerIndexes = {
   AAVE: '0', // on fantom it's Geist
   DYDX: '1',
@@ -7,11 +5,8 @@ const providerIndexes = {
   BALANCER: '3',
 };
 
-export const getFlashloanProvider = async (setup, vault) => {
-  const { contracts, config } = setup;
-
-  const { borrowAsset } = await vault.vAssets();
-  const activeProvider = await vault.activeProvider();
+export const getFlashloanProvider = async setup => {
+  const { config } = setup;
 
   let index = providerIndexes.AAVE;
   if (config.networkName === 'ethereum') {
