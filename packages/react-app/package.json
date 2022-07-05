@@ -85,7 +85,7 @@
     "react-page-scroller": "^2.2.1",
     "react-responsive": "^9.0.0-beta.3",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "5",
     "react-spring": "^9.1.2",
     "rebass": "^4.0.7",
     "redstone-evm-connector": "2.1.7",
