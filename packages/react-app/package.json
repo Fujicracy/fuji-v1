@@ -26,10 +26,10 @@
     "extends": "react-app"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
+    "start:dev": "react-app-rewired start",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "start:dev": "react-scripts start",
-    "test": "react-scripts test",
     "lint": "eslint src/ --format table",
     "lint:fix": "yarn lint --fix",
     "format": "prettier --write ./src '!src/contracts/**.js'",
@@ -101,7 +101,10 @@
   "devDependencies": {
     "@testing-library/dom": "^6.12.2",
     "@types/react": "^16.9.19",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "chalk": "^4.1.0",
+    "crypto-browserify": "^3.12.0",
     "eslint": "^7.27.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -111,9 +114,16 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "https-browserify": "^1.0.0",
     "ipfs-http-client": "^45.0.0",
+    "os-browserify": "^0.3.0",
     "prettier": "^2.3.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
     "s3-folder-upload": "^2.3.1",
-    "surge": "^0.21.5"
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "surge": "^0.21.5",
+    "url": "^0.11.0"
   }
 }
