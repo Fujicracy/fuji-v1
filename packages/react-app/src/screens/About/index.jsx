@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { LandingHeader } from 'components';
+import { ExternalLink, LandingHeader } from 'components';
 import {
   linkedinIcon,
   teamBoyanPhoto,
@@ -219,24 +219,36 @@ function Infos() {
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.partner}>
-              <img
-                src={partnerDelphi}
-                className={classes.partnerImage}
-                alt="Partner - Delphi Digital"
-              />
+              <ExternalLink href="https://delphidigital.io/">
+                <img
+                  src={partnerDelphi}
+                  className={classes.partnerImage}
+                  alt="Partner - Delphi Digital"
+                />
+              </ExternalLink>
             </Grid>
             <Grid item md={6} xs={12} className={classes.partner}>
-              <img
-                src={partnerCapital}
-                className={classes.partnerImage}
-                alt="Partner - Origin Capital"
-              />
+              <ExternalLink href="https://metacartel.xyz/">
+                <img
+                  src={partnerCapital}
+                  className={classes.partnerImage}
+                  alt="Partner - Origin Capital"
+                />
+              </ExternalLink>
             </Grid>
             <Grid item md={6} xs={12} className={classes.partner}>
-              <img src={partnerMaven} className={classes.partnerImage} alt="Partner - Maven 11" />
+              <ExternalLink href="https://maven11.com/">
+                <img src={partnerMaven} className={classes.partnerImage} alt="Partner - Maven 11" />
+              </ExternalLink>
             </Grid>
             <Grid item md={6} xs={12} className={classes.partner}>
-              <img src={partnerSpartan} className={classes.partnerImage} alt="Partner - Spartan" />
+              <ExternalLink href="https://www.spartangroup.io/">
+                <img
+                  src={partnerSpartan}
+                  className={classes.partnerImage}
+                  alt="Partner - Spartan"
+                />
+              </ExternalLink>
             </Grid>
           </Grid>
         </Grid>

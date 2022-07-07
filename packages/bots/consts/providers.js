@@ -1,91 +1,15 @@
-const PROVIDER_TYPE = {
-  AAVE: 'AAVE',
-  COMPOUND: 'Compound',
-  DYDX: 'DYDX',
-  IRONBANK: 'IronBank',
-  FUSE3: 'FusePool3',
-  FUSE6: 'FusePool6',
-  FUSE7: 'FusePool7',
-  FUSE8: 'FusePool8',
-  FUSE18: 'FusePool18',
-  SCREAM: 'Scream',
-  CREAM: 'Cream',
-  GEIST: 'Geist',
-  HUNDRED: 'Hundred',
-  AAVE_V3: 'AaveV3',
-};
+import * as ethereumCore from './providers-ethereum-core.js';
+import * as ethereumFuse from './providers-ethereum-fuse.js';
+import * as fantomCore from './providers-fantom-core.js';
 
 const PROVIDERS = {
-  [PROVIDER_TYPE.AAVE]: {
-    id: 'aave',
-    name: 'ProviderAave',
-    title: 'Aave',
+  ethereum: {
+    core: ethereumCore,
+    fuse: ethereumFuse,
   },
-  [PROVIDER_TYPE.COMPOUND]: {
-    id: 'compound',
-    name: 'ProviderCompound',
-    title: 'Compound',
-  },
-  [PROVIDER_TYPE.DYDX]: {
-    id: 'dydx',
-    name: 'ProviderDYDX',
-    title: 'DyDx',
-  },
-  [PROVIDER_TYPE.IRONBANK]: {
-    id: 'ironbank',
-    name: 'ProviderIronBank',
-    title: 'IronBank',
-  },
-  [PROVIDER_TYPE.FUSE3]: {
-    id: 'fuse3',
-    name: 'ProviderFuse3',
-    title: 'RariDAO Pool',
-  },
-  [PROVIDER_TYPE.FUSE6]: {
-    id: 'fuse6',
-    name: 'ProviderFuse6',
-    title: "Tetranode's",
-  },
-  [PROVIDER_TYPE.FUSE7]: {
-    id: 'fuse7',
-    name: 'ProviderFuse7',
-    title: 'Pool 7',
-  },
-  [PROVIDER_TYPE.FUSE8]: {
-    id: 'fuse8',
-    name: 'ProviderFuse8',
-    title: 'Fei DAO Pool',
-  },
-  [PROVIDER_TYPE.FUSE18]: {
-    id: 'fuse18',
-    name: 'ProviderFuse18',
-    title: 'Olympus Pool',
-  },
-  [PROVIDER_TYPE.SCREAM]: {
-    id: 'scream',
-    name: 'ProviderScream',
-    title: 'Scream',
-  },
-  [PROVIDER_TYPE.CREAM]: {
-    id: 'cream',
-    name: 'ProviderCream',
-    title: 'Iron Bank',
-  },
-  [PROVIDER_TYPE.GEIST]: {
-    id: 'geist',
-    name: 'ProviderGeist',
-    title: 'Geist',
-  },
-  [PROVIDER_TYPE.HUNDRED]: {
-    id: 'hundred',
-    name: 'ProviderHundred',
-    title: 'Hundred',
-  },
-  [PROVIDER_TYPE.AAVE_V3]: {
-    id: 'aave-v3',
-    name: 'ProviderAaveV3FTM',
-    title: 'Aave V3',
+  fantom: {
+    core: fantomCore,
   },
 };
 
-export { PROVIDER_TYPE, PROVIDERS };
+export { PROVIDERS };

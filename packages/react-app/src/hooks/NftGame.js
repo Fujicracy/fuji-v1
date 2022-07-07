@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatUnits } from '@ethersproject/units';
+import { BigNumber } from 'ethers';
 import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS, NFT_ITEMS } from 'consts';
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
@@ -192,4 +193,43 @@ export function useProfileInfo() {
   }, [points, climbingSpeedPerWeek, boost]);
 
   return { points, claimedPoints, climbingSpeedPerDay, climbingSpeedPerWeek, boost, isLoading };
+}
+
+export function useSouvenirNFT() {
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const { lockedNFTID } = useContractReader(contracts, 'NFTGame', 'userdata', [address]);
+  const cardsAmount = useContractReader(contracts, 'NFTGame', 'nftCardsAmount');
+
+  // Need to convert to string cause react useffect deps is comparing object pointers, and objects change at each poll...
+  const lockedNFTIDString = lockedNFTID?.toString();
+  const cardsAmountString = cardsAmount?.toString();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [NFTImage, setNFTImage] = useState();
+
+  useEffect(() => {
+    async function fetchNFT() {
+      console.count('fetchNFT');
+      try {
+        const base64json = await contracts.NFTGame.uri(lockedNFTIDString);
+        const json = JSON.parse(atob(base64json.split(',')[1]));
+        setNFTImage(json.image);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (contracts && address && lockedNFTIDString && cardsAmountString) {
+      if (BigNumber.from(lockedNFTIDString).lte(BigNumber.from(3).add(cardsAmountString))) {
+        console.debug('Invalid nft id (id is < 8). User pbbly havent lock');
+        setIsLoading(false);
+        return;
+      }
+      fetchNFT();
+    }
+  }, [contracts, address, lockedNFTIDString, cardsAmountString]);
+
+  return { isLoading, NFTImage };
 }

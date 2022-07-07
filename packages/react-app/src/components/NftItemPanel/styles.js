@@ -16,18 +16,23 @@ export const Container = styled.div`
 
   box-sizing: border-box;
   border-radius: 8px;
+  border: 1px solid ${props => props.backgroundColor || 'white'};
   background-color: ${props => props.backgroundColor || 'white'};
 
   display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
+
+  background-image: url('${props => props.backgroundImage}');
+  background-size: contain;
+  background-position: center;
 
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  :-webkit-scrollbar {
+  ::-webkit-scrollbar {
     display: none;
   }
 
@@ -52,17 +57,22 @@ export const LegendaryContainer = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background-color: ${props => props.backgroundColor || 'white'};
+  border: 1px solid ${props => props.backgroundColor || 'white'};
+
+  background-image: url('${props => props.backgroundImage}');
+  background-size: contain;
+  background-position: center;
 
   display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
 
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  :-webkit-scrollbar {
+  ::-webkit-scrollbar {
     display: none;
   }
 
@@ -125,6 +135,7 @@ export const BuyButton = styled.div`
   background: ${({ theme }) => theme.buttonColor || 'rgba(255, 255, 255, 0.16)'};
   color: ${({ theme }) => theme.foreColor};
   cursor: pointer;
+  border: 1px solid ${props => props.theme.backColor || props.activeColor};
 
   &:hover {
     border: ${props => !props.disabled && `1px solid ${props.theme.foreColor}`};
