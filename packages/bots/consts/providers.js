@@ -12,6 +12,7 @@ const PROVIDER_TYPE = {
   CREAM: 'Cream',
   GEIST: 'Geist',
   HUNDRED: 'Hundred',
+  AAVE_V3: 'AaveV3',
 };
 
 const PROVIDERS = {
@@ -79,6 +80,11 @@ const PROVIDERS = {
     id: 'hundred',
     name: 'ProviderHundred',
     title: 'Hundred',
+  },
+  [PROVIDER_TYPE.AAVE_V3]: {
+    id: 'aave-v3',
+    name: 'ProviderAaveV3FTM',
+    title: 'Aave V3',
   },
 };
 
