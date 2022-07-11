@@ -1,5 +1,5 @@
 import { ASSETS, ASSET_NAME } from './assets.js';
-import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
+import { PROVIDER_TYPE, PROVIDERS } from './providers-fantom-core.js';
 
 const assets = ASSETS.fantom;
 const assetName = ASSET_NAME.fantom;
@@ -11,14 +11,14 @@ const VAULTS = {
     name: 'VaultFTMDAI',
     deployBlockNumber: 19246494,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
+      PROVIDERS[PROVIDER_TYPE.AAVE_V3],
     ],
   },
   VaultFTMUSDC: {
@@ -27,14 +27,14 @@ const VAULTS = {
     name: 'VaultFTMUSDC',
     deployBlockNumber: 19246736,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
+      PROVIDERS[PROVIDER_TYPE.AAVE_V3],
     ],
   },
   VaultWBTCDAI: {
@@ -43,15 +43,15 @@ const VAULTS = {
     name: 'VaultWBTCDAI',
     deployBlockNumber: 19428442,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+      PROVIDERS[PROVIDER_TYPE.AAVE_V3],
+    ],
   },
   VaultWETHUSDC: {
     collateralAsset: assets[assetName.ETH],
@@ -59,15 +59,15 @@ const VAULTS = {
     name: 'VaultWETHUSDC',
     deployBlockNumber: 23503564,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+      PROVIDERS[PROVIDER_TYPE.AAVE_V3],
+    ],
   },
   VaultWETHDAI: {
     collateralAsset: assets[assetName.ETH],
@@ -75,15 +75,15 @@ const VAULTS = {
     name: 'VaultWETHDAI',
     deployBlockNumber: 23791628,
     refinanceConfig: {
-      thresholdAPR: 3,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
     providers: [
       PROVIDERS[PROVIDER_TYPE.GEIST],
-      PROVIDERS[PROVIDER_TYPE.SCREAM],
       PROVIDERS[PROVIDER_TYPE.CREAM],
       PROVIDERS[PROVIDER_TYPE.HUNDRED],
-    ]
+      PROVIDERS[PROVIDER_TYPE.AAVE_V3],
+    ],
   },
 };
 

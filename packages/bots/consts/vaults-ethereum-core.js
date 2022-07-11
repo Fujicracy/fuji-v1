@@ -1,5 +1,5 @@
 import { ASSETS, ASSET_NAME } from './assets.js';
-import { PROVIDER_TYPE, PROVIDERS } from './providers.js';
+import { PROVIDER_TYPE, PROVIDERS } from './providers-ethereum-core.js';
 
 const assets = ASSETS.ethereum;
 const assetName = ASSET_NAME.ethereum;
