@@ -16,6 +16,7 @@ import Inventory from './Inventory';
 import Leaderboard from './Leaderboard';
 import Store from './Store';
 import LockingCeremony from './LockingCeremony';
+import BondFactory from './BondFactory';
 
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
@@ -50,7 +51,6 @@ function NftGame() {
     window?.widgetbotCrate?.show();
     return () => window?.widgetbotCrate?.hide();
   });
-  console.count('NFT game');
 
   return (
     <>
@@ -101,7 +101,9 @@ function NftGame() {
               </StyledNavLink>
             </li>
             <li>
-              <StyledNavLink to={`${path}/bond-factory`} disabled onClick={e => e.preventDefault()}>
+              {/* TODO: Tooltip */}
+              <StyledNavLink to={`${path}/bond-factory`}>
+                {/* disabled onClick={e => e.preventDefault()} */}
                 <Flex alignItems="center" justifyContent="center">
                   Bond factory
                   <LockOutlinedIcon fontSize="small" />
@@ -125,6 +127,7 @@ function NftGame() {
               <Route path={`${path}/inventory`} component={Inventory} />
               <Route path={`${path}/leaderboard`} component={Leaderboard} />
               <Route path={`${path}/locking-ceremony`} component={LockingCeremony} />
+              <Route path={`${path}/bond-factory`} component={BondFactory} />
             </Switch>
           </Flex>
         </Flex>
