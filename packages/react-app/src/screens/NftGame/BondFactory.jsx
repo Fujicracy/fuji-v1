@@ -30,7 +30,7 @@ function BondFactory() {
       <Description
         mt={4}
         title="What is a token bond ?"
-        description="A bond is redeemable against fuji tokens. The longer the vesting duration of the bond, the higher the amont of tokens redeemable."
+        description="A bond will be redeemable against fuji tokens. The longer the vesting duration of the bond, the higher the amont of tokens redeemable."
       />
 
       <Flex mt={4} flexWrap="wrap">
