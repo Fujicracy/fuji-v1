@@ -24,6 +24,7 @@ function BondBalance({ bg = 'white', color = 'black', width, height = '180px', m
           <Text color={color} fontSize="4rem" lineHeight="4rem" fontWeight="bold">
             12
           </Text>
+          {/* TODO: Change button to link */}
           <BuyButton
             mt={isMobile ? '12px' : '16px'}
             theme={{ foreColor: color }}
