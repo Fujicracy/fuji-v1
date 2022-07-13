@@ -11,7 +11,7 @@ const CountButton = styled.button`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
+  background: ${props => props.backgroundColor || 'rgba(0,0,0,0.1)'};
   color: ${({ foreColor }) => foreColor};
 
   cursor: pointer;
