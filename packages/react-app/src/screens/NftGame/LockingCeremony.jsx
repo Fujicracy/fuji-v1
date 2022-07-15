@@ -10,6 +10,7 @@ import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_LINK } from 'consts
 import { useContractLoader, useContractReader, useGearsBalance, useSouvenirNFT } from 'hooks';
 import GearSet from 'components/GearSet';
 import { HorizontalLine } from './styles';
+import { NavLink } from 'react-router-dom';
 
 const carouselResponsive = {
   desktop: {
@@ -49,6 +50,15 @@ const ConsumateButton = styled(Button)`
     cursor: not-allowed;
     opacity: 0.5;
   }
+`;
+
+const ButtonLink = styled(NavLink)`
+  color: white;
+  background-color: #fe3477;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 16px;
 `;
 
 const CountDownLabel = ({ label, value }) => (
@@ -138,7 +148,12 @@ function LockingCeremony() {
   if (NFTImage) {
     return (
       <BlackBoxContainer width="860px" hasBlackContainer={!isMobile} borderRadius="8px" mb="88px">
-        <Box backgroundColor="#F7EDE8" borderRadius="8" p="3rem 4rem" style={{ borderRadius: "8px 8px 0 0"}}>
+        <Box
+          backgroundColor="#F7EDE8"
+          borderRadius="8"
+          p="3rem 4rem"
+          style={{ borderRadius: '8px 8px 0 0' }}
+        >
           <Text fontSize="1.5rem" lineHeight="1.7rem" textAlign="justify">
             "There are many paths leading to the top of Mount Fuji, but there is only one summit -
             love."
@@ -166,10 +181,7 @@ function LockingCeremony() {
               3. At the end of the vesting period, you will receive the respective Fuji tokens.
             </Text>
 
-            {/* TODO */}
-            <Button backgroundColor="#FE3477" mt={3}>
-              Go to bond factory
-            </Button>
+            <ButtonLink to="bond-factory">Go to bond factory</ButtonLink>
           </Box>
         </Flex>
       </BlackBoxContainer>
@@ -201,8 +213,7 @@ function LockingCeremony() {
 
       <Text color="white" fontSize="1rem" mt="4">
         You can still trade Climbing Gears on the
-        <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}> marketplace</ExternalLink>
-        .
+        <ExternalLink href={NFT_GAME_MARKETPLACE_LINK}> marketplace</ExternalLink>.
       </Text>
 
       <HorizontalLine margin="16px 0px 24px" />
