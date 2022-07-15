@@ -48,7 +48,7 @@ const CHAINS = {
     title: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
     icon: maticIcon.toString(),
     isCustomNetwork: true,
-    isDeployed: false,
+    isDeployed: true,
     dashboardUrl: 'https://polygon.fujidao.org/#/dashboard',
     rpcUrls: [
       'https://polygon-rpc.com/',
@@ -92,6 +92,7 @@ const CHAIN = CHAINS[CHAIN_NAME];
 const EXPLORER_INFOS = {
   [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
   [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
+  [CHAIN_IDS.POLYGON]: { url: 'https://polygonscan.com/tx/', name: 'Polygonscan' },
   [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
 };
 

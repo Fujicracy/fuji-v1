@@ -7,6 +7,18 @@ Prerequisite: make sure that the address and the ABI of the new provider is avai
 
 2. Add the newly created provider to the list of `providers` for affected vaults in `packages/react-app/src/consts/vaults-[NETWORK_NAME].js`
 
+## Add a new chain
+
+Prerequisite: make sure contracts are deployed and functional. The addresses should be available in: `packages/react-app/src/contracts/[NETWORK_ID]-core.deployment.json`.
+
+1. In `packages\react-app\src\consts` add/or modify the following files:
+  - Add a new file called: `assets-$chain`, were `$chain` is replaced by the chain name being added. Fill all the required information for that chain, and use as a reference file: `assets-ethereum.js`.
+  - Modify the `assets.js` file to include the new assets in the corresponding objects: `DEFAULT_BALANCE_ASSET`, `ASSETS`, `ASSET_NAME`.
+  - Modify the `chains.js` file to include the new chain in the corresponding objects: `CHAIN_IDS`, `CHAIN_NAMES`, `CHAINS`, and `EXPLORER_INFOS`.
+  - Add a new file called: `vaults-$chain` , were `$chain` is replaced by the chain name being added. Fill all the required information for that chain, and use as a reference file: `vaults-core.js`.
+  - Modify the `vaults.js` file to include vault information in the corresponding objects: `BORROW_IDS`, `COLLATERAL_IDS`, `VAULTS_NAMES`, and `VAULTS`
+
+
 ## Available Scripts
 
 In the project directory, you can run:
