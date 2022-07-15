@@ -34,6 +34,7 @@ export const ASSETS = {
     decimals: 18,
     address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
     oracle: '0xF9680D99D6C9589e2a93a78A04A279e509205945',
+    isERC20: true,
   },
   [ASSET_NAME.BTC]: {
     id: ASSET_NAME.BTC.toLowerCase(),
@@ -42,6 +43,7 @@ export const ASSETS = {
     decimals: 8,
     address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
     oracle: '0xDE31F8bFBD8c84b5360CFACCa3539B938dd78ae6',
+    isERC20: true,
   },
   [ASSET_NAME.MATIC]: {
     id: ASSET_NAME.MATIC.toLowerCase(),
