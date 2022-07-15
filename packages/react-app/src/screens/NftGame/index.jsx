@@ -46,7 +46,7 @@ function NftGame() {
   const crates = useCratesBalance();
   const gears = useGearsBalance();
   const { isLoading, NFTImage } = useSouvenirNFT();
-  const bondingAvailable = !isLoading && NFTImage;
+  const isBondingAvailable = !isLoading && NFTImage;
 
   useEffect(() => {
     // stupid trick but putting this in a context make the whole app crash.
@@ -104,15 +104,21 @@ function NftGame() {
               </StyledNavLink>
             </li>
             <li>
-              <Tooltip title="Bond Factory will be available only after locking in your points.">
+              <Tooltip
+                title={
+                  isBondingAvailable
+                    ? ''
+                    : 'Bond Factory will be available only after locking in your points.'
+                }
+              >
                 <StyledNavLink
                   to={`${path}/bond-factory`}
-                  disabled={!bondingAvailable}
-                  onClick={e => !bondingAvailable && e.preventDefault()}
+                  disabled={!isBondingAvailable}
+                  onClick={e => !isBondingAvailable && e.preventDefault()}
                 >
                   <Flex alignItems="center" justifyContent="center">
                     Bond factory
-                    {!bondingAvailable && <LockOutlinedIcon fontSize="small" />}
+                    {!isBondingAvailable && <LockOutlinedIcon fontSize="small" />}
                   </Flex>
                 </StyledNavLink>
               </Tooltip>
@@ -134,7 +140,9 @@ function NftGame() {
               <Route path={`${path}/inventory`} component={Inventory} />
               <Route path={`${path}/leaderboard`} component={Leaderboard} />
               <Route path={`${path}/locking-ceremony`} component={LockingCeremony} />
-              {bondingAvailable && <Route path={`${path}/bond-factory`} component={BondFactory} />}
+              {isBondingAvailable && (
+                <Route path={`${path}/bond-factory`} component={BondFactory} />
+              )}
 
               {/* Fallback */}
               <Route path="*">

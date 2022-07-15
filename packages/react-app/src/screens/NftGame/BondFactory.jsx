@@ -1,14 +1,30 @@
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Flex } from 'rebass';
-import { useProfileInfo } from 'hooks';
+import { useAuth, useContractLoader, useProfileInfo } from 'hooks';
 
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BlackBoxContainer, SectionTitle, Description, Bond, BondBalance } from 'components';
+import { Transactor } from 'helpers';
 
 function BondFactory() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const { points, isLoading } = useProfileInfo();
+
+  const { provider } = useAuth();
+  const contracts = useContractLoader();
+  const tx = Transactor(provider);
+
+  // To buy bonds, nftinteractions.mintBonds(uint256 _slotType, uint256 amount)
+  const buy = async (days, amount) => {
+    // TODO: check points and nb of bonds
+    try {
+      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount));
+    } catch (error) {
+      // TODO: Display err
+      console.error(error);
+    }
+  };
 
   return (
     <BlackBoxContainer
@@ -34,11 +50,11 @@ function BondFactory() {
       />
 
       <Flex mt={4} flexWrap="wrap">
-        <Bond months="3" width={[1, 1 / 2]} />
+        <Bond months="3" width={[1, 1 / 2]} onBuy={buy} />
         <BondBalance width={[1, 1 / 2]} />
-        <Bond bg="#735CDD" color="white" months="6" width={[1, 1 / 2]} />
+        <Bond bg="#735CDD" color="white" months="6" width={[1, 1 / 2]} onBuy={buy} />
         <BondBalance bg="#735CDD" color="white" months="6" width={[1, 1 / 2]} />
-        <Bond bg="#A5243D" color="white" months="12" width={[1, 1 / 2]} />
+        <Bond bg="#A5243D" color="white" months="12" width={[1, 1 / 2]} onBuy={buy} />
         <BondBalance bg="#A5243D" color="white" months="12" width={[1, 1 / 2]} />
       </Flex>
     </BlackBoxContainer>

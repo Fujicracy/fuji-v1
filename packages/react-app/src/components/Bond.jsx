@@ -7,10 +7,20 @@ import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { CountButton } from 'components/UI';
 import { AmountInput, BuyButton } from 'components/NftItemPanel/styles';
 
-function Bond({ bg = 'white', color = 'black', width, months }) {
+function Bond({ bg = 'white', color = 'black', width, months, onBuy }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+
+  const buyBond = async () => {
+    setIsBuying(true);
+    try {
+      // We consider 1month = 30days
+      await onBuy(months * 30, amount);
+    } finally {
+      setIsBuying(false);
+    }
+  };
 
   return (
     <Box width={width}>
@@ -49,11 +59,7 @@ function Bond({ bg = 'white', color = 'black', width, months }) {
               +
             </CountButton>
           </Flex>
-          <BuyButton
-            mt={isMobile ? '12px' : '16px'}
-            theme={{ foreColor: color }}
-            onClick={() => alert('not implemented')}
-          >
+          <BuyButton mt={isMobile ? '12px' : '16px'} theme={{ foreColor: color }} onClick={buyBond}>
             {isBuying && (
               <CircularProgress
                 style={{

@@ -133,7 +133,6 @@ function LockingCeremony() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
   const [popupIsOpen, setPopupIsOpen] = useState(false);
 
-  /* eslint-disable */
   const { isLoading, NFTImage } = useSouvenirNFT();
   const ready = endTimestamp && nftGears && !isLoading;
 
