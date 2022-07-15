@@ -78,7 +78,7 @@ const fixture = async ([wallet]) => {
     tokens[`${ASSETS[asset].name}`] = await getContractAt("IERC20", ASSETS[asset].address);
   }
   const swapper = await getContractAt("IUniswapV2Router02", ZIPSWAP_ROUTER_ADDR);
-  const arbitrumWrapper = await getContractAt(
+  const optimismUnwrapper = await getContractAt(
     "contracts/interfaces/IWETH.sol:IWETH",
     ASSETS.WETH.address
   );
@@ -90,8 +90,8 @@ const fixture = async ([wallet]) => {
   const Fliquidator = await getContractFactory("F2Fliquidator");
   const fliquidator = await Fliquidator.deploy([]);
 
-  const Flasher = await getContractFactory("FlasherArbitrum");
-  const flasher = await Flasher.deploy([]);
+  //const Flasher = await getContractFactory("FlasherOptimism");
+  //const flasher = await Flasher.deploy([]);
 
   const Controller = await getContractFactory("Controller");
   const controller = await Controller.deploy([]);
@@ -106,14 +106,14 @@ const fixture = async ([wallet]) => {
   );
 
   // Step 2: Providers
-  const ProviderAaveV3Arbitrum = await getContractFactory("ProviderAaveV3Arbitrum");
-  const aavev3 = await ProviderAaveV3Arbitrum.deploy([]);
+  const ProviderAaveV3Optimism = await getContractFactory("ProviderAaveV3Optimism");
+  const aavev3 = await ProviderAaveV3Optimism.deploy([]);
 
   // Log if debug is set true
   if (DEBUG) {
     console.log("fujiadmin", fujiadmin.address);
     console.log("fliquidator", fliquidator.address);
-    console.log("flasher", flasher.address);
+    //console.log("flasher", flasher.address);
     console.log("controller", controller.address);
     console.log("f1155", f1155.address);
     console.log("oracle", oracle.address);
@@ -145,13 +145,13 @@ const fixture = async ([wallet]) => {
   }
 
   // Step 4: Setup
-  await fujiadmin.setFlasher(flasher.address);
+  //await fujiadmin.setFlasher(flasher.address);
   await fujiadmin.setFliquidator(fliquidator.address);
   await fujiadmin.setTreasury(TREASURY_ADDR);
   await fujiadmin.setController(controller.address);
   await fliquidator.setFujiAdmin(fujiadmin.address);
   await fliquidator.setSwapper(ZIPSWAP_ROUTER_ADDR);
-  await flasher.setFujiAdmin(fujiadmin.address);
+  //await flasher.setFujiAdmin(fujiadmin.address);
   await controller.setFujiAdmin(fujiadmin.address);
   await f1155.setPermit(fliquidator.address, true);
 
@@ -162,11 +162,11 @@ const fixture = async ([wallet]) => {
     oracle,
     fujiadmin,
     fliquidator,
-    flasher,
+    //flasher,
     controller,
     f1155,
     swapper,
-    arbitrumWrapper,
+    optimismUnwrapper,
   };
 };
 
