@@ -5,9 +5,8 @@ import { space } from 'styled-system';
 export const Container = styled.fieldset`
   border: 0.15rem solid ${themeGet('colors.text64')};
   border-radius: 0.5rem;
-  margin: -0.5rem 0rem;
   background-color: ${themeGet('colors.block56')};
-  padding: 20px 30px 16px;
+  padding: 15px 30px 16px;
 
   color: ${themeGet('colors.text100')};
   ${space}
@@ -24,7 +23,6 @@ export const TitleContainer = styled.legend`
 `;
 
 export const ContentContainer = styled.p`
-  margin-top: 0.375px;
-  font-size: 0.75rem;
+  font-size: 14px;
   font-weight: 400;
 `;

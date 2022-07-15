@@ -35,7 +35,7 @@ const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
   console.log('Estimated bonus (USD): ', chalk.blue(bonus));
   console.log('Estimated cost (USD): ', chalk.red(cost));
 
-  return cost * 1.5 < bonus;
+  return cost < bonus;
 };
 
 const liquidateAll = async (setup, toLiq, vault, decimals) => {
@@ -50,7 +50,7 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
   const fliquidatorName = config.networkName === 'fantom' ? 'FliquidatorFTM' : 'Fliquidator';
   const currency = config.networkName === 'fantom' ? 'fantom' : 'ethereum';
 
-  const index = await getFlashloanProvider(setup, vault);
+  const index = await getFlashloanProvider(setup);
   // only for Ethereum
   const gasPrice = await getGasPrice();
   const ethPrice = await getPriceOf(currency);
@@ -96,7 +96,7 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
   console.log('---> find borrowers');
 
   let borrowers;
-  if (process.env.REDIS) {
+  if (process.env.REDIS === 'true') {
     console.log('---> using redis');
     const client = await connectRedis();
     const vaultAddr = vault.address.toLowerCase();

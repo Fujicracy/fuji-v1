@@ -36,6 +36,8 @@ export const StyledNavLink = styled(NavLink)`
   line-height: 21px;
   color: white;
 
+  ${props => props.disabled && `cursor: default;`}
+
   position: relative;
 
   &.active {
@@ -48,6 +50,11 @@ export const StyledNavLink = styled(NavLink)`
   > span {
     font-size: 14px;
     color: #fe3477;
+  }
+
+  &[disabled] {
+    color: grey;
+    cursor: not-allowed;
   }
 
   ${fujiMedia.greaterThan('small')`
@@ -130,8 +137,6 @@ export const TiledPanel = styled.div`
 
 export const GearSetContainer = styled.div`
   position: relative;
-  width: 172px;
-  height: 172px;
 `;
 
 export const GearSetItem = styled.div`
@@ -139,9 +144,8 @@ export const GearSetItem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
-  width: 172px;
-  height: 172px;
   background: rgb(18, 18, 18);
 
   border: 2px solid rgb(58, 58, 58);
@@ -151,12 +155,25 @@ export const GearSetItem = styled.div`
     transparent 20px,
     purple 0
   );
+
+  transition: 0.3s all;
+  ${({ hover }) =>
+    hover &&
+    `&:hover {
+      border: 2px solid #fa266c;
+      cursor: pointer;
+      & > div {
+        // rewrite for GearSetBadge
+        background-color: #fa266c;
+      }
+    }`}
 `;
 
 export const GearSetBadge = styled.div`
   width: 43px;
   height: 43px;
 
+  transition: all 0.3s;
   background-color: rgb(58, 58, 58);
   border-radius: 50%;
   position: absolute;
@@ -166,17 +183,17 @@ export const GearSetBadge = styled.div`
 `;
 
 export const GearSetNumber = styled.div`
-  width: 43px;
-  height: 43px;
+  width: 40px;
+  height: 40px;
 
   display: flex;
-  align-items: cetner;
+  align-items: flex-start;
   justify-content: center;
 
   color: rgba(240, 1, 79, 1);
   position: absolute;
-  right: -8px;
-  top: -8px;
+  right: -6px;
+  top: 4px;
   z-index: 2;
 `;
 

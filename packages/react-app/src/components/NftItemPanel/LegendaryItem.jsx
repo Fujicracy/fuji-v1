@@ -3,54 +3,50 @@ import { Flex } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { CircularProgress } from '@material-ui/core';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, INVENTORY_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, CRATE_TYPE, NFT_GAME_MODAL_THEMES } from 'consts';
 import { SectionTitle } from '../Blocks';
-import { Label, CountButton } from '../UI';
-import { ItemPanel, BuyButton, LegendaryItemsContainter, LegendaryContainer } from './styles';
+import { CountButton } from '../UI';
+import {
+  BuyButton,
+  LegendaryItemsContainer,
+  LegendaryContainer,
+  InfoButton,
+  CancelButton,
+  AmountInput,
+} from './styles';
+import ItemInfo from './ItemInfo';
+import legendaryBg from '../../assets/images/images/nft-game/legendary_crate_glow-min.jpg';
 
-const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
+const LegendaryItem = ({ price, description, onBuy, isLoading }) => {
   const [amount, setAmount] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
 
   const isBuyButtonDisabled = isBuying || amount === 0 || isLoading;
 
-  const theme = NFT_GAME_MODAL_THEMES[INVENTORY_TYPE.LEGENDARY];
+  const theme = NFT_GAME_MODAL_THEMES[CRATE_TYPE.LEGENDARY];
 
   const handleClickBuy = async () => {
     if (isBuying) return;
 
     try {
       setIsBuying(true);
-      const res = await onBuy(INVENTORY_TYPE.LEGENDARY, amount);
+      const res = await onBuy(CRATE_TYPE.LEGENDARY, amount);
       if (res) setAmount(0);
     } catch (error) {
       console.error('minting inventory error:', { error });
     }
     setIsBuying(false);
   };
-  return (
-    <LegendaryContainer color={theme.foreColor} backgroundColor={theme.backColor}>
-      <LegendaryItemsContainter>
-        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
-          Legendary
-        </SectionTitle>
-        <SectionTitle
-          color={theme.foreColor}
-          fontSize="16px"
-          mt={2}
-          spanFontSize="10px"
-          spanColor={theme.foreColor}
-          lineHeight="12px"
-          alignItems="baseline"
-        >
-          {points.toLocaleString()} <span>{description}</span>
-        </SectionTitle>
-      </LegendaryItemsContainter>
 
-      <ItemPanel mode={INVENTORY_TYPE.LEGENDARY} src={theme.idleImage} />
-      <LegendaryItemsContainter
+  const body = showInfo ? (
+    <ItemInfo type={CRATE_TYPE.LEGENDARY} />
+  ) : (
+    <div className="animate__animated animate__fast animate__flipInY">
+      {/* <ItemPanel mode={CRATE_TYPE.LEGENDARY} src={theme.idleImage} /> */}
+      <LegendaryItemsContainer
         position="right"
         margin={isMobile ? '0px 0px 0px 16px' : '16px 0px 0px'}
       >
@@ -65,9 +61,13 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
           >
             -
           </CountButton>
-          <Label color={theme.foreColor} ml={1} mr={1} width={20}>
-            {amount}
-          </Label>
+          <AmountInput
+            value={amount}
+            theme={theme}
+            type="number"
+            onChange={e => setAmount(parseInt(e.target.value, 10))}
+            disabled={isBuying || isLoading}
+          />
           <CountButton
             foreColor={theme.foreColor}
             activeColor={theme.backColor}
@@ -121,7 +121,41 @@ const LegendaryItem = ({ points, description, onBuy, isLoading }) => {
             Buy
           </BuyButton>
         )}
-      </LegendaryItemsContainter>
+      </LegendaryItemsContainer>
+    </div>
+  );
+
+  return (
+    <LegendaryContainer
+      color={theme.foreColor}
+      backgroundColor={theme.backColor}
+      mode={showInfo ? 'info' : undefined}
+      backgroundImage={!showInfo && !isMobile ? legendaryBg : ''}
+      justifyContent="space-between"
+    >
+      {showInfo ? (
+        <CancelButton onClick={() => setShowInfo(false)} />
+      ) : (
+        <InfoButton onClick={() => !isBuying && setShowInfo(true)} />
+      )}
+      <LegendaryItemsContainer>
+        <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+          Legendary
+        </SectionTitle>
+        <SectionTitle
+          color={theme.foreColor}
+          fontSize="16px"
+          mt={2}
+          spanFontSize="10px"
+          spanColor={theme.foreColor}
+          lineHeight="12px"
+          alignItems="baseline"
+        >
+          {price.toLocaleString()} <span>{description}</span>
+        </SectionTitle>
+      </LegendaryItemsContainer>
+
+      {body}
     </LegendaryContainer>
   );
 };

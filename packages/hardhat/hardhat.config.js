@@ -8,6 +8,7 @@ require("@nomiclabs/hardhat-etherscan");
 require("@tenderly/hardhat-tenderly");
 require("hardhat-contract-sizer");
 require("hardhat-gas-reporter");
+require("@openzeppelin/hardhat-defender");
 require("@openzeppelin/hardhat-upgrades");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
@@ -25,7 +26,9 @@ const forkUrl =
     ? "https://rpc.ftm.tools/"
     : network === "bsc"
       ? "https://bsc-dataseed.binance.org/"
-      : mainnetUrl;
+      : network === "polygon"
+        ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
+        : mainnetUrl
 
 //
 // Select the network you want to deploy to here:
@@ -110,18 +113,18 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: true,
-            runs: 700,
+            runs: 500,
           },
         },
       }
     ],
     overrides: {
       "contracts/fantom/nft-bonds/NFTInteractions.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
@@ -129,7 +132,7 @@ module.exports = {
         },
       },
       "contracts/fantom/nft-bonds/FujiPriceAware.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
@@ -137,7 +140,7 @@ module.exports = {
         },
       },
       "contracts/fantom/nft-bonds/mocks/MockRandomTests.sol": {
-        version: "0.8.2",
+        version: "0.8.4",
         settings: {
           optimizer: {
             enabled: false
@@ -149,6 +152,10 @@ module.exports = {
   mocha: {
     timeout: 200000,
   },
+  defender: {
+    apiKey: process.env.OZ_DEFENDER_API_KEY,
+    apiSecret: process.env.OZ_DEFENDER_API_SECRET,
+  }
 };
 
 const DEBUG = false;

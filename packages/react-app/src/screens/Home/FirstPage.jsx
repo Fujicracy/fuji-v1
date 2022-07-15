@@ -47,7 +47,7 @@ function FirstPage({ onClickAnimation }) {
   };
 
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100%">
+    <Flex flexDirection="column" justifyContent="center" alignItems="center" height="100vh">
       <HomeAnimatedContainer style={props}>
         <Image
           src={isMobile ? fujiLandingMobile : isTablet ? fujiLandingTablet : fujiLanding1}

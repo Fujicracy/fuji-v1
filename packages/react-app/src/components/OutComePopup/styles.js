@@ -48,26 +48,14 @@ export const ItemContainer = styled.div`
   height: 180px;
   border-radius: 12px;
   border: 1px solid black;
+  overflow: hidden;
 
   margin: auto;
 
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-export const RoundedAmountContainer = styled.div`
-  position: absolute;
-  width: ${props => props.width || '40px'};
-  height: ${props => props.height || '40px'};
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 4px;
-  right: 4px;
-  border-radius: 50%;
-  border: 1px solid black;
+  background: ${props => props.backgroundColor};
 `;
 
 export const CloseButton = styled(CloseOutlinedIcon)`

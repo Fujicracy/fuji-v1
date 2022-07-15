@@ -14,7 +14,8 @@ import {
   Grid,
 } from '@material-ui/core';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import { Box, Flex } from 'rebass';
+import Alert from '@material-ui/lab/Alert';
+import { Box, Flex, Link } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import find from 'lodash/find';
 
@@ -45,7 +46,7 @@ import { useAuth, useBalance, useAllowance, useResources, useContractLoader } fr
 import { Container, Helper } from './styles';
 
 function InitBorrow() {
-  const { address, provider, networkName } = useAuth();
+  const { address, provider, networkName, deployment } = useAuth();
   const contracts = useContractLoader();
   const { vaults } = useResources();
 
@@ -430,9 +431,8 @@ function InitBorrow() {
         {dialogContents[dialog.step]?.actions()}
       </Dialog>
       <Box
-        minWidth={isMobile ? '320px' : isTablet ? '420px' : '1200px'}
-        width={isMobile ? '320px' : isTablet ? '470px' : '1200px'}
-        margin={isMobile ? '32px 28px' : isTablet ? '36px' : '24px 160px'}
+        width={isMobile ? '600px' : isTablet ? '960px' : '1200px'}
+        margin={isMobile ? '32px auto' : isTablet ? '36px' : '24px auto'}
       >
         <Grid container spacing={isMobile ? 4 : isTablet ? 4 : 6}>
           <Grid item xs={12} sm={12} md={4}>
@@ -443,7 +443,7 @@ function InitBorrow() {
                 padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
               >
                 <Grid container spacing={isMobile ? 3 : 4}>
-                  {networkName !== CHAIN_NAMES.FANTOM && (
+                  {networkName === CHAIN_NAMES.ETHEREUM && (
                     <Grid item xs={8} sm={8} md={12}>
                       <SelectMarket />
                     </Grid>
@@ -460,7 +460,7 @@ function InitBorrow() {
               </BlackBoxContainer>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <BlackBoxContainer
               hasBlackContainer
               padding={isMobile ? '32px 28px' : isTablet ? '44px 36px 40px' : '32px 28px'}
@@ -562,25 +562,48 @@ function InitBorrow() {
                   <span>{` ${getActiveProviderName()}`}</span>.
                 </Helper>
 
-                <Button onClick={handleSubmit(onSubmit)} block fontWeight={600} disabled={loading}>
-                  <Flex flexDirection="row" justifyContent="center" alignItems="center">
-                    {loading && (
-                      <CircularProgress
-                        style={{
-                          width: 25,
-                          height: 25,
-                          marginRight: '16px',
-                          color: 'rgba(0, 0, 0, 0.26)',
-                        }}
-                      />
-                    )}
-                    {getBorrowBtnContent()}
-                  </Flex>
-                </Button>
+                {deployment === 'fuse' ? (
+                  <Alert severity="warning" variant="outlined" style={{ color: 'white' }}>
+                    On April 30th Fuse pools were exploited and all borrowing was paused to restrict
+                    any further damage. <br />
+                    If you have open positions in Fuse, please report your case in our Discord
+                    channel{' '}
+                    <Link
+                      href="https://discord.com/channels/833590270599233566/844166088220868618"
+                      target="_blank"
+                      style={{ textDecoration: 'underline', color: 'white' }}
+                    >
+                      #protocol-support
+                    </Link>
+                    , and we will notify you when Fuse functions are resumed so you can repay any
+                    outstanding debt and remove your collateral.
+                  </Alert>
+                ) : (
+                  <Button
+                    onClick={handleSubmit(onSubmit)}
+                    block
+                    fontWeight={600}
+                    disabled={loading}
+                  >
+                    <Flex flexDirection="row" justifyContent="center" alignItems="center">
+                      {loading && (
+                        <CircularProgress
+                          style={{
+                            width: 25,
+                            height: 25,
+                            marginRight: '16px',
+                            color: 'rgba(0, 0, 0, 0.26)',
+                          }}
+                        />
+                      )}
+                      {getBorrowBtnContent()}
+                    </Flex>
+                  </Button>
+                )}
               </form>
             </BlackBoxContainer>
           </Grid>
-          <Grid item xs={12} sm={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <Box mr={isMobile || isTablet ? '' : '56px'}>
               <CollaterizationIndicator position={position} />
             </Box>

@@ -89,6 +89,9 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     _;
   }
 
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() initializer {}
+
   /**
    * @dev Initializes the contract by setting:
    * - Type of collateral and borrow asset of this vault.
@@ -108,7 +111,7 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
       Errors.VL_ZERO_ADDR
     );
 
-    __Claimable_init();
+    __Ownable_init();
     __Pausable_init();
     __ReentrancyGuard_init();
 
@@ -768,6 +771,6 @@ contract FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault {
     _userFeeTimestamps[msg.sender] = block.timestamp;
     remainingProtocolFee += userFee;
 
-    emit Payback(msg.sender, vAssets.borrowAsset, debtBalance);
+    emit Payback(msg.sender, vAssets.borrowAsset, amountToPayback);
   }
 }

@@ -19,7 +19,7 @@ import "../interfaces/IFujiERC1155.sol";
 import "../interfaces/IProvider.sol";
 import "../libraries/Errors.sol";
 import "./libraries/LibUniversalERC20UpgradeableFTM.sol";
-import "./nft-bonds/NFTGame.sol";
+import "./nft-bonds/interfaces/INFTGame.sol";
 
 /**
  * @dev Contract for the interaction of Fuji users with the Fuji protocol.
@@ -97,6 +97,9 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
     _;
   }
 
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() initializer {}
+
   /**
    * @dev Initializes the contract by setting:
    * - Type of collateral and borrow asset of this vault.
@@ -116,7 +119,7 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
       Errors.VL_ZERO_ADDR
     );
 
-    __Claimable_init();
+    __Ownable_init();
     __Pausable_init();
     __ReentrancyGuard_init();
 
@@ -799,9 +802,11 @@ contract FujiVaultFTM is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVaul
    * Used to plug functionality. 
    */
   function _afterDebtActionCallback(uint256 _amount, bool _isPayback) internal {
-    NFTGame game = NFTGame(nftGame);
-    if (block.timestamp < game.gamePhaseTimestamps(1) && block.timestamp >= game.gamePhaseTimestamps(0) && game.isValidVault(address(this))) {
-      game.checkStateOfPoints(msg.sender, _amount, _isPayback, _borrowAssetDecimals);
+    if (nftGame != address(0)) {
+      INFTGame game = INFTGame(nftGame);
+      if (block.timestamp < game.gamePhaseTimestamps(1) && block.timestamp >= game.gamePhaseTimestamps(0) && game.isValidVault(address(this))) {
+        game.checkStateOfPoints(msg.sender, _amount, _isPayback, _borrowAssetDecimals);
+      }
     }
   }
 }

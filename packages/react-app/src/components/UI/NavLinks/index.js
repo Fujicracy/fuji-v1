@@ -1,32 +1,17 @@
 import styled, { keyframes } from 'styled-components';
-import { Box } from 'rebass';
+import { Link } from 'rebass';
 import { themeGet } from '@styled-system/theme-get';
 import { fujiMedia } from 'consts';
-import { Link } from 'react-router-dom';
+import { Link as ReactLink } from 'react-router-dom';
 import { margin } from 'styled-system';
-
-export const NavUnlisted = styled(Box).attrs(props => ({
-  pt: 4,
-  pb: 4,
-  justifyContent: props.justifyContent,
-}))`
-  position: ${props => (props.navPosition ? props.navPosition : 'fixed')};
-  bottom: 0rem;
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
-  left: ${props => props.position === 'left' && '32px'};
-  right: ${props => props.position === 'right' && '32px'};
-  ${fujiMedia.lessThan('medium')`
-    justify-content: space-between;
-  `}
-`;
+import theme from 'theme/main';
 
 export const NavImageLink = styled.a.attrs(props => ({
   href: props.contact.url || '',
   target: props.target || '_blank',
   rel: props.rel || 'noopener noreferrer',
 }))`
+  display: inline-block;
   background: ${props => `url(${props.contact.image}) no-repeat top center`};
   height: 20px;
   width: 20px;
@@ -73,7 +58,7 @@ const animationBack = keyframes`
   }
 `;
 
-export const NavBackLink = styled(Link)`
+export const NavBackLink = styled(ReactLink)`
   color: var(--text);
   cursor: pointer;
   width: auto;
@@ -88,4 +73,12 @@ export const NavBackLink = styled(Link)`
   }
 
   ${margin};
+`;
+
+export const ExternalLink = styled(Link).attrs(props => ({
+  href: props.href || '',
+  target: props.target || '_blank',
+  rel: props.rel || 'noopener noreferrer',
+}))`
+  color: ${theme.colors.pink};
 `;

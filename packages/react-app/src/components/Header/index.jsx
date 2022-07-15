@@ -64,8 +64,8 @@ function Header() {
   useEffect(() => {
     if (Object.values(chains).find(chain => chain.id === networkId)) {
       setSelectedChain(chains[networkName]);
-    } else if (networkId === 31337) {
-      setSelectedChain(CHAINS.local);
+    } else if (networkId === 31337 || networkId === 4) {
+      setSelectedChain(networkId === 31337 ? CHAINS.local : CHAINS.rinkeby);
     } else {
       setSelectedChain(null);
     }
@@ -192,14 +192,16 @@ function Header() {
                   </MenuItem>
                 </NavLink>
 
-                <NavLink to="/nft-game">
-                  <MenuItem
-                    isSelected={currentPage.pathname === '/dashboard/nft-game'}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Ascend
-                  </MenuItem>
-                </NavLink>
+                {networkName !== CHAIN_NAMES.ETHEREUM && (
+                  <NavLink to="/nft-game">
+                    <MenuItem
+                      isSelected={currentPage.pathname === '/dashboard/nft-game'}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Climbing
+                    </MenuItem>
+                  </NavLink>
+                )}
 
                 <NavLink to="/about">
                   <MenuItem
@@ -218,7 +220,7 @@ function Header() {
                   Documentation
                 </MenuItem>
 
-                {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
+                {networkName === CHAIN_NAMES.ETHEREUM && (
                   <NavLink to="/claim-nft">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/claim-nft'}
@@ -285,19 +287,22 @@ function Header() {
                     </NavLink>
                   </li>
 
-                  <li className="nav-item">
-                    <NavLink to="/nft-game" activeClassName="current">
-                      Ascent
-                    </NavLink>
-                  </li>
+                  {networkName !== CHAIN_NAMES.ETHEREUM && (
+                    <li className="nav-item">
+                      <NavLink to="/nft-game" activeClassName="current">
+                        Climbing
+                      </NavLink>
+                    </li>
+                  )}
+
+                  {networkName === CHAIN_NAMES.ETHEREUM && (
+                    <li className="nav-item">
+                      <NavLink to="/claim-nft" activeClassName="current">
+                        NFT
+                      </NavLink>
+                    </li>
+                  )}
                 </>
-              )}
-              {selectedChain?.name === CHAIN_NAMES.ETHEREUM && (
-                <li className="nav-item">
-                  <NavLink to="/claim-nft" activeClassName="current">
-                    NFT
-                  </NavLink>
-                </li>
               )}
 
               <li>

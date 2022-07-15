@@ -1,21 +1,57 @@
 import React, { useState } from 'react';
-import { Flex, Image } from 'rebass';
+import { Flex, Image, Text } from 'rebass';
+import { useHistory } from 'react-router-dom';
 
-import { NFT_GAME_MODAL_THEMES, CRATE_CARD_IDS, NFT_GEARS } from 'consts';
-
-import { giftBoxImage } from 'assets/images';
-
-import SectionTitle from '../Blocks/SectionTitle';
+import { CRATE_TYPE, NFT_GAME_MODAL_THEMES, NFT_IDS, NFT_ITEMS } from 'consts';
+import { BlackButton } from 'components/UI';
+import { OpacityImage } from 'components/InventoryPopup/styles';
+import GearSet from 'components/GearSet';
+import { SectionTitle } from 'components/Blocks';
 import {
-  StyledModal,
-  CarouselContainer,
-  CloseButton,
-  ItemContainer,
-  RoundedAmountContainer,
-} from './styles';
+  commonCrateIdleImage,
+  epicCrateIdleImage,
+  legendaryCrateIdleImage,
+  emptyCrateAnimation,
+  meterPointCrateAnimation,
+} from 'assets/images';
+
+import { StyledModal, CarouselContainer, CloseButton, ItemContainer } from './styles';
+
+const carouselResponsive = {
+  desktop: {
+    breakpoint: {
+      max: 3000,
+      min: 1024,
+    },
+    items: 3,
+    partialVisibilityGutter: 40,
+  },
+  mobile: {
+    breakpoint: {
+      max: 464,
+      min: 0,
+    },
+    items: 1,
+    partialVisibilityGutter: 30,
+  },
+  tablet: {
+    breakpoint: {
+      max: 1024,
+      min: 464,
+    },
+    items: 2,
+    partialVisibilityGutter: 30,
+  },
+};
 
 const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType }) => {
   const [opacity, setOpacity] = useState(0);
+  const history = useHistory();
+  const theme = NFT_GAME_MODAL_THEMES[crateType];
+  const crateImage =
+    (crateType === CRATE_TYPE.COMMON && commonCrateIdleImage) ||
+    (crateType === CRATE_TYPE.EPIC && epicCrateIdleImage) ||
+    (crateType === CRATE_TYPE.LEGENDARY && legendaryCrateIdleImage);
 
   function afterOpen() {
     setTimeout(() => {
@@ -30,8 +66,6 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
     });
   }
 
-  console.log({ outComes });
-  const theme = NFT_GAME_MODAL_THEMES[crateType];
   return (
     <StyledModal
       color={theme.foreColor}
@@ -42,78 +76,100 @@ const OutComePopup = ({ isOpen, onClose, isLoading = false, outComes, crateType 
       opacity={opacity}
       padding="2rem"
     >
+      <OpacityImage src={theme.backMask} height="100%" />
       <CloseButton onClick={isLoading ? undefined : onClose} />
+      <SectionTitle color={theme.foreColor} fontSize="20px" fontWeight="bold">
+        Rewards
+      </SectionTitle>
       <CarouselContainer
         additionalTransfrom={0}
         arrows
-        autoPlay={false}
-        // autoPlaySpeed={3000}
+        autoPlay
+        autoPlaySpeed={3000}
         containerClass="carousel-container"
         draggable
-        keyBoardControl
         minimumTouchDrag={80}
-        renderButtonGroupOutside={false}
-        renderDotsOutside={false}
-        // centerMode={Object.keys(outComes).length < 3}
-        centerMode={false}
-        responsive={{
-          desktop: {
-            breakpoint: {
-              max: 3000,
-              min: 1024,
-            },
-            items: 3,
-            partialVisibilityGutter: 40,
-          },
-          mobile: {
-            breakpoint: {
-              max: 464,
-              min: 0,
-            },
-            items: 1,
-            partialVisibilityGutter: 30,
-          },
-          tablet: {
-            breakpoint: {
-              max: 1024,
-              min: 464,
-            },
-            items: 2,
-            partialVisibilityGutter: 30,
-          },
-        }}
+        responsive={carouselResponsive}
         showDots={false}
-        sliderClass=""
-        slidesToSlide={2}
         swipeable
       >
-        {Object.keys(outComes).map(outKey => (
-          <ItemContainer key={outKey}>
-            <RoundedAmountContainer>{outComes[outKey].count}</RoundedAmountContainer>
-            {outKey === CRATE_CARD_IDS.NOTHING ? (
-              <SectionTitle color={theme.foreColor} fontSize="20px">
-                Empty
-              </SectionTitle>
-            ) : outKey === CRATE_CARD_IDS.POINTS.toString() ? (
-              <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <SectionTitle color={theme.foreColor} fontSize="20px">
-                  {outComes[outKey].amount}
-                </SectionTitle>
-                <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
-                  Meter Points
-                </SectionTitle>
+        {Object.keys(outComes).map(outKey => {
+          if (outKey === NFT_IDS.NOTHING) {
+            return (
+              <div>
+                <Flex justifyContent="center" alignItems="center" mb="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
+                </Flex>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={emptyCrateAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="1">
+                  <Text fontWeight="bold" display="inline">
+                    {outComes[outKey].count}x
+                  </Text>{' '}
+                  Empty
+                </Text>
+              </div>
+            );
+          }
+          if (outKey === NFT_IDS.POINTS.toString()) {
+            return (
+              <div>
+                <Flex justifyContent="center" alignItems="center" mb="2">
+                  <Image height="30px" src={crateImage} mr="2" />
+                  <Text fontSize="2" textAlign="center">
+                    x{outComes[outKey].count}
+                  </Text>
+                </Flex>
+                <ItemContainer key={outKey} backgroundColor={theme.backColor}>
+                  <video autoPlay muted loop width="180" height="180">
+                    <source src={meterPointCrateAnimation} type="video/mp4" />
+                  </video>
+                </ItemContainer>
+                <Text color={theme.foreColor} textAlign="center" fontSize="1rem" mt="2">
+                  <Text fontWeight="bold" display="inline">
+                    {outComes[outKey].amount}
+                  </Text>{' '}
+                  meter points
+                </Text>
+              </div>
+            );
+          }
+          return (
+            <>
+              <Flex justifyContent="center" alignItems="center" mb="2">
+                <Image height="30px" src={crateImage} mr="2" />
+                <Text fontSize="2" textAlign="center">
+                  x{outComes[outKey].count}
+                </Text>
               </Flex>
-            ) : (
-              <Flex flexDirection="column" alignItems="center" justifyContent="center">
-                <Image src={giftBoxImage} width="140px" height="140px" />
-                <SectionTitle color={theme.foreColor} fontSize="20px" mt={3}>
-                  {NFT_GEARS[outKey].name}
-                </SectionTitle>
-              </Flex>
-            )}
-          </ItemContainer>
-        ))}
+              <GearSet
+                key={NFT_ITEMS[outKey].name}
+                width="180px"
+                textColor={theme.foreColor}
+                hover={false}
+                nftGear={{
+                  balance: outComes[outKey].count,
+                  name: NFT_ITEMS[outKey].name,
+                  boost: '10',
+                  images: { medium: NFT_ITEMS[outKey].images },
+                }}
+              />
+            </>
+          );
+        })}
       </CarouselContainer>
+      <Flex>
+        <BlackButton style={{ marginRight: '8px' }} onClick={() => history.push('/nft-game/store')}>
+          Store
+        </BlackButton>
+        <BlackButton onClick={onClose}>Inventory</BlackButton>
+      </Flex>
     </StyledModal>
   );
 };

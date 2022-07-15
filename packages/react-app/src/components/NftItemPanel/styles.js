@@ -1,25 +1,40 @@
 import styled from 'styled-components';
 import { space, color, padding, width, height, opacity } from 'styled-system';
 import { Image, Flex } from 'rebass';
-import { INVENTORY_TYPE, fujiMedia } from 'consts';
+import { CRATE_TYPE, fujiMedia } from 'consts';
 import { inventoryBadge } from 'assets/images';
+import InfoIcon from '@material-ui/icons/Info';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 export const Container = styled.div`
   border: none;
   position: relative;
+  overflow: hidden;
 
   width: ${props => (props.mode === 'inventory' ? '172px' : '100%')};
   height: ${props => (props.mode === 'inventory' ? '256px' : '360px')};
 
   box-sizing: border-box;
   border-radius: 8px;
+  border: 1px solid ${props => props.backgroundColor || 'white'};
   background-color: ${props => props.backgroundColor || 'white'};
 
-  display: flex;
+  display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
+
+  background-image: url('${props => props.backgroundImage}');
+  background-size: contain;
+  background-position: center;
+
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
@@ -42,12 +57,24 @@ export const LegendaryContainer = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background-color: ${props => props.backgroundColor || 'white'};
+  border: 1px solid ${props => props.backgroundColor || 'white'};
 
-  display: flex;
+  background-image: url('${props => props.backgroundImage}');
+  background-size: contain;
+  background-position: center;
+
+  display: ${props => (props.mode === 'info' ? 'block' : 'flex')};
   flex-direction: column;
-  justify-content: center;
+  justify-content: ${props => props.justifyContent || 'center'};
   align-items: center;
   padding: 24px;
+
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   cursor: ${props => (props.mode === 'inventory' ? 'pointer' : 'inherit')};
 
@@ -81,9 +108,9 @@ export const ItemPanel = styled(Image)`
 
   z-index: 0;
   ${fujiMedia.lessThan('small')`
-    position: ${props => props.mode === INVENTORY_TYPE.LEGENDARY && 'absolute'};
-    right:  ${props => props.mode === INVENTORY_TYPE.LEGENDARY && '24px'};
-    margin-top: ${props => (props.mode === INVENTORY_TYPE.LEGENDARY ? '0px' : '16px')};
+    position: ${props => props.mode === CRATE_TYPE.LEGENDARY && 'absolute'};
+    right:  ${props => props.mode === CRATE_TYPE.LEGENDARY && '24px'};
+    margin-top: ${props => (props.mode === CRATE_TYPE.LEGENDARY ? '0px' : '16px')};
 
     width: 80px;
     height: 80px;
@@ -105,22 +132,40 @@ export const BuyButton = styled.div`
 
   font-weight: 500;
   border-radius: 30px;
-  background: ${props => props.backgroundColor || 'rgba(255, 255, 255, 0.16)'};
-
+  background: ${({ theme }) => theme.buttonColor || 'rgba(255, 255, 255, 0.16)'};
+  color: ${({ theme }) => theme.foreColor};
   cursor: pointer;
-  color: ${props => props.foreColor};
+  border: 1px solid ${props => props.theme.backColor || props.activeColor};
 
   &:hover {
-    border: ${props => !props.disabled && `1px solid ${props.foreColor}`};
+    border: ${props => !props.disabled && `1px solid ${props.theme.foreColor}`};
   }
 
-  &:active {
-    background: ${props => !props.disabled && props.foreColor};
-    color: ${props => !props.disabled && props.activeColor};
+  &[disabled] {
+    cursor: not-allowed;
+    color: ${({ theme }) => theme.disabledForeColor};
+  }
+
+  &:not([disabled]):active {
+    background: ${({ theme }) => theme.foreColor};
+    color: ${({ theme }) => theme.activeColor};
   }
 
   ${space};
   ${width};
+`;
+
+export const InfoButton = styled(InfoIcon)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+`;
+export const CancelButton = styled(CancelIcon)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
 `;
 
 export const OpacityImage = styled(Image)`
@@ -141,7 +186,7 @@ export const MarkContainer = styled.div`
   height: calc(100% - 36px);
   border: 3px solid
     ${props =>
-      props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+      props.type === CRATE_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
   box-sizing: border-box;
   border-radius: 8px;
 `;
@@ -176,7 +221,7 @@ export const FujiMark = styled.div`
   text-align: center;
 
   color: ${props =>
-    props.type === INVENTORY_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
+    props.type === CRATE_TYPE.COMMON ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.4)'};
 
   transform: rotate(-90deg);
 
@@ -188,13 +233,15 @@ export const FujiMark = styled.div`
   }
 `;
 
-export const LegendaryItemsContainter = styled(Flex)`
+export const ItemsContainer = styled(Flex)`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
+`;
 
+export const LegendaryItemsContainer = styled(ItemsContainer)`
   ${fujiMedia.lessThan('small')`
     align-items: flex-start;
   `}
@@ -237,4 +284,59 @@ export const StackedContainer = styled.div`
   align-items: center;
   position: relative;
   flex-direction: row-reverse;
+
+  @keyframes cardAnimation {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+
+    15% {
+      transform: translate3d(-3%, 0, 0) rotate3d(0, 0, 1, -5deg);
+    }
+
+    30% {
+      transform: translate3d(2%, 0, 0) rotate3d(0, 0, 1, 3deg);
+    }
+
+    45% {
+      transform: translate3d(-2%, 0, 0) rotate3d(0, 0, 1, -3deg);
+    }
+
+    60% {
+      transform: translate3d(2%, 0, 0) rotate3d(0, 0, 1, 2deg);
+    }
+
+    75% {
+      transform: translate3d(-1%, 0, 0) rotate3d(0, 0, 1, -1deg);
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  &:hover {
+    animation: cardAnimation;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+`;
+
+export const HorizontalBreaker = styled.hr`
+  margin: 1rem 0;
+  display: block;
+  border: none;
+  border-bottom: 1px solid ${props => props.color ?? 'inherit'};
+  width: 100%;
+`;
+
+export const AmountInput = styled.input`
+  width: 2rem;
+  margin: 0 8px;
+  text-align: center;
+  height: 1.5rem;
+  background-color: inherit;
+  border: 1px solid ${({ theme }) => theme.buttonColor};
+  color: ${({ theme }) => theme.foreColor};
+  border-radius: 3px;
 `;

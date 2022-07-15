@@ -5,6 +5,7 @@ import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import { BlackButton } from 'components/UI';
 
 export const ContentContainer = styled(Box)`
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -42,10 +43,9 @@ export const StyledModal = Modal.styled`
     border-radius: 0px;
     justify-content: space-between;
   `};
-  ${fujiMedia.between('small', 'medium')`
-    
-  `};
 
+  animation: zoomIn;
+  animation-duration: .6s;
 `;
 
 export const OpacityImage = styled(Image)`
@@ -86,4 +86,42 @@ export const PanelContainer = styled.div`
   border-radius: 50%;
   filter: blur(10px);
   z-index: 0;
+`;
+
+export const SkipButton = styled.button`
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  color: white;
+  font-size: 1rem;
+  z-index: 1;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  background: transparent;
+  transition: 0.3s background;
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+`;
+
+export const OpenButton = styled(BlackButton)`
+  &:hover {
+    animation: pulse;
+    animation-duration: 0.5s;
+  }
+`;
+
+export const AmountInput = styled.input`
+  width: 2rem;
+  margin: 0 8px;
+  text-align: center;
+  height: 1.5rem;
+  background-color: inherit;
+  border: 1px solid ${({ theme }) => theme.buttonColor};
+  color: ${({ theme }) => theme.foreColor};
+  border-radius: 3px;
 `;
