@@ -9,7 +9,7 @@ const VAULTS_NAMES = {
   // VaultWETHDAI: 'VaultWETHDAI',
   VaultWETHUSDC: 'VaultWETHUSDC',
   VaultUSDCWETH: 'VaultUSDCWETH',
-  VaultUSDCWBTC: 'VaultUSDCWBTC'
+  VaultUSDCWBTC: 'VaultUSDCWBTC',
 };
 
 const COLLATERAL_IDS = {
@@ -31,7 +31,7 @@ const BORROW_IDS = {
   // [VAULTS_NAMES.VaultWETHDAI]: 9,
   [VAULTS_NAMES.VaultWETHUSDC]: 11,
   [VAULTS_NAMES.VaultUSDCWETH]: 17,
-  [VAULTS_NAMES.VaultUSDCWBTC]: 19
+  [VAULTS_NAMES.VaultUSDCWBTC]: 19,
 };
 
 const VAULTS = {
@@ -48,7 +48,7 @@ const VAULTS = {
   //   title: 'MATIC-DAI',
   //   threshold: 60,
   // },
-    // [VAULTS_NAMES.VaultMATICUSDC]: {
+  // [VAULTS_NAMES.VaultMATICUSDC]: {
   //   borrowAsset: ASSETS[ASSET_NAME.USDC],
   //   collateralAsset: ASSETS[ASSET_NAME.MATIC],
   //   borrowId: BORROW_IDS[VAULTS_NAMES.VaultMATICUSDC],
@@ -79,10 +79,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.BTC],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultWBTCUSDC],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultWBTCUSDC],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE_MATIC],
-      PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC],
-    ],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
     name: 'VaultWBTCUSDC',
     title: 'BTC-USDC',
     threshold: 65,
@@ -105,10 +102,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultWETHUSDC],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultWETHUSDC],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE_MATIC],
-      PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC],
-    ],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
     name: 'VaultWETHUSDC',
     title: 'ETH-USDC',
     threshold: 75,
@@ -118,10 +112,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.USDC],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultUSDCWETH],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultUSDCWETH],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE_MATIC],
-      PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC],
-    ],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
     name: 'VaultUSDCWETH',
     title: 'USDC-ETH',
     threshold: 75,
@@ -131,10 +122,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.USDC],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultUSDCWBTC],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultUSDCWBTC],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE_MATIC],
-      PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC],
-    ],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
     name: 'VaultUSDCWBTC',
     title: 'USDC-BTC',
     threshold: 75,
