@@ -1,24 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { Box, Flex, Text } from 'rebass';
 import { CircularProgress } from '@material-ui/core';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_BOND_PRICE } from 'consts';
 import { CountButton } from 'components/UI';
 import { AmountInput, BuyButton } from 'components/NftItemPanel/styles';
+import { useAuth, useContractLoader } from 'hooks';
+import { Transactor } from 'helpers';
 
-function Bond({ bg = 'white', color = 'black', width, months, onBuy }) {
+function Bond({ bg = 'white', color = 'black', width, months, points }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const [amount, setAmount] = useState(0);
-  const [isBuying, setIsBuying] = useState(false);
 
-  const buyBond = async () => {
+  const [amount, setAmount] = useState(0);
+  useEffect(() => {
+    if (amount * NFT_GAME_BOND_PRICE > points) {
+      setError(`You don't have enought points.`);
+    } else {
+      setError('');
+    }
+  }, [amount, points]);
+
+  const [isBuying, setIsBuying] = useState(false);
+  const [error, setError] = useState('');
+
+  const { provider } = useAuth();
+  const contracts = useContractLoader();
+  const tx = Transactor(provider);
+
+  const onChangeAmount = value => {
+    console.log({ value });
+
+    // Display error instead
+    if (value * NFT_GAME_BOND_PRICE > points) {
+      setError(`You don't have enought points.`);
+    }
+    setAmount(value);
+  };
+
+  const buy = async () => {
+    if (amount < 1) {
+      return;
+    }
+
+    if (points < amount * NFT_GAME_BOND_PRICE) {
+      return console.error('Not enough points to buy');
+    }
+
     setIsBuying(true);
     try {
-      // We consider 1month = 30days
-      await onBuy(months * 30, amount);
+      const days = months * 30; // We consider each month is 30 days
+      console.log({ days, amount });
+      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount));
+    } catch (error) {
+      // TODO: Display err
+      console.error(error);
     } finally {
       setIsBuying(false);
+      setAmount(0);
     }
   };
 
@@ -30,7 +69,7 @@ function Bond({ bg = 'white', color = 'black', width, months, onBuy }) {
         </Text>
         <Box color={color} mt={3}>
           <Text fontSize="1.5rem" fontWeight="bold" display="inline">
-            10000
+            {NFT_GAME_BOND_PRICE}
           </Text>
           <Text fontSize=".8rem" display="inline">
             {' '}
@@ -46,29 +85,31 @@ function Bond({ bg = 'white', color = 'black', width, months, onBuy }) {
           width="100%"
         >
           <Flex flexDirection="row" justifyContent="center" alignItems="center">
-            <CountButton foreColor={color} onClick={() => setAmount(amount - 1)}>
+            <CountButton
+              foreColor={color}
+              onClick={() => onChangeAmount(amount - 1)}
+              disabled={amount < 1}
+            >
               -
             </CountButton>
             <AmountInput
               value={amount}
               theme={{ foreColor: color }}
               type="number"
-              onChange={e => setAmount(parseInt(e.target.value, 10))}
+              onChange={e => onChangeAmount(+e.target.value)}
             />
-            <CountButton foreColor={color} onClick={() => setAmount(amount + 1)}>
+            <CountButton foreColor={color} onClick={() => onChangeAmount(amount + 1)}>
               +
             </CountButton>
           </Flex>
-          <BuyButton mt={isMobile ? '12px' : '16px'} theme={{ foreColor: color }} onClick={buyBond}>
+          {error && (
+            <Text fontSize=".8rem" color={color}>
+              ⚠️ {error}
+            </Text>
+          )}
+          <BuyButton mt={isMobile ? '12px' : '16px'} theme={{ foreColor: color }} onClick={buy}>
             {isBuying && (
-              <CircularProgress
-                style={{
-                  width: 20,
-                  height: 20,
-                  marginRight: '16px',
-                  color,
-                }}
-              />
+              <CircularProgress size={16} value={15} style={{ marginRight: '8px', color }} />
             )}
             Buy
           </BuyButton>
