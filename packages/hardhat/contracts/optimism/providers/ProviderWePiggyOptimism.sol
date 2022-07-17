@@ -11,17 +11,19 @@ import "../../interfaces/compound/ICEth.sol";
 import "../../interfaces/compound/IComptroller.sol";
 import "../../libraries/LibUniversalERC20.sol";
 
+import "hardhat/console.sol";
+
 contract HelperFunct {
   function _isNative(address token) internal pure returns (bool) {
     return (token == address(0) || token == address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE));
   }
 
   function _getMappingAddr() internal pure returns (address) {
-    return 0xE596335ffea393afD6370e540321F81888520d6d; // Fuji WePiggy WePiggy Mapping
+    return 0xE596335ffea393afD6370e540321F81888520d6d; // Fuji WePiggy Arbitrum Mapping
   }
 
   function _getComptrollerAddress() internal pure returns (address) {
-    return 0x896aecb9E73Bf21C50855B7874729596d0e511CB; // WePiggy WePiggy
+    return 0x896aecb9E73Bf21C50855B7874729596d0e511CB; // WePiggy Arbitrum
   }
 
   // WePiggy functions
@@ -51,7 +53,7 @@ contract HelperFunct {
   }
 }
 
-contract ProviderWePiggyWePiggy is IProvider, HelperFunct {
+contract ProviderWePiggyOptimism is IProvider, HelperFunct {
   using LibUniversalERC20 for IERC20;
 
   // Provider Core Functions
@@ -63,7 +65,10 @@ contract ProviderWePiggyWePiggy is IProvider, HelperFunct {
    */
   function deposit(address _asset, uint256 _amount) external payable override {
     // Get cToken address from mapping
+    console.log(_asset);
+    console.log(_getMappingAddr());
     address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
+    console.log(cTokenAddr);
 
     // Enter and/or ensure collateral market is enacted
     _enterCollatMarket(cTokenAddr);
