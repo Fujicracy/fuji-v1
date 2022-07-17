@@ -110,6 +110,8 @@ const fixture = async ([wallet]) => {
   const aavev3 = await ProviderAaveV3Optimism.deploy([]);
   const ProviderWePiggyOptimism = await getContractFactory("ProviderWePiggyOptimism");
   const wepiggy = await ProviderWePiggyOptimism.deploy([]);
+  const ProviderDForceOptimism = await getContractFactory("ProviderDForceOptimism");
+  const dforce = await ProviderDForceOptimism.deploy([]);
 
   // Log if debug is set true
   if (DEBUG) {
@@ -121,6 +123,7 @@ const fixture = async ([wallet]) => {
     console.log("oracle", oracle.address);
     console.log("aavev3", aavev3.address);
     console.log("wepiggy", wepiggy.address);
+    console.log("dforce", dforce.address);
   }
 
   // Setp 3: Vaults
@@ -142,7 +145,7 @@ const fixture = async ([wallet]) => {
     await f1155.setPermit(vault.address, true);
     await vault.setFujiERC1155(f1155.address);
     await fujiadmin.allowVault(vault.address, true);
-    await vault.setProviders([aavev3.address, wepiggy.address]);
+    await vault.setProviders([aavev3.address, wepiggy.address, dforce.address]);
 
     vaults[name] = vault;
   }
@@ -163,6 +166,7 @@ const fixture = async ([wallet]) => {
     ...vaults,
     aavev3,
     wepiggy,
+    dforce,
     oracle,
     fujiadmin,
     fliquidator,
