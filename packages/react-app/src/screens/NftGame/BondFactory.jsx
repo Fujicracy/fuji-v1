@@ -35,7 +35,7 @@ function BondFactory() {
 
       <Flex mt={4} flexWrap="wrap">
         <Bond months="3" width={[1, 1 / 2]} points={points} />
-        <BondBalance width={[1, 1 / 2]} />
+        <BondBalance width={[1, 1 / 2]} months="3" />
         <Bond bg="#735CDD" color="white" months="6" width={[1, 1 / 2]} points={points} />
         <BondBalance bg="#735CDD" color="white" months="6" width={[1, 1 / 2]} />
         <Bond bg="#A5243D" color="white" months="12" width={[1, 1 / 2]} points={points} />

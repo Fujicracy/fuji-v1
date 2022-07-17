@@ -3,9 +3,11 @@ import { Box, Flex, Text } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
 import { BuyButton } from './NftItemPanel/styles';
+import { useBondBalance } from 'hooks';
 
 function BondBalance({ bg = 'white', color = 'black', width, height = '180px', months }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
+  const balances = useBondBalance();
 
   return (
     <Box width={width}>
@@ -22,7 +24,7 @@ function BondBalance({ bg = 'white', color = 'black', width, height = '180px', m
             You own
           </Text>
           <Text color={color} fontSize="4rem" lineHeight="4rem" fontWeight="bold">
-            12
+            {balances[months * 30] ?? 0}
           </Text>
           {/* TODO: Change button to link */}
           <BuyButton

@@ -233,3 +233,59 @@ export function useSouvenirNFT() {
 
   return { isLoading, NFTImage };
 }
+
+export function useBondBalance() {
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const PreTokenBonds = contracts?.PreTokenBonds;
+  const [balances, setBalances] = useState({});
+
+  console.count('useBondBalance');
+  useEffect(() => {
+    console.count('useBondBalance > useEffect');
+    async function fetch() {
+      try {
+        const res = {};
+        {
+          const balanceOf = await PreTokenBonds.balanceOf(address);
+          console.debug('balanceOf', balanceOf);
+        }
+
+        {
+          const tokenId = await PreTokenBonds.tokenOfOwnerByIndex(address, 0);
+          console.log('useBondBalance > useEffect > tokenId', tokenId);
+          const slot = await PreTokenBonds.slotOf(tokenId.toString());
+          const balance = await PreTokenBonds.unitsInToken(tokenId);
+          res[slot.toNumber()] = balance.toNumber();
+        }
+
+        {
+          const tokenId2 = await PreTokenBonds.tokenOfOwnerByIndex(address, 1);
+          console.log('useBondBalance > useEffect > tokenId2', tokenId2);
+          const slot2 = await PreTokenBonds.slotOf(tokenId2.toString());
+          const balance2 = await PreTokenBonds.unitsInToken(tokenId2);
+          res[slot2.toNumber()] = balance2.toNumber();
+        }
+
+        {
+          const tokenId3 = await PreTokenBonds.tokenOfOwnerByIndex(address, 2);
+          console.log('useBondBalance > useEffect > tokenId3', tokenId3);
+          const slot3 = await PreTokenBonds.slotOf(tokenId3.toString());
+          const balance3 = await PreTokenBonds.unitsInToken(tokenId3);
+          res[slot3.toNumber()] = balance3.toNumber();
+        }
+
+        console.log('useBondBalance > useEffect > res', res);
+
+        setBalances(res);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (address && PreTokenBonds) {
+      fetch();
+    }
+  }, [address, PreTokenBonds]);
+
+  return balances;
+}
