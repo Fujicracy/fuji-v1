@@ -13,7 +13,7 @@ const PROVIDER_TYPE = {
   COMPOUND_MOCK: 'CompoundMock',
   AAVE_V3_FTM: 'AaveV3FTM',
   AAVE_MATIC: 'AaveV2MATIC',
-  AAVE_V3_MATIC: 'AaveV3MATIC'
+  AAVE_V3_MATIC: 'AaveV3MATIC',
 };
 
 const PROVIDERS = {

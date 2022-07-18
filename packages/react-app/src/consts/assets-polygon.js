@@ -1,11 +1,11 @@
-import { usdcIcon, daiIcon, ethIcons, btcIcon, maticIcon} from 'assets/images';
+import { usdcIcon, daiIcon, ethIcons, btcIcon, maticIcon } from 'assets/images';
 
 export const ASSET_NAME = {
   USDC: 'USDC',
   ETH: 'ETH',
   DAI: 'DAI',
   BTC: 'BTC',
-  MATIC: 'MATIC'
+  MATIC: 'MATIC',
 };
 
 export const ASSETS = {
@@ -52,5 +52,5 @@ export const ASSETS = {
     decimals: 18,
     address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     oracle: '0xAB594600376Ec9fD91F8e885dADF0CE036862dE0',
-  }
+  },
 };
