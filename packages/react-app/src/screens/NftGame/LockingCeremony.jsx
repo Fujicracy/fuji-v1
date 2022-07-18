@@ -61,6 +61,18 @@ const ButtonLink = styled(NavLink)`
   margin-top: 16px;
 `;
 
+const NftImage = styled(Image)`
+  border-radius: 600px;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 0 28px rgba(250, 38, 108, 0.5), 0 0 10px rgba(250, 38, 108, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &:hover {
+    box-shadow: 0 14px 28px rgba(250, 38, 108, 0.5), 0 10px 10px rgba(250, 38, 108, 0.5) !important;
+  }
+`;
+
 const CountDownLabel = ({ label, value }) => (
   <Flex flexDirection="column" textAlign="center" minWidth="60px">
     <Text color="#fa266c" fontSize="2rem" fontWeight="bold" p={1}>
@@ -162,7 +174,7 @@ function LockingCeremony() {
         {/* flexWrap="wrap" */}
         <Flex color="white" p={[3, 5]}>
           <Box width={[1, 0.5]}>
-            <Image src={NFTImage} width={300} height={300} />
+            <NftImage src={NFTImage} />
           </Box>
           <Box width={[1, 0.5]} ml={[3, 5]}>
             <Text fontSize="2rem" lineHeight="2rem" fontWeight="bold">
