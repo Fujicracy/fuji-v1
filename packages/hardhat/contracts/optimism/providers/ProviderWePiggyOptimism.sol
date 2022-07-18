@@ -11,8 +11,6 @@ import "../../interfaces/compound/ICEth.sol";
 import "../../interfaces/compound/IComptroller.sol";
 import "../../libraries/LibUniversalERC20.sol";
 
-import "hardhat/console.sol";
-
 contract HelperFunct {
   function _isNative(address token) internal pure returns (bool) {
     return (token == address(0) || token == address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE));
@@ -65,10 +63,7 @@ contract ProviderWePiggyOptimism is IProvider, HelperFunct {
    */
   function deposit(address _asset, uint256 _amount) external payable override {
     // Get cToken address from mapping
-    console.log(_asset);
-    console.log(_getMappingAddr());
     address cTokenAddr = IFujiMappings(_getMappingAddr()).addressMapping(_asset);
-    console.log(cTokenAddr);
 
     // Enter and/or ensure collateral market is enacted
     _enterCollatMarket(cTokenAddr);
