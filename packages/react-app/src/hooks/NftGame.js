@@ -249,40 +249,18 @@ export function useBondBalance() {
         return;
       }
 
-      try {
-        const tokenId = await PreTokenBonds.tokenOfOwnerByIndex(address, 0);
-        const slot = await PreTokenBonds.slotOf(tokenId.toString());
-        const balance = await PreTokenBonds.unitsInToken(tokenId);
-        res[slot.toNumber()] = balance.toNumber();
-      } catch (e) {
-        if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
-          return;
+      for (let i = 0; i < 3; i++) {
+        try {
+          const tokenId = await PreTokenBonds.tokenOfOwnerByIndex(address, i);
+          const slot = await PreTokenBonds.slotOf(tokenId.toString());
+          const balance = await PreTokenBonds.unitsInToken(tokenId);
+          res[slot.toNumber()] = balance.toNumber();
+        } catch (e) {
+          if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
+            return;
+          }
+          console.error(e);
         }
-        console.error(e);
-      }
-
-      try {
-        const tokenId2 = await PreTokenBonds.tokenOfOwnerByIndex(address, 1);
-        const slot2 = await PreTokenBonds.slotOf(tokenId2.toString());
-        const balance2 = await PreTokenBonds.unitsInToken(tokenId2);
-        res[slot2.toNumber()] = balance2.toNumber();
-      } catch (e) {
-        if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
-          return;
-        }
-        console.error(e);
-      }
-
-      try {
-        const tokenId3 = await PreTokenBonds.tokenOfOwnerByIndex(address, 2);
-        const slot3 = await PreTokenBonds.slotOf(tokenId3.toString());
-        const balance3 = await PreTokenBonds.unitsInToken(tokenId3);
-        res[slot3.toNumber()] = balance3.toNumber();
-      } catch (e) {
-        if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
-          return;
-        }
-        console.error(e);
       }
 
       setBalances(res);
