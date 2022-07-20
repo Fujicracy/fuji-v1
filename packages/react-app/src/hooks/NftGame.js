@@ -223,7 +223,7 @@ export function useSouvenirNFT() {
 
     if (contracts && address && lockedNFTIDString && cardsAmountString) {
       if (BigNumber.from(lockedNFTIDString).lte(BigNumber.from(3).add(cardsAmountString))) {
-        console.debug('Invalid nft id (id is < 8). User pbbly havent lock');
+        console.debug(`Invalid nft id (id ${lockedNFTIDString} is < 8). User pbbly havent lock`);
         setIsLoading(false);
         return;
       }
@@ -243,8 +243,8 @@ export function useBondBalance() {
   useEffect(() => {
     async function fetch() {
       const res = {};
-
       const totalBalance = await PreTokenBonds.balanceOf(address);
+
       if (totalBalance.toNumber() <= 0) {
         return;
       }
@@ -257,7 +257,7 @@ export function useBondBalance() {
           res[slot.toNumber()] = balance.toNumber();
         } catch (e) {
           if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
-            return;
+            continue;
           }
           console.error(e);
         }

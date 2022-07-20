@@ -115,6 +115,7 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
   async function lessgo() {
     setIsFetching(true);
     try {
+      console.debug('NFTInteractions', contracts.NFTInteractions);
       const txRes = await tx(contracts.NFTInteractions.lockFinalScore());
       onSuccess(txRes);
       setIsFetching(false);

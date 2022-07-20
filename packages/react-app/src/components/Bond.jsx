@@ -29,9 +29,6 @@ function Bond({ bg = 'white', color = 'black', width, months, points }) {
   const tx = Transactor(provider);
 
   const onChangeAmount = value => {
-    console.log({ value });
-
-    // Display error instead
     if (value * NFT_GAME_BOND_PRICE > points) {
       setError(`You don't have enought points.`);
     }
@@ -44,16 +41,14 @@ function Bond({ bg = 'white', color = 'black', width, months, points }) {
     }
 
     if (points < amount * NFT_GAME_BOND_PRICE) {
-      return console.error('Not enough points to buy');
+      return;
     }
 
     setIsBuying(true);
     try {
       const days = months * 30; // We consider each month is 30 days
-      console.log({ days, amount });
-      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount));
+      await tx(contracts.NFTInteractions.mintBonds(days, amount));
     } catch (error) {
-      // TODO: Display err
       console.error(error);
     } finally {
       setIsBuying(false);
