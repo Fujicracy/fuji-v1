@@ -66,10 +66,10 @@ const NftImage = styled(Image)`
   max-width: 100%;
   max-height: 100%;
   box-shadow: 0 0 28px rgba(250, 38, 108, 0.5), 0 0 10px rgba(250, 38, 108, 0.4);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &:hover {
-    box-shadow: 0 14px 28px rgba(250, 38, 108, 0.5), 0 10px 10px rgba(250, 38, 108, 0.5) !important;
+    box-shadow: 0 14px 50px rgba(250, 38, 108, 0.5), 0 10px 50px rgba(250, 38, 108, 0.5) !important;
   }
 `;
 
@@ -172,11 +172,11 @@ function LockingCeremony() {
           <Text textAlign="right">Morihei Ueshiba</Text>
         </Box>
         {/* flexWrap="wrap" */}
-        <Flex color="white" p={[3, 5]}>
+        <Flex color="white" p={[3, 5]} flexWrap="wrap">
           <Box width={[1, 0.5]}>
             <NftImage src={NFTImage} />
           </Box>
-          <Box width={[1, 0.5]} ml={[3, 5]}>
+          <Box width={[1, 0.5]} pl={[3, 5]}>
             <Text fontSize="2rem" lineHeight="2rem" fontWeight="bold">
               Next Steps
             </Text>
