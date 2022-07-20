@@ -5,6 +5,7 @@ import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS, NFT_ITEMS } 
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
+import { toNumber } from 'lodash';
 
 // helpers
 
@@ -242,19 +243,26 @@ export function useBondBalance() {
 
   useEffect(() => {
     async function fetch() {
-      const res = {};
-      const totalBalance = await PreTokenBonds.balanceOf(address);
 
-      if (totalBalance.toNumber() <= 0) {
+      const vestingTimes = await PreTokenBonds.getBondVestingTimes();
+      let res = {};
+
+      // Initialize each vesting time with zeros
+      vestingTimes.forEach( t => {
+        res[t.toNumber()] = 0
+      });
+      const totalVouchers = await PreTokenBonds.balanceOf(address);
+
+      if (totalVouchers.toNumber() <= 0) {
         return;
       }
 
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < totalVouchers.toNumber(); i++) {
         try {
           const tokenId = await PreTokenBonds.tokenOfOwnerByIndex(address, i);
-          const slot = await PreTokenBonds.slotOf(tokenId.toString());
+          const slot = await PreTokenBonds.slotOf(tokenId);
           const balance = await PreTokenBonds.unitsInToken(tokenId);
-          res[slot.toNumber()] = balance.toNumber();
+          res[slot.toNumber()] += balance.toNumber();
         } catch (e) {
           if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
             continue;
@@ -263,7 +271,13 @@ export function useBondBalance() {
         }
       }
 
-      setBalances(res);
+      // Format results
+      let formattedRes = {}
+      vestingTimes.forEach( t => {
+        formattedRes[t.toNumber()] = (res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS).toFixed(2);
+      });
+
+      setBalances(formattedRes);
     }
     if (address && PreTokenBonds) {
       fetch();

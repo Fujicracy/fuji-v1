@@ -3,7 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import { Box, Flex, Text } from 'rebass';
 import { CircularProgress } from '@material-ui/core';
 
-import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_BOND_PRICE } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_POINTS_DECIMALS, NFT_GAME_BOND_PRICE } from 'consts';
 import { CountButton } from 'components/UI';
 import { AmountInput, BuyButton } from 'components/NftItemPanel/styles';
 import { useAuth, useContractLoader } from 'hooks';
@@ -43,7 +43,7 @@ function Bond({ bg = 'white', color = 'black', width, months, points }) {
     setIsBuying(true);
     try {
       const days = months * 30; // We consider each month is 30 days
-      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount));
+      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount * 10 ** NFT_GAME_POINTS_DECIMALS));
       await res.wait();
     } catch (error) {
       console.error(error);
