@@ -117,7 +117,8 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
     try {
       console.debug('NFTInteractions', contracts.NFTInteractions);
       const txRes = await tx(contracts.NFTInteractions.lockFinalScore());
-      onSuccess(txRes);
+      await txRes.wait();
+      onSuccess();
       setIsFetching(false);
     } catch (e) {
       // Todo: handle error

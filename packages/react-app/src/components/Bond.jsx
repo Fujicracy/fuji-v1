@@ -36,18 +36,15 @@ function Bond({ bg = 'white', color = 'black', width, months, points }) {
   };
 
   const buy = async () => {
-    if (amount < 1) {
-      return;
-    }
-
-    if (points < amount * NFT_GAME_BOND_PRICE) {
+    if (amount < 1 || isBuying || points < amount * NFT_GAME_BOND_PRICE) {
       return;
     }
 
     setIsBuying(true);
     try {
       const days = months * 30; // We consider each month is 30 days
-      await tx(contracts.NFTInteractions.mintBonds(days, amount));
+      const res = await tx(contracts.NFTInteractions.mintBonds(days, amount));
+      await res.wait();
     } catch (error) {
       console.error(error);
     } finally {
