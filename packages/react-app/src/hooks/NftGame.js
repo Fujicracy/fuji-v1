@@ -243,13 +243,12 @@ export function useBondBalance() {
 
   useEffect(() => {
     async function fetch() {
-
       const vestingTimes = await PreTokenBonds.getBondVestingTimes();
       let res = {};
 
       // Initialize each vesting time with zeros
-      vestingTimes.forEach( t => {
-        res[t.toNumber()] = 0
+      vestingTimes.forEach(t => {
+        res[t.toNumber()] = 0;
       });
       const totalVouchers = await PreTokenBonds.balanceOf(address);
 
@@ -272,9 +271,11 @@ export function useBondBalance() {
       }
 
       // Format results
-      let formattedRes = {}
-      vestingTimes.forEach( t => {
-        formattedRes[t.toNumber()] = (res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS).toFixed(2);
+      let formattedRes = {};
+      vestingTimes.forEach(t => {
+        formattedRes[t.toNumber()] = (res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS).toFixed(
+          2,
+        );
       });
 
       setBalances(formattedRes);
