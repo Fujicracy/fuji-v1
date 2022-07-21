@@ -273,9 +273,8 @@ export function useBondBalance() {
       // Format results
       let formattedRes = {};
       vestingTimes.forEach(t => {
-        formattedRes[t.toNumber()] = (res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS).toFixed(
-          2,
-        );
+        const balance = parseInt(res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS);
+        formattedRes[t.toNumber()] = balance;
       });
 
       setBalances(formattedRes);
