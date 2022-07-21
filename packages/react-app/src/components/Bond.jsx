@@ -107,9 +107,7 @@ function Bond({ bg = 'white', color = 'black', width, months, points }) {
             </Text>
           )}
           <BuyButton mt={isMobile ? '12px' : '16px'} theme={{ foreColor: color }} onClick={buy}>
-            {isBuying && (
-              <CircularProgress size={16} value={15} style={{ marginRight: '8px', color }} />
-            )}
+            {isBuying && <CircularProgress size={16} style={{ marginRight: '8px', color }} />}
             Buy
           </BuyButton>
         </Flex>
