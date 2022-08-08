@@ -131,15 +131,13 @@ function CollateralForm({ position }) {
   const withdraw = async withApproval => {
     setDialog({ step: 'doing', withApproval });
 
-    const unformattedAmount = Number(amount) === Number(leftCollateral) ? '-1' : amount;
-    const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [
-      parseUnits(unformattedAmount, collateralAsset.decimals),
-    ]);
-    const res = await tx(
-      contracts[vault.name].withdraw(parseUnits(unformattedAmount, collateralAsset.decimals), {
-        gasLimit,
-      }),
-    );
+    const txAmount =
+      Number(amount) === Number(leftCollateral)
+        ? BigNumber.from(-1)
+        : parseUnits(amount, collateralAsset.decimals);
+
+    const gasLimit = await GasEstimator(contracts[vault.name], 'withdraw', [txAmount]);
+    const res = await tx(contracts[vault.name].withdraw(txAmount, { gasLimit }));
 
     if (res && res.hash) {
       const receipt = await res.wait();
@@ -244,11 +242,9 @@ function CollateralForm({ position }) {
   };
 
   const handleMaxBalance = () => {
-    setAmount(action === Action.Supply ? userBalance : leftCollateral);
-    setValue('amount', action === Action.Supply ? userBalance : leftCollateral, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    const val = action === Action.Supply ? userBalance : leftCollateral;
+    setAmount(val);
+    setValue('amount', val, { shouldValidate: true, shouldDirty: true });
   };
 
   const handleClickTitleInfo =

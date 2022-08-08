@@ -118,11 +118,12 @@ function DebtForm({ position }) {
   }, [neededCollateral, collateralBalance, borrowPrice, collateralPrice, vault]);
 
   useEffect(() => {
-    if (balance && debtBalance) {
-      const debt = formatUnits(debtBalance, decimals);
-      const max = Number(debt) > Number(balance) ? balance : debt;
-      setMaxToRepay(fixDecimalString(max, 6));
+    if (!debtBalance || !balance) {
+      return;
     }
+    const debt = formatUnits(debtBalance, decimals);
+    const max = Number(debt) > Number(balance) ? balance : debt;
+    setMaxToRepay(debt);
   }, [debtBalance, balance, decimals]);
 
   const borrow = async () => {
@@ -163,14 +164,18 @@ function DebtForm({ position }) {
         ? formatUnits(unFormattedBalance, decimals)
         : amount;
 
+    const txAmount = parseUnits(amount, decimals).eq(debtBalance)
+      ? -1
+      : parseUnits(unFormattedAmount, decimals);
+
     const gasLimit = await GasEstimator(contracts[vault.name], 'payback', [
-      parseUnits(unFormattedAmount, decimals),
-      { value: borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals) },
+      txAmount,
+      { value: borrowAsset.isERC20 ? 0 : txAmount },
     ]);
 
     const res = await tx(
-      contracts[vault.name].payback(parseUnits(unFormattedAmount, decimals), {
-        value: borrowAsset.isERC20 ? 0 : parseUnits(unFormattedAmount, decimals),
+      contracts[vault.name].payback(txAmount, {
+        value: borrowAsset.isERC20 ? 0 : txAmount, // why 0 when erc20 ??
         gasLimit,
       }),
     );
