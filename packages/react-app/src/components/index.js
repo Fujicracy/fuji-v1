@@ -19,6 +19,8 @@ import GearPopup from './GearPopup';
 import EthAddress from './EthAddress';
 import Footer from './Footer';
 import LockingCeremonyPopup from './LockingCeremonyPopup';
+import Bond from './Bond';
+import BondBalance from './BondBalance';
 
 export * from './NftItemPanel';
 
@@ -47,4 +49,6 @@ export {
   GearPopup,
   Footer,
   LockingCeremonyPopup,
+  Bond,
+  BondBalance,
 };

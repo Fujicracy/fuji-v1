@@ -132,10 +132,10 @@ export const BuyButton = styled.div`
 
   font-weight: 500;
   border-radius: 30px;
-  background: ${({ theme }) => theme.buttonColor || 'rgba(255, 255, 255, 0.16)'};
+  background: ${({ theme }) => theme.buttonColor || 'rgba(0, 0, 0, 0.1)'};
   color: ${({ theme }) => theme.foreColor};
   cursor: pointer;
-  border: 1px solid ${props => props.theme.backColor || props.activeColor};
+  border: 1px solid ${props => props.theme.backColor || props.activeColor || 'transparent'};
 
   &:hover {
     border: ${props => !props.disabled && `1px solid ${props.theme.foreColor}`};
@@ -336,7 +336,8 @@ export const AmountInput = styled.input`
   text-align: center;
   height: 1.5rem;
   background-color: inherit;
-  border: 1px solid ${({ theme }) => theme.buttonColor};
+  border: 1px solid ${({ theme }) => theme.buttonColor || 'rgba(0,0,0,0.1)'};
   color: ${({ theme }) => theme.foreColor};
+  background-color: rgba(0, 0, 0, 0.1);
   border-radius: 3px;
 `;

@@ -3,11 +3,12 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
 import { Flex, Box } from 'rebass';
 import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
-import { useCratesBalance, useGearsBalance } from 'hooks';
+import { useCratesBalance, useGearsBalance, useSouvenirNFT } from 'hooks';
 
 import { BackgroundEffect, NavBackLink, Header, SectionTitle } from 'components';
 
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
+import Tooltip from '@material-ui/core/Tooltip';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Profile from './Profile';
@@ -16,6 +17,7 @@ import Inventory from './Inventory';
 import Leaderboard from './Leaderboard';
 import Store from './Store';
 import LockingCeremony from './LockingCeremony';
+import BondFactory from './BondFactory';
 
 import { StyledNavLink, NavigationContainer, HeaderBackContainer, HightLightBadge } from './styles';
 
@@ -43,6 +45,8 @@ function NftGame() {
 
   const crates = useCratesBalance();
   const gears = useGearsBalance();
+  const { isLoading, NFTImage } = useSouvenirNFT();
+  const isBondingAvailable = !isLoading && NFTImage;
 
   useEffect(() => {
     // stupid trick but putting this in a context make the whole app crash.
@@ -50,7 +54,6 @@ function NftGame() {
     window?.widgetbotCrate?.show();
     return () => window?.widgetbotCrate?.hide();
   });
-  console.count('NFT game');
 
   return (
     <>
@@ -101,12 +104,24 @@ function NftGame() {
               </StyledNavLink>
             </li>
             <li>
-              <StyledNavLink to={`${path}/bond-factory`} disabled onClick={e => e.preventDefault()}>
-                <Flex alignItems="center" justifyContent="center">
-                  Bond factory
-                  <LockOutlinedIcon fontSize="small" />
-                </Flex>
-              </StyledNavLink>
+              <Tooltip
+                title={
+                  isBondingAvailable
+                    ? ''
+                    : 'Bond Factory will be available only after locking in your points.'
+                }
+              >
+                <StyledNavLink
+                  to={`${path}/bond-factory`}
+                  disabled={!isBondingAvailable}
+                  onClick={e => !isBondingAvailable && e.preventDefault()}
+                >
+                  <Flex alignItems="center" justifyContent="center">
+                    Bond factory
+                    {!isBondingAvailable && <LockOutlinedIcon fontSize="small" />}
+                  </Flex>
+                </StyledNavLink>
+              </Tooltip>
             </li>
           </NavigationContainer>
 
@@ -125,6 +140,18 @@ function NftGame() {
               <Route path={`${path}/inventory`} component={Inventory} />
               <Route path={`${path}/leaderboard`} component={Leaderboard} />
               <Route path={`${path}/locking-ceremony`} component={LockingCeremony} />
+              {isBondingAvailable && (
+                <Route path={`${path}/bond-factory`} component={BondFactory} />
+              )}
+
+              {/* Fallback */}
+              <Route path="*">
+                {!isMobile ? (
+                  <Redirect to={`${path}/store`} />
+                ) : (
+                  <Redirect to={`${path}/profile`} />
+                )}
+              </Route>
             </Switch>
           </Flex>
         </Flex>

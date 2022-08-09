@@ -18,6 +18,7 @@ packages/react-app/app.yaml
 !packages/react-app/src/contracts/1-*.deployment.json
 !packages/react-app/src/contracts/250-*.deployment.json
 !packages/react-app/src/contracts/4-*.deployment.json
+!packages/react-app/src/contracts/137-*.deployment.json
 !packages/react-app/src/contracts/42161-*.deployment.json
 packages/bots/contracts/*
 !packages/bots/contracts/1-*.deployment.json
