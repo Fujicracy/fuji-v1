@@ -29,6 +29,9 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
               if (networkId === CHAIN_IDS.FANTOM || CHAIN_NAME === CHAIN_NAMES.FANTOM) {
                 const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate(address);
                 liquidatorEvents = await contracts.FliquidatorFTM.queryFilter(filterLiquidator);
+              } else if (networkId === CHAIN_IDS.POLYGON || CHAIN_NAME === CHAIN_NAMES.POLYGON) {
+                const filterLiquidator = contracts.F2FliquidatorMATIC.filters.Liquidate(address);
+                liquidatorEvents = await contracts.F2FliquidatorMATIC.queryFilter(filterLiquidator);
               } else {
                 const filterLiquidator = contracts.Fliquidator.filters.Liquidate(address);
                 liquidatorEvents = await contracts.Fliquidator.queryFilter(filterLiquidator);
