@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { themeGet } from '@styled-system/theme-get';
 import { color, padding } from 'styled-system';
 import CloseIcon from '@material-ui/icons/Close';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from 'styled-react-modal';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -95,12 +96,17 @@ const PrimaryButton = styled(Button)`
   transition: opacity 0.3s;
   cursor: pointer;
 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
   &:hover {
     opacity: 0.8;
   }
 
   &[disabled] {
-    opacity: 0.5;
+    opacity: 0.8;
     cursor: not-allowed;
   }
 `;
@@ -116,7 +122,8 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
     setIsFetching(true);
     try {
       const txRes = await tx(contracts.NFTInteractions.lockFinalScore());
-      onSuccess(txRes);
+      await txRes.wait();
+      onSuccess();
       setIsFetching(false);
     } catch (e) {
       // Todo: handle error
@@ -167,7 +174,10 @@ const LockingCeremonyPopup = ({ isOpen, close, onSuccess }) => {
               disabled={isFetching || !isChecked}
               onClick={lessgo}
             >
-              Confirm {isFetching ? '⏳' : ''}
+              {isFetching && (
+                <CircularProgress size={14} style={{ marginRight: '8px', color: 'white' }} />
+              )}
+              Confirm
             </PrimaryButton>
           </SectionBox>
         </Box>
