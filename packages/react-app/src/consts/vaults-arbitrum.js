@@ -1,4 +1,4 @@
-import { ASSETS, ASSET_NAME } from './assets-polygon';
+import { ASSETS, ASSET_NAME } from './assets-arbitrum';
 import { PROVIDER_TYPE, PROVIDERS } from './providers';
 
 const VAULTS_NAMES = {
@@ -25,7 +25,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultETHDAI],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultETHDAI],
-    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_V3_ARB], PROVIDERS[PROVIDER_TYPE.DFORCE_ARB]],
     name: 'VaultETHDAI',
     title: 'ETH-DAI',
     threshold: 75,
@@ -35,18 +35,18 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultETHUSDC],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultETHUSDC],
-    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_V3_ARB], PROVIDERS[PROVIDER_TYPE.DFORCE_ARB], PROVIDERS[PROVIDER_TYPE.WEPIGGY_ARB]],
     name: 'VaultETHUSDC',
     title: 'ETH-USDC',
     threshold: 75,
   },
-  [VAULTS_NAMES.VaultUSDCWETH]: {
+  [VAULTS_NAMES.VaultUSDCETH]: {
     borrowAsset: ASSETS[ASSET_NAME.ETH],
     collateralAsset: ASSETS[ASSET_NAME.USDC],
-    borrowId: BORROW_IDS[VAULTS_NAMES.VaultUSDCWETH],
-    collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultUSDCWETH],
-    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_MATIC], PROVIDERS[PROVIDER_TYPE.AAVE_V3_MATIC]],
-    name: 'VaultUSDCWETH',
+    borrowId: BORROW_IDS[VAULTS_NAMES.VaultUSDCETH],
+    collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultUSDCETH],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_V3_ARB], PROVIDERS[PROVIDER_TYPE.DFORCE_ARB], PROVIDERS[PROVIDER_TYPE.WEPIGGY_ARB]],
+    name: 'VaultUSDCETH',
     title: 'USDC-ETH',
     threshold: 75,
   },

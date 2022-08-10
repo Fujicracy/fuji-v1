@@ -16,16 +16,16 @@ const ASSETS = {
   ethereum: ethereum.ASSETS,
   fantom: fantom.ASSETS,
   polygon: polygon.ASSETS,
-  rinkeby: rinkeby.ASSETS,
   arbitrum: arbitrum.ASSETS,
+  rinkeby: rinkeby.ASSETS,
 };
 
 const ASSET_NAME = {
   ethereum: ethereum.ASSET_NAME,
   fantom: fantom.ASSET_NAME,
   polygon: polygon.ASSET_NAME,
-  rinkeby: rinkeby.ASSET_NAME,
   arbitrum: arbitrum.ASSET_NAME,
+  rinkeby: rinkeby.ASSET_NAME,
 };
 
 export { ASSETS, ASSET_NAME, DEFAULT_BALANCE_ASSET };
