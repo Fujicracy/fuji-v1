@@ -6,6 +6,7 @@ import btcIcon from './icons/tokens/BTC.svg';
 import feiIcon from './icons/tokens/FEI.svg';
 import ftmIcon from './icons/tokens/FTM.svg';
 import maticIcon from './icons/tokens/MATIC.svg';
+import arbIcon from './icons/tokens/ARB.svg';
 
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
@@ -106,6 +107,7 @@ export {
   feiIcon,
   ftmIcon,
   maticIcon,
+  arbIcon,
   linkedinIcon,
   plusIcon,
   closeIcon,
