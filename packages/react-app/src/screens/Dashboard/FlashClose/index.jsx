@@ -40,7 +40,7 @@ const providerIndexes = {
 async function getProviderIndex(vault, contracts, networkName) {
   const activeProvider = await contracts[vault.name].activeProvider();
 
-  let index = providerIndexes.AAVE;
+  let index = providerIndexes.BALANCER;
 
   if (networkName === CHAIN_NAMES.ETHEREUM) {
     const ibank = PROVIDERS[PROVIDER_TYPE.IRONBANK].name;
@@ -55,6 +55,8 @@ async function getProviderIndex(vault, contracts, networkName) {
   } else if (networkName === CHAIN_NAMES.FANTOM) {
     index = providerIndexes.AAVE;
   } else if (networkName === CHAIN_NAMES.POLYGON) {
+    index = providerIndexes.BALANCER;
+  } else if (networkName === CHAIN_NAMES.ARBITRUM) {
     index = providerIndexes.BALANCER;
   }
 
