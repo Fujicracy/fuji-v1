@@ -16,7 +16,7 @@ const PROVIDER_TYPE = {
   AAVE_V3_MATIC: 'AaveV3MATIC',
   AAVE_V3_ARB: 'AaveV3ARB',
   DFORCE_ARB: 'DForceARB',
-  WEPIGGY_ARB: 'WePiggyARB'
+  WEPIGGY_ARB: 'WePiggyARB',
 };
 
 const PROVIDERS = {

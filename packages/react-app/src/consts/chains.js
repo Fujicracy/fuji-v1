@@ -75,10 +75,7 @@ const CHAINS = {
     isCustomNetwork: true,
     isDeployed: true,
     dashboardUrl: 'https://arbitrum.fujidao.org/#/dashboard',
-    rpcUrls: [
-      'https://rpc.ankr.com/arbitrum',
-      'https://arb1.arbitrum.io/rpc',
-    ],
+    rpcUrls: ['https://rpc.ankr.com/arbitrum', 'https://arb1.arbitrum.io/rpc'],
     nativeCurrency: {
       name: 'AETH',
       symbol: 'AETH',
