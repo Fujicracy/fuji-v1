@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Flex, Text } from 'rebass';
 import { useMediaQuery } from 'react-responsive';
-import { BREAKPOINTS, BREAKPOINT_NAMES } from 'consts';
+import { BREAKPOINTS, BREAKPOINT_NAMES, NFT_GAME_MARKETPLACE_BOND_LINK } from 'consts';
 import { BuyButton } from './NftItemPanel/styles';
 import { useBondBalance } from 'hooks';
+import { ExternalLink } from './UI';
 
 function BondBalance({ bg = 'white', color = 'black', width, height = '180px', months }) {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
@@ -26,14 +27,11 @@ function BondBalance({ bg = 'white', color = 'black', width, height = '180px', m
           <Text color={color} fontSize="4rem" lineHeight="4rem" fontWeight="bold">
             {balances[months * 30] ?? 0}
           </Text>
-          {/* TODO: Change button to link */}
-          <BuyButton
-            mt={isMobile ? '12px' : '16px'}
-            theme={{ foreColor: color }}
-            onClick={() => alert('not implemented')}
-          >
-            Trade
-          </BuyButton>
+          <ExternalLink href={NFT_GAME_MARKETPLACE_BOND_LINK}>
+            <BuyButton mt={isMobile ? '12px' : '16px'} theme={{ foreColor: color }}>
+              Trade
+            </BuyButton>
+          </ExternalLink>
         </Flex>
       </Box>
     </Box>
