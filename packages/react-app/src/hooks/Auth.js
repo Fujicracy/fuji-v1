@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext, createContext } from 'react';
 import { ethers } from 'ethers';
+import ReactGA from 'react-ga4';
 import { useHistory } from 'react-router-dom';
 import Onboard from 'bnc-onboard';
 import {
@@ -143,6 +144,10 @@ function useProvideAuth() {
           } else {
             const n = Object.values(CHAINS).find(v => v.id === id && v.isDeployed);
             if (n) {
+              ReactGA.event({
+                category: 'switch_chain',
+                action: n.name,
+              });
               setNetworkName(n.name);
             } else {
               // unsupported network
