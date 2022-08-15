@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { useEffect, useState } from 'react';
 import { useContractLoader, useAuth } from 'hooks';
-import { ASSETS, CHAIN_IDS, TRANSACTION_ACTIONS, CHAIN_NAMES, CHAIN_NAME } from 'consts';
+import { ASSETS, CHAIN_IDS, TRANSACTION_ACTIONS, CHAIN_NAMES, CHAIN_NAME, CHAIN } from 'consts';
 import { formatUnits } from '@ethersproject/units';
 import usePoller from './Poller';
 
@@ -29,6 +29,14 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
               if (networkId === CHAIN_IDS.FANTOM || CHAIN_NAME === CHAIN_NAMES.FANTOM) {
                 const filterLiquidator = contracts.FliquidatorFTM.filters.Liquidate(address);
                 liquidatorEvents = await contracts.FliquidatorFTM.queryFilter(filterLiquidator);
+              } else if (networkId === CHAIN_IDS.ARBITRUM || CHAIN_NAME === CHAIN_NAMES.ARBITRUM) {
+                const filterLiquidator = contracts.F2FliquidatorArbitrum.filters.Liquidate(address);
+                liquidatorEvents = await contracts.F2FliquidatorArbitrum.queryFilter(
+                  filterLiquidator,
+                );
+              } else if (networkId === CHAIN_IDS.POLYGON || CHAIN_NAME === CHAIN_NAMES.POLYGON) {
+                const filterLiquidator = contracts.F2FliquidatorMATIC.filters.Liquidate(address);
+                liquidatorEvents = await contracts.F2FliquidatorMATIC.queryFilter(filterLiquidator);
               } else {
                 const filterLiquidator = contracts.Fliquidator.filters.Liquidate(address);
                 liquidatorEvents = await contracts.Fliquidator.queryFilter(filterLiquidator);
