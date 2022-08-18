@@ -13,7 +13,7 @@ const EthAddress = ({ address, suffix, prefix }) => {
 };
 
 EthAddress.propTypes = {
-  address: PropTypes.string.isRequired,
+  address: PropTypes.string,
   prefix: PropTypes.number,
   suffix: PropTypes.number,
 };
