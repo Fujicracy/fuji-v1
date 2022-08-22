@@ -24,7 +24,6 @@ export default function useTransactionHistory(vaultName, action, pollTime = 4000
       const events = [];
 
       if (action === TRANSACTION_ACTIONS.ALL || action === TRANSACTION_ACTIONS.LIQUIDATION) {
-        console.debug(contracts.Fliquidator);
         const filterLiquidator = contracts.Fliquidator.filters.Liquidate(address);
         const liquidatorEvents = await contracts.Fliquidator.queryFilter(filterLiquidator);
         events.push(...liquidatorEvents);
