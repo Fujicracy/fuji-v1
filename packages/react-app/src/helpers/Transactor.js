@@ -31,6 +31,9 @@ export default function Transactor(provider) {
       if (network.chainId === 250) {
         explorerUrl = 'https://ftmscan.com/tx/';
         explorerName = 'Ftmscan';
+      } else if (network.chainId === 137) {
+        explorerUrl = 'https://polygonscan.com/tx/';
+        explorerName = 'Polygonscan';
       }
 
       let dismissPendingWallet;
