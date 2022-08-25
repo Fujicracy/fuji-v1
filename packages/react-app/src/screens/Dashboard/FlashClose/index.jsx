@@ -40,7 +40,7 @@ const providerIndexes = {
 async function getProviderIndex(vault, contracts, networkName) {
   const activeProvider = await contracts[vault.name].activeProvider();
 
-  let index = providerIndexes.AAVE;
+  let index = providerIndexes.BALANCER;
 
   if (networkName === CHAIN_NAMES.ETHEREUM) {
     const ibank = PROVIDERS[PROVIDER_TYPE.IRONBANK].name;
@@ -55,6 +55,8 @@ async function getProviderIndex(vault, contracts, networkName) {
   } else if (networkName === CHAIN_NAMES.FANTOM) {
     index = providerIndexes.AAVE;
   } else if (networkName === CHAIN_NAMES.POLYGON) {
+    index = providerIndexes.BALANCER;
+  } else if (networkName === CHAIN_NAMES.ARBITRUM) {
     index = providerIndexes.BALANCER;
   }
 
@@ -84,16 +86,15 @@ function FlashClose({ position }) {
   const onFlashClose = async () => {
     setLoading(true);
     const providerIndex = await getProviderIndex(vault, contracts, networkName);
-    const fliquidatorName = Object.keys(contracts).find(name => name.includes('Fliquidator'));
-    const fliquidator = contracts[fliquidatorName];
+    const { Fliquidator } = contracts;
 
-    const gasLimit = await GasEstimator(fliquidator, 'flashClose', [
+    const gasLimit = await GasEstimator(Fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
       position.vaultAddress,
       providerIndex,
     ]);
     const res = await tx(
-      fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
+      Fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
         gasLimit,
       }),
     );

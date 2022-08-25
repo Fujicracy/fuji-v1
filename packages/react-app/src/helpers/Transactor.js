@@ -31,6 +31,9 @@ export default function Transactor(provider) {
       if (network.chainId === 250) {
         explorerUrl = 'https://ftmscan.com/tx/';
         explorerName = 'Ftmscan';
+      } else if (network.chainId === 42161) {
+        explorerUrl = 'https://arbiscan.io/tx/';
+        explorerName = 'Arbiscan';
       }
 
       let dismissPendingWallet;
