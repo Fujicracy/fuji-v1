@@ -40,6 +40,7 @@ import {
   MenuNavigationContainer,
   DropDownBackContainer,
 } from './styles';
+import { EthAddress } from 'components';
 
 function Header() {
   const { address, provider, onboard, networkName, networkId, changeNetwork } = useAuth();
@@ -80,7 +81,6 @@ function Header() {
     if (userBalance) formatBalance();
   }, [defaultAsset, userBalance]);
 
-  const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
   });
@@ -322,7 +322,9 @@ function Header() {
                       onClick={() => setIsOpenWalletDropDown(!isOpenWalletDropDown)}
                       isClicked={isOpenWalletDropDown}
                     >
-                      <Label color="#f5f5f5">{ellipsedAddress}</Label>
+                      <Label color="#f5f5f5">
+                        <EthAddress address={address} withEns />
+                      </Label>
                       <Image
                         src={isOpenWalletDropDown ? upArrowIcon : downArrowIcon}
                         ml={2}

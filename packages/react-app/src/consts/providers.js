@@ -14,6 +14,9 @@ const PROVIDER_TYPE = {
   AAVE_V3_FTM: 'AaveV3FTM',
   AAVE_MATIC: 'AaveV2MATIC',
   AAVE_V3_MATIC: 'AaveV3MATIC',
+  AAVE_V3_ARB: 'AaveV3ARB',
+  DFORCE_ARB: 'DForceARB',
+  WEPIGGY_ARB: 'WePiggyARB',
 };
 
 const PROVIDERS = {
@@ -91,6 +94,21 @@ const PROVIDERS = {
     id: 'aave-v3-matic',
     name: 'ProviderAaveV3MATIC',
     title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.AAVE_V3_ARB]: {
+    id: 'aave-v3-arbitrum',
+    name: 'ProviderAaveV3Arbitrum',
+    title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.DFORCE_ARB]: {
+    id: 'DForce-arbitrum',
+    name: 'ProviderDForceArbitrum',
+    title: 'DForce',
+  },
+  [PROVIDER_TYPE.WEPIGGY_ARB]: {
+    id: 'WePiggy-arbitrum',
+    name: 'ProviderWePiggyArbitrum',
+    title: 'WePiggy',
   },
 };
 

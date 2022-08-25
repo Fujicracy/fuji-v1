@@ -2,6 +2,7 @@ import * as ethereumCore from './vaults-core';
 import * as ethereumFuse from './vaults-fuse';
 import * as fantomCore from './vaults-fantom';
 import * as polygonCore from './vaults-polygon';
+import * as arbitrumCore from './vaults-arbitrum';
 import * as rinkebyCore from './vaults-rinkeby';
 
 const BORROW_IDS = {
@@ -14,6 +15,9 @@ const BORROW_IDS = {
   },
   polygon: {
     core: polygonCore.BORROW_IDS,
+  },
+  arbitrum: {
+    core: arbitrumCore.BORROW_IDS,
   },
   rinkeby: {
     core: rinkebyCore.BORROW_IDS,
@@ -31,6 +35,9 @@ const COLLATERAL_IDS = {
   polygon: {
     core: polygonCore.COLLATERAL_IDS,
   },
+  arbitrum: {
+    core: arbitrumCore.COLLATERAL_IDS,
+  },
   rinkeby: {
     core: rinkebyCore.COLLATERAL_IDS,
   },
@@ -47,6 +54,9 @@ const VAULTS_NAMES = {
   polygon: {
     core: polygonCore.VAULTS_NAMES,
   },
+  arbitrum: {
+    core: arbitrumCore.VAULTS_NAMES,
+  },
   rinkeby: {
     core: rinkebyCore.VAULTS_NAMES,
   },
@@ -62,6 +72,9 @@ const VAULTS = {
   },
   polygon: {
     core: polygonCore.VAULTS,
+  },
+  arbitrum: {
+    core: arbitrumCore.VAULTS,
   },
   rinkeby: {
     core: rinkebyCore.VAULTS,
