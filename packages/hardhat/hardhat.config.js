@@ -28,13 +28,10 @@ const forkUrl =
       ? "https://bsc-dataseed.binance.org/"
       : network === "polygon"
         ? `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
-<<<<<<< HEAD
         : network === "optimism"
           ? `https://opt-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
-=======
         : network === "arbitrum"
           ? `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`
->>>>>>> alpha
           : mainnetUrl
 
 //
@@ -108,6 +105,7 @@ module.exports = {
     optimism: {
       url: `https://opt-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
+    },
     arbitrum: {
       url: `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : { mnemonic: mnemonic() },
@@ -170,7 +168,7 @@ module.exports = {
     apiKey: process.env.OZ_DEFENDER_API_KEY,
     apiSecret: process.env.OZ_DEFENDER_API_SECRET,
   }
-};
+}
 
 const DEBUG = false;
 
