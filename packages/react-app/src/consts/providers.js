@@ -11,7 +11,12 @@ const PROVIDER_TYPE = {
   GEIST: 'Geist',
   HUNDRED: 'Hundred',
   COMPOUND_MOCK: 'CompoundMock',
-  AAVE_V3: 'AaveV3',
+  AAVE_V3_FTM: 'AaveV3FTM',
+  AAVE_MATIC: 'AaveV2MATIC',
+  AAVE_V3_MATIC: 'AaveV3MATIC',
+  AAVE_V3_ARB: 'AaveV3ARB',
+  DFORCE_ARB: 'DForceARB',
+  WEPIGGY_ARB: 'WePiggyARB',
 };
 
 const PROVIDERS = {
@@ -75,10 +80,35 @@ const PROVIDERS = {
     name: 'ProviderMockCompound',
     title: 'MockCompound',
   },
-  [PROVIDER_TYPE.AAVE_V3]: {
-    id: 'aave-v3',
+  [PROVIDER_TYPE.AAVE_V3_FTM]: {
+    id: 'aave-v3-ftm',
     name: 'ProviderAaveV3FTM',
     title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.AAVE_MATIC]: {
+    id: 'aave-matic',
+    name: 'ProviderAaveMATIC',
+    title: 'Aave',
+  },
+  [PROVIDER_TYPE.AAVE_V3_MATIC]: {
+    id: 'aave-v3-matic',
+    name: 'ProviderAaveV3MATIC',
+    title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.AAVE_V3_ARB]: {
+    id: 'aave-v3-arbitrum',
+    name: 'ProviderAaveV3Arbitrum',
+    title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.DFORCE_ARB]: {
+    id: 'DForce-arbitrum',
+    name: 'ProviderDForceArbitrum',
+    title: 'DForce',
+  },
+  [PROVIDER_TYPE.WEPIGGY_ARB]: {
+    id: 'WePiggy-arbitrum',
+    name: 'ProviderWePiggyArbitrum',
+    title: 'WePiggy',
   },
 };
 

@@ -1,11 +1,12 @@
-## Add a new provider
+**Table of content**
 
-Prerequisite: make sure that the address and the ABI of the new provider is available in `packages/react-app/src/contracts/[NETWORK_ID]-core.deployment.json`.
-
-1. Add a new `PROVIDER_TYPE` and a new entry in `PROVIDERS` in `packages/react-app/src/consts/providers.js`.
-  - Make sure the property `name` of the provider **matches exactly the name of the deployed provider's contract**.
-
-2. Add the newly created provider to the list of `providers` for affected vaults in `packages/react-app/src/consts/vaults-[NETWORK_NAME].js`
+- [Available Scripts](#available-scripts)
+  - [`yarn start`](#yarn-start)
+  - [`yarn build`](#yarn-build)
+  - [Deployment](#deployment)
+  - [`yarn build` fails to minify](#yarn-build-fails-to-minify)
+- [How to add a new chain ?](#how-to-add-a-new-chain-)
+- [How to add a new provider ?](#how-to-add-a-new-provider-)
 
 ## Available Scripts
 
@@ -36,3 +37,29 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+## How to add a new chain ?
+
+Prerequisite: make sure contracts are deployed and functional. The contract addresses should be available in: `packages/react-app/src/contracts/[NETWORK_ID]-core.deployment.json`.
+
+1. In `packages\react-app\src\consts` add/or modify the following files:
+
+   - Add a new file called: `assets-$chain`, were `$chain` is replaced by the chain name being added. Fill all the required information for that chain, and use as a reference file: `assets-ethereum.js`.
+   - Modify the `assets.js` file to include the new assets in the corresponding objects: `DEFAULT_BALANCE_ASSET`, `ASSETS`, `ASSET_NAME`.
+   - Modify the `chains.js` file to include the new chain in the corresponding objects: `CHAIN_IDS`, `CHAIN_NAMES`, `CHAINS`, and `EXPLORER_INFOS`.
+   - Add a new file called: `vaults-$chain` , were `$chain` is replaced by the chain name being added. Fill all the required information for that chain, and use as a reference file: `vaults-core.js`.
+   - Modify the `vaults.js` file to include vault information in the corresponding objects: `BORROW_IDS`, `COLLATERAL_IDS`, `VAULTS_NAMES`, and `VAULTS`.
+   - Ensure to add all providers for the new chain following the steps for **Adding a new provider**.
+
+2. Make the necessary changes in `packages/react-app/src/screens/Dashboard/FlashClose/index.jsx` to enable "flashClose" functionality
+3. Update `TransactionHistory.js` hooks with `F2Fliquidator` name (see block at line 27)
+
+## How to add a new provider ?
+
+Prerequisite: make sure that the address and the ABI of the new provider is available in `packages/react-app/src/contracts/[NETWORK_ID]-core.deployment.json`.
+
+1. Add a new `PROVIDER_TYPE` and a new entry in `PROVIDERS` in `packages/react-app/src/consts/providers.js`.
+
+- Make sure the property `name` of the provider **matches exactly the name of the deployed provider's contract**.
+
+2. Add the newly created provider to the list of `providers` for affected vaults in `packages/react-app/src/consts/vaults-[NETWORK_NAME].js`

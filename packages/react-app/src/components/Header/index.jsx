@@ -40,6 +40,7 @@ import {
   MenuNavigationContainer,
   DropDownBackContainer,
 } from './styles';
+import { EthAddress } from 'components';
 
 function Header() {
   const { address, provider, onboard, networkName, networkId, changeNetwork } = useAuth();
@@ -80,7 +81,6 @@ function Header() {
     if (userBalance) formatBalance();
   }, [defaultAsset, userBalance]);
 
-  const ellipsedAddress = address ? address.substr(0, 6) + '...' + address.substr(-4, 4) : '';
   const isMobile = useMediaQuery({
     maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber,
   });
@@ -192,7 +192,7 @@ function Header() {
                   </MenuItem>
                 </NavLink>
 
-                {networkName !== CHAIN_NAMES.ETHEREUM && (
+                {networkName === CHAIN_NAMES.FANTOM && (
                   <NavLink to="/nft-game">
                     <MenuItem
                       isSelected={currentPage.pathname === '/dashboard/nft-game'}
@@ -287,7 +287,7 @@ function Header() {
                     </NavLink>
                   </li>
 
-                  {networkName !== CHAIN_NAMES.ETHEREUM && (
+                  {networkName === CHAIN_NAMES.FANTOM && (
                     <li className="nav-item">
                       <NavLink to="/nft-game" activeClassName="current">
                         Climbing
@@ -322,7 +322,9 @@ function Header() {
                       onClick={() => setIsOpenWalletDropDown(!isOpenWalletDropDown)}
                       isClicked={isOpenWalletDropDown}
                     >
-                      <Label color="#f5f5f5">{ellipsedAddress}</Label>
+                      <Label color="#f5f5f5">
+                        <EthAddress address={address} withEns />
+                      </Label>
                       <Image
                         src={isOpenWalletDropDown ? upArrowIcon : downArrowIcon}
                         ml={2}

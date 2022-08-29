@@ -5,6 +5,7 @@ import { CRATE_IDS, CRATE_TYPE, NFT_GAME_POINTS_DECIMALS, GEAR_IDS, NFT_ITEMS } 
 import { useAuth } from './Auth';
 import { useContractLoader } from './ContractLoader';
 import { useContractReader } from './ContractReader';
+import { toNumber } from 'lodash';
 
 // helpers
 
@@ -223,7 +224,7 @@ export function useSouvenirNFT() {
 
     if (contracts && address && lockedNFTIDString && cardsAmountString) {
       if (BigNumber.from(lockedNFTIDString).lte(BigNumber.from(3).add(cardsAmountString))) {
-        console.debug('Invalid nft id (id is < 8). User pbbly havent lock');
+        console.debug(`Invalid nft id (id ${lockedNFTIDString} is < 8). User pbbly havent lock`);
         setIsLoading(false);
         return;
       }
@@ -232,4 +233,58 @@ export function useSouvenirNFT() {
   }, [contracts, address, lockedNFTIDString, cardsAmountString]);
 
   return { isLoading, NFTImage };
+}
+
+export function useBondBalance() {
+  const { address } = useAuth();
+  const contracts = useContractLoader();
+  const PreTokenBonds = contracts?.PreTokenBonds;
+  const [balances, setBalances] = useState({});
+
+  useEffect(() => {
+    async function fetch() {
+      const vestingTimes = await PreTokenBonds.getBondVestingTimes();
+      let res = {};
+
+      // Initialize each vesting time with zeros
+      vestingTimes.forEach(t => {
+        res[t.toNumber()] = 0;
+      });
+      const totalVouchers = await PreTokenBonds.balanceOf(address);
+
+      if (totalVouchers.toNumber() <= 0) {
+        return;
+      }
+
+      for (let i = 0; i < totalVouchers.toNumber(); i++) {
+        try {
+          const tokenId = await PreTokenBonds.tokenOfOwnerByIndex(address, i);
+          const slot = await PreTokenBonds.slotOf(tokenId);
+          const balance = await PreTokenBonds.unitsInToken(tokenId);
+          res[slot.toNumber()] += balance.toNumber();
+        } catch (e) {
+          if (e.reason === 'ERC721Enumerable: owner index out of bounds') {
+            continue;
+          }
+          console.error(e);
+        }
+      }
+
+      // Format results
+      let formattedRes = {};
+      vestingTimes.forEach(t => {
+        const balance = parseInt(res[t.toNumber()] / 10 ** NFT_GAME_POINTS_DECIMALS);
+        formattedRes[t.toNumber()] = balance;
+      });
+
+      setBalances(formattedRes);
+    }
+    if (address && PreTokenBonds) {
+      fetch();
+      const interval = setInterval(fetch, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [address, PreTokenBonds]);
+
+  return balances;
 }

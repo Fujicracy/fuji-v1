@@ -188,3 +188,8 @@ export const NFT_GAME_MODAL_THEMES = {
 
 export const NFT_GAME_MARKETPLACE_LINK =
   'https://paintswap.finance/marketplace/collections/0x14b35fbc82b3a3b95843062b96861ddbdeefaee0';
+
+export const NFT_GAME_MARKETPLACE_BOND_LINK =
+  'https://app.solv.finance/marketplace/ecosystem?network=ftm-mainnet';
+
+export const NFT_GAME_BOND_PRICE = 10000; // in meter points

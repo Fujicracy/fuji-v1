@@ -1,4 +1,4 @@
-import { ftmIcon, maticIcon, ethIcons, logoIcon } from 'assets/images';
+import { ftmIcon, maticIcon, arbIcon, ethIcons, logoIcon } from 'assets/images';
 import { capitalizeFirstLetter } from 'helpers/Utils';
 
 const CHAIN_IDS = {
@@ -6,6 +6,7 @@ const CHAIN_IDS = {
   RINKEBY: 4,
   FANTOM: 250,
   POLYGON: 137,
+  ARBITRUM: 42161,
   LOCAL: 31337,
 };
 
@@ -14,6 +15,7 @@ const CHAIN_NAMES = {
   RINKEBY: 'rinkeby',
   FANTOM: 'fantom',
   POLYGON: 'polygon',
+  ARBITRUM: 'arbitrum',
   LOCAL: 'local',
 };
 
@@ -48,7 +50,7 @@ const CHAINS = {
     title: capitalizeFirstLetter(CHAIN_NAMES.POLYGON),
     icon: maticIcon.toString(),
     isCustomNetwork: true,
-    isDeployed: false,
+    isDeployed: true,
     dashboardUrl: 'https://polygon.fujidao.org/#/dashboard',
     rpcUrls: [
       'https://polygon-rpc.com/',
@@ -64,6 +66,22 @@ const CHAINS = {
       decimals: 18,
     },
     blockExplorerUrls: ['https://polygonscan.com'],
+  },
+  [CHAIN_NAMES.ARBITRUM]: {
+    id: CHAIN_IDS.ARBITRUM,
+    name: CHAIN_NAMES.ARBITRUM,
+    title: capitalizeFirstLetter(CHAIN_NAMES.ARBITRUM),
+    icon: arbIcon.toString(),
+    isCustomNetwork: true,
+    isDeployed: true,
+    dashboardUrl: 'https://arbitrum.fujidao.org/#/dashboard',
+    rpcUrls: ['https://rpc.ankr.com/arbitrum', 'https://arb1.arbitrum.io/rpc'],
+    nativeCurrency: {
+      name: 'AETH',
+      symbol: 'AETH',
+      decimals: 18,
+    },
+    blockExplorerUrls: ['https://arbiscan.io/'],
   },
   [CHAIN_NAMES.LOCAL]: {
     id: CHAIN_IDS.LOCAL,
@@ -92,6 +110,8 @@ const CHAIN = CHAINS[CHAIN_NAME];
 const EXPLORER_INFOS = {
   [CHAIN_IDS.ETHEREUM]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
   [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
+  [CHAIN_IDS.POLYGON]: { url: 'https://polygonscan.com/tx/', name: 'Polygonscan' },
+  [CHAIN_IDS.ARBITRUM]: { url: 'https://arbiscan.io/tx/', name: 'Arbiscan' },
   [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
 };
 
