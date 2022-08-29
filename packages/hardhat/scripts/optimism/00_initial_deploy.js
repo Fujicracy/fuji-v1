@@ -28,7 +28,7 @@ global.console.log = (...args) => {
 const deployContracts = async () => {
   console.log("📡 Deploying...");
 
-  const treasury = "0x89c1E94F47c4e3a374B5a98455468f27CA2b2544";
+  const treasury = "0xD1e58F8D6B2aDF19683A28fa79E89A3d62aE2FAe";
   // Functional Contracts
   const fujiadmin = await deployFujiAdmin();
   const fliquidator = await deployF2Fliquidator();
