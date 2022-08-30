@@ -223,6 +223,8 @@ const networkSuffix = (name) => {
       return name + "MATIC";
     case "arbitrum":
       return name + "Arbitrum";
+    case "optimism":
+      return name + "Optimism";
     default:
       return ""
   }
