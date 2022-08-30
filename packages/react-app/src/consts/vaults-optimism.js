@@ -22,9 +22,7 @@ const VAULTS = {
     collateralAsset: ASSETS[ASSET_NAME.ETH],
     borrowId: BORROW_IDS[VAULTS_NAMES.VaultETHUSDC],
     collateralId: COLLATERAL_IDS[VAULTS_NAMES.VaultETHUSDC],
-    providers: [
-      PROVIDERS[PROVIDER_TYPE.AAVE_V3_OPT], PROVIDERS[PROVIDER_TYPE.DFORCE_OPT],
-    ],
+    providers: [PROVIDERS[PROVIDER_TYPE.AAVE_V3_OPT], PROVIDERS[PROVIDER_TYPE.DFORCE_OPT]],
     name: 'VaultETHUSDC',
     title: 'ETH-USDC',
     threshold: 75,
