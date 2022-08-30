@@ -1,4 +1,4 @@
-import { ftmIcon, maticIcon, arbIcon, ethIcons, logoIcon } from 'assets/images';
+import { ftmIcon, maticIcon, arbIcon, optIcon, ethIcons, logoIcon } from 'assets/images';
 import { capitalizeFirstLetter } from 'helpers/Utils';
 
 const CHAIN_IDS = {
@@ -7,6 +7,7 @@ const CHAIN_IDS = {
   FANTOM: 250,
   POLYGON: 137,
   ARBITRUM: 42161,
+  OPTIMISM: 10,
   LOCAL: 31337,
 };
 
@@ -16,6 +17,7 @@ const CHAIN_NAMES = {
   FANTOM: 'fantom',
   POLYGON: 'polygon',
   ARBITRUM: 'arbitrum',
+  OPTIMISM: 'optimism',
   LOCAL: 'local',
 };
 
@@ -83,6 +85,22 @@ const CHAINS = {
     },
     blockExplorerUrls: ['https://arbiscan.io/'],
   },
+  [CHAIN_NAMES.OPTIMISM]: {
+    id: CHAIN_IDS.OPTIMISM,
+    name: CHAIN_NAMES.OPTIMISM,
+    title: capitalizeFirstLetter(CHAIN_NAMES.OPTIMISM),
+    icon: optIcon.toString(),
+    isCustomNetwork: true,
+    isDeployed: true,
+    dashboardUrl: 'https://optimism.fujidao.org/#/dashboard',
+    rpcUrls: ['https://mainnet.optimism.io', 'https://rpc.ankr.com/optimism'],
+    nativeCurrency: {
+      name: 'OETH',
+      symbol: 'OETH',
+      decimals: 18,
+    },
+    blockExplorerUrls: ['https://optimistic.etherscan.io/'],
+  },
   [CHAIN_NAMES.LOCAL]: {
     id: CHAIN_IDS.LOCAL,
     name: CHAIN_NAMES.LOCAL,
@@ -112,6 +130,7 @@ const EXPLORER_INFOS = {
   [CHAIN_IDS.FANTOM]: { url: 'https://ftmscan.com/tx/', name: 'Ftmscan' },
   [CHAIN_IDS.POLYGON]: { url: 'https://polygonscan.com/tx/', name: 'Polygonscan' },
   [CHAIN_IDS.ARBITRUM]: { url: 'https://arbiscan.io/tx/', name: 'Arbiscan' },
+  [CHAIN_IDS.OPTIMISM]: { url: 'https://optimistic.etherscan.io/tx/', name: 'Optiscan' },
   [CHAIN_IDS.LOCAL]: { url: 'https://etherscan.io/tx/', name: 'Etherscan' },
 };
 

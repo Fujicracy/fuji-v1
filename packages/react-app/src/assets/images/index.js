@@ -7,6 +7,7 @@ import feiIcon from './icons/tokens/FEI.svg';
 import ftmIcon from './icons/tokens/FTM.svg';
 import maticIcon from './icons/tokens/MATIC.svg';
 import arbIcon from './icons/tokens/ARB.svg';
+import optIcon from './icons/tokens/OPT.svg';
 
 import linkedinIcon from './icons/linkedin.svg';
 import plusIcon from './icons/plus.svg';
@@ -108,6 +109,7 @@ export {
   ftmIcon,
   maticIcon,
   arbIcon,
+  optIcon,
   linkedinIcon,
   plusIcon,
   closeIcon,

@@ -58,6 +58,8 @@ async function getProviderIndex(vault, contracts, networkName) {
     index = providerIndexes.BALANCER;
   } else if (networkName === CHAIN_NAMES.ARBITRUM) {
     index = providerIndexes.BALANCER;
+  } else if (networkName === CHAIN_NAMES.OPTIMISM) {
+    index = providerIndexes.BALANCER;
   }
 
   return index;
@@ -86,16 +88,15 @@ function FlashClose({ position }) {
   const onFlashClose = async () => {
     setLoading(true);
     const providerIndex = await getProviderIndex(vault, contracts, networkName);
-    const fliquidatorName = Object.keys(contracts).find(name => name.includes('Fliquidator'));
-    const fliquidator = contracts[fliquidatorName];
+    const { Fliquidator } = contracts;
 
-    const gasLimit = await GasEstimator(fliquidator, 'flashClose', [
+    const gasLimit = await GasEstimator(Fliquidator, 'flashClose', [
       parseUnits(amount, decimals),
       position.vaultAddress,
       providerIndex,
     ]);
     const res = await tx(
-      fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
+      Fliquidator.flashClose(parseUnits(amount, decimals), position.vaultAddress, providerIndex, {
         gasLimit,
       }),
     );
