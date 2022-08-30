@@ -17,6 +17,9 @@ const PROVIDER_TYPE = {
   AAVE_V3_ARB: 'AaveV3ARB',
   DFORCE_ARB: 'DForceARB',
   WEPIGGY_ARB: 'WePiggyARB',
+  AAVE_V3_OPT: 'AaveV3OPT',
+  DFORCE_OPT: 'DForceOPT',
+  WEPIGGY_OPT: 'WePiggyOPT',
 };
 
 const PROVIDERS = {
@@ -108,6 +111,21 @@ const PROVIDERS = {
   [PROVIDER_TYPE.WEPIGGY_ARB]: {
     id: 'WePiggy-arbitrum',
     name: 'ProviderWePiggyArbitrum',
+    title: 'WePiggy',
+  },
+  [PROVIDER_TYPE.AAVE_V3_OPT]: {
+    id: 'aave-v3-optimism',
+    name: 'ProviderAaveV3Optimism',
+    title: 'Aave V3',
+  },
+  [PROVIDER_TYPE.DFORCE_OPT]: {
+    id: 'DForce-optimism',
+    name: 'ProviderDForceOptimism',
+    title: 'DForce',
+  },
+  [PROVIDER_TYPE.WEPIGGY_OPT]: {
+    id: 'WePiggy-optimism',
+    name: 'ProviderWePiggyOptimism',
     title: 'WePiggy',
   },
 };

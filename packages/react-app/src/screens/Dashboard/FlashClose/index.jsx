@@ -58,6 +58,8 @@ async function getProviderIndex(vault, contracts, networkName) {
     index = providerIndexes.BALANCER;
   } else if (networkName === CHAIN_NAMES.ARBITRUM) {
     index = providerIndexes.BALANCER;
+  } else if (networkName === CHAIN_NAMES.OPTIMISM) {
+    index = providerIndexes.BALANCER;
   }
 
   return index;
