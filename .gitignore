@@ -10,6 +10,7 @@ packages/*/artifacts/*
 !packages/*/artifacts/250-*.deploy
 !packages/*/artifacts/4-*.deploy
 !packages/*/artifacts/42161-*.deploy
+!packages/*/artifacts/10-*.deploy
 packages/*/cache
 packages/*/*.txt
 packages/hardhat/.openzeppelin/unknown-31337.json
@@ -20,10 +21,12 @@ packages/react-app/app.yaml
 !packages/react-app/src/contracts/4-*.deployment.json
 !packages/react-app/src/contracts/137-*.deployment.json
 !packages/react-app/src/contracts/42161-*.deployment.json
+!packages/react-app/src/contracts/10-*.deployment.json
 packages/bots/contracts/*
 !packages/bots/contracts/1-*.deployment.json
 !packages/bots/contracts/250-*.deployment.json
 !packages/bots/contracts/42161-*.deployment.json
+!packages/bots/contracts/10-*.deployment.json
 
 docker
 # docker/**/data
