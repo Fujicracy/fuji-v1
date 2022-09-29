@@ -11,7 +11,6 @@ const PROVIDER_TYPE = {
   GEIST: 'Geist',
   HUNDRED: 'Hundred',
   COMPOUND_MOCK: 'CompoundMock',
-  AAVE_V3_FTM: 'AaveV3FTM',
   AAVE_MATIC: 'AaveV2MATIC',
   AAVE_V3_MATIC: 'AaveV3MATIC',
   AAVE_V3_ARB: 'AaveV3ARB',
@@ -82,11 +81,6 @@ const PROVIDERS = {
     id: 'compound-mock',
     name: 'ProviderMockCompound',
     title: 'MockCompound',
-  },
-  [PROVIDER_TYPE.AAVE_V3_FTM]: {
-    id: 'aave-v3-ftm',
-    name: 'ProviderAaveV3FTM',
-    title: 'Aave V3',
   },
   [PROVIDER_TYPE.AAVE_MATIC]: {
     id: 'aave-matic',

@@ -26,18 +26,21 @@ const getBalances = async (borrowers, vaultContract, f1155Contract) => {
     ids.push(borrowID);
   });
 
-  return await f1155Contract.balanceOfBatch(addrs, ids);
-}
+  return f1155Contract.balanceOfBatch(addrs, ids);
+};
 
 const getNeededCollateralFor = (amount, collatF, safetyF, price, borrowDecimals) => {
   // from FujiVault.sol:
-  //uint256 minimumReq = (_amount * price) / (10**uint256(_borrowAssetDecimals));
-  //return (minimumReq * (collatF.a) * (safetyF.a)) / (collatF.b) / (safetyF.b);
-  return amount.mul(price)
-    .div(BigNumber.from(`${Math.pow(10, borrowDecimals)}`))
-    .mul(collatF.a).mul(safetyF.a)
-    .div(collatF.b).div(safetyF.b);
-}
+  // uint256 minimumReq = (_amount * price) / (10**uint256(_borrowAssetDecimals));
+  // return (minimumReq * (collatF.a) * (safetyF.a)) / (collatF.b) / (safetyF.b);
+  return amount
+    .mul(price)
+    .div(BigNumber.from(`${10 ** borrowDecimals}`))
+    .mul(collatF.a)
+    .mul(safetyF.a)
+    .div(collatF.b)
+    .div(safetyF.b);
+};
 
 const buildPositions = async (borrowers, vault, contracts) => {
   const toLiquidate = [];
@@ -55,11 +58,11 @@ const buildPositions = async (borrowers, vault, contracts) => {
   const price = await contracts.FujiOracle.getPriceOf(
     vault.collateralAsset.address,
     vault.borrowAsset.address,
-    BigNumber.from(collateralDecimals)
+    BigNumber.from(collateralDecimals),
   );
 
   const balances = await getBalances(borrowers, vaultContract, contracts.FujiERC1155);
-  for (let i = 0; i < balances.length; i = i + 2) {
+  for (let i = 0; i < balances.length; i += 2) {
     const borrower = borrowers[i / 2];
     const collateralBalance = balances[i];
     const borrowBalance = balances[i + 1];
@@ -69,14 +72,16 @@ const buildPositions = async (borrowers, vault, contracts) => {
       collatF,
       safetyF,
       price,
-      borrowDecimals
+      borrowDecimals,
     );
 
     // (debt + 43/1000 * debt) * price
     const bonus = borrowBalance.mul(BigNumber.from(43)).div(BigNumber.from(1000));
     // as getNeededCollateralFor without factors
-    const calcAmount = borrowBalance.add(bonus).mul(price)
-      .div(BigNumber.from(`${Math.pow(10, borrowDecimals)}`));
+    const calcAmount = borrowBalance
+      .add(bonus)
+      .mul(price)
+      .div(BigNumber.from(`${10 ** borrowDecimals}`));
 
     const position = {
       account: borrower,

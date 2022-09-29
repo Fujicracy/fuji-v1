@@ -24,7 +24,7 @@ export default function useCustomContractLoader(provider, contractName, address)
 
           const customContract = new Contract(
             address,
-            require(`../contracts/${contractName}.abi.js`),
+            require(`../contracts/${contractName}.abi.js`), // eslint-disable-line
             signer,
           );
           try {

@@ -49,7 +49,7 @@ export function useContractLoader() {
 
         const newContracts = {};
 
-        const contractsData = require(`../contracts/${networkId}-${deployment}.deployment.json`);
+        const contractsData = require(`../contracts/${networkId}-${deployment}.deployment.json`); // eslint-disable-line
         const contractList = Object.keys(contractsData);
         for (let i = 0; i < contractList.length; i += 1) {
           const contractName = contractList[i];
