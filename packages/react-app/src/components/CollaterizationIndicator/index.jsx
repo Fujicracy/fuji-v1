@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useReducer } from 'react';
-import { useSpring, animated } from 'react-spring';
+import { useSpring } from 'react-spring';
 import { Flex } from 'rebass';
 import { Typography, Button, Collapse } from '@material-ui/core';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';

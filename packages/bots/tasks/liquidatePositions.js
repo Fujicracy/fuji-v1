@@ -83,7 +83,9 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
       if (receipt && receipt.events) {
         // 'FlashLiquidate' gets emitted from alpha version Fliquidator
         // 'Liquidate' from all subsequent versions
-        const events = receipt.events.filter(e => ['FlashLiquidate', 'Liquidate'].includes(e.event));
+        const events = receipt.events.filter(e =>
+          ['FlashLiquidate', 'Liquidate'].includes(e.event),
+        );
         console.log('Liquidated: ', chalk.blue(events.length), ' positions.');
       }
     }
@@ -115,7 +117,7 @@ const getAllBorrowers = async (vault, startBlock, currentBlock) => {
           console.log('new borrower:', b);
           borrowers.push(b);
         }
-      })
+      });
 
       await client.set(`borrowers-${vaultAddr}`, JSON.stringify(borrowers));
     }

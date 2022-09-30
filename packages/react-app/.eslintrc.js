@@ -11,7 +11,7 @@ module.exports = {
     es6: true,
   },
   parserOptions: {
-    ecmaVersion: 11,
+    sourceType: 'module',
   },
   settings: {
     'import/resolver': {
@@ -20,7 +20,7 @@ module.exports = {
       },
     },
   },
-  extends: ['plugin:prettier/recommended', 'prettier'],
+  extends: ['plugin:prettier/recommended', 'prettier', 'plugin:@typescript-eslint/recommended'],
   plugins: ['prettier', 'json', 'react-hooks', 'import'],
   rules: {
     'arrow-body-style': 'off',
