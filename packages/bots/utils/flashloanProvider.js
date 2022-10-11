@@ -13,6 +13,10 @@ export const getFlashloanProvider = async setup => {
     index = providerIndexes.BALANCER;
   } else if (config.networkName === 'fantom') {
     index = providerIndexes.AAVE;
+  } else if (config.networkName === 'arbitrum') {
+    index = providerIndexes.BALANCER;
+  } else if (config.networkName === 'polygon') {
+    index = providerIndexes.BALANCER;
   }
 
   return index;
