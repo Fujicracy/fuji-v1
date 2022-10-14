@@ -8,7 +8,7 @@ import { BlackBoxContainer, SectionTitle, Description, Bond, BondBalance } from 
 
 function BondFactory() {
   const isMobile = useMediaQuery({ maxWidth: BREAKPOINTS[BREAKPOINT_NAMES.MOBILE].inNumber });
-  const { points, isLoading } = useProfileInfo();
+  const { points } = useProfileInfo();
 
   return (
     <BlackBoxContainer
