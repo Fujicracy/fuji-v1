@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import styled from 'styled-components';
-import { size, color, space, width, height, padding } from 'styled-system';
-import { Box, Image } from 'rebass';
+import { color, padding } from 'styled-system';
 import { fujiMedia } from 'consts';
 import Modal from 'styled-react-modal';
 import { themeGet } from '@styled-system/theme-get';

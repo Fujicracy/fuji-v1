@@ -34,6 +34,9 @@ export default function Transactor(provider) {
       } else if (network.chainId === 42161) {
         explorerUrl = 'https://arbiscan.io/tx/';
         explorerName = 'Arbiscan';
+      } else if (network.chainId === 137) {
+        explorerUrl = 'https://polygonscan.com/tx/';
+        explorerName = 'Polygonscan';
       }
 
       let dismissPendingWallet;
