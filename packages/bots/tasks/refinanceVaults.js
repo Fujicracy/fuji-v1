@@ -55,7 +55,8 @@ async function executeSwitch(setup, vault, newProviderAddr) {
   const { config } = setup;
   if (config.networkName === 'ethereum') {
     return executeSwitchETH(setup, vault, newProviderAddr);
-  } else if (config.networkName === 'fantom') {
+  }
+  if (config.networkName === 'fantom') {
     return executeSwitchFTM(setup, vault, newProviderAddr);
   }
 }
