@@ -51,6 +51,13 @@ async function executeSwitchETH(setup, vault, newProviderAddr) {
   );
 }
 
+async function executeSwitchArb(setup, vault, newProviderAddr) {
+  const { contracts, signer } = setup;
+
+  const index = await getFlashloanProvider(setup);
+  return contracts.Controller.connect(signer).doRefinancing(vault.address, newProviderAddr, index);
+}
+
 async function executeSwitch(setup, vault, newProviderAddr) {
   const { config } = setup;
   if (config.networkName === 'ethereum') {
@@ -59,6 +66,11 @@ async function executeSwitch(setup, vault, newProviderAddr) {
   if (config.networkName === 'fantom') {
     return executeSwitchFTM(setup, vault, newProviderAddr);
   }
+  if (config.networkName === 'arbitrum') {
+    return executeSwitchArb(setup, vault, newProviderAddr);
+  }
+
+  throw Error('Missing network clause for refinance!');
 }
 
 function shouldSwitch(vault, rates, blocks) {

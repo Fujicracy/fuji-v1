@@ -12,7 +12,7 @@ const VAULTS = {
     name: 'VaultETHDAI',
     deployBlockNumber: 19224015,
     refinanceConfig: {
-      thresholdAPR: 4,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
   },
@@ -27,7 +27,7 @@ const VAULTS = {
     name: 'VaultETHUSDC',
     deployBlockNumber: 19224020,
     refinanceConfig: {
-      thresholdAPR: 4,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
   },
@@ -42,7 +42,7 @@ const VAULTS = {
     name: 'VaultUSDCETH',
     deployBlockNumber: 19224023,
     refinanceConfig: {
-      thresholdAPR: 4,
+      thresholdAPR: 1,
       hoursSinceLast: 24,
     },
   },
