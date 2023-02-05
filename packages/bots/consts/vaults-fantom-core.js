@@ -6,6 +6,7 @@ const assetName = ASSET_NAME.fantom;
 
 const VAULTS = {
   VaultFTMDAI: {
+    address: '0x67908BE314DE4A16AD34f401f5d99e061DFE7334',
     collateralAsset: assets[assetName.FTM],
     borrowAsset: assets[assetName.DAI],
     name: 'VaultFTMDAI',
@@ -21,6 +22,7 @@ const VAULTS = {
     ],
   },
   VaultFTMUSDC: {
+    address: '0x085a99366861bd9c0B040b8Ad3882ab44327617e',
     collateralAsset: assets[assetName.FTM],
     borrowAsset: assets[assetName.USDC],
     name: 'VaultFTMUSDC',
@@ -36,6 +38,7 @@ const VAULTS = {
     ],
   },
   VaultWBTCDAI: {
+    address: '0xcb2A80380206c5bF2AAd4A0fAB2b2C31A59C208B',
     collateralAsset: assets[assetName.BTC],
     borrowAsset: assets[assetName.DAI],
     name: 'VaultWBTCDAI',
@@ -51,6 +54,7 @@ const VAULTS = {
     ],
   },
   VaultWETHUSDC: {
+    address: '0x1bAc9447611b5d1D763906dC60269Ac61E04CD4B',
     collateralAsset: assets[assetName.ETH],
     borrowAsset: assets[assetName.USDC],
     name: 'VaultWETHUSDC',
@@ -66,6 +70,7 @@ const VAULTS = {
     ],
   },
   VaultWETHDAI: {
+    address: '0x0793Cf99906423AaF17c736dcAcBFE843931686a',
     collateralAsset: assets[assetName.ETH],
     borrowAsset: assets[assetName.DAI],
     name: 'VaultWETHDAI',
