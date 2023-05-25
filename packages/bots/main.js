@@ -1,8 +1,15 @@
+/* eslint-disable no-unused-expressions */
 import fs from 'fs';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { refinanceVaults, liquidatePositions, saveBorrowers, saveRepayers } from './tasks/index.js';
+import {
+  refinanceVaults,
+  liquidatePositions,
+  saveBorrowers,
+  saveRepayers,
+  saveFlashClosers,
+} from './tasks/index.js';
 
 const configs = JSON.parse(fs.readFileSync('./.config.json'));
 
@@ -28,6 +35,11 @@ yargs(hideBin(process.argv))
     command: 'repayers',
     desc: '-> save repayers in a csv file',
     handler: argv => saveRepayers(configs[argv.network], argv.deployment),
+  })
+  .command({
+    command: 'flashclosers',
+    desc: '-> save flashclosers in a csv file',
+    handler: argv => saveFlashClosers(configs[argv.network], argv.deployment),
   })
   .demandCommand()
   .help().argv;

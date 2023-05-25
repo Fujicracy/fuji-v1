@@ -1,12 +1,11 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
-import { ethers, BigNumber } from 'ethers';
 import { VAULTS } from '../consts/index.js';
 import {
   loadContracts,
   getSigner,
-  getGasPrice,
-  getPriceOf,
+  // getGasPrice,
+  // getPriceOf,
   getFlashloanProvider,
   getBorrowers,
   connectRedis,
@@ -14,32 +13,32 @@ import {
   logStatus,
 } from '../utils/index.js';
 
-const { utils } = ethers;
+// const { utils } = ethers;
 
-const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
-  let totalDebt = BigNumber.from(0);
+// const isViable = (positions, gasPrice, gasLimit, ethPrice, decimals) => {
+// let totalDebt = BigNumber.from(0);
 
-  for (let i = 0; i < positions.length; i += 1) {
-    totalDebt = totalDebt.add(positions[i].debt);
-  }
+// for (let i = 0; i < positions.length; i += 1) {
+// totalDebt = totalDebt.add(positions[i].debt);
+// }
 
-  const formatUnits = utils.formatUnits;
+// const formatUnits = utils.formatUnits;
 
-  // 4.3%
-  let bonus = totalDebt.mul(BigNumber.from(43)).div(BigNumber.from(1000));
-  bonus = formatUnits(bonus.toString(), decimals);
+/// / 4.3%
+// let bonus = totalDebt.mul(BigNumber.from(43)).div(BigNumber.from(1000));
+// bonus = formatUnits(bonus.toString(), decimals);
 
-  let cost = formatUnits(gasLimit.mul(BigNumber.from(gasPrice)).toString());
-  cost *= ethPrice;
+// let cost = formatUnits(gasLimit.mul(BigNumber.from(gasPrice)).toString());
+// cost *= ethPrice;
 
-  console.log('Estimated bonus (USD): ', chalk.blue(bonus));
-  console.log('Estimated cost (USD): ', chalk.red(cost));
+// console.log('Estimated bonus (USD): ', chalk.blue(bonus));
+// console.log('Estimated cost (USD): ', chalk.red(cost));
 
-  return cost < bonus;
-};
+// return cost < bonus;
+// };
 
-const liquidateAll = async (setup, toLiq, vault, decimals) => {
-  const { config, contracts, signer } = setup;
+const liquidateAll = async (setup, toLiq, vault) => {
+  const { contracts, signer } = setup;
 
   const positions = toLiq.filter(p => p.solvent);
   if (positions.length === 0) {
@@ -47,35 +46,34 @@ const liquidateAll = async (setup, toLiq, vault, decimals) => {
     return;
   }
 
-  const fliquidatorName = config.networkName === 'fantom' ? 'FliquidatorFTM' : 'Fliquidator';
-  const currency = config.networkName === 'fantom' ? 'fantom' : 'ethereum';
+  // const fliquidatorName = config.networkName === 'fantom' ? 'FliquidatorFTM' : 'Fliquidator';
+  // const currency = config.networkName === 'fantom' ? 'fantom' : 'ethereum';
 
   const index = await getFlashloanProvider(setup);
   // only for Ethereum
-  const gasPrice = await getGasPrice();
-  const ethPrice = await getPriceOf(currency);
+  // const gasPrice = await getGasPrice();
+  // const ethPrice = await getPriceOf(currency);
 
-  let gasLimit = await contracts[fliquidatorName].connect(signer).estimateGas.flashBatchLiquidate(
-    positions.map(p => p.account),
-    vault.address,
-    index,
-  );
+  // const gasLimit = await contracts[fliquidatorName].connect(signer).estimateGas.flashBatchLiquidate(
+  // positions.map(p => p.account),
+  // vault.address,
+  // index,
+  // );
 
-  if (!isViable(positions, gasPrice, gasLimit, ethPrice, decimals)) {
-    console.log(chalk.red('!!! Cost of liquidations exceeds bonus'));
-    return;
-  }
+  // if (!isViable(positions, gasPrice, gasLimit, ethPrice, decimals)) {
+  // console.log(chalk.red('!!! Cost of liquidations exceeds bonus'));
+  // return;
+  // }
   console.log(chalk.green('---> Proceed to liquidations'));
 
   // increase by 50% to prevent outOfGas tx failing
-  gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('2')));
+  // gasLimit = gasLimit.add(gasLimit.div(BigNumber.from('2')));
 
   try {
-    const res = await contracts[fliquidatorName].connect(signer).flashBatchLiquidate(
+    const res = await contracts.Fliquidator.connect(signer).flashBatchLiquidate(
       positions.map(p => p.account),
       vault.address,
       index,
-      { gasLimit },
     );
     if (res && res.hash) {
       console.log(`TX submited: ${res.hash}`);
