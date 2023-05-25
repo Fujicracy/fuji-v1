@@ -148,19 +148,19 @@ button:focus {
 
 @font-face {
   font-family: Poppins;
-  src: url(https://assets.codepen.io/194136/Poppins-SemiBold.ttf);
+  src: local('Poppins-SemiBold'), url('./assets/fonts/Poppins-SemiBold.ttf') format('opentype');
   font-weight: 600;
 }
 
 @font-face {
   font-family: Poppins;
-  src: url(https://assets.codepen.io/194136/Poppins-Medium.ttf);
+  src: local('Poppins-Medium'), url('./assets/fonts/Poppins-Medium.ttf') format('opentype');
   font-weight: 500;
 }
 
 @font-face {
   font-family: Poppins;
-  src: url(https://assets.codepen.io/194136/Poppins-Regular.ttf);
+  src: local('Poppins-Regular'), url('./assets/fonts/Poppins-Regular.ttf') format('opentype');
   font-weight: 400;
 }
 
