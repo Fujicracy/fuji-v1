@@ -4,24 +4,21 @@
 
 import chalk from 'chalk';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
+import { formatUnits } from 'ethers/lib/utils.js';
 import { VAULTS } from '../consts/index.js';
 import { getSigner, loadContracts } from '../utils/index.js';
 
-const searchBorrowers = async (vault, searchLength) => {
-  const filterBorrowers = vault.filters.Borrow();
-  const events = await vault.queryFilter(filterBorrowers, searchLength);
+const searchBorrowers = async (vaultContract, vault) => {
+  const filterBorrowers = vaultContract.filters.Borrow();
+  const events = await vaultContract.queryFilter(filterBorrowers, vaultContract.deployBlockNumber);
   const borrowers = [];
   for (let i = 0; i < events.length; i += 1) {
     const e = events[i];
-    const block = await e.getBlock();
-    const tx = await e.getTransactionReceipt();
     borrowers.push({
-      vault: vault.address,
-      txhash: tx.transactionHash,
-      blockNumber: e.blockNumber,
-      timestamp: block.timestamp,
+      vault: vault.name,
       userAddr: e.args.userAddrs,
-      amount: e.args.amount,
+      amount: formatUnits(e.args.amount, vault.borrowAsset.decimals),
+      asset: vault.borrowAsset.name,
     });
   }
 
@@ -41,11 +38,10 @@ const saveFile = borrowers => {
   const csvWriter = createCsvWriter({
     path: 'fuji-borrowers.csv',
     header: [
-      { id: 'timestamp', title: 'Timestamp' },
-      { id: 'txhash', title: 'TxHash' },
+      { id: 'vault', title: 'Vault' },
       { id: 'userAddr', title: 'User Address' },
-      { id: 'vault', title: 'Vault Address' },
       { id: 'amount', title: 'Amount' },
+      { id: 'asset', title: 'Asset' },
     ],
   });
   csvWriter
@@ -64,8 +60,8 @@ const saveBorrowers = async (config, deployment) => {
   for (let v = 0; v < vaults.length; v++) {
     const vaultName = vaults[v].name;
     console.log('Searching BORROW positions in', chalk.blue(vaultName));
-    const vault = contracts[vaultName];
-    const found = await searchBorrowers(vault);
+    const vaultContract = contracts[vaultName];
+    const found = await searchBorrowers(vaultContract, vaults[v]);
     borrowers.push(...found);
   }
   borrowers = filterAndSort(borrowers);
