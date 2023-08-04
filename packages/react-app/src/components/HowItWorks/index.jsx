@@ -15,13 +15,16 @@ function HowItWorks() {
             filter: 'drop-shadow(0px 0px 1px white)',
           }}
         />
-        <Typography variant="h3">How it works</Typography>
+        <Typography variant="h3">WARNING !!!</Typography>
       </TitleContainer>
 
       <ContentContainer>
-        With Fuji you reduce your loan expenses by <span className="bold">~10%</span>. The protocol
-        constantly <span className="bold">monitors</span> borrow markets and automatically{' '}
-        <span className="bold">refinances</span> its debt positions at the best available rates.
+        We released a newer version of the Fuji protocol and we are going to sunset the current one.
+        Please, withdraw and migrate your liquidity from the V1 to{' '}
+        <a href="https://app.fuji.finance" className="bold">
+          Fuji V2 Himalaya
+        </a>
+        .
       </ContentContainer>
     </Container>
   );

@@ -12,7 +12,12 @@ function AlphaWarning() {
         <Image src={flaskIcon} alt="flask" width="35px" height="35px" />
       </Box>
       <Typography variant="body2">
-        This is an alpha version and contracts are not audited. Use at your own risk.
+        We released a newer version of the Fuji protocol and we are going to sunset the current one.
+        Please, withdraw and migrate your liquidity from the V1 to{' '}
+        <a href="https://app.fuji.finance" className="bold">
+          Fuji V2 Himalaya
+        </a>
+        .
       </Typography>
     </Container>
   );
