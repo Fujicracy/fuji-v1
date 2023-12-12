@@ -539,41 +539,14 @@ contract F2FujiVault is VaultBaseUpgradeable, ReentrancyGuardUpgradeable, IVault
 
   /**
    * @dev Harvests the Rewards from baseLayer Protocols
-   * @param _farmProtocolNum: number per VaultHarvester Contract for specific farm
-   * @param _data: the additional data to be used for harvest
+   * @param token: to harvest
    */
-  function harvestRewards(uint256 _farmProtocolNum, bytes memory _data) external onlyOwner {
-    (address tokenReturned, IHarvester.Transaction memory harvestTransaction) = IHarvester(
-      _fujiAdmin.getVaultHarvester()
-    ).getHarvestTransaction(_farmProtocolNum, _data);
-
-    // Claim rewards
-    (bool success, ) = harvestTransaction.to.call(harvestTransaction.data);
-    require(success, "failed to harvest rewards");
-
-    if (tokenReturned != address(0)) {
-      uint256 tokenBal = IERC20Upgradeable(tokenReturned).univBalanceOf(address(this));
-      require(tokenReturned != address(0) && tokenBal > 0, Errors.VL_HARVESTING_FAILED);
-
-      ISwapper.Transaction memory swapTransaction = ISwapper(_fujiAdmin.getSwapper())
-        .getSwapTransaction(tokenReturned, vAssets.collateralAsset, tokenBal);
-
-      // Approve rewards
-      if (tokenReturned != NATIVE) {
-        IERC20Upgradeable(tokenReturned).univApprove(swapTransaction.to, tokenBal);
-      }
-
-      // Swap rewards -> collateralAsset
-      (success, ) = swapTransaction.to.call{ value: swapTransaction.value }(swapTransaction.data);
-      require(success, "failed to swap rewards");
-
-      _deposit(
-        IERC20Upgradeable(vAssets.collateralAsset).univBalanceOf(address(this)),
-        address(activeProvider)
-      );
-
-      updateF1155Balances();
-    }
+  function harvestRewards(address token) external onlyOwner {
+    uint256 untouched = IProvider(activeProvider).getDepositBalance(vAssets.collateralAsset);
+    uint256 amount = IERC20Upgradeable(token).balanceOf(address(this));
+    IERC20Upgradeable(token).safeTransfer(owner(), amount);
+    uint256 check = IProvider(activeProvider).getDepositBalance(vAssets.collateralAsset);
+    assert(untouched == check);
   }
 
   /**
